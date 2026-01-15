@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -45,6 +46,22 @@ class Candidate extends BaseModel
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return HasMany<Education, $this>
+     */
+    public function degrees(): HasMany
+    {
+        return $this->hasMany(Education::class, 'candidate_id', 'id');
+    }
+
+    /**
+     * @return HasMany<WorkExperience, $this>
+     */
+    public function workExperiences(): HasMany
+    {
+        return $this->hasMany(WorkExperience::class);
     }
 
     /**
