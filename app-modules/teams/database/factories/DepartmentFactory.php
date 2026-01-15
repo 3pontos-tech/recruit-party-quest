@@ -8,7 +8,7 @@ use He4rt\Teams\Department;
 use He4rt\Teams\Team;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
 
 /** @extends Factory<Department> */
 class DepartmentFactory extends Factory
@@ -18,10 +18,10 @@ class DepartmentFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'description' => $this->faker->text(),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'name' => fake()->name(),
+            'description' => fake()->text(),
+            'created_at' => Date::now(),
+            'updated_at' => Date::now(),
 
             'team_id' => Team::factory(),
             'head_user_id' => User::factory(),

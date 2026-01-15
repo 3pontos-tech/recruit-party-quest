@@ -10,7 +10,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('departments', function (Blueprint $table) {
+        Schema::create('departments', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->foreignUuid('team_id')->constrained('teams');
             $table->foreignUuid('head_user_id')->constrained('users');
