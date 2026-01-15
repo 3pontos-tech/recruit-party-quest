@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('stage_type');
             $table->integer('display_order');
             $table->string('description');
-            $table->string('expected_duration_days');
+            $table->integer('expected_duration_days');
             $table->boolean('active');
             $table->timestamps();
             $table->softDeletes();

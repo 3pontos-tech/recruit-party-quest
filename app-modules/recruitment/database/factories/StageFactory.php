@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Recruitment\Database\Factories;
 
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 use He4rt\Recruitment\Stages\Models\Stage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Date;
@@ -17,12 +18,12 @@ class StageFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'stage_type' => fake()->word(),
-            'display_order' => fake()->randomNumber(),
-            'description' => fake()->text(),
-            'expected_duration_days' => fake()->word(),
-            'active' => fake()->boolean(),
+            'name' => fake()->jobTitle(),
+            'stage_type' => fake()->randomElement(StageTypeEnum::cases()),
+            'display_order' => fake()->numberBetween(1, 10),
+            'description' => fake()->sentence(),
+            'expected_duration_days' => fake()->numberBetween(1, 14),
+            'active' => true,
             'created_at' => Date::now(),
             'updated_at' => Date::now(),
 
