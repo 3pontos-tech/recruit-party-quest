@@ -21,7 +21,7 @@ use Illuminate\Support\Carbon;
  * @property string $stage_type
  * @property int $display_order
  * @property string $description
- * @property string $expected_duration_days
+ * @property int $expected_duration_days
  * @property bool $active
  * @property Carbon $created_at
  * @property Carbon $updated_at
