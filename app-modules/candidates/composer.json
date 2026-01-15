@@ -1,0 +1,27 @@
+{
+    "name": "he4rt/candidates",
+    "description": "",
+    "type": "library",
+    "version": "1.0.0",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "He4rt\\Candidates\\": "src/",
+            "He4rt\\Candidates\\Database\\Factories\\": "database/factories/",
+            "He4rt\\Candidates\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "He4rt\\Candidates\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "He4rt\\Candidates\\CandidatesServiceProvider"
+            ]
+        }
+    }
+}

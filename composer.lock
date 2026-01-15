@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f9d5a5564a8125186c0229e118f9bfe",
+    "content-hash": "9f1ecff6e3660a44735299ddd3f8f529",
     "packages": [
         {
             "name": "alizharb/filament-activity-log",
@@ -3024,6 +3024,42 @@
                 }
             ],
             "time": "2025-08-22T14:27:06+00:00"
+        },
+        {
+            "name": "he4rt/candidates",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "app-modules/candidates",
+                "reference": "a0e7174bb96e5c32658eb3f9d277b080e3116f74"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "He4rt\\Candidates\\CandidatesServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "He4rt\\Candidates\\": "src/",
+                    "He4rt\\Candidates\\Database\\Factories\\": "database/factories/",
+                    "He4rt\\Candidates\\Database\\Seeders\\": "database/seeders/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "He4rt\\Candidates\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         },
         {
             "name": "he4rt/panel-admin",
