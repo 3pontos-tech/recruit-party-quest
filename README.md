@@ -1,119 +1,133 @@
 # RPQ — Recruit Party Quest
 
-**RPQ (Recruit Party Quest)** is a multi-tenant recruitment platform designed using **Domain-Driven Design (DDD)** principles.  
-This repository focuses on the **core data model and domain boundaries** that support the full hiring lifecycle.
-
-Detailed documentation for each domain lives in:
+**RPQ** is a multi-tenant recruitment platform built with Laravel using **Domain-Driven Design (DDD)** and a **modular monolith** architecture.
 
 ## Core Concepts
 
-- Domain-Driven Design with explicit bounded contexts
-- Multi-tenancy as a first-class concernDriven
-- Clear aggregate roots and ownership
-- Auditability and extensibility by design
+- **Domain-Driven Design** — Explicit bounded contexts and aggregate roots
+- **Multi-tenancy** — Team-based isolation as a first-class concern
+- **Modular Monolith** — Self-contained modules under `app-modules/`
+- **Auditability** — Full activity logging and history tracking
 
 ---
 
-## Modules Overview
+## Modules
 
-RPQ is split into the following modules, aligned with the MVP features:
+| Module           | Description                                         | Documentation                                   |
+| ---------------- | --------------------------------------------------- | ----------------------------------------------- |
+| **Users**        | User accounts, authentication, profiles             | [📖 README](app-modules/users/README.md)        |
+| **Teams**        | Organizations, departments, team membership         | [📖 README](app-modules/teams/README.md)        |
+| **Permissions**  | RBAC via Spatie, roles and permissions              | [📖 README](app-modules/permissions/README.md)  |
+| **Location**     | Polymorphic addresses for entities                  | [📖 README](app-modules/location/README.md)     |
+| **Recruitment**  | Job requisitions, postings, pipeline stages         | [📖 README](app-modules/recruitment/README.md)  |
+| **Screening**    | Screening questions and knockout logic              | [📖 README](app-modules/screening/README.md)    |
+| **Candidates**   | Candidate profiles, skills, education, work history | [📖 README](app-modules/candidates/README.md)   |
+| **Applications** | Application lifecycle, stage transitions, offers    | [📖 README](app-modules/applications/README.md) |
+| **Feedback**     | Evaluations, ratings, and comments                  | [📖 README](app-modules/feedback/README.md)     |
+| **Panel Admin**  | Filament admin panel for system management          | [📖 README](app-modules/panel-admin/README.md)  |
 
-- **Users** — User management, models, policies, factories.
-- **Permissions** — RBAC (Roles/Permissions via Spatie), policies.
-- **Panel(admin)** — Admin panel with User/Role resources.
-- **Panel(app)** — App with User/Role resources.
-- **Organization** — tenant boundary, departments, locations
-- **Recruitment** — job requisitions and public postings
-- **Pipeline & Screening** — stages, interviewers, knockout logic
-- **Candidates** — profiles, skills, education, work history
-- **Applications** — candidate-to-requisition lifecycle
-- **Evaluation & Feedback** — interviews, ratings, comments
-- **Talent Pool** — reusable candidate sourcing
-- **Communication** — event-driven candidate messaging (conceptual)
+> Modules prefixed with `panel-` are **Filament-based UIs**
 
-Each domain owns its data and exposes relationships explicitly.
+---
 
-> Modules prefixed with `panel-` are for **Filament-based UIs**
+## Architecture Overview
 
-## Philosophy
+```mermaid
+graph TB
+    subgraph Organization["🏢 ORGANIZATION"]
+        TEAM[Teams]
+        DEPT[Departments]
+        LOC[Locations]
+    end
 
-- Business language reflected in schema
-- Strong boundaries, minimal coupling
-- Designed to scale in complexity without rewrites
+    subgraph Identity["👤 IDENTITY"]
+        USER[Users]
+        ROLE[Permissions]
+    end
 
-## Modular Architecture
+    subgraph Recruitment["📋 RECRUITMENT"]
+        REQ[Job Requisitions]
+        POST[Job Postings]
+        PIPE[Pipeline Stages]
+        SCREEN[Screening Questions]
+    end
 
-It follows a **modular monolith** architecture for better organization, scalability, and maintainability.
+    subgraph Candidate["👥 CANDIDATES"]
+        CAND[Candidates]
+        SKILL[Skills]
+    end
 
-Core code lives in `app/` (standard Laravel), while business domains and UIs are separated into self-contained **modules** under `app-modules/`.
+    subgraph Application["📝 APPLICATIONS"]
+        APP[Applications]
+        EVAL[Evaluations]
+        COMM[Comments]
+    end
 
-### Module Structure
-
+    TEAM -->|owns| USER
+    TEAM -->|owns| REQ
+    USER -->|creates| REQ
+    REQ -->|published as| POST
+    REQ -->|has| PIPE
+    REQ -->|has| SCREEN
+    CAND -->|applies to| APP
+    APP -->|links| REQ
+    APP -->|receives| EVAL
+    APP -->|has| COMM
 ```
-app-modules/{module-name}/
-├── src/                      # Core PHP classes
-│   ├── Models/               # Eloquent models
-│   ├── Policies/             # Authorization policies
-│   ├── Resources/            # Filament resources (panels only)
-│   ├── Schemas/              # Form/Table schemas
-│   ├── Tables/               # Table definitions
-│   └── {Module}ServiceProvider.php  # Module bootstrap
-├── tests/
-│   └── Feature/              # Pest feature/unit tests
-├── database/
-│   ├── factories/            # Model factories
-│   └── migrations/           # Module migrations (if any)
-└── config/                   # Module-specific config (e.g., rbac.php)
-```
 
-## Development Conventions
-
-- **Namespaces**: `He4rt\{PascalCasedModule}` (e.g., `He4rt\Admin`)`.`
-- **Service Providers**: One per module for auto-registration.
-- **Policies**: Attached via `#[UsePolicy(...)]` attributes on models.
-- **Testing**: Pest v4 feature tests per module; use factories; assertions like `assertSuccessful()`, `livewire()`.
-- **Filament v4**: Use schemas, `relationship()`, Heroicons; tests with `livewire(Class::class)`.
-- **PHP**: Strict types, constructor promotion, explicit types/returns.
-- **Formatting**: Laravel Pint v1.
-- **Analysis**: PHPStan and Rector.
-
-## Makefile
-
-Development workflow powered by [Makefile](Makefile). Run `make help` for all commands.
-
-### Key Commands
-
-| Command              | Alias | Description                                 |
-|----------------------|-------|---------------------------------------------|
-| `make test`          | `t`   | Run all Pest tests (`--parallel --compact`) |
-| `make test-feature`  |       | Feature tests only                          |
-| `make pint`          |       | Run Pint formatter                          |
-| `make phpstan`       | `p`   | PHPStan analysis                            |
-| `make check`         | `c`   | Dry-run: Rector/Pint/PHPStan                |
-| `make format`        | `f`   | Rector + Pint fixes                         |
-| `make route-list`    | `rl`  | List routes (`--except-vendor`)             |
-| `make migrate-fresh` |       | Reset & seed DB                             |
-| `make env-up`        |       | Docker Compose up                           |
-| `make env-down`      |       | Docker down (clean)                         |
-| `make dev`           |       | `composer run dev` (Vite)                   |
-| `make setup`         |       | Full project setup                          |
+---
 
 ## Quick Start
 
 ```bash
-make setup          # Install deps, etc.
+make setup          # Install dependencies
 make env-up         # Start Docker (DB, etc.)
-make migrate-fresh  # DB setup
-make dev            # Frontend build/watch
+make migrate-fresh  # Database setup with seeds
+make dev            # Start Vite dev server
 ```
 
-Access admin panel (SuperAdmin required): `/admin` (create via tinker or seed).
+Access admin panel at `/admin` (requires SuperAdmin role).
 
-## Additional Info
+---
 
-- **Docker**: `docker-compose.yml` for dev env.
-- **Vite**: Tailwind v4 CSS-first config.
-- **RBAC**: Spatie Permission; sync via `php artisan sync:permissions`.
-- Docs: Use Laravel/Filament v4 guides.
+## Development
 
-For contributions, follow Laravel standards.
+### Module Structure
+
+```
+app-modules/{module}/
+├── src/                    # PHP classes (Models, Policies, Enums)
+├── tests/                  # Pest feature/unit tests
+├── database/               # Factories, migrations, seeders
+└── config/                 # Module-specific config
+```
+
+### Conventions
+
+- **Namespace**: `He4rt\{Module}` (e.g., `He4rt\Users`)
+- **Testing**: Pest v4 with factories
+- **Formatting**: Laravel Pint
+- **Analysis**: PHPStan + Rector
+
+### Key Commands
+
+| Command        | Description               |
+| -------------- | ------------------------- |
+| `make test`    | Run all tests             |
+| `make pint`    | Format code               |
+| `make phpstan` | Static analysis           |
+| `make check`   | Dry-run all checks        |
+| `make format`  | Apply Rector + Pint fixes |
+
+Run `make help` for all available commands.
+
+---
+
+## Tech Stack
+
+- **PHP 8.5** / **Laravel 12**
+- **Filament v4** — Admin panels
+- **Livewire v3** — Reactive components
+- **Tailwind v4** — CSS-first styling
+- **Pest v4** — Testing framework
+- **Spatie Permission** — RBAC
