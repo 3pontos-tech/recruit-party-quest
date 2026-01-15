@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace He4rt\Recruitment\Database\Factories;
 
-use He4rt\Recruitment\Recruitment\Models\JobPosting;
-use He4rt\Recruitment\Recruitment\Models\JobRequisition;
+use He4rt\Recruitment\Requisitions\Models\JobPosting;
+use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Date;
 
