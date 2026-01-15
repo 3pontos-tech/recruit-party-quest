@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Teams;
 
+use He4rt\Teams\Policies\TeamPolicy;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;

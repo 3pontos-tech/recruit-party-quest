@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Teams;
+namespace He4rt\Teams\Policies;
 
 use He4rt\Permissions\Roles;
+use He4rt\Teams\Team;
 use He4rt\Users\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
