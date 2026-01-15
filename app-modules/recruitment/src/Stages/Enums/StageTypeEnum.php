@@ -45,13 +45,6 @@ enum StageTypeEnum: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::Screening => 'Triagem',
-            self::Assessment => 'Avaliação',
-            self::Interview => 'Entrevista',
-            self::Offer => 'Proposta',
-            self::Hired => 'Contratado',
-            self::Rejected => 'Rejeitado',
-        };
+        return __('recruitment::stage_type.'.$this->value.'.label');
     }
 }
