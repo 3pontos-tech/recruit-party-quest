@@ -11,6 +11,7 @@ use Filament\Panel;
 use He4rt\Permissions\Permission;
 use He4rt\Permissions\Role;
 use He4rt\Permissions\Roles;
+use He4rt\Recruitment\Stages\Concerns\InteractsWithInterviewStages;
 use He4rt\Teams\Concerns\InteractsWithTenants;
 use He4rt\Teams\Team;
 use He4rt\Users\Database\Factories\UserFactory;
@@ -49,6 +50,7 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
     use HasFactory;
     use HasRoles;
     use HasUuids;
+    use InteractsWithInterviewStages;
     use InteractsWithMedia;
     use InteractsWithTenants;
     use LogsActivity;
