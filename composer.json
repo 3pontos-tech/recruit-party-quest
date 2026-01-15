@@ -18,6 +18,7 @@
         "he4rt/panel-admin": "^1.0.0",
         "he4rt/permissions": "^1.0.0",
         "he4rt/recruitment": ">=1",
+        "he4rt/screening": ">=1",
         "he4rt/teams": "^1.0.0",
         "he4rt/users": "^1.0.0",
         "internachi/modular": "dev-main#ad95fe9",

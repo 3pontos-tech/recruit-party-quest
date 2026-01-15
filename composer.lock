@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dfb70252d0e2c6f75f14818ae2c3afd8",
+    "content-hash": "455b3ff52612a390da3b1dc9fdad4a2e",
     "packages": [
         {
             "name": "alizharb/filament-activity-log",
@@ -3026,6 +3026,42 @@
             "time": "2025-08-22T14:27:06+00:00"
         },
         {
+            "name": "he4rt/applications",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "app-modules/applications",
+                "reference": "90618878ad08cc417390438ba92ff1ad302693de"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "He4rt\\Applications\\ApplicationsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "He4rt\\Applications\\": "src/",
+                    "He4rt\\Applications\\Database\\Factories\\": "database/factories/",
+                    "He4rt\\Applications\\Database\\Seeders\\": "database/seeders/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "He4rt\\Applications\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "he4rt/candidates",
             "version": "1.0.0",
             "dist": {
@@ -3195,6 +3231,42 @@
             "autoload-dev": {
                 "psr-4": {
                     "He4rt\\Recruitment\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "he4rt/screening",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "app-modules/screening",
+                "reference": "a414b1cbda428e31f42793650f150da53cddc57f"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "He4rt\\Screening\\Providers\\ScreeningServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "He4rt\\Screening\\": "src/",
+                    "He4rt\\Screening\\Database\\Factories\\": "database/factories/",
+                    "He4rt\\Screening\\Database\\Seeders\\": "database/seeders/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "He4rt\\Screening\\Tests\\": "tests/"
                 }
             },
             "license": [
@@ -15711,5 +15783,5 @@
         "php": "^8.4"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
