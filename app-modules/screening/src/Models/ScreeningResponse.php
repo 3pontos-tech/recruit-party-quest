@@ -10,12 +10,13 @@ use He4rt\Screening\Database\Factories\ScreeningResponseFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 /**
  * @property string $id
  * @property string $application_id
  * @property string $question_id
- * @property array $response_value
+ * @property Collection<int,string>|string|null $response_value
  * @property bool $is_knockout_fail
  * @property Carbon $created_at
  * @property-read Application $application

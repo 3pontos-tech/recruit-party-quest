@@ -19,10 +19,10 @@ use Illuminate\Support\Carbon;
  * @property string $requisition_id
  * @property string $question_text
  * @property QuestionTypeEnum $question_type
- * @property array|null $choices
+ * @property array<int, mixed>|null $choices
  * @property bool $is_required
  * @property bool $is_knockout
- * @property array|null $knockout_criteria
+ * @property array<string, mixed>|null $knockout_criteria
  * @property int $display_order
  * @property Carbon $created_at
  * @property Carbon $updated_at
