@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "70c189fb1ee1142ad27b7e06d11272bd",
+    "content-hash": "2f9d5a5564a8125186c0229e118f9bfe",
     "packages": [
         {
             "name": "alizharb/filament-activity-log",
@@ -3087,6 +3087,42 @@
             "autoload-dev": {
                 "psr-4": {
                     "He4rt\\Permissions\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "he4rt/recruitment",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "app-modules/recruitment",
+                "reference": "7a75a7c18b1513d83938466250b30e9f53ae3405"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "He4rt\\Recruitment\\RecruitmentServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "He4rt\\Recruitment\\": "src/",
+                    "He4rt\\Recruitment\\Database\\Factories\\": "database/factories/",
+                    "He4rt\\Recruitment\\Database\\Seeders\\": "database/seeders/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "He4rt\\Recruitment\\Tests\\": "tests/"
                 }
             },
             "license": [

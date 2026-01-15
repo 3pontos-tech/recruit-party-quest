@@ -1,0 +1,27 @@
+{
+    "name": "he4rt/recruitment",
+    "description": "",
+    "type": "library",
+    "version": "1.0.0",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "He4rt\\Recruitment\\": "src/",
+            "He4rt\\Recruitment\\Database\\Factories\\": "database/factories/",
+            "He4rt\\Recruitment\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "He4rt\\Recruitment\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "He4rt\\Recruitment\\RecruitmentServiceProvider"
+            ]
+        }
+    }
+}
