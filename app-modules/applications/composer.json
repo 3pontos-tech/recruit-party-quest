@@ -1,0 +1,27 @@
+{
+    "name": "he4rt/applications",
+    "description": "",
+    "type": "library",
+    "version": "1.0.0",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "He4rt\\Applications\\": "src/",
+            "He4rt\\Applications\\Database\\Factories\\": "database/factories/",
+            "He4rt\\Applications\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "He4rt\\Applications\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "He4rt\\Applications\\ApplicationsServiceProvider"
+            ]
+        }
+    }
+}
