@@ -77,11 +77,17 @@ class Address extends BaseModel
         return $this->morphTo();
     }
 
+    /**
+     * @return Attribute<string, string>
+     */
     protected function label(): Attribute
     {
         return Attribute::make(get: fn ($value) => sprintf('%s, Estado de %s', $this->city, $this->state));
     }
 
+    /**
+     * @return Attribute<array{lat: float, lng: float}, array{lat: float, lng: float}>
+     */
     protected function location(): Attribute
     {
         return Attribute::make(

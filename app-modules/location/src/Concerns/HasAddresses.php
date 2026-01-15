@@ -14,6 +14,6 @@ trait HasAddresses
      */
     public function address(): MorphMany
     {
-        return $this->morphOne(Address::class, 'addressable');
+        return $this->morphMany(Address::class, 'addressable');
     }
 }
