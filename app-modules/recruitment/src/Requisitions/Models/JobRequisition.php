@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Recruitment\Recruitment\Models;
+namespace He4rt\Recruitment\Requisitions\Models;
 
 use App\Models\BaseModel;
 use He4rt\Recruitment\Database\Factories\JobRequisitionFactory;
-use He4rt\Recruitment\Recruitment\Policies\JobRequisitionPolicy;
+use He4rt\Recruitment\Requisitions\Policies\JobRequisitionPolicy;
 use He4rt\Teams\Department;
 use He4rt\Teams\Team;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -69,6 +70,14 @@ class JobRequisition extends BaseModel
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class);
+    }
+
+    /**
+     * @return HasOne<JobPosting, $this>
+     */
+    public function post(): HasOne
+    {
+        return $this->hasOne(JobPosting::class);
     }
 
     /**

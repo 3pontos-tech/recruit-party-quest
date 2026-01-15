@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Recruitment\Recruitment\Policies;
+namespace He4rt\Recruitment\Requisitions\Policies;
 
 use He4rt\Permissions\PermissionsEnum;
-use He4rt\Recruitment\Recruitment\Models\JobPosting;
+use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Users\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
