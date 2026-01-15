@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Teams;
 
 use App\Models\BaseModel;
+use He4rt\Location\Concerns\HasAddresses;
 use He4rt\Teams\Database\Factories\TeamFactory;
 use He4rt\Teams\Policies\TeamPolicy;
 use He4rt\Users\User;
@@ -38,6 +39,7 @@ use Illuminate\Support\Carbon;
 #[UseFactory(TeamFactory::class)]
 class Team extends BaseModel
 {
+    use HasAddresses;
     use SoftDeletes;
 
     /**
