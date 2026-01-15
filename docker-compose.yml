@@ -1,0 +1,76 @@
+services:
+  sycorax-db:
+    build:
+      dockerfile: docker/postgres.Dockerfile
+      context: .
+    image: postgres.local:18
+    container_name: sycorax-db
+    restart: no
+    hostname: dev
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: dev_sycorax
+    ports:
+      - '5432:5432'
+    volumes:
+      - sycorax-db:/var/lib/postgresql
+    networks:
+      - dev-sycorax
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready --quiet --username=postgres --dbname=postgres || exit 1']
+      interval: 10s
+      retries: 5
+      timeout: 10s
+      start_period: 15s
+
+  sycorax-redis:
+    build:
+      dockerfile: docker/redis.Dockerfile
+      context: .
+    image: redis.local:8
+    container_name: sycorax-redis
+    restart: no
+    hostname: dev
+    ports:
+      - '6379:6379'
+    networks:
+      - dev-sycorax
+    healthcheck:
+      test: ['CMD-SHELL', 'redis-cli --raw incr ping || exit 1']
+      interval: 10s
+      retries: 5
+      timeout: 10s
+      start_period: 15s
+
+  sycorax-mailpit:
+    build:
+      dockerfile: docker/mailpit.Dockerfile
+      context: .
+    image: mailpit.local:1
+    container_name: sycorax-mailpit
+    restart: no
+    hostname: dev
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    networks:
+      - dev-sycorax
+    healthcheck:
+      test: ['CMD', '/mailpit', 'readyz']
+      interval: 10s
+      retries: 5
+      timeout: 10s
+      start_period: 10s
+
+volumes:
+  sycorax-db:
+    name: sycorax-db
+
+networks:
+  dev-sycorax:
+    name: dev-sycorax
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: dev-sycorax
+      com.docker.network.bridge.host_binding_ipv4: '127.0.0.1'

@@ -1,0 +1,27 @@
+{
+    "name": "he4rt/permissions",
+    "description": "",
+    "type": "library",
+    "version": "1.0.0",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "He4rt\\Permissions\\": "src/",
+            "He4rt\\Permissions\\Database\\Factories\\": "database/factories/",
+            "He4rt\\Permissions\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "He4rt\\Permissions\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "He4rt\\Permissions\\PermissionsServiceProvider"
+            ]
+        }
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "name": "he4rt/users",
+    "description": "",
+    "type": "library",
+    "version": "1.0.0",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "He4rt\\Users\\": "src/",
+            "He4rt\\Users\\Database\\Factories\\": "database/factories/",
+            "He4rt\\Users\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "He4rt\\Users\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "He4rt\\Users\\UsersServiceProvider"
+            ]
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "name": "@he4rt/sycorax",
+    "license": "MIT",
+    "$schema": "https://json.schemastore.org/package.json",
+    "private": true,
+    "type": "module",
+    "engines": {
+        "node": "^24"
+    },
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite",
+        "format": "npx prettier --write \"**/*.{js,ts,json,yml,md,css,blade.php}\"",
+        "prepare": "npx -y husky",
+        "outdated": "npx npm-check-updates"
+    },
+    "devDependencies": {
+        "@tailwindcss/vite": "4.1.18",
+        "autoprefixer": "10.4.23",
+        "axios": "1.13.2",
+        "concurrently": "9.2.1",
+        "husky": "9.1.7",
+        "laravel-vite-plugin": "2.0.1",
+        "lint-staged": "16.2.7",
+        "npm-check-updates": "19.3.1",
+        "prettier": "3.7.4",
+        "prettier-plugin-blade": "2.1.21",
+        "prettier-plugin-tailwindcss": "0.7.2",
+        "tailwindcss": "4.1.18",
+        "vite": "7.3.1"
+    },
+    "optionalDependencies": {
+        "@rollup/rollup-linux-x64-gnu": "4.55.1",
+        "@tailwindcss/oxide-linux-x64-gnu": "4.1.18",
+        "lightningcss-linux-x64-gnu": "1.30.2"
+    },
+    "lint-staged": {
+        "*.{js,ts,json,yml,md,css,blade.php}": [
+            "prettier --write"
+        ],
+        "*.php": [
+            "vendor/bin/rector process",
+            "vendor/bin/pint"
+        ]
+    }
+}

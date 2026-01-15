@@ -1,0 +1,5 @@
+./vendor/bin/rector process --dry-run --ansi
+./vendor/bin/pint --test --ansi
+./node_modules/.bin/prettier --log-level=silent --check --ignore-unknown "**/*.{js,ts,json,yml,md,css,blade.php}"
+./vendor/bin/phpstan analyse --ansi
+./vendor/bin/pest --parallel --compact

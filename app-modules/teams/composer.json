@@ -1,0 +1,27 @@
+{
+    "name": "he4rt/teams",
+    "description": "",
+    "type": "library",
+    "version": "1.0.0",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "He4rt\\Teams\\": "src/",
+            "He4rt\\Teams\\Database\\Factories\\": "database/factories/",
+            "He4rt\\Teams\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "He4rt\\Teams\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "He4rt\\Teams\\TeamsServiceProvider"
+            ]
+        }
+    }
+}
