@@ -13,9 +13,11 @@ use He4rt\Applications\Policies\ApplicationPolicy;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Models\Stage;
+use He4rt\Screening\Models\ScreeningResponse;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
@@ -40,6 +42,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $offer_response_deadline
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property-read Collection<int, ScreeningResponse> $screeningResponses
  *
  * @extends BaseModel<ApplicationFactory>
  */
@@ -93,6 +96,14 @@ class Application extends BaseModel
     public function stageHistory(): HasMany
     {
         return $this->hasMany(ApplicationStageHistory::class);
+    }
+
+    /**
+     * @return HasMany<ScreeningResponse, $this>
+     */
+    public function screeningResponses(): HasMany
+    {
+        return $this->hasMany(ScreeningResponse::class);
     }
 
     protected function casts(): array
