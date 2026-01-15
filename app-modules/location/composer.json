@@ -1,0 +1,27 @@
+{
+    "name": "he4rt/location",
+    "description": "",
+    "type": "library",
+    "version": "1.0.0",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "He4rt\\Location\\": "src/",
+            "He4rt\\Location\\Database\\Factories\\": "database/factories/",
+            "He4rt\\Location\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "He4rt\\Location\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "He4rt\\Location\\LocationServiceProvider"
+            ]
+        }
+    }
+}
