@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Recruitment\Database\Factories;
 
-use He4rt\Recruitment\Recruitment\JobRequisition;
+use He4rt\Recruitment\Recruitment\Models\JobRequisition;
 use He4rt\Teams\Department;
 use He4rt\Teams\Team;
 use He4rt\Users\User;

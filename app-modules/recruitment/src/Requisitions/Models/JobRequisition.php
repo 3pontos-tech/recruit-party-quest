@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Recruitment\Recruitment;
+namespace He4rt\Recruitment\Recruitment\Models;
 
 use App\Models\BaseModel;
 use He4rt\Recruitment\Database\Factories\JobRequisitionFactory;
+use He4rt\Recruitment\Recruitment\Policies\JobRequisitionPolicy;
 use He4rt\Teams\Department;
 use He4rt\Teams\Team;
 use He4rt\Users\User;
