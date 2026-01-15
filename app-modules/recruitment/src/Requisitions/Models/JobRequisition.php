@@ -6,12 +6,12 @@ namespace He4rt\Recruitment\Requisitions\Models;
 
 use App\Models\BaseModel;
 use He4rt\Recruitment\Database\Factories\JobRequisitionFactory;
-use He4rt\Recruitment\Requisitions\EmploymentTypeEnum;
-use He4rt\Recruitment\Requisitions\ExperienceLevelEnum;
+use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
+use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
+use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
+use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 use He4rt\Recruitment\Requisitions\Policies\JobRequisitionPolicy;
-use He4rt\Recruitment\Requisitions\RequisitionPriorityEnum;
-use He4rt\Recruitment\Requisitions\RequisitionStatusEnum;
-use He4rt\Recruitment\Requisitions\WorkArrangementEnum;
 use He4rt\Teams\Department;
 use He4rt\Teams\Team;
 use He4rt\Users\User;

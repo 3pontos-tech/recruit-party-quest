@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Recruitment\Requisitions;
+namespace He4rt\Recruitment\Requisitions\Enums;
 
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
@@ -44,13 +44,6 @@ enum ExperienceLevelEnum: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::Intern => 'Estágio',
-            self::EntryLevel => 'Júnior',
-            self::MidLevel => 'Pleno',
-            self::Senior => 'Sênior',
-            self::Lead => 'Lead',
-            self::Principal => 'Principal',
-        };
+        return __('requisitions::experience_level.'.$this->value.'.label');
     }
 }

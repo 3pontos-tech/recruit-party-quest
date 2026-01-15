@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Recruitment\Requisitions;
+namespace He4rt\Recruitment\Requisitions\Enums;
 
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
@@ -35,10 +35,6 @@ enum WorkArrangementEnum: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::Remote => 'Remoto',
-            self::Hybrid => 'Híbrido',
-            self::OnSite => 'Presencial',
-        };
+        return __('requisitions::work_arrangement.'.$this->value.'.label');
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Recruitment\Requisitions;
+namespace He4rt\Recruitment\Requisitions\Enums;
 
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
@@ -48,14 +48,6 @@ enum RequisitionStatusEnum: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::Draft => 'Rascunho',
-            self::PendingApproval => 'Pendente de aprovação',
-            self::Approved => 'Aprovado',
-            self::Published => 'Publicado',
-            self::OnHold => 'Em espera',
-            self::Closed => 'Fechado',
-            self::Cancelled => 'Cancelado',
-        };
+        return __('requisitions::requisitions_status.'.$this->value.'.label');
     }
 }

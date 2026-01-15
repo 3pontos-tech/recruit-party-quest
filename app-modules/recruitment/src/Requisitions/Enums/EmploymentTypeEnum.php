@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Recruitment\Requisitions;
+namespace He4rt\Recruitment\Requisitions\Enums;
 
+use Filament\Support\Colors\Color;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
@@ -17,14 +18,14 @@ enum EmploymentTypeEnum: string implements HasColor, HasIcon, HasLabel
     case Temporary = 'temporary';
     case PartTime = 'part_time';
 
-    public function getColor(): string
+    public function getColor(): array
     {
         return match ($this) {
-            self::FullTimeEmployee => 'primary',
-            self::Contractor => 'secondary',
-            self::Intern => 'success',
-            self::Temporary => 'warning',
-            self::PartTime => 'info',
+            self::FullTimeEmployee => Color::Emerald,
+            self::Contractor => Color::Blue,
+            self::Intern => Color::Lime,
+            self::Temporary => Color::Amber,
+            self::PartTime => Color::Sky,
         };
     }
 
@@ -41,12 +42,6 @@ enum EmploymentTypeEnum: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::FullTimeEmployee => 'Tempo integral',
-            self::Contractor => 'Contratado',
-            self::Intern => 'Estágio',
-            self::Temporary => 'Temporário',
-            self::PartTime => 'Meio período',
-        };
+        return __('requisitions::employment_type.'.$this->value.'.label');
     }
 }
