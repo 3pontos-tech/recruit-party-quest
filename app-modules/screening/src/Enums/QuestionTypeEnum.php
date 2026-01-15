@@ -17,13 +17,6 @@ enum QuestionTypeEnum: string implements HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::YesNo => 'Yes/No',
-            self::Text => 'Text',
-            self::Number => 'Number',
-            self::SingleChoice => 'Single Choice',
-            self::MultipleChoice => 'Multiple Choice',
-            self::FileUpload => 'File Upload',
-        };
+        return __('screening::enums.question_type.'.$this->value.'.label');
     }
 }

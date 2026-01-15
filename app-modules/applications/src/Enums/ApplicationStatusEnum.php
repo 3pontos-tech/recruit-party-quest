@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace He4rt\Applications\Enums;
 
-enum ApplicationStatusEnum: string
+use Filament\Support\Contracts\HasLabel;
+
+enum ApplicationStatusEnum: string implements HasLabel
 {
     case New = 'new';
     case InReview = 'in_review';
@@ -15,4 +17,9 @@ enum ApplicationStatusEnum: string
     case Hired = 'hired';
     case Rejected = 'rejected';
     case Withdrawn = 'withdrawn';
+
+    public function getLabel(): string
+    {
+        return __('applications::enums.application_status.'.$this->value.'.label');
+    }
 }

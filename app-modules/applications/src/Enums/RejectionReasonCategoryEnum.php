@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace He4rt\Applications\Enums;
 
-enum RejectionReasonCategoryEnum: string
+use Filament\Support\Contracts\HasLabel;
+
+enum RejectionReasonCategoryEnum: string implements HasLabel
 {
     case Qualifications = 'qualifications';
     case Experience = 'experience';
@@ -14,4 +16,9 @@ enum RejectionReasonCategoryEnum: string
     case Availability = 'availability';
     case PositionFilled = 'position_filled';
     case Other = 'other';
+
+    public function getLabel(): string
+    {
+        return __('applications::enums.rejection_reason_category.'.$this->value.'.label');
+    }
 }

@@ -29,12 +29,6 @@ enum EvaluationRatingEnum: string implements HasColor, HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::StrongNo => 'Strong No',
-            self::No => 'No',
-            self::Maybe => 'Maybe',
-            self::Yes => 'Yes',
-            self::StrongYes => 'Strong Yes',
-        };
+        return __('feedback::enums.evaluation_rating.'.$this->value.'.label');
     }
 }
