@@ -35,6 +35,6 @@ enum WorkArrangementEnum: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): string
     {
-        return __('requisitions::work_arrangement.'.$this->value.'.label');
+        return __('recruitment::requisitions.work_arrangement.'.$this->value.'.label');
     }
 }

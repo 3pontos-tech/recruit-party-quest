@@ -48,6 +48,6 @@ enum RequisitionStatusEnum: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): string
     {
-        return __('requisitions::requisitions_status.'.$this->value.'.label');
+        return __('recruitment::requisitions.requisition_status.'.$this->value.'.label');
     }
 }

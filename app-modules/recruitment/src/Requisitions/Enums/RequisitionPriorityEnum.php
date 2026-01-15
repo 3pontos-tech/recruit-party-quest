@@ -38,6 +38,6 @@ enum RequisitionPriorityEnum: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): string
     {
-        return __('requisitions::requisition_priority.'.$this->value.'.label');
+        return __('recruitment::requisitions.requisition_priority.'.$this->value.'.label');
     }
 }

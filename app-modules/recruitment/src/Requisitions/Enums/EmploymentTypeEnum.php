@@ -42,6 +42,6 @@ enum EmploymentTypeEnum: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): string
     {
-        return __('requisitions::employment_type.'.$this->value.'.label');
+        return __('recruitment::requisitions.employment_type.'.$this->value.'.label');
     }
 }

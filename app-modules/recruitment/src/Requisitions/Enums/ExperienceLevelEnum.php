@@ -44,6 +44,6 @@ enum ExperienceLevelEnum: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): string
     {
-        return __('requisitions::experience_level.'.$this->value.'.label');
+        return __('recruitment::requisitions.experience_level.'.$this->value.'.label');
     }
 }
