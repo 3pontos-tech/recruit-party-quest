@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Location;
+namespace He4rt\Location\Concerns;
 
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 

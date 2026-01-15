@@ -7,7 +7,7 @@ namespace He4rt\Candidates\Models;
 use App\Models\BaseModel;
 use He4rt\Candidates\Database\Factories\CandidateFactory;
 use He4rt\Candidates\Policies\CandidatePolicy;
-use He4rt\Location\HasAddress;
+use He4rt\Location\Concerns\HasAddress;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
