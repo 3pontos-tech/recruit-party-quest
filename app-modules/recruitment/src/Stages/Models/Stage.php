@@ -7,7 +7,9 @@ namespace He4rt\Recruitment\Stages\Models;
 use App\Models\BaseModel;
 use He4rt\Recruitment\Database\Factories\StageFactory;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -38,6 +40,20 @@ class Stage extends BaseModel
     public function requisition(): BelongsTo
     {
         return $this->belongsTo(JobRequisition::class, 'job_requisition_id');
+    }
+
+    /**
+     * @return BelongsToMany<User, $this, InterviewerPivot>
+     */
+    public function interviewers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'recruitment_stage_interviewer',
+            'pipeline_stage_id',
+            'interviewer_user_id',
+        )->withTimestamps()
+            ->using(InterviewerPivot::class);
     }
 
     protected function casts(): array
