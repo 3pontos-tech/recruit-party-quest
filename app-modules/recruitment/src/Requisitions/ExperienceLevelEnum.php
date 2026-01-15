@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace He4rt\Recruitment\Requisitions;
 
 use Filament\Support\Contracts\HasColor;
@@ -7,7 +9,7 @@ use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 use Filament\Support\Icons\Heroicon;
 
-enum ExperienceLevelEnum: string implements HasLabel, HasIcon, HasColor
+enum ExperienceLevelEnum: string implements HasColor, HasIcon, HasLabel
 {
     case Intern = 'intern';
     case EntryLevel = 'entry_level';

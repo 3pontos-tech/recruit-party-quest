@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace He4rt\Recruitment\Requisitions;
 
 use Filament\Support\Contracts\HasColor;
@@ -7,7 +9,7 @@ use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 use Filament\Support\Icons\Heroicon;
 
-enum WorkArrangementEnum: string implements HasLabel, HasIcon, HasColor
+enum WorkArrangementEnum: string implements HasColor, HasIcon, HasLabel
 {
     case Remote = 'remote';
     case Hybrid = 'hybrid';
