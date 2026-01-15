@@ -11,6 +11,8 @@ use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Policies\ApplicationPolicy;
 use He4rt\Candidates\Models\Candidate;
+use He4rt\Feedback\Models\ApplicationComment;
+use He4rt\Feedback\Models\Evaluation;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Screening\Models\ScreeningResponse;
@@ -43,6 +45,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property-read Collection<int, ScreeningResponse> $screeningResponses
+ * @property-read Collection<int, Evaluation> $evaluations
+ * @property-read Collection<int, ApplicationComment> $comments
  *
  * @extends BaseModel<ApplicationFactory>
  */
@@ -104,6 +108,22 @@ class Application extends BaseModel
     public function screeningResponses(): HasMany
     {
         return $this->hasMany(ScreeningResponse::class);
+    }
+
+    /**
+     * @return HasMany<Evaluation, $this>
+     */
+    public function evaluations(): HasMany
+    {
+        return $this->hasMany(Evaluation::class);
+    }
+
+    /**
+     * @return HasMany<ApplicationComment, $this>
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(ApplicationComment::class);
     }
 
     protected function casts(): array

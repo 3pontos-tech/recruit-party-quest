@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "455b3ff52612a390da3b1dc9fdad4a2e",
+    "content-hash": "e793a7c0e53f949c051e6c3c6ba272f4",
     "packages": [
         {
             "name": "alizharb/filament-activity-log",
@@ -3098,6 +3098,42 @@
             }
         },
         {
+            "name": "he4rt/feedback",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "app-modules/feedback",
+                "reference": "5a74f253751a0f4d034902e8450fe742be53cb6b"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "He4rt\\Feedback\\Providers\\FeedbackServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "He4rt\\Feedback\\": "src/",
+                    "He4rt\\Feedback\\Database\\Factories\\": "database/factories/",
+                    "He4rt\\Feedback\\Database\\Seeders\\": "database/seeders/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "He4rt\\Feedback\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "he4rt/location",
             "version": "1.0.0",
             "dist": {
@@ -3247,13 +3283,13 @@
             "dist": {
                 "type": "path",
                 "url": "app-modules/screening",
-                "reference": "a414b1cbda428e31f42793650f150da53cddc57f"
+                "reference": "613560c58092ecc4cc3703aa83cba6b05fb15df3"
             },
             "type": "library",
             "extra": {
                 "laravel": {
                     "providers": [
-                        "He4rt\\Screening\\Providers\\ScreeningServiceProvider"
+                        "He4rt\\Screening\\ScreeningServiceProvider"
                     ]
                 }
             },
