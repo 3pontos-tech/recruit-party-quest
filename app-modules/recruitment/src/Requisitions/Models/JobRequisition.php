@@ -12,12 +12,15 @@ use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 use He4rt\Recruitment\Requisitions\Policies\JobRequisitionPolicy;
+use He4rt\Screening\Models\ScreeningQuestion;
 use He4rt\Teams\Department;
 use He4rt\Teams\Team;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -50,6 +53,7 @@ use Illuminate\Support\Carbon;
  * @property-read Department $department
  * @property-read User $hiringManager
  * @property-read User $createdBy
+ * @property-read Collection<int, ScreeningQuestion> $screeningQuestions
  *
  * @extends BaseModel<JobRequisitionFactory>
  */
@@ -99,6 +103,14 @@ class JobRequisition extends BaseModel
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by_id');
+    }
+
+    /**
+     * @return HasMany<ScreeningQuestion, $this>
+     */
+    public function screeningQuestions(): HasMany
+    {
+        return $this->hasMany(ScreeningQuestion::class, 'requisition_id');
     }
 
     protected function casts(): array
