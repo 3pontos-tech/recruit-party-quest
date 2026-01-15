@@ -6,7 +6,12 @@ namespace He4rt\Recruitment\Requisitions\Models;
 
 use App\Models\BaseModel;
 use He4rt\Recruitment\Database\Factories\JobRequisitionFactory;
+use He4rt\Recruitment\Requisitions\EmploymentTypeEnum;
+use He4rt\Recruitment\Requisitions\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Policies\JobRequisitionPolicy;
+use He4rt\Recruitment\Requisitions\RequisitionPriorityEnum;
+use He4rt\Recruitment\Requisitions\RequisitionStatusEnum;
+use He4rt\Recruitment\Requisitions\WorkArrangementEnum;
 use He4rt\Teams\Department;
 use He4rt\Teams\Team;
 use He4rt\Users\User;
@@ -105,6 +110,11 @@ class JobRequisition extends BaseModel
             'closed_at' => 'timestamp',
             'is_internal_only' => 'boolean',
             'is_confidential' => 'boolean',
+            'status' => RequisitionStatusEnum::class,
+            'priority' => RequisitionPriorityEnum::class,
+            'work_arrangement' => WorkArrangementEnum::class,
+            'employment_type' => EmploymentTypeEnum::class,
+            'experience_level' => ExperienceLevelEnum::class,
         ];
     }
 }
