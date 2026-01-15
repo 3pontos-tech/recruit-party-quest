@@ -39,8 +39,7 @@ class Skill extends BaseModel
     {
         return $this->belongsToMany(Candidate::class, 'candidate_known_skills', 'skill_id', 'candidate_id')
             ->withPivot(['years_of_experience', 'proficiency_level'])
-            ->using(CandidateSkill::class)
-            ->withTimestamps();
+            ->using(CandidateSkill::class);
     }
 
     protected function casts(): array

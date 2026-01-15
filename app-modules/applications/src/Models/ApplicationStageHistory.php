@@ -29,6 +29,8 @@ use Illuminate\Support\Carbon;
 #[UseFactory(ApplicationStageHistoryFactory::class)]
 class ApplicationStageHistory extends BaseModel
 {
+    public const UPDATED_AT = null;
+
     protected $table = 'application_stage_history';
 
     /**

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Location\Database\Factories;
 
-use He4rt\Location\Models\Address;
+use He4rt\Location\Address;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Date;

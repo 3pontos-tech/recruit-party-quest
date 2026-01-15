@@ -24,6 +24,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[UseFactory(CandidateSkillFactory::class)]
 class CandidateSkill extends BasePivot
 {
+    public $timestamps = false;
+
     protected $table = 'candidate_known_skills';
 
     /**
