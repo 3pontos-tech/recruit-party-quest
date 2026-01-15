@@ -3103,7 +3103,7 @@
             "dist": {
                 "type": "path",
                 "url": "app-modules/recruitment",
-                "reference": "7a75a7c18b1513d83938466250b30e9f53ae3405"
+                "reference": "9914394c403a7e829c71e99bf2b359c636faa210"
             },
             "type": "library",
             "extra": {
@@ -3859,16 +3859,16 @@
         },
         {
             "name": "laravel/prompts",
-            "version": "v0.3.9",
+            "version": "v0.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/prompts.git",
-                "reference": "5c41bf0555b7cfefaad4e66d3046675829581ac4"
+                "reference": "360ba095ef9f51017473505191fbd4ab73e1cab3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/prompts/zipball/5c41bf0555b7cfefaad4e66d3046675829581ac4",
-                "reference": "5c41bf0555b7cfefaad4e66d3046675829581ac4",
+                "url": "https://api.github.com/repos/laravel/prompts/zipball/360ba095ef9f51017473505191fbd4ab73e1cab3",
+                "reference": "360ba095ef9f51017473505191fbd4ab73e1cab3",
                 "shasum": ""
             },
             "require": {
@@ -3912,9 +3912,9 @@
             "description": "Add beautiful and user-friendly forms to your command-line applications.",
             "support": {
                 "issues": "https://github.com/laravel/prompts/issues",
-                "source": "https://github.com/laravel/prompts/tree/v0.3.9"
+                "source": "https://github.com/laravel/prompts/tree/v0.3.10"
             },
-            "time": "2026-01-07T21:00:29+00:00"
+            "time": "2026-01-13T20:29:29+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -15639,5 +15639,5 @@
         "php": "^8.4"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
