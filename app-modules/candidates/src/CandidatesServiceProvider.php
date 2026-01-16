@@ -17,7 +17,7 @@ class CandidatesServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->loadTranslationsFrom(__DIR__.'/../lang', 'candidate');
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'candidates');
 
         Relation::morphMap([
             'candidates' => Candidate::class,
