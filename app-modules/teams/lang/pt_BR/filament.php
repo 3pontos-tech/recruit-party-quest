@@ -30,4 +30,23 @@ return [
             'label' => 'membro',
         ],
     ],
+    'department' => [
+        'label' => 'Departamento',
+        'plural_label' => 'Departamentos',
+        'navigation_label' => 'Departamentos',
+        'fields' => [
+            'id' => 'ID',
+            'team' => 'Time',
+            'name' => 'Nome',
+            'description' => 'Descrição',
+            'head_user' => 'Responsável',
+            'requisitions_count' => 'Requisições',
+            'created_at' => 'Criado em',
+            'updated_at' => 'Atualizado em',
+            'deleted_at' => 'Excluído em',
+        ],
+        'filters' => [
+            'team' => 'Time',
+        ],
+    ],
 ];

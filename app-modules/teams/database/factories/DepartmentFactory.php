@@ -27,4 +27,13 @@ class DepartmentFactory extends Factory
             'head_user_id' => User::factory(),
         ];
     }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Department $department): void {
+            if ($department->head_user_id && $department->team_id) {
+                $department->team->members()->syncWithoutDetaching([$department->head_user_id]);
+            }
+        });
+    }
 }

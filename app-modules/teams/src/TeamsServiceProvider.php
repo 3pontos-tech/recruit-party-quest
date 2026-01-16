@@ -20,6 +20,7 @@ class TeamsServiceProvider extends ServiceProvider
 
         Relation::morphMap([
             'teams' => Team::class,
+            'departments' => Department::class,
         ]);
 
     }
