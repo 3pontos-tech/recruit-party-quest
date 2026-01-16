@@ -18,7 +18,7 @@ class DepartmentFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'name' => fake()->randomElement(['IT', 'HR', 'Finance']),
             'description' => fake()->text(),
             'created_at' => Date::now(),
             'updated_at' => Date::now(),
