@@ -28,14 +28,13 @@ use Jeffgreco13\FilamentBreezy\BreezyCore;
 
 final class AdminPanelProvider extends PanelProvider
 {
-    private FilamentPanel $panelId = FilamentPanel::Admin;
+    private FilamentPanel $panelEnum = FilamentPanel::Admin;
 
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->default()
-            ->path($this->panelId->value)
-            ->id($this->panelId->value)
+            ->path($this->panelEnum->getPath())
+            ->id($this->panelEnum->value)
             ->login(LoginPage::class)
             ->topbar()
             ->sidebarFullyCollapsibleOnDesktop()
@@ -47,7 +46,7 @@ final class AdminPanelProvider extends PanelProvider
                 'info' => Color::Indigo,
                 'gray' => Color::Gray,
             ])
-            ->viteTheme(sprintf('resources/css/filament/%s/theme.css', $this->panelId->value))
+            ->viteTheme(sprintf('resources/css/filament/%s/theme.css', $this->panelEnum->value))
             ->defaultThemeMode(ThemeMode::Dark)
             ->discoverClusters(in: base_path('app-modules/panel-admin/src/Filament/Clusters'), for: 'He4rt\\Admin\\Filament\\Clusters')
             ->discoverPages(in: base_path('app-modules/panel-admin/src/Filament/Pages'), for: 'He4rt\\Admin\\Filament\\Pages')
