@@ -85,6 +85,6 @@ class CandidateResource extends Resource
 
     public static function getGlobalSearchResultTitle(Model $record): Htmlable|string
     {
-        return $record->user?->name ?? $record->headline ?? (string) $record->id;
+        return $record->user->name ?? $record->headline ?? (string) $record->id;
     }
 }

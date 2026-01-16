@@ -35,7 +35,7 @@ class ApplicationForm
                                 name: 'requisition',
                                 titleAttribute: 'id'
                             )
-                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->post?->title ?? $record->id)
+                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->post->title ?? $record->id)
                             ->required()
                             ->preload()
                             ->searchable()
@@ -47,7 +47,7 @@ class ApplicationForm
                                 titleAttribute: 'id',
                                 modifyQueryUsing: fn ($query) => $query->with('user:id,name')->select(['id', 'user_id']),
                             )
-                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->user?->name ?? $record->id)
+                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->user->name ?? $record->id)
                             ->required()
                             ->preload()
                             ->searchable()
