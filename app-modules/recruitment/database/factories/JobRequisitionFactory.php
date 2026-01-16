@@ -48,4 +48,13 @@ class JobRequisitionFactory extends Factory
             'created_by_id' => User::factory(),
         ];
     }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (JobRequisition $requisition): void {
+            if ($requisition->hiring_manager_id && $requisition->team_id) {
+                $requisition->team->members()->syncWithoutDetaching([$requisition->hiring_manager_id]);
+            }
+        });
+    }
 }

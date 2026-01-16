@@ -12,7 +12,9 @@ use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 use He4rt\Recruitment\Requisitions\Policies\JobRequisitionPolicy;
+use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Screening\Models\ScreeningQuestion;
+use He4rt\Teams\Concerns\BelongsToTeam;
 use He4rt\Teams\Department;
 use He4rt\Teams\Team;
 use He4rt\Users\User;
@@ -61,17 +63,10 @@ use Illuminate\Support\Carbon;
 #[UsePolicy(JobRequisitionPolicy::class)]
 class JobRequisition extends BaseModel
 {
+    use BelongsToTeam;
     use SoftDeletes;
 
     protected $table = 'recruitment_job_requisitions';
-
-    /**
-     * @return BelongsTo<Team, $this>
-     */
-    public function team(): BelongsTo
-    {
-        return $this->belongsTo(Team::class);
-    }
 
     /**
      * @return BelongsTo<Department, $this>
@@ -111,6 +106,14 @@ class JobRequisition extends BaseModel
     public function screeningQuestions(): HasMany
     {
         return $this->hasMany(ScreeningQuestion::class, 'requisition_id');
+    }
+
+    /**
+     * @return HasMany<Stage, $this>
+     */
+    public function stages(): HasMany
+    {
+        return $this->hasMany(Stage::class, 'job_requisition_id');
     }
 
     protected function casts(): array
