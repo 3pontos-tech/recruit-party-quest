@@ -20,6 +20,7 @@ final class DatabaseSeeder extends Seeder
 
         if (app()->isLocal()) {
             $this->spawnAdminUser();
+            $this->call(DevelopmentSeeder::class);
         }
 
         $this->command->newLine();
