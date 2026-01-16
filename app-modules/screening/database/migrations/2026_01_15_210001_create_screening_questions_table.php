@@ -12,6 +12,7 @@ return new class extends Migration
     {
         Schema::create('screening_questions', function (Blueprint $table): void {
             $table->uuid('id')->primary();
+            $table->foreignUuid('team_id')->constrained('teams')->cascadeOnDelete();
             $table->foreignUuid('requisition_id')->constrained('recruitment_job_requisitions')->cascadeOnDelete();
 
             $table->text('question_text');
@@ -29,7 +30,7 @@ return new class extends Migration
 
             $table->timestamps();
 
-            // $table->unique(['requisition_id', 'display_order']);
+            $table->unique(['requisition_id', 'display_order']);
         });
     }
 

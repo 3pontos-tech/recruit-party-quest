@@ -16,6 +16,7 @@ use He4rt\Feedback\Models\Evaluation;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Screening\Models\ScreeningResponse;
+use He4rt\Teams\Concerns\BelongsToTeam;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
@@ -54,6 +55,8 @@ use Illuminate\Support\Carbon;
 #[UseFactory(ApplicationFactory::class)]
 class Application extends BaseModel
 {
+    use BelongsToTeam;
+
     /**
      * @return BelongsTo<JobRequisition, $this>
      */

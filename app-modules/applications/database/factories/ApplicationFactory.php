@@ -11,6 +11,7 @@ use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Models\Stage;
+use He4rt\Teams\Team;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,6 +23,7 @@ class ApplicationFactory extends Factory
     public function definition(): array
     {
         return [
+            'team_id' => Team::factory(),
             'requisition_id' => JobRequisition::factory(),
             'candidate_id' => Candidate::factory(),
             'current_stage_id' => null,

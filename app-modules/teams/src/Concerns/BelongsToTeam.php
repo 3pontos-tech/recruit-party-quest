@@ -17,29 +17,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 trait BelongsToTeam
 {
     /**
-     * Boot the trait to add global scope for tenant filtering.
-     */
-    public static function bootBelongsToTeam(): void
-    {
-        static::creating(function ($model): void {
-            if (blank($model->team_id) && auth()->check()) {
-                $currentTeam = filament()->getTenant();
-                if ($currentTeam instanceof Team) {
-                    $model->team_id = $currentTeam->id;
-                }
-            }
-        });
-    }
-
-    /**
-     * Initialize the trait.
-     */
-    public function initializeBelongsToTeam(): void
-    {
-        $this->fillable[] = 'team_id';
-    }
-
-    /**
      * @return BelongsTo<Team, $this>
      */
     public function team(): BelongsTo

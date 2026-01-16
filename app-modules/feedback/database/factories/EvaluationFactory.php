@@ -8,6 +8,7 @@ use He4rt\Applications\Models\Application;
 use He4rt\Feedback\Enums\EvaluationRatingEnum;
 use He4rt\Feedback\Models\Evaluation;
 use He4rt\Recruitment\Stages\Models\Stage;
+use He4rt\Teams\Team;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,6 +21,7 @@ class EvaluationFactory extends Factory
     {
         return [
             'application_id' => Application::factory(),
+            'team_id' => Team::factory(),
             'stage_id' => Stage::factory(),
             'evaluator_id' => User::factory(),
             'overall_rating' => fake()->randomElement(EvaluationRatingEnum::cases()),

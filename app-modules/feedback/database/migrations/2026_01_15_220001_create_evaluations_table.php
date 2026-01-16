@@ -12,6 +12,7 @@ return new class extends Migration
     {
         Schema::create('evaluations', function (Blueprint $table): void {
             $table->uuid('id')->primary();
+            $table->foreignUuid('team_id')->constrained('teams')->cascadeOnDelete();
             $table->foreignUuid('application_id')->constrained('applications')->cascadeOnDelete();
             $table->foreignUuid('stage_id')->constrained('recruitment_pipeline_stages')->cascadeOnDelete();
             $table->foreignUuid('evaluator_id')->constrained('users');

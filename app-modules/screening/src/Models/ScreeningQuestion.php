@@ -8,6 +8,7 @@ use App\Models\BaseModel;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Screening\Database\Factories\ScreeningQuestionFactory;
 use He4rt\Screening\Enums\QuestionTypeEnum;
+use He4rt\Teams\Concerns\BelongsToTeam;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,6 +35,8 @@ use Illuminate\Support\Carbon;
 #[UseFactory(ScreeningQuestionFactory::class)]
 class ScreeningQuestion extends BaseModel
 {
+    use BelongsToTeam;
+
     protected $table = 'screening_questions';
 
     /**

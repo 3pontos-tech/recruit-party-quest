@@ -12,6 +12,7 @@ return new class extends Migration
     {
         Schema::create('screening_responses', function (Blueprint $table): void {
             $table->uuid('id')->primary();
+            $table->foreignUuid('team_id')->constrained('teams')->cascadeOnDelete();
             $table->foreignUuid('application_id')->constrained('applications')->cascadeOnDelete();
             $table->foreignUuid('question_id')->constrained('screening_questions')->cascadeOnDelete();
 

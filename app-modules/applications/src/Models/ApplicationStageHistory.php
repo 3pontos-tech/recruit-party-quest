@@ -8,6 +8,7 @@ use App\Models\BaseModel;
 use He4rt\Applications\Database\Factories\ApplicationStageHistoryFactory;
 use He4rt\Applications\Policies\ApplicationStageHistoryPolicy;
 use He4rt\Recruitment\Stages\Models\Stage;
+use He4rt\Teams\Concerns\BelongsToTeam;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
@@ -29,7 +30,7 @@ use Illuminate\Support\Carbon;
 #[UseFactory(ApplicationStageHistoryFactory::class)]
 class ApplicationStageHistory extends BaseModel
 {
-    public const UPDATED_AT = null;
+    use BelongsToTeam;
 
     protected $table = 'application_stage_history';
 

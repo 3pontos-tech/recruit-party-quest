@@ -7,6 +7,7 @@ namespace He4rt\Screening\Models;
 use App\Models\BaseModel;
 use He4rt\Applications\Models\Application;
 use He4rt\Screening\Database\Factories\ScreeningResponseFactory;
+use He4rt\Teams\Concerns\BelongsToTeam;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -27,6 +28,8 @@ use Illuminate\Support\Collection;
 #[UseFactory(ScreeningResponseFactory::class)]
 class ScreeningResponse extends BaseModel
 {
+    use BelongsToTeam;
+
     public $timestamps = false;
 
     protected $table = 'screening_responses';

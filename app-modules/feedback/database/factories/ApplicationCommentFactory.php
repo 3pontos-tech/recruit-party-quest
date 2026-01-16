@@ -6,6 +6,7 @@ namespace He4rt\Feedback\Database\Factories;
 
 use He4rt\Applications\Models\Application;
 use He4rt\Feedback\Models\ApplicationComment;
+use He4rt\Teams\Team;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -17,6 +18,7 @@ class ApplicationCommentFactory extends Factory
     public function definition(): array
     {
         return [
+            'team_id' => Team::factory(),
             'application_id' => Application::factory(),
             'author_id' => User::factory(),
             'content' => fake()->paragraph(),

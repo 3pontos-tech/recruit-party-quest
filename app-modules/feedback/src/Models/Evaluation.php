@@ -9,6 +9,7 @@ use He4rt\Applications\Models\Application;
 use He4rt\Feedback\Database\Factories\EvaluationFactory;
 use He4rt\Feedback\Enums\EvaluationRatingEnum;
 use He4rt\Recruitment\Stages\Models\Stage;
+use He4rt\Teams\Concerns\BelongsToTeam;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -37,6 +38,8 @@ use Illuminate\Support\Carbon;
 #[UseFactory(EvaluationFactory::class)]
 class Evaluation extends BaseModel
 {
+    use BelongsToTeam;
+
     protected $table = 'evaluations';
 
     /**

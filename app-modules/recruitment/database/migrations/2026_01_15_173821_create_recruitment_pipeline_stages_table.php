@@ -12,6 +12,7 @@ return new class extends Migration
     {
         Schema::create('recruitment_pipeline_stages', function (Blueprint $table): void {
             $table->uuid('id')->primary();
+            $table->foreignUuid('team_id')->constrained('teams');
             $table->foreignUuid('job_requisition_id')->constrained('recruitment_job_requisitions');
             $table->string('name');
             $table->string('stage_type');

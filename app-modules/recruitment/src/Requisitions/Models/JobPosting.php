@@ -7,6 +7,7 @@ namespace He4rt\Recruitment\Requisitions\Models;
 use App\Models\BaseModel;
 use He4rt\Recruitment\Database\Factories\JobPostingFactory;
 use He4rt\Recruitment\Requisitions\Policies\JobPostingPolicy;
+use He4rt\Teams\Concerns\BelongsToTeam;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -41,6 +42,7 @@ use Illuminate\Support\Collection;
 #[UsePolicy(JobPostingPolicy::class)]
 class JobPosting extends BaseModel
 {
+    use BelongsToTeam;
     use SoftDeletes;
 
     protected $table = 'recruitment_job_postings';

@@ -7,6 +7,7 @@ namespace He4rt\Screening\Database\Factories;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Screening\Enums\QuestionTypeEnum;
 use He4rt\Screening\Models\ScreeningQuestion;
+use He4rt\Teams\Team;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /** @extends Factory<ScreeningQuestion> */
@@ -17,6 +18,7 @@ class ScreeningQuestionFactory extends Factory
     public function definition(): array
     {
         return [
+            'team_id' => Team::factory(),
             'requisition_id' => JobRequisition::factory(),
             'question_text' => fake()->sentence().'?',
             'question_type' => fake()->randomElement(QuestionTypeEnum::cases()),

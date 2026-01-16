@@ -7,6 +7,7 @@ namespace He4rt\Screening\Database\Factories;
 use He4rt\Applications\Models\Application;
 use He4rt\Screening\Models\ScreeningQuestion;
 use He4rt\Screening\Models\ScreeningResponse;
+use He4rt\Teams\Team;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /** @extends Factory<ScreeningResponse> */
@@ -17,6 +18,7 @@ class ScreeningResponseFactory extends Factory
     public function definition(): array
     {
         return [
+            'team_id' => Team::factory(),
             'application_id' => Application::factory(),
             'question_id' => ScreeningQuestion::factory(),
             'response_value' => ['value' => fake()->word()],

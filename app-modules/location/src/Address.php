@@ -6,6 +6,7 @@ namespace He4rt\Location;
 
 use App\Models\BaseModel;
 use He4rt\Location\Database\Factories\AddressFactory;
+use He4rt\Teams\Concerns\BelongsToTeam;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -38,6 +39,8 @@ use Illuminate\Support\Carbon;
 #[UsePolicy(AddressPolicy::class)]
 class Address extends BaseModel
 {
+    use BelongsToTeam;
+
     protected $table = 'addresses';
 
     protected $appends = [

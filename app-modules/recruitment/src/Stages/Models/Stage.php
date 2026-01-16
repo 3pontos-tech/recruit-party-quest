@@ -8,6 +8,7 @@ use App\Models\BaseModel;
 use He4rt\Recruitment\Database\Factories\StageFactory;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
+use He4rt\Teams\Concerns\BelongsToTeam;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,6 +34,7 @@ use Illuminate\Support\Carbon;
 #[UseFactory(StageFactory::class)]
 class Stage extends BaseModel
 {
+    use BelongsToTeam;
     use SoftDeletes;
 
     protected $table = 'recruitment_pipeline_stages';

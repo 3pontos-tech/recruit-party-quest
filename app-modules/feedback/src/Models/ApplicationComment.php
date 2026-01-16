@@ -7,6 +7,7 @@ namespace He4rt\Feedback\Models;
 use App\Models\BaseModel;
 use He4rt\Applications\Models\Application;
 use He4rt\Feedback\Database\Factories\ApplicationCommentFactory;
+use He4rt\Teams\Concerns\BelongsToTeam;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,6 +29,8 @@ use Illuminate\Support\Carbon;
 #[UseFactory(ApplicationCommentFactory::class)]
 class ApplicationComment extends BaseModel
 {
+    use BelongsToTeam;
+
     protected $table = 'application_comments';
 
     /**

@@ -7,6 +7,7 @@ namespace He4rt\Recruitment\Database\Factories;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 use He4rt\Recruitment\Stages\Models\Stage;
+use He4rt\Teams\Team;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Date;
 
@@ -28,6 +29,7 @@ class StageFactory extends Factory
             'updated_at' => Date::now(),
 
             'job_requisition_id' => JobRequisition::factory(),
+            'team_id' => Team::factory(),
         ];
     }
 }
