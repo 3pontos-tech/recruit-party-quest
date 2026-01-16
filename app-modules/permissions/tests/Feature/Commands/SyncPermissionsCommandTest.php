@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace He4rt\Permissions\Tests\Feature\Commands;
 
+use He4rt\Permissions\Permission;
 use He4rt\Permissions\Role;
 use He4rt\Permissions\Roles;
 use He4rt\Users\User;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Artisan;
 
 use function Pest\Laravel\assertDatabaseCount;
@@ -19,9 +19,9 @@ it('synchronizes roles and permissions', function (): void {
         'email' => 'admin@admin.com',
     ]);
 
-    $permissionCount = count(Relation::morphMap()) * 7; // 7 actions in PermissionsEnum
-
     Artisan::call('sync:permissions');
+
+    $permissionCount = Permission::query()->count();
 
     foreach (Roles::cases() as $role) {
         assertDatabaseHas('rbac_roles', [
