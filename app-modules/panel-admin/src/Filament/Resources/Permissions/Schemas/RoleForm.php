@@ -24,7 +24,7 @@ class RoleForm
                         Section::make()
                             ->schema([
                                 TextInput::make('name')
-                                    ->label('Role Name')
+                                    ->label(__('permissions::filament.fields.name'))
                                     ->unique(
                                         ignoreRecord: true,
                                     )
@@ -32,7 +32,7 @@ class RoleForm
                                     ->maxLength(255),
 
                                 TextInput::make('guard_name')
-                                    ->label('Guard Name')
+                                    ->label(__('permissions::filament.fields.guard_name'))
                                     ->default('web')
                                     ->nullable()
                                     ->maxLength(255),
@@ -51,9 +51,9 @@ class RoleForm
 
     public static function getPermissionsFormComponent(): Component
     {
-        return Tabs::make('Permissions')
+        return Tabs::make(__('permissions::filament.tabs.permissions'))
             ->tabs([
-                Tab::make('Permissions')
+                Tab::make(__('permissions::filament.tabs.permissions'))
                     ->schema([
                         PermissionsCheckboxList::make('permissions')
                             ->hiddenLabel()

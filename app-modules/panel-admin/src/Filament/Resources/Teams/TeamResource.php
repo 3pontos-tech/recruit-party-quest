@@ -9,6 +9,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use He4rt\Admin\Filament\Clusters\CoreManagementCluster;
 use He4rt\Admin\Filament\Resources\Teams\Pages\CreateTeam;
 use He4rt\Admin\Filament\Resources\Teams\Pages\EditTeam;
 use He4rt\Admin\Filament\Resources\Teams\Pages\ListTeams;
@@ -24,7 +25,11 @@ class TeamResource extends Resource
 {
     protected static ?string $model = Team::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static ?string $cluster = CoreManagementCluster::class;
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::BuildingOffice;
+
+    protected static ?int $navigationSort = 2;
 
     protected static ?string $recordTitleAttribute = 'name';
 

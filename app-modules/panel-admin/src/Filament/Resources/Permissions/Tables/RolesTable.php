@@ -15,31 +15,29 @@ use Illuminate\Support\Str;
 
 class RolesTable
 {
-    public static function table(Table $table): Table
+    public static function configure(Table $table): Table
     {
         return $table
             ->columns([
                 TextColumn::make('name')
                     ->weight(FontWeight::Medium)
-                    ->label('Name')
+                    ->label(__('permissions::filament.fields.name'))
                     ->formatStateUsing(fn (string $state): string => Str::headline($state))
                     ->searchable(),
                 TextColumn::make('guard_name')
                     ->badge()
                     ->color('warning')
-                    ->label('Guard Name'),
+                    ->label(__('permissions::filament.fields.guard_name')),
                 TextColumn::make('permissions_count')
                     ->badge()
-                    ->label('Permissions')
+                    ->label(__('permissions::filament.fields.permissions'))
                     ->counts('permissions')
                     ->color('primary'),
                 TextColumn::make('updated_at')
-                    ->label('Updated At')
+                    ->label(__('permissions::filament.fields.updated_at'))
                     ->dateTime(),
             ])
-            ->filters([
 
-            ])
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),

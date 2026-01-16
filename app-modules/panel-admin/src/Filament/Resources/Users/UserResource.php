@@ -9,6 +9,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use He4rt\Admin\Filament\Clusters\CoreManagementCluster;
 use He4rt\Admin\Filament\Resources\Users\Pages\CreateUser;
 use He4rt\Admin\Filament\Resources\Users\Pages\EditUser;
 use He4rt\Admin\Filament\Resources\Users\Pages\ListUsers;
@@ -21,11 +22,15 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
+    protected static ?string $cluster = CoreManagementCluster::class;
+
     protected static ?string $slug = 'users';
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Users;
+
+    protected static ?int $navigationSort = 1;
 
     public static function form(Schema $schema): Schema
     {
