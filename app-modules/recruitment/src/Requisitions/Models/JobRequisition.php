@@ -40,7 +40,7 @@ use Illuminate\Support\Carbon;
  * @property string $salary_currency
  * @property string $hiring_manager_id
  * @property string $created_by_id
- * @property string $status
+ * @property RequisitionStatusEnum $status
  * @property string $priority
  * @property Carbon|null $target_start_at
  * @property Carbon|null $approved_at

@@ -3,10 +3,70 @@
 declare(strict_types=1);
 
 return [
-    'resource' => [],
-    'fields' => [],
-    'table' => [],
-    'relation_managers' => [],
+    'relation_managers' => [
+        'stages' => [
+            'title' => 'Pipeline Stages',
+            'label' => 'Stage',
+            'plural_label' => 'Stages',
+        ],
+    ],
+    'actions' => [
+        'workflow' => [
+            'label' => 'Actions',
+        ],
+        'approve' => [
+            'label' => 'Approve',
+            'modal_heading' => 'Approve Requisition',
+            'modal_description' => 'Are you sure you want to approve this job requisition?',
+            'modal_submit' => 'Approve',
+            'notification' => 'Job requisition approved successfully.',
+        ],
+        'publish' => [
+            'label' => 'Publish',
+            'modal_heading' => 'Publish Requisition',
+            'modal_description' => 'Are you sure you want to publish this job requisition? It will be visible to candidates.',
+            'modal_submit' => 'Publish',
+            'notification' => 'Job requisition published successfully.',
+        ],
+        'put_on_hold' => [
+            'label' => 'Put On Hold',
+            'modal_heading' => 'Put Requisition On Hold',
+            'modal_description' => 'Are you sure you want to put this job requisition on hold?',
+            'modal_submit' => 'Put On Hold',
+            'notification' => 'Job requisition put on hold successfully.',
+        ],
+        'close' => [
+            'label' => 'Close',
+            'modal_heading' => 'Close Requisition',
+            'modal_description' => 'Are you sure you want to close this job requisition?',
+            'modal_submit' => 'Close',
+            'notification' => 'Job requisition closed successfully.',
+        ],
+        'cancel' => [
+            'label' => 'Cancel',
+            'modal_heading' => 'Cancel Requisition',
+            'modal_description' => 'Are you sure you want to cancel this job requisition? This action cannot be undone.',
+            'modal_submit' => 'Cancel Requisition',
+            'notification' => 'Job requisition cancelled successfully.',
+        ],
+        'clone' => [
+            'label' => 'Clone',
+            'modal_heading' => 'Clone Requisition',
+            'modal_description' => 'This will create a copy of the requisition with Draft status.',
+            'modal_submit' => 'Clone',
+            'notification' => 'Job requisition cloned successfully.',
+        ],
+    ],
+    'stage' => [
+        'fields' => [
+            'name' => 'Name',
+            'stage_type' => 'Stage Type',
+            'display_order' => 'Display Order',
+            'description' => 'Description',
+            'expected_duration_days' => 'Expected Duration (Days)',
+            'active' => 'Active',
+        ],
+    ],
     'requisition' => [
         'label' => 'Job Requisition',
         'plural_label' => 'Job Requisitions',

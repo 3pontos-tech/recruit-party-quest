@@ -3,14 +3,70 @@
 declare(strict_types=1);
 
 return [
-    'resource' => [
-        'label' => '',
-        'plural_label' => '',
-        'navigation_label' => '',
+    'relation_managers' => [
+        'stages' => [
+            'title' => 'Etapas do Pipeline',
+            'label' => 'Etapa',
+            'plural_label' => 'Etapas',
+        ],
     ],
-    'fields' => [],
-    'table' => [],
-    'relation_managers' => [],
+    'actions' => [
+        'workflow' => [
+            'label' => 'Ações',
+        ],
+        'approve' => [
+            'label' => 'Aprovar',
+            'modal_heading' => 'Aprovar Requisição',
+            'modal_description' => 'Tem certeza que deseja aprovar esta requisição de vaga?',
+            'modal_submit' => 'Aprovar',
+            'notification' => 'Requisição de vaga aprovada com sucesso.',
+        ],
+        'publish' => [
+            'label' => 'Publicar',
+            'modal_heading' => 'Publicar Requisição',
+            'modal_description' => 'Tem certeza que deseja publicar esta requisição de vaga? Ela ficará visível para os candidatos.',
+            'modal_submit' => 'Publicar',
+            'notification' => 'Requisição de vaga publicada com sucesso.',
+        ],
+        'put_on_hold' => [
+            'label' => 'Pausar',
+            'modal_heading' => 'Pausar Requisição',
+            'modal_description' => 'Tem certeza que deseja pausar esta requisição de vaga?',
+            'modal_submit' => 'Pausar',
+            'notification' => 'Requisição de vaga pausada com sucesso.',
+        ],
+        'close' => [
+            'label' => 'Encerrar',
+            'modal_heading' => 'Encerrar Requisição',
+            'modal_description' => 'Tem certeza que deseja encerrar esta requisição de vaga?',
+            'modal_submit' => 'Encerrar',
+            'notification' => 'Requisição de vaga encerrada com sucesso.',
+        ],
+        'cancel' => [
+            'label' => 'Cancelar',
+            'modal_heading' => 'Cancelar Requisição',
+            'modal_description' => 'Tem certeza que deseja cancelar esta requisição de vaga? Esta ação não pode ser desfeita.',
+            'modal_submit' => 'Cancelar Requisição',
+            'notification' => 'Requisição de vaga cancelada com sucesso.',
+        ],
+        'clone' => [
+            'label' => 'Duplicar',
+            'modal_heading' => 'Duplicar Requisição',
+            'modal_description' => 'Isso criará uma cópia da requisição com status Rascunho.',
+            'modal_submit' => 'Duplicar',
+            'notification' => 'Requisição de vaga duplicada com sucesso.',
+        ],
+    ],
+    'stage' => [
+        'fields' => [
+            'name' => 'Nome',
+            'stage_type' => 'Tipo de Etapa',
+            'display_order' => 'Ordem de Exibição',
+            'description' => 'Descrição',
+            'expected_duration_days' => 'Duração Esperada (Dias)',
+            'active' => 'Ativo',
+        ],
+    ],
     'requisition' => [
         'label' => 'Requisição de Vaga',
         'plural_label' => 'Requisições de Vagas',
