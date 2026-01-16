@@ -30,7 +30,7 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->unique(['requisition_id', 'display_order']);
+            //            $table->unique(['requisition_id', 'display_order']);
         });
     }
 

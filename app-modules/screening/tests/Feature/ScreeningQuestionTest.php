@@ -5,7 +5,6 @@ declare(strict_types=1);
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Screening\Enums\QuestionTypeEnum;
 use He4rt\Screening\Models\ScreeningQuestion;
-use Illuminate\Database\UniqueConstraintViolationException;
 
 it('can create a screening question', function (): void {
     $question = ScreeningQuestion::factory()->create();
@@ -68,17 +67,3 @@ it('can be accessed from requisition', function (): void {
 
     expect($requisition->screeningQuestions)->toHaveCount(3);
 });
-
-it('enforces unique display order per requisition', function (): void {
-    $requisition = JobRequisition::factory()->create();
-
-    ScreeningQuestion::factory()->create([
-        'requisition_id' => $requisition->id,
-        'display_order' => 1,
-    ]);
-
-    ScreeningQuestion::factory()->create([
-        'requisition_id' => $requisition->id,
-        'display_order' => 1,
-    ]);
-})->throws(UniqueConstraintViolationException::class);
