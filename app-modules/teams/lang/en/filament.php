@@ -27,7 +27,8 @@ return [
     'relation_managers' => [
         'members' => [
             'title' => 'Members',
-            'label' => 'member',
+            'label' => 'Member',
+            'plural_label' => 'Members',
         ],
     ],
     'department' => [
