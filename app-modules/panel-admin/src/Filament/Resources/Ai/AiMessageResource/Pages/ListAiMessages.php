@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Admin\Filament\Resources\Departments\Pages;
+namespace He4rt\Admin\Filament\Resources\Ai\AiMessageResource\Pages;
 
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
-use He4rt\Admin\Filament\Resources\Departments\DepartmentResource;
+use He4rt\Admin\Filament\Resources\Ai\AiMessageResource;
 
-class ListDepartments extends ListRecords
+final class ListAiMessages extends ListRecords
 {
-    protected static string $resource = DepartmentResource::class;
+    protected static string $resource = AiMessageResource::class;
 
     protected function getHeaderActions(): array
     {

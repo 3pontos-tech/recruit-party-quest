@@ -15,13 +15,14 @@ class TeamsServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'teams');
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'teams');
+
         Gate::policy(Team::class, TeamPolicy::class);
 
         Relation::morphMap([
             'teams' => Team::class,
             'departments' => Department::class,
         ]);
-
     }
 }

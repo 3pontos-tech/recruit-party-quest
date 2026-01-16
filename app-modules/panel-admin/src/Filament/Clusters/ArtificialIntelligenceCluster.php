@@ -15,9 +15,19 @@ final class ArtificialIntelligenceCluster extends Cluster
 
     protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
-    protected static ?string $navigationLabel = 'Artificial Intelligence';
+    protected static ?string $navigationLabel = null;
 
     protected static ?int $navigationSort = 20;
 
-    protected static ?string $clusterBreadcrumb = 'AI';
+    protected static ?string $clusterBreadcrumb = null;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('ai::filament.cluster.navigation_label');
+    }
+
+    public static function getClusterBreadcrumb(): string
+    {
+        return __('ai::filament.cluster.breadcrumb');
+    }
 }

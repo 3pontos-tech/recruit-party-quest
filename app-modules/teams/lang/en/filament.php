@@ -20,6 +20,8 @@ return [
         'created_at' => 'Created At',
         'updated_at' => 'Updated At',
         'deleted_at' => 'Deleted At',
+        'email' => 'Email',
+        'password' => 'Password',
     ],
     'table' => [
         'slug_description' => 'slug: :slug',
@@ -29,6 +31,16 @@ return [
             'title' => 'Members',
             'label' => 'Member',
             'plural_label' => 'Members',
+            'joined_at' => 'Joined At',
+            'invite_action' => 'Invite Member',
+            'invite_heading' => 'Invite New Member',
+            'invite_description' => 'Create a new user and add them to this team.',
+            'invite_success' => 'Invitation sent successfully!',
+        ],
+        'departments' => [
+            'title' => 'Departments',
+            'label' => 'Department',
+            'plural_label' => 'Departments',
         ],
     ],
     'department' => [
@@ -48,6 +60,21 @@ return [
         ],
         'filters' => [
             'team' => 'Team',
+        ],
+        'create_action' => 'Create Department',
+    ],
+    'emails' => [
+        'team_invitation' => [
+            'subject' => 'Welcome to :team_name team!',
+            'greeting' => 'Hello :name,',
+            'introduction' => 'You have been invited to join the :team_name team.',
+            'credentials_title' => 'Your Login Credentials',
+            'email_label' => 'Email',
+            'password_label' => 'Temporary Password',
+            'instructions' => 'Please log in using these credentials. We recommend changing your password after your first login.',
+            'login_button' => 'Log In Now',
+            'forgot_password_button' => 'Forgot Your Password?',
+            'footer' => ':team_name Team',
         ],
     ],
 ];

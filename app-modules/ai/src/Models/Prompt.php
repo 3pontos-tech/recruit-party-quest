@@ -8,13 +8,28 @@ namespace He4rt\Ai\Models;
 use App\Models\BaseModel;
 use He4rt\Ai\Enums\AiPromptMessageType;
 use He4rt\Users\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
- * @mixin IdeHelperPrompt
+ * @property string $id
+ * @property string|null $user_id
+ * @property string $type_id
+ * @property AiPromptMessageType $message_type
+ * @property bool $is_smart
+ * @property string $title
+ * @property string|null $description
+ * @property string $prompt
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property-read PromptType $type
+ * @property-read User|null $user
+ * @property-read Collection<int, AiAssistant> $assistants
  */
 final class Prompt extends BaseModel
 {

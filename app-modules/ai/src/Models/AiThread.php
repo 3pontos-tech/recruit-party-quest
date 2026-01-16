@@ -6,23 +6,42 @@ namespace He4rt\Ai\Models;
 
 use App\Models\BaseModel;
 use He4rt\Ai\Casts\AsSession;
+use He4rt\Ai\Entities\ChatSession;
 use He4rt\Ai\Models\Scopes\AiThreadScope;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Livewire\Wireable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 // use App\Settings\DisplaySettings;
-
 /**
- * @mixin IdeHelperAiThread
+ * @property string $id
+ * @property string $assistant_id
+ * @property string|null $folder_id
+ * @property string $user_id
+ * @property string $name
+ * @property int|null $cloned_count
+ * @property int|null $emailed_count
+ * @property Carbon|null $saved_at
+ * @property Carbon|null $locked_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property ChatSession|null $session
+ * @property-read AiAssistant $assistant
+ * @property-read AiThreadFolder|null $folder
+ * @property-read Collection<int, AiMessage> $messages
+ * @property-read Collection<int, User> $users
+ * @property-read User $user
  */
 #[ScopedBy(AiThreadScope::class)]
 final class AiThread extends BaseModel implements HasMedia, Wireable

@@ -24,6 +24,8 @@ final class AiServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->loadTranslationsFrom(__DIR__.'/../../lang', 'ai');
+
         Relation::morphMap([
             'ai_assistant' => AiAssistant::class,
             'ai_message' => AiMessage::class,

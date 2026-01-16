@@ -12,9 +12,23 @@ use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Concerns\AsPivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
- * @mixin IdeHelperAiMessage
+ * @property string $id
+ * @property string|null $prompt_id
+ * @property string|null $message_id
+ * @property string $content
+ * @property string|null $context
+ * @property array<mixed> $request
+ * @property string $thread_id
+ * @property string|null $user_id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property-read AiThread $thread
+ * @property-read User|null $user
+ * @property-read Prompt|null $prompt
  */
 final class AiMessage extends BaseModel
 {

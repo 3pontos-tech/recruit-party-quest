@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Admin\Filament\Resources\Departments\Pages;
+namespace He4rt\Admin\Filament\Resources\Ai\AiMessageResource\Pages;
 
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
-use He4rt\Admin\Filament\Resources\Departments\DepartmentResource;
+use He4rt\Admin\Filament\Resources\Ai\AiMessageResource;
 
-class EditDepartment extends EditRecord
+final class EditAiMessage extends EditRecord
 {
-    protected static string $resource = DepartmentResource::class;
+    protected static string $resource = AiMessageResource::class;
 
     protected function getHeaderActions(): array
     {
