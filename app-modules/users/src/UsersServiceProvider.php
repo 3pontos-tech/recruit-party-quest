@@ -7,6 +7,7 @@ namespace He4rt\Users;
 use App\Enums\FilamentPanel;
 use Filament\Panel;
 use He4rt\Admin\Filament\Resources\Users\UserResource;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
 class UsersServiceProvider extends ServiceProvider
@@ -24,5 +25,9 @@ class UsersServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'users');
+
+        Relation::morphMap([
+            'users' => User::class,
+        ]);
     }
 }

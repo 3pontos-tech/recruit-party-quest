@@ -8,6 +8,7 @@ use App\Enums\FilamentPanel;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
+use He4rt\Candidates\Models\Candidate;
 use He4rt\Permissions\Permission;
 use He4rt\Permissions\Role;
 use He4rt\Permissions\Roles;
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -85,6 +87,14 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults();
+    }
+
+    /**
+     * @return HasOne<Candidate, $this>
+     */
+    public function candidate(): HasOne
+    {
+        return $this->hasOne(Candidate::class, 'user_id');
     }
 
     /**
