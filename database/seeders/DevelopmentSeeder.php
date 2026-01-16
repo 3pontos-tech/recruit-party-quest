@@ -106,7 +106,7 @@ final class DevelopmentSeeder extends Seeder
                 $skills->random(fake()->numberBetween(2, 5))->pluck('id')->toArray(),
                 [
                     'years_of_experience' => fake()->numberBetween(1, 10),
-                    'proficiency_level' => fake()->randomElement(['beginner', 'intermediate', 'advanced', 'expert']),
+                    'proficiency_level' => fake()->randomElement([1, 2, 3, 4]),
                 ]
             );
         });
