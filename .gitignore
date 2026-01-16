@@ -38,3 +38,7 @@ boost.json
 .output.txt
 .github/git-commit-instructions.md
 .github/copilot-instructions.md
+AGENTS.md
+GEMINI.md
+opencode.json
+.gemini

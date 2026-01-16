@@ -49,10 +49,10 @@ final class AdminPanelProvider extends PanelProvider
             ])
             ->viteTheme(sprintf('resources/css/filament/%s/theme.css', $this->panelId->value))
             ->defaultThemeMode(ThemeMode::Dark)
-            ->discoverClusters(in: app_path('Filament/Admin/Clusters'), for: 'App\\Filament\\Admin\\Clusters')
-            ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
-            ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
-            ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
+            ->discoverClusters(in: base_path('app-modules/panel-admin/src/Filament/Clusters'), for: 'He4rt\\Admin\\Filament\\Clusters')
+            ->discoverPages(in: base_path('app-modules/panel-admin/src/Filament/Pages'), for: 'He4rt\\Admin\\Filament\\Pages')
+            ->discoverResources(in: base_path('app-modules/panel-admin/src/Filament/Resources'), for: 'He4rt\\Admin\\Filament\\Resources')
+            ->discoverWidgets(in: base_path('app-modules/panel-admin/src/Filament/Widgets'), for: 'He4rt\\Admin\\Filament\\Widgets')
             ->topbar(false)
             ->pages([
                 Dashboard::class,

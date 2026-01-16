@@ -12,6 +12,7 @@
         "alizharb/filament-activity-log": "^1.1.3",
         "filament/filament": "^4.5.3",
         "filament/spatie-laravel-media-library-plugin": "^4.5.3",
+        "he4rt/ai": "*",
         "he4rt/applications": ">=1",
         "he4rt/candidates": ">=1",
         "he4rt/feedback": ">=1",
@@ -28,6 +29,7 @@
         "laravel/tinker": "^2.11.0",
         "monicahq/laravel-cloudflare": "^4.0.0",
         "owenvoke/blade-fontawesome": "^3.0.0",
+        "prism-php/prism": "^0.99.11",
         "spatie/laravel-activitylog": "^4.10.2",
         "spatie/laravel-backup": "^9.3.7",
         "spatie/laravel-permission": "^6.24",
@@ -37,6 +39,7 @@
         "barryvdh/laravel-debugbar": "^3.16.3",
         "driftingly/rector-laravel": "^2.1.9",
         "fakerphp/faker": "^1.24.1",
+        "filament/blueprint": "^1.0",
         "larastan/larastan": "^3.8.1",
         "laravel/boost": "^1.8.10",
         "laravel/pail": "^1.2.4",
@@ -145,6 +148,11 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "repositories": [
+        {
+            "name": "filament",
+            "type": "composer",
+            "url": "https://packages.filamentphp.com/composer"
+        },
         {
             "type": "path",
             "url": "app-modules/*",
