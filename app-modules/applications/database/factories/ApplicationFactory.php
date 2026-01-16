@@ -24,7 +24,7 @@ class ApplicationFactory extends Factory
         return [
             'requisition_id' => JobRequisition::factory(),
             'candidate_id' => Candidate::factory(),
-            'current_stage_id' => Stage::factory(),
+            'current_stage_id' => null,
             'status' => fake()->randomElement(ApplicationStatusEnum::cases()),
             'source' => fake()->randomElement(CandidateSourceEnum::cases()),
             'source_details' => fake()->sentence(),
@@ -61,5 +61,15 @@ class ApplicationFactory extends Factory
             'offer_amount' => fake()->numberBetween(30000, 150000),
             'offer_response_deadline' => now()->addDays(7),
         ]);
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Application $application): void {
+            if ($application->requisition_id && ! $application->current_stage_id) {
+                $stage = Stage::factory()->create(['job_requisition_id' => $application->requisition_id]);
+                $application->update(['current_stage_id' => $stage->id]);
+            }
+        });
     }
 }
