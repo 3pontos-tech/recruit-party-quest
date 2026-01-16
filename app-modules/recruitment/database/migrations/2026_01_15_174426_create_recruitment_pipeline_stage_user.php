@@ -14,7 +14,6 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('pipeline_stage_id')->constrained('recruitment_pipeline_stages');
             $table->foreignUuid('interviewer_user_id')->constrained('users');
-            $table->primary(['pipeline_stage_id', 'interviewer_user_id']);
             $table->timestamps();
         });
     }

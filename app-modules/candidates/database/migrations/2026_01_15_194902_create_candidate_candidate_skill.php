@@ -16,8 +16,6 @@ return new class extends Migration
             $table->foreignUuid('skill_id')->constrained('candidate_skills');
             $table->integer('years_of_experience');
             $table->integer('proficiency_level');
-
-            $table->primary(['candidate_id', 'skill_id']);
         });
     }
 
