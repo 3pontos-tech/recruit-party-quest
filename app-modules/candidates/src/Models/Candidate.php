@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Candidates\Models;
 
 use App\Models\BaseModel;
+use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Database\Factories\CandidateFactory;
 use He4rt\Candidates\Policies\CandidatePolicy;
 use He4rt\Location\Concerns\HasAddress;
@@ -21,15 +22,26 @@ use Illuminate\Support\Collection;
 /**
  * @property string $id
  * @property string $user_id
+ * @property string|null $phone_number
+ * @property string|null $headline
+ * @property string|null $summary
+ * @property Carbon|null $availability_date
  * @property bool $willing_to_relocate
- * @property string $experience_level
+ * @property bool $is_open_to_remote
+ * @property float|null $expected_salary
+ * @property string $expected_salary_currency
+ * @property string|null $linkedin_url
+ * @property string|null $portfolio_url
+ * @property string|null $experience_level
  * @property Collection<int,string>|null $contact_links
- * @property string $self_identified_gender
+ * @property string|null $self_identified_gender
  * @property bool $has_disability
- * @property string $source
+ * @property string|null $source
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read User $user
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Application> $applications
  *
  * @extends BaseModel<CandidateFactory>
  */
@@ -45,7 +57,15 @@ class Candidate extends BaseModel
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * @return HasMany<Application, $this>
+     */
+    public function applications(): HasMany
+    {
+        return $this->hasMany(Application::class);
     }
 
     /**
@@ -78,8 +98,11 @@ class Candidate extends BaseModel
     {
         return [
             'willing_to_relocate' => 'boolean',
+            'is_open_to_remote' => 'boolean',
             'contact_links' => 'array',
             'has_disability' => 'boolean',
+            'availability_date' => 'date',
+            'expected_salary' => 'decimal:2',
         ];
     }
 }
