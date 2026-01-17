@@ -72,6 +72,10 @@ return [
         'label' => 'Job Requisition',
         'plural_label' => 'Job Requisitions',
         'navigation_label' => 'Job Requisitions',
+        'tabs' => [
+            'details' => 'Requisition Details',
+            'screening_questions' => 'Screening Questions',
+        ],
         'sections' => [
             'basic_information' => 'Basic Information',
             'position_details' => 'Position Details',

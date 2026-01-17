@@ -1,0 +1,59 @@
+<?php
+
+declare(strict_types=1);
+
+namespace He4rt\Screening\QuestionTypes;
+
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\TextInput;
+use He4rt\Screening\Contracts\QuestionTypeContract;
+use He4rt\Screening\Enums\QuestionTypeEnum;
+
+/**
+ * File upload question type - document/file uploads with size and type restrictions.
+ */
+final class FileUploadType implements QuestionTypeContract
+{
+    public static function type(): QuestionTypeEnum
+    {
+        return QuestionTypeEnum::FileUpload;
+    }
+
+    public static function label(): string
+    {
+        return __('screening::question_types.file_upload.label');
+    }
+
+    public static function icon(): string
+    {
+        return 'heroicon-o-paper-clip';
+    }
+
+    public static function settingsSchema(): array
+    {
+        return [
+            TextInput::make('settings.max_size_kb')
+                ->label(__('screening::question_types.file_upload.settings.max_size_kb'))
+                ->numeric()
+                ->minValue(1)
+                ->suffix('KB')
+                ->placeholder('5120')
+                ->helperText(__('screening::question_types.file_upload.settings.max_size_help')),
+
+            TextInput::make('settings.max_files')
+                ->label(__('screening::question_types.file_upload.settings.max_files'))
+                ->numeric()
+                ->minValue(1)
+                ->maxValue(10)
+                ->default(1)
+                ->placeholder('1'),
+
+            TagsInput::make('settings.allowed_extensions')
+                ->label(__('screening::question_types.file_upload.settings.allowed_extensions'))
+                ->placeholder(__('screening::question_types.file_upload.settings.extensions_placeholder'))
+                ->helperText(__('screening::question_types.file_upload.settings.extensions_help'))
+                ->suggestions(['pdf', 'doc', 'docx', 'txt', 'jpg', 'png'])
+                ->columnSpanFull(),
+        ];
+    }
+}

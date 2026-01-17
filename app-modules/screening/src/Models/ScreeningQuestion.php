@@ -26,6 +26,7 @@ use Illuminate\Support\Carbon;
  * @property string $question_text
  * @property QuestionTypeEnum $question_type
  * @property array<int, mixed>|null $choices
+ * @property array<string, mixed>|null $settings
  * @property bool $is_required
  * @property bool $is_knockout
  * @property array<string, mixed>|null $knockout_criteria
@@ -66,6 +67,7 @@ class ScreeningQuestion extends BaseModel
         return [
             'question_type' => QuestionTypeEnum::class,
             'choices' => 'array',
+            'settings' => 'array',
             'is_required' => 'boolean',
             'is_knockout' => 'boolean',
             'knockout_criteria' => 'array',

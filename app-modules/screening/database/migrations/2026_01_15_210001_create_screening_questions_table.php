@@ -20,6 +20,7 @@ return new class extends Migration
 
             // For choice questions
             $table->json('choices')->nullable();
+            $table->json('settings')->nullable();
 
             // Validation
             $table->boolean('is_required')->default(false);

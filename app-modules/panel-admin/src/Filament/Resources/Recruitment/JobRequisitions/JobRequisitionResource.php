@@ -59,7 +59,6 @@ class JobRequisitionResource extends Resource
     {
         return [
             PipelineStagesRelationManager::class,
-            ScreeningQuestionsRelationManager::class,
         ];
     }
 
