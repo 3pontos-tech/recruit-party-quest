@@ -48,6 +48,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, ScreeningResponse> $screeningResponses
  * @property-read Collection<int, Evaluation> $evaluations
  * @property-read Collection<int, ApplicationComment> $comments
+ * @property-read JobRequisition $requisition
  *
  * @extends BaseModel<ApplicationFactory>
  */
