@@ -24,6 +24,11 @@ return new class extends Migration
             $table->string('linkedin_url')->nullable();
             $table->string('portfolio_url')->nullable();
             $table->string('experience_level')->nullable();
+            $table->boolean('is_onboarded')->default(false);
+            $table->timestamp('onboarding_completed_at')->nullable();
+            $table->string('timezone', 50)->nullable();
+            $table->string('preferred_language', 10)->default('en');
+            $table->boolean('data_consent_given')->default(false);
             $table->jsonb('contact_links')->nullable();
             $table->string('self_identified_gender')->nullable();
             $table->boolean('has_disability')->default(false);

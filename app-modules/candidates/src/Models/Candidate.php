@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 /**
  * @property string $id
@@ -37,6 +38,11 @@ use Illuminate\Support\Collection;
  * @property string|null $self_identified_gender
  * @property bool $has_disability
  * @property string|null $source
+ * @property bool $is_onboarded
+ * @property Carbon|null $onboarding_completed_at
+ * @property string|null $timezone
+ * @property string $preferred_language
+ * @property bool $data_consent_given
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
@@ -50,6 +56,7 @@ use Illuminate\Support\Collection;
 class Candidate extends BaseModel
 {
     use HasAddress;
+    use InteractsWithMedia;
     use SoftDeletes;
 
     /**
@@ -94,6 +101,11 @@ class Candidate extends BaseModel
             ->using(CandidateSkill::class);
     }
 
+    public function hasCompletedOnboarding(): bool
+    {
+        return $this->is_onboarded;
+    }
+
     protected function casts(): array
     {
         return [
@@ -103,6 +115,9 @@ class Candidate extends BaseModel
             'has_disability' => 'boolean',
             'availability_date' => 'date',
             'expected_salary' => 'decimal:2',
+            'is_onboarded' => 'boolean',
+            'data_consent_given' => 'boolean',
+            'onboarding_completed_at' => 'datetime',
         ];
     }
 }
