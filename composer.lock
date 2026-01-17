@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "967480a70b933645397ab35902ab6bca",
+    "content-hash": "f69b3f937da3fa7bc2dfbf6efd1f964c",
     "packages": [
         {
             "name": "alizharb/filament-activity-log",
@@ -3133,6 +3133,35 @@
             }
         },
         {
+            "name": "he4rt/core",
+            "version": "1.0",
+            "dist": {
+                "type": "path",
+                "url": "app-modules/he4rt",
+                "reference": "777f9973b37d56b106f24b510a2c49689299f3d8"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "He4rt\\Core\\Providers\\He4rtServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "He4rt\\Core\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "he4rt/feedback",
             "version": "1.0.0",
             "dist": {
@@ -3246,7 +3275,7 @@
             "dist": {
                 "type": "path",
                 "url": "app-modules/panel-app",
-                "reference": "9efe0efe9312bb739ff0d122740fff932f49ca9d"
+                "reference": "7edf88258256464fd877bfe828c1a6342bfd61aa"
             },
             "type": "library",
             "extra": {
