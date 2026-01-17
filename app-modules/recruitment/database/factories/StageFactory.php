@@ -18,11 +18,22 @@ class StageFactory extends Factory
 
     public function definition(): array
     {
+        $stageData = [
+            'Initial Screening' => 'Reviewing application and basic qualifications.',
+            'Technical Interview' => 'Deep dive into technical skills and problem-solving abilities.',
+            'Cultural Fit' => 'Assessing alignment with company values and team dynamics.',
+            'Final Interview' => 'Conversation with hiring manager or leadership team.',
+            'Technical Challenge' => 'Practical assessment of coding or design skills.',
+            'Offer Stage' => 'Finalizing terms and conditions of employment.',
+        ];
+
+        $name = fake()->randomElement(array_keys($stageData));
+
         return [
-            'name' => fake()->jobTitle(),
+            'name' => $name,
             'stage_type' => fake()->randomElement(StageTypeEnum::cases()),
             'display_order' => fake()->numberBetween(1, 10),
-            'description' => fake()->sentence(),
+            'description' => $stageData[$name],
             'expected_duration_days' => fake()->numberBetween(1, 14),
             'active' => true,
             'created_at' => Date::now(),
