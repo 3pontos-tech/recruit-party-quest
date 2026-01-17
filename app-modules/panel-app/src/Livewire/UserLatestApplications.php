@@ -8,6 +8,7 @@ use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Users\User;
 use Illuminate\Contracts\Database\Query\Builder;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Computed;
@@ -36,8 +37,11 @@ class UserLatestApplications extends Component
         return auth()->user();
     }
 
+    /**
+     * @return LengthAwarePaginator<int, Application>
+     */
     #[Computed]
-    public function applications()
+    public function applications(): LengthAwarePaginator
     {
         return Application::query()
             ->whereHas('candidate', fn (Builder $q) => $q->where('user_id', auth()->id()))
@@ -64,6 +68,9 @@ class UserLatestApplications extends Component
         return view('panel-app::livewire.user-latest-applications');
     }
 
+    /**
+     * @phpstan-ignore-next-line
+     */
     protected function getStatusesForFilter(?string $filter): array
     {
         return match ($filter) {
