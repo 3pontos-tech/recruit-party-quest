@@ -12,6 +12,9 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\Width;
+use He4rt\App\Filament\Pages\AppDashboard;
+use He4rt\App\RedirectIfOnboardingIncomplete;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -31,28 +34,28 @@ class AppPanelProvider extends PanelProvider
             ->default()
             ->login(LoginPage::class)
             ->registration()
+            ->topNavigation()
+            ->maxContentWidth(Width::ScreenTwoExtraLarge)
             ->path($this->panelEnum->getPath())
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->discoverResources(in: app_path('Filament/App/Resources'), for: 'App\Filament\App\Resources')
-            ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\Filament\App\Pages')
+            ->discoverClusters(in: base_path('app-modules/panel-app/src/Filament/Clusters'), for: 'He4rt\\App\\Filament\\Clusters')
+            ->discoverPages(in: base_path('app-modules/panel-app/src/Filament/Pages'), for: 'He4rt\\App\\Filament\\Pages')
+            ->discoverResources(in: base_path('app-modules/panel-app/src/Filament/Resources'), for: 'He4rt\\App\\Filament\\Resources')
+            ->discoverWidgets(in: base_path('app-modules/panel-app/src/Filament/Widgets'), for: 'He4rt\\App\\Filament\\Widgets')
             ->pages([
-                Dashboard::class,
+                auth()->check() ? Dashboard::class : AppDashboard::class,
             ])
             ->plugins([
                 BreezyCore::make()
                     ->myProfile(
-                        shouldRegisterUserMenu: true, // Sets the navigation group for the My Profile page (default = null)
+                        shouldRegisterUserMenu: false, // Disable - we have custom profile page
                         hasAvatars: false,
-                        // Customizes the 'account' link label in the panel User Menu (default = null)
-                        navigationGroup: 'Settings',
-                        // Sets the 'account' link in the panel User Menu (default = true)
-                        userMenuLabel: 'My Profile', // Enables the avatar upload form component (default = false)
                     )
                     ->enableBrowserSessions(),
             ])
-            ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'App\Filament\App\Widgets')
+            ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'He4rt\App\Filament\Widgets')
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -62,6 +65,7 @@ class AppPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                RedirectIfOnboardingIncomplete::class,
             ]);
     }
 }
