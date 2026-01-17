@@ -8,7 +8,6 @@ use App\Enums\FilamentPanel;
 use App\Filament\Shared\Pages\LoginPage;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -41,6 +40,11 @@ class AppPanelProvider extends PanelProvider
             ->path($this->panelEnum->getPath())
             ->colors([
                 'primary' => Color::Gray,
+                'success' => Color::Green,
+                'warning' => Color::Yellow,
+                'danger' => Color::Red,
+                'info' => Color::Indigo,
+                'gray' => Color::Gray,
             ])
             ->renderHook(PanelsRenderHook::SIDEBAR_NAV_END, fn () => Blade::render(<<<'BLADE'
                @guest
@@ -62,26 +66,6 @@ class AppPanelProvider extends PanelProvider
                @endguest
             BLADE
             ))
-            ->navigationItems([
-                NavigationItem::make('Home')
-                    ->url('#hero')
-                    ->sort(0),
-                NavigationItem::make('Nossos pilares')
-                    ->url('#foundations')
-                    ->sort(1),
-                NavigationItem::make('Projects')
-                    ->url('#projects')
-                    ->sort(3),
-                NavigationItem::make('Comunidade')
-                    ->url('#community')
-                    ->sort(4),
-                NavigationItem::make('Eventos')
-                    ->url('#events')
-                    ->sort(5),
-                NavigationItem::make('Contato')
-                    ->url('#contact')
-                    ->sort(6),
-            ])
             ->viteTheme('app-modules/he4rt/resources/css/themes/3pontos/theme.css')
             ->discoverClusters(in: base_path('app-modules/panel-app/src/Filament/Clusters'), for: 'He4rt\\App\\Filament\\Clusters')
             ->discoverPages(in: base_path('app-modules/panel-app/src/Filament/Pages'), for: 'He4rt\\App\\Filament\\Pages')
