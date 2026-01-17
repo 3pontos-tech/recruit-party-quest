@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7cd031eac5e0450149c4430fc5d17eb1",
+    "content-hash": "967480a70b933645397ab35902ab6bca",
     "packages": [
         {
             "name": "alizharb/filament-activity-log",
@@ -3230,6 +3230,42 @@
             "autoload-dev": {
                 "psr-4": {
                     "He4rt\\Admin\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "he4rt/panel-app",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "app-modules/panel-app",
+                "reference": "9efe0efe9312bb739ff0d122740fff932f49ca9d"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "He4rt\\App\\PanelAppServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "He4rt\\App\\": "src/",
+                    "He4rt\\App\\Database\\Factories\\": "database/factories/",
+                    "He4rt\\App\\Database\\Seeders\\": "database/seeders/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "He4rt\\App\\Tests\\": "tests/"
                 }
             },
             "license": [

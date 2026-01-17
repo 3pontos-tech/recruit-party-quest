@@ -18,6 +18,7 @@
         "he4rt/feedback": ">=1",
         "he4rt/location": ">=1",
         "he4rt/panel-admin": ">=1",
+        "he4rt/panel-app": "*",
         "he4rt/permissions": ">=1",
         "he4rt/recruitment": ">=1",
         "he4rt/screening": ">=1",
