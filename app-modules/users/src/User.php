@@ -16,6 +16,7 @@ use He4rt\Recruitment\Stages\Concerns\InteractsWithInterviewStages;
 use He4rt\Teams\Concerns\InteractsWithTenants;
 use He4rt\Teams\Team;
 use He4rt\Users\Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Collection;
@@ -46,6 +47,7 @@ use Spatie\Permission\Traits\HasRoles;
  */
 #[UsePolicy(UserPolicy::class)]
 #[UseFactory(UserFactory::class)]
+#[ObservedBy(UserObserver::class)]
 final class User extends Authenticatable implements FilamentUser, HasAvatar, HasMedia
 {
     /** @use HasFactory<UserFactory> */
@@ -59,7 +61,7 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
     use Notifiable;
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Get the attributes that should be hidden for serialization.
      *
      * @var list<string>
      */
@@ -73,7 +75,7 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
     {
         return match ($panel->currentPanel()) {
             FilamentPanel::Admin => $this->hasRole(Roles::SuperAdmin),
-            default => false,
+            default => true,
         };
     }
 
