@@ -81,7 +81,7 @@ class JobRequisition extends BaseModel
      */
     public function post(): HasOne
     {
-        return $this->hasOne(JobPosting::class);
+        return $this->hasOne(JobPosting::class, 'job_requisition_id');
     }
 
     /**
