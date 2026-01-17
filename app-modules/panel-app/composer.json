@@ -1,0 +1,27 @@
+{
+    "name": "he4rt/panel-app",
+    "description": "",
+    "type": "library",
+    "version": "1.0.0",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "He4rt\\App\\": "src/",
+            "He4rt\\App\\Database\\Factories\\": "database/factories/",
+            "He4rt\\App\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "He4rt\\App\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "He4rt\\App\\PanelAppServiceProvider"
+            ]
+        }
+    }
+}
