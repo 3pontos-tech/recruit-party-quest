@@ -49,6 +49,8 @@ class OnboardingWizard extends Page
 
     protected static bool $isDiscovered = true;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?int $navigationSort = -1;
 
     public static function canAccess(): bool
