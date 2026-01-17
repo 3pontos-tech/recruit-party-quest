@@ -47,8 +47,6 @@ class OnboardingWizard extends Page
 
     protected static string|null|BackedEnum $navigationIcon = 'heroicon-o-academic-cap';
 
-    protected string $view = 'panel-app::filament.app.pages.onboarding';
-
     protected static bool $isDiscovered = true;
 
     protected static ?int $navigationSort = -1;
