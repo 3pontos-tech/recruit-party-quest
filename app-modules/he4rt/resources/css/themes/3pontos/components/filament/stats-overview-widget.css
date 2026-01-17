@@ -1,0 +1,61 @@
+.fi-wi-stats-overview-stat {
+    @apply bg-elevation-surface ring-outline-low dark:ring-outline-low relative block h-full rounded-xl p-6 shadow-sm ring-1;
+
+    & .fi-icon {
+        @apply text-icon-medium shrink-0;
+    }
+
+    & .fi-wi-stats-overview-stat-content {
+        @apply grid gap-y-2;
+    }
+
+    & .fi-wi-stats-overview-stat-label-ctn {
+        @apply flex items-center gap-x-2;
+    }
+
+    & .fi-wi-stats-overview-stat-label {
+        @apply text-text-medium font-family-secondary text-sm font-medium;
+    }
+
+    & .fi-wi-stats-overview-stat-value {
+        @apply text-text-high font-family-primary text-3xl font-semibold tracking-tight;
+    }
+
+    & .fi-wi-stats-overview-stat-description {
+        @apply text-text-medium flex items-center gap-x-1 text-sm;
+
+        &.fi-color {
+            @apply text-(--text) dark:text-(--dark-text);
+
+            & .fi-icon {
+                @apply text-color-500;
+            }
+        }
+    }
+
+    & .fi-wi-stats-overview-stat-chart {
+        @apply absolute inset-x-0 bottom-0 overflow-hidden rounded-b-xl;
+
+        & > canvas {
+            @apply h-6;
+        }
+
+        & .fi-wi-stats-overview-stat-chart-bg-color {
+            @apply text-elevation-01dp/70 dark:text-elevation-01dp/70;
+        }
+
+        & .fi-wi-stats-overview-stat-chart-border-color {
+            @apply text-outline-low;
+        }
+
+        &.fi-color {
+            & .fi-wi-stats-overview-stat-chart-bg-color {
+                @apply text-color-50 dark:text-color-400/5;
+            }
+
+            & .fi-wi-stats-overview-stat-chart-border-color {
+                @apply text-color-500 dark:text-color-400/50;
+            }
+        }
+    }
+}
