@@ -7,6 +7,7 @@ namespace He4rt\Screening\Models;
 use App\Models\BaseModel;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Models\Stage;
+use He4rt\Screening\Casts\SettingsCast;
 use He4rt\Screening\Database\Factories\ScreeningQuestionFactory;
 use He4rt\Screening\Enums\QuestionTypeEnum;
 use He4rt\Teams\Concerns\BelongsToTeam;
@@ -25,8 +26,7 @@ use Illuminate\Support\Carbon;
  * @property string $screenable_type
  * @property string $question_text
  * @property QuestionTypeEnum $question_type
- * @property array<int, mixed>|null $choices
- * @property array<string, mixed>|null $settings
+ * @property object|null $settings
  * @property bool $is_required
  * @property bool $is_knockout
  * @property array<string, mixed>|null $knockout_criteria
@@ -66,8 +66,7 @@ class ScreeningQuestion extends BaseModel
     {
         return [
             'question_type' => QuestionTypeEnum::class,
-            'choices' => 'array',
-            'settings' => 'array',
+            'settings' => SettingsCast::class,
             'is_required' => 'boolean',
             'is_knockout' => 'boolean',
             'knockout_criteria' => 'array',

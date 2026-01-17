@@ -9,6 +9,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use He4rt\Screening\Contracts\QuestionTypeContract;
 use He4rt\Screening\Enums\QuestionTypeEnum;
+use He4rt\Screening\QuestionTypes\Settings\SingleChoiceSettings;
 
 /**
  * Single choice question type - radio buttons or dropdown with one selection.
@@ -41,7 +42,7 @@ final class SingleChoiceType implements QuestionTypeContract
                 ])
                 ->default('radio'),
 
-            Repeater::make('choices')
+            Repeater::make('settings.choices')
                 ->label(__('screening::question_types.single_choice.settings.choices'))
                 ->schema([
                     TextInput::make('value')
@@ -58,5 +59,15 @@ final class SingleChoiceType implements QuestionTypeContract
                 ->reorderable()
                 ->columnSpanFull(),
         ];
+    }
+
+    public static function settingsClass(): string
+    {
+        return SingleChoiceSettings::class;
+    }
+
+    public static function defaultSettings(): SingleChoiceSettings
+    {
+        return new SingleChoiceSettings();
     }
 }

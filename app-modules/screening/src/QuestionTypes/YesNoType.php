@@ -6,6 +6,7 @@ namespace He4rt\Screening\QuestionTypes;
 
 use He4rt\Screening\Contracts\QuestionTypeContract;
 use He4rt\Screening\Enums\QuestionTypeEnum;
+use He4rt\Screening\QuestionTypes\Settings\YesNoSettings;
 
 /**
  * Yes/No question type - simple boolean toggle.
@@ -33,5 +34,15 @@ final class YesNoType implements QuestionTypeContract
     public static function settingsSchema(): array
     {
         return [];
+    }
+
+    public static function settingsClass(): string
+    {
+        return YesNoSettings::class;
+    }
+
+    public static function defaultSettings(): YesNoSettings
+    {
+        return new YesNoSettings();
     }
 }

@@ -8,6 +8,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 use He4rt\Screening\Contracts\QuestionTypeContract;
 use He4rt\Screening\Enums\QuestionTypeEnum;
+use He4rt\Screening\QuestionTypes\Settings\MultipleChoiceSettings;
 
 /**
  * Multiple choice question type - checkboxes with multiple selections.
@@ -44,7 +45,7 @@ final class MultipleChoiceType implements QuestionTypeContract
                 ->minValue(1)
                 ->placeholder(__('screening::question_types.multiple_choice.settings.no_limit')),
 
-            Repeater::make('choices')
+            Repeater::make('settings.choices')
                 ->label(__('screening::question_types.multiple_choice.settings.choices'))
                 ->schema([
                     TextInput::make('value')
@@ -61,5 +62,15 @@ final class MultipleChoiceType implements QuestionTypeContract
                 ->reorderable()
                 ->columnSpanFull(),
         ];
+    }
+
+    public static function settingsClass(): string
+    {
+        return MultipleChoiceSettings::class;
+    }
+
+    public static function defaultSettings(): MultipleChoiceSettings
+    {
+        return new MultipleChoiceSettings();
     }
 }

@@ -35,4 +35,16 @@ interface QuestionTypeContract
      * @return array<int, \Filament\Forms\Components\Component>
      */
     public static function settingsSchema(): array;
+
+    /**
+     * Get the Settings ValueObject class for this type.
+     *
+     * @return class-string
+     */
+    public static function settingsClass(): string;
+
+    /**
+     * Create default settings for this type.
+     */
+    public static function defaultSettings(): object;
 }

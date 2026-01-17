@@ -8,6 +8,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use He4rt\Screening\Contracts\QuestionTypeContract;
 use He4rt\Screening\Enums\QuestionTypeEnum;
+use He4rt\Screening\QuestionTypes\Settings\TextSettings;
 
 /**
  * Text question type - free-form text input.
@@ -48,5 +49,15 @@ final class TextType implements QuestionTypeContract
                 ->label(__('screening::question_types.text.settings.placeholder'))
                 ->placeholder(__('screening::question_types.text.settings.placeholder_example')),
         ];
+    }
+
+    public static function settingsClass(): string
+    {
+        return TextSettings::class;
+    }
+
+    public static function defaultSettings(): TextSettings
+    {
+        return new TextSettings();
     }
 }

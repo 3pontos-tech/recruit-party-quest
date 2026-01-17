@@ -7,6 +7,7 @@ namespace He4rt\Screening\QuestionTypes;
 use Filament\Forms\Components\TextInput;
 use He4rt\Screening\Contracts\QuestionTypeContract;
 use He4rt\Screening\Enums\QuestionTypeEnum;
+use He4rt\Screening\QuestionTypes\Settings\NumberSettings;
 
 /**
  * Number question type - numeric input with min/max constraints.
@@ -55,5 +56,15 @@ final class NumberType implements QuestionTypeContract
                 ->label(__('screening::question_types.number.settings.suffix'))
                 ->placeholder('years'),
         ];
+    }
+
+    public static function settingsClass(): string
+    {
+        return NumberSettings::class;
+    }
+
+    public static function defaultSettings(): NumberSettings
+    {
+        return new NumberSettings();
     }
 }

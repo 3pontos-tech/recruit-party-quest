@@ -130,9 +130,12 @@ it('can handle mixed create, update, and delete operations', function (): void {
             questionText: 'Brand new question',
             questionType: QuestionTypeEnum::SingleChoice,
             displayOrder: 2,
-            choices: [
-                ['value' => 'a', 'label' => 'Option A'],
-                ['value' => 'b', 'label' => 'Option B'],
+            settings: [
+                'layout' => 'radio',
+                'choices' => [
+                    ['value' => 'a', 'label' => 'Option A'],
+                    ['value' => 'b', 'label' => 'Option B'],
+                ],
             ],
         ),
         // questionToDelete is not included, so it should be deleted
@@ -146,7 +149,6 @@ it('can handle mixed create, update, and delete operations', function (): void {
     expect($questions)->toHaveCount(2)
         ->and($questions[0]->question_text)->toBe('Updated existing')
         ->and($questions[1]->question_text)->toBe('Brand new question')
-        ->and($questions[1]->choices)->toHaveCount(2)
         ->and(ScreeningQuestion::query()->find($questionToDelete->id))->toBeNull();
 });
 

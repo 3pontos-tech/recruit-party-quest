@@ -43,21 +43,26 @@ it('can create a DTO from array', function (): void {
         ->and($dto->id)->toBe('question-789');
 });
 
-it('can create a DTO from array with enum instance', function (): void {
+it('can create a DTO from array with enum instance and settings', function (): void {
     $dto = ScreeningQuestionDTO::fromArray([
         'requisition_id' => 'req-123',
         'team_id' => 'team-456',
         'question_text' => 'Select your skills',
         'question_type' => QuestionTypeEnum::MultipleChoice,
         'display_order' => 3,
-        'choices' => [
-            ['value' => 'php', 'label' => 'PHP'],
-            ['value' => 'js', 'label' => 'JavaScript'],
+        'settings' => [
+            'min_selections' => 1,
+            'max_selections' => 3,
+            'choices' => [
+                ['value' => 'php', 'label' => 'PHP'],
+                ['value' => 'js', 'label' => 'JavaScript'],
+            ],
         ],
     ]);
 
     expect($dto->questionType)->toBe(QuestionTypeEnum::MultipleChoice)
-        ->and($dto->choices)->toHaveCount(2);
+        ->and($dto->settings)->toHaveKey('choices')
+        ->and($dto->settings['choices'])->toHaveCount(2);
 });
 
 it('can create a collection from repeater data', function (): void {
@@ -109,7 +114,7 @@ it('can convert to array', function (): void {
         'display_order',
         'is_required',
         'is_knockout',
-        'choices',
+        'settings',
         'knockout_criteria',
     ])
         ->and($array['requisition_id'])->toBe('req-123')

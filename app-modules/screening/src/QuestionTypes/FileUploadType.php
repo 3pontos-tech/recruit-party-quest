@@ -8,6 +8,7 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use He4rt\Screening\Contracts\QuestionTypeContract;
 use He4rt\Screening\Enums\QuestionTypeEnum;
+use He4rt\Screening\QuestionTypes\Settings\FileUploadSettings;
 
 /**
  * File upload question type - document/file uploads with size and type restrictions.
@@ -55,5 +56,15 @@ final class FileUploadType implements QuestionTypeContract
                 ->suggestions(['pdf', 'doc', 'docx', 'txt', 'jpg', 'png'])
                 ->columnSpanFull(),
         ];
+    }
+
+    public static function settingsClass(): string
+    {
+        return FileUploadSettings::class;
+    }
+
+    public static function defaultSettings(): FileUploadSettings
+    {
+        return new FileUploadSettings();
     }
 }

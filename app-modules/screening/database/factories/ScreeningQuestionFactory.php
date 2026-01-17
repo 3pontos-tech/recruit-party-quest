@@ -24,7 +24,7 @@ class ScreeningQuestionFactory extends Factory
             'screenable_id' => JobRequisition::factory(),
             'question_text' => fake()->sentence().'?',
             'question_type' => fake()->randomElement(QuestionTypeEnum::cases()),
-            'choices' => null,
+            'settings' => null,
             'is_required' => fake()->boolean(70),
             'is_knockout' => fake()->boolean(30),
             'knockout_criteria' => null,
@@ -36,7 +36,7 @@ class ScreeningQuestionFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'question_type' => QuestionTypeEnum::YesNo,
-            'choices' => null,
+            'settings' => [],
         ]);
     }
 
@@ -44,10 +44,13 @@ class ScreeningQuestionFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'question_type' => QuestionTypeEnum::SingleChoice,
-            'choices' => [
-                ['value' => 'option_a', 'label' => 'Option A'],
-                ['value' => 'option_b', 'label' => 'Option B'],
-                ['value' => 'option_c', 'label' => 'Option C'],
+            'settings' => [
+                'layout' => 'radio',
+                'choices' => [
+                    ['value' => 'option_a', 'label' => 'Option A'],
+                    ['value' => 'option_b', 'label' => 'Option B'],
+                    ['value' => 'option_c', 'label' => 'Option C'],
+                ],
             ],
         ]);
     }
@@ -56,11 +59,15 @@ class ScreeningQuestionFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'question_type' => QuestionTypeEnum::MultipleChoice,
-            'choices' => [
-                ['value' => 'option_a', 'label' => 'Option A'],
-                ['value' => 'option_b', 'label' => 'Option B'],
-                ['value' => 'option_c', 'label' => 'Option C'],
-                ['value' => 'option_d', 'label' => 'Option D'],
+            'settings' => [
+                'min_selections' => 0,
+                'max_selections' => null,
+                'choices' => [
+                    ['value' => 'option_a', 'label' => 'Option A'],
+                    ['value' => 'option_b', 'label' => 'Option B'],
+                    ['value' => 'option_c', 'label' => 'Option C'],
+                    ['value' => 'option_d', 'label' => 'Option D'],
+                ],
             ],
         ]);
     }
@@ -69,7 +76,11 @@ class ScreeningQuestionFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'question_type' => QuestionTypeEnum::Text,
-            'choices' => null,
+            'settings' => [
+                'max_length' => null,
+                'multiline' => false,
+                'placeholder' => null,
+            ],
         ]);
     }
 
@@ -77,7 +88,13 @@ class ScreeningQuestionFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'question_type' => QuestionTypeEnum::Number,
-            'choices' => null,
+            'settings' => [
+                'min' => null,
+                'max' => null,
+                'step' => null,
+                'prefix' => null,
+                'suffix' => null,
+            ],
         ]);
     }
 
@@ -85,7 +102,11 @@ class ScreeningQuestionFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'question_type' => QuestionTypeEnum::FileUpload,
-            'choices' => null,
+            'settings' => [
+                'max_size_kb' => 5120,
+                'max_files' => 1,
+                'allowed_extensions' => ['pdf', 'doc', 'docx'],
+            ],
         ]);
     }
 

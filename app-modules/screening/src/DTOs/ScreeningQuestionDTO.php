@@ -9,13 +9,11 @@ use He4rt\Screening\Enums\QuestionTypeEnum;
 /**
  * Data Transfer Object for screening question data.
  *
- * @phpstan-type ChoiceArray array{value: string, label: string}
  * @phpstan-type KnockoutCriteriaArray array<string, mixed>
  */
 readonly class ScreeningQuestionDTO
 {
     /**
-     * @param  array<int, ChoiceArray>|null  $choices
      * @param  array<string, mixed>|null  $settings
      * @param  KnockoutCriteriaArray|null  $knockoutCriteria
      */
@@ -27,7 +25,6 @@ readonly class ScreeningQuestionDTO
         public int $displayOrder,
         public bool $isRequired = true,
         public bool $isKnockout = false,
-        public ?array $choices = null,
         public ?array $settings = null,
         public ?array $knockoutCriteria = null,
         public ?string $id = null,
@@ -44,7 +41,6 @@ readonly class ScreeningQuestionDTO
      *     display_order: int,
      *     is_required?: bool,
      *     is_knockout?: bool,
-     *     choices?: array<int, ChoiceArray>|null,
      *     settings?: array<string, mixed>|null,
      *     knockout_criteria?: KnockoutCriteriaArray|null,
      *     id?: string|null,
@@ -64,7 +60,6 @@ readonly class ScreeningQuestionDTO
             displayOrder: (int) $data['display_order'],
             isRequired: $data['is_required'] ?? true,
             isKnockout: $data['is_knockout'] ?? false,
-            choices: $data['choices'] ?? null,
             settings: $data['settings'] ?? null,
             knockoutCriteria: $data['knockout_criteria'] ?? null,
             id: $data['id'] ?? null,
@@ -93,7 +88,6 @@ readonly class ScreeningQuestionDTO
                 'display_order' => $item['display_order'] ?? $index + 1,
                 'is_required' => $item['is_required'] ?? true,
                 'is_knockout' => $item['is_knockout'] ?? false,
-                'choices' => $item['choices'] ?? null,
                 'settings' => $item['settings'] ?? null,
                 'knockout_criteria' => $item['knockout_criteria'] ?? null,
                 'id' => $item['id'] ?? null,
@@ -118,7 +112,6 @@ readonly class ScreeningQuestionDTO
             'display_order' => $this->displayOrder,
             'is_required' => $this->isRequired,
             'is_knockout' => $this->isKnockout,
-            'choices' => $this->choices,
             'settings' => $this->settings,
             'knockout_criteria' => $this->knockoutCriteria,
         ];
