@@ -50,8 +50,7 @@ class ApplicationForm
                             ->getOptionLabelFromRecordUsing(fn ($record) => $record->user->name ?? $record->id)
                             ->required()
                             ->preload()
-                            ->searchable()
-                            ->disabledOn('edit'),
+                            ->searchable(),
                         Select::make('status')
                             ->label(__('applications::filament.fields.status'))
                             ->options(ApplicationStatusEnum::class)
