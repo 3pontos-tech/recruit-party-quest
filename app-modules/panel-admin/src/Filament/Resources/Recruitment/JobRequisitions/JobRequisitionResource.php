@@ -13,9 +13,9 @@ use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\Pages\CreateJobRe
 use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\Pages\EditJobRequisition;
 use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\Pages\ListJobRequisitions;
 use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\RelationManagers\PipelineStagesRelationManager;
-use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\RelationManagers\ScreeningQuestionsRelationManager;
 use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\Schemas\JobRequisitionForm;
 use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\Tables\JobRequisitionsTable;
+use He4rt\Admin\Filament\Resources\Recruitment\Screening\ScreeningQuestionsRelationManager;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
