@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Applications\Policies;
 
+use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Permissions\PermissionsEnum;
 use He4rt\Users\User;
@@ -46,5 +47,26 @@ class ApplicationPolicy
     public function forceDelete(User $user, Application $application): bool
     {
         return $user->hasPermissionTo(PermissionsEnum::ForceDelete->buildPermissionFor(Application::class));
+    }
+
+    public function transition(User $user, Application $application, string $toStatus): bool
+    {
+        // TODO: fazer testes para isso
+        if (! $user->hasPermissionTo(PermissionsEnum::Update->buildPermissionFor(Application::class))) {
+            return false;
+        }
+
+        $offerTransitions = [
+            ApplicationStatusEnum::OfferExtended->value,
+            ApplicationStatusEnum::OfferAccepted->value,
+            ApplicationStatusEnum::OfferDeclined->value,
+            ApplicationStatusEnum::Hired->value,
+        ];
+
+        if (in_array($toStatus, $offerTransitions, true)) {
+            return $user->hasPermissionTo('manage-offers');
+        }
+
+        return true;
     }
 }
