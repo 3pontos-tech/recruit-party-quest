@@ -67,4 +67,9 @@ final class FileUploadType implements QuestionTypeContract
     {
         return new FileUploadSettings();
     }
+
+    public static function component(): string
+    {
+        return 'screening::questions.file-upload';
+    }
 }

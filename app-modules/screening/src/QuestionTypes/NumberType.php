@@ -67,4 +67,9 @@ final class NumberType implements QuestionTypeContract
     {
         return new NumberSettings();
     }
+
+    public static function component(): string
+    {
+        return 'screening::questions.number';
+    }
 }

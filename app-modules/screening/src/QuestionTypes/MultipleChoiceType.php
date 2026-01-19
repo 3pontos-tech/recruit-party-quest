@@ -73,4 +73,9 @@ final class MultipleChoiceType implements QuestionTypeContract
     {
         return new MultipleChoiceSettings();
     }
+
+    public static function component(): string
+    {
+        return 'screening::questions.multiple-choice';
+    }
 }

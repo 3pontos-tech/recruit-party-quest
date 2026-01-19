@@ -60,4 +60,9 @@ final class TextType implements QuestionTypeContract
     {
         return new TextSettings();
     }
+
+    public static function component(): string
+    {
+        return 'screening::questions.text';
+    }
 }

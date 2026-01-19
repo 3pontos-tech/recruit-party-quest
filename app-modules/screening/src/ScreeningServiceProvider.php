@@ -16,6 +16,7 @@ class ScreeningServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'screening');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'screening');
 
         Relation::morphMap([
             'screening_questions' => ScreeningQuestion::class,

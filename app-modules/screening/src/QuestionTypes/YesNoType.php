@@ -45,4 +45,9 @@ final class YesNoType implements QuestionTypeContract
     {
         return new YesNoSettings();
     }
+
+    public static function component(): string
+    {
+        return 'screening::questions.yes-no';
+    }
 }

@@ -47,4 +47,11 @@ interface QuestionTypeContract
      * Create default settings for this type.
      */
     public static function defaultSettings(): object;
+
+    /**
+     * Get the Blade component name for rendering this question type.
+     *
+     * Used with x-dynamic-component for public-facing forms.
+     */
+    public static function component(): string;
 }

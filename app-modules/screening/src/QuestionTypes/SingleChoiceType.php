@@ -70,4 +70,9 @@ final class SingleChoiceType implements QuestionTypeContract
     {
         return new SingleChoiceSettings();
     }
+
+    public static function component(): string
+    {
+        return 'screening::questions.single-choice';
+    }
 }
