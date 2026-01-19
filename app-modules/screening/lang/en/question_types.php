@@ -5,6 +5,8 @@ declare(strict_types=1);
 return [
     'yes_no' => [
         'label' => 'Yes/No',
+        'yes' => 'Yes',
+        'no' => 'No',
     ],
     'text' => [
         'label' => 'Text',

@@ -61,7 +61,7 @@
 
         <section>
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <x-screening::questions.text
+                <x-screening::questions.number
                     :question="\He4rt\Screening\Models\ScreeningQuestion::query()->where('id', '019bd69f-132c-72a8-a8db-14493d2ec938')->firstOrFail()"
                 />
             </div>

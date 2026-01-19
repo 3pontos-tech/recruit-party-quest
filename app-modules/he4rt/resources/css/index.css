@@ -10,6 +10,7 @@
 @import './components/avatar.css' layer(components);
 @import './components/avatar-stack.css' layer(components);
 @import './components/text-input.css' layer(components);
+@import './components/radio.css' layer(components);
 @import './components/tag.css' layer(components);
 @import './components/badge.css' layer(components);
 @import './components/heading.css' layer(components);
@@ -44,6 +45,7 @@
     0% {
         transform: translateX(0);
     }
+
     100% {
         transform: translateX(-100%);
     }
