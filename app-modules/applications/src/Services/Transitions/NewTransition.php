@@ -6,6 +6,7 @@ namespace He4rt\Applications\Services\Transitions;
 
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Exceptions\InvalidTransitionException;
+use He4rt\Recruitment\Stages\Models\Stage;
 
 final class NewTransition extends AbstractApplicationTransition
 {
@@ -24,14 +25,23 @@ final class NewTransition extends AbstractApplicationTransition
     }
 
     /**
-     * Expect meta['to_status'] to indicate destination status and apply changes atomically.
-     *
      * @param  array<string,mixed>  $meta
      */
     public function processStep(array $meta = []): void
     {
         match (ApplicationStatusEnum::tryFrom($meta['to_status'])) {
-            ApplicationStatusEnum::InReview => $this->application->update(['status' => ApplicationStatusEnum::InReview]),
+            ApplicationStatusEnum::InReview => $this->application->update([
+                'status' => ApplicationStatusEnum::InReview,
+                'current_stage_id' => Stage::query()
+                    ->where('job_requisition_id', $this->application->requisition_id)
+                    ->where('active', true)
+                    ->orderBy('display_order')
+                    ->value('id'),
+            ]),
+
+            ApplicationStatusEnum::Withdrawn => $this->application->update([
+                'status' => ApplicationStatusEnum::Withdrawn,
+            ]),
 
             ApplicationStatusEnum::Rejected => $this->application->update([
                 'status' => ApplicationStatusEnum::Rejected,
@@ -41,21 +51,8 @@ final class NewTransition extends AbstractApplicationTransition
                 'rejection_reason_details' => $meta['rejection_reason_details'] ?? null,
             ]),
 
-            ApplicationStatusEnum::Withdrawn => $this->application->update([
-                'status' => ApplicationStatusEnum::Withdrawn,
-            ]),
-
-            default => throw new InvalidTransitionException('Transition from New to '.($to->value ?? '').' is not allowed'),
+            default => throw new InvalidTransitionException('Transition from New to '.($meta['to_status'] ?? '').' is not allowed'),
         };
-
-        if (isset($meta['to_stage_id'])) {
-            $this->application->stageHistory()->create([
-                'from_stage_id' => $meta['from_stage_id'] ?? null,
-                'to_stage_id' => $meta['to_stage_id'],
-                'moved_by' => $meta['by_user_id'] ?? null,
-                'notes' => $meta['notes'] ?? null,
-            ]);
-        }
     }
 
     public function notify(array $meta = []): void

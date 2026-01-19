@@ -23,8 +23,17 @@ final class OfferAcceptedTransition extends AbstractApplicationTransition
 
     public function processStep(array $meta = []): void
     {
+        $fromStage = $this->application->current_stage_id;
+
         $this->application->update([
             'status' => ApplicationStatusEnum::OfferAccepted,
+        ]);
+
+        $this->application->stageHistory()->create([
+            'from_stage_id' => $fromStage,
+            'to_stage_id' => $this->application->current_stage_id,
+            'moved_by' => $meta['by_user_id'] ?? null,
+            'notes' => $meta['notes'] ?? null,
         ]);
     }
 

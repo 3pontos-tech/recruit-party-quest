@@ -7,6 +7,8 @@ namespace He4rt\Applications\Services\Transitions;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Exceptions\MissingTransitionDataException;
 
+use function now;
+
 final class RejectApplicationTransition extends AbstractApplicationTransition
 {
     public function choices(): array
@@ -25,12 +27,13 @@ final class RejectApplicationTransition extends AbstractApplicationTransition
 
         $fromStage = $this->application->current_stage_id;
 
-        $this->application->status = ApplicationStatusEnum::Rejected;
-        $this->application->rejected_at = $meta['rejected_at'] ?? now();
-        $this->application->rejected_by = $meta['by_user_id'] ?? null;
-        $this->application->rejection_reason_category = $meta['rejection_reason_category'];
-        $this->application->rejection_reason_details = $meta['rejection_reason_details'] ?? null;
-        $this->application->save();
+        $this->application->update([
+            'status' => ApplicationStatusEnum::Rejected,
+            'rejected_at' => $meta['rejected_at'] ?? now(),
+            'rejected_by' => $meta['by_user_id'] ?? null,
+            'rejection_reason_category' => $meta['rejection_reason_category'],
+            'rejection_reason_details' => $meta['rejection_reason_details'] ?? null,
+        ]);
 
         // persist stage history
         $this->application->stageHistory()->create([

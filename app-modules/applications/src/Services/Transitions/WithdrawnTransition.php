@@ -29,16 +29,18 @@ final class WithdrawnTransition extends AbstractApplicationTransition
      */
     public function processStep(array $meta = []): void
     {
-        $this->application->status = ApplicationStatusEnum::Withdrawn;
+        $fromStage = $this->application->current_stage_id;
 
-        $now = now();
+        $this->application->update([
+            'status' => ApplicationStatusEnum::Withdrawn,
+        ]);
 
-        // record withdrawn metadata if provided
-        $this->application->withdrawn_at = $meta['withdrawn_at'] ?? $now;
-        $this->application->withdrawn_by = $meta['withdrawn_by'] ?? $meta['by_user_id'] ?? null;
-        $this->application->withdrawn_reason = $meta['withdrawn_reason'] ?? null;
-
-        $this->application->save();
+        $this->application->stageHistory()->create([
+            'from_stage_id' => $fromStage,
+            'to_stage_id' => $this->application->current_stage_id,
+            'moved_by' => $meta['by_user_id'] ?? null,
+            'notes' => $meta['notes'] ?? null,
+        ]);
     }
 
     public function notify(array $meta = []): void

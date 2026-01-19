@@ -21,10 +21,18 @@ final class OfferDeclinedTransition extends AbstractApplicationTransition
 
     public function processStep(array $meta = []): void
     {
-        $this->application->status = ApplicationStatusEnum::OfferDeclined;
-        $this->application->offer_declined_at = $meta['offer_declined_at'] ?? now();
-        $this->application->offer_declined_by = $meta['by_user_id'] ?? auth()?->id();
-        $this->application->save();
+        $fromStage = $this->application->current_stage_id;
+
+        $this->application->update([
+            'status' => ApplicationStatusEnum::OfferDeclined,
+        ]);
+
+        $this->application->stageHistory()->create([
+            'from_stage_id' => $fromStage,
+            'to_stage_id' => $this->application->current_stage_id,
+            'moved_by' => $meta['by_user_id'] ?? null,
+            'notes' => $meta['notes'] ?? null,
+        ]);
     }
 
     public function notify(array $meta = []): void

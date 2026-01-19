@@ -20,8 +20,18 @@ final class HiredTransition extends AbstractApplicationTransition
 
     public function processStep(array $meta = []): void
     {
-        $this->application->status = ApplicationStatusEnum::Hired;
-        $this->application->save();
+        $fromStage = $this->application->current_stage_id;
+
+        $this->application->update([
+            'status' => ApplicationStatusEnum::Hired,
+        ]);
+
+        $this->application->stageHistory()->create([
+            'from_stage_id' => $fromStage,
+            'to_stage_id' => $this->application->current_stage_id,
+            'moved_by' => $meta['by_user_id'] ?? null,
+            'notes' => $meta['notes'] ?? null,
+        ]);
     }
 
     public function notify(array $meta = []): void
