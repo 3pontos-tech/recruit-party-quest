@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Admin\Filament\Resources\Stages;
+namespace He4rt\Admin\Filament\Resources\Recruitment\Stages;
 
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -10,10 +10,10 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use He4rt\Admin\Filament\Resources\Recruitment\Screening\ScreeningQuestionsRelationManager;
-use He4rt\Admin\Filament\Resources\Stages\Pages\EditStage;
-use He4rt\Admin\Filament\Resources\Stages\Pages\ListStages;
-use He4rt\Admin\Filament\Resources\Stages\Schemas\StageForm;
-use He4rt\Admin\Filament\Resources\Stages\Tables\StagesTable;
+use He4rt\Admin\Filament\Resources\Recruitment\Stages\Pages\EditStage;
+use He4rt\Admin\Filament\Resources\Recruitment\Stages\Pages\ListStages;
+use He4rt\Admin\Filament\Resources\Recruitment\Stages\Schemas\StageForm;
+use He4rt\Admin\Filament\Resources\Recruitment\Stages\Tables\StagesTable;
 use He4rt\Recruitment\Stages\Models\Stage;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -53,6 +53,9 @@ class StageResource extends Resource
         ];
     }
 
+    /**
+     * @return Builder<Stage>
+     */
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
         return parent::getRecordRouteBindingEloquentQuery()

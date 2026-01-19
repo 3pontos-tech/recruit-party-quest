@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Admin\Filament\Resources\Stages\Pages;
+namespace He4rt\Admin\Filament\Resources\Recruitment\Stages\Pages;
 
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
 use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
-use He4rt\Admin\Filament\Resources\Stages\StageResource;
+use He4rt\Admin\Filament\Resources\Recruitment\Stages\StageResource;
 use He4rt\Recruitment\Stages\Models\Stage;
 
 /**
@@ -25,7 +25,7 @@ class EditStage extends EditRecord
 
         return [
             config('app.url').'/admin' => 'Dashboard',
-            JobRequisitionResource::getUrl('edit', ['record' => $stage->job_requisition_id]) => 'Vaga: '.$stage->requisition->post->title ?? 'Editar Vaga',
+            JobRequisitionResource::getUrl('edit', ['record' => $stage->job_requisition_id]) => 'Vaga: '.($stage->requisition->post->title),
             $stage->name,
         ];
     }

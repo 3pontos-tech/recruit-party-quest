@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Admin\Filament\Resources\Stages\Schemas;
+namespace He4rt\Admin\Filament\Resources\Recruitment\Stages\Schemas;
 
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;

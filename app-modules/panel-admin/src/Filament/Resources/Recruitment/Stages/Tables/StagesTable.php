@@ -2,17 +2,15 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Admin\Filament\Resources\Stages\Tables;
+namespace He4rt\Admin\Filament\Resources\Recruitment\Stages\Tables;
 
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 
 class StagesTable
 {
@@ -45,14 +43,14 @@ class StagesTable
                 DeleteAction::make(),
             ])
             ->headerActions([
-                CreateAction::make()
-                    ->mutateDataUsing(function (array $data): array {
-                        /** @var JobRequisition $model */
-                        $model = $this->getOwnerRecord();
-                        $data['team_id'] = $model->team_id;
-
-                        return $data;
-                    }),
+                //                CreateAction::make()
+                //                    ->mutateDataUsing(function (array $data): array {
+                //                        /** @var Stage $model */
+                //                        $model = $this->getOwnerRecord();
+                //                        $data['team_id'] = $model->team_id;
+                //
+                //                        return $data;
+                //                    }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
