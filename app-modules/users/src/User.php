@@ -7,6 +7,7 @@ namespace He4rt\Users;
 use App\Enums\FilamentPanel;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
+use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Permissions\Permission;
@@ -48,7 +49,7 @@ use Spatie\Permission\Traits\HasRoles;
 #[UsePolicy(UserPolicy::class)]
 #[UseFactory(UserFactory::class)]
 #[ObservedBy(UserObserver::class)]
-final class User extends Authenticatable implements FilamentUser, HasAvatar, HasMedia
+final class User extends Authenticatable implements FilamentUser, HasAvatar, HasMedia, HasTenants
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory;
