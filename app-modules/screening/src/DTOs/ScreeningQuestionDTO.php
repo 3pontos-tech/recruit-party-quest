@@ -48,15 +48,11 @@ readonly class ScreeningQuestionDTO
      */
     public static function fromArray(array $data): self
     {
-        $questionType = $data['question_type'] instanceof QuestionTypeEnum
-            ? $data['question_type']
-            : QuestionTypeEnum::from($data['question_type']);
-
         return new self(
             requisitionId: $data['requisition_id'],
             teamId: $data['team_id'],
             questionText: $data['question_text'],
-            questionType: $questionType,
+            questionType: $data['question_type'],
             displayOrder: (int) $data['display_order'],
             isRequired: $data['is_required'] ?? true,
             isKnockout: $data['is_knockout'] ?? false,
