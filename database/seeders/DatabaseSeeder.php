@@ -39,10 +39,11 @@ final class DatabaseSeeder extends Seeder
         $admin->assignRole(Roles::SuperAdmin);
 
         $team = Team::factory()
-            ->recycle($admin)
+            ->hasDepartments(2)
             ->create([
                 'name' => '3Pontos',
                 'slug' => '3pontos',
+                'owner_id' => $admin->getKey(),
             ]);
 
         $team->members()->attach($admin);

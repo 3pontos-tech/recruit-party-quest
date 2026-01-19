@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Enums\FilamentPanel;
+use App\Filament\Shared\Pages\LoginPage;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -34,6 +35,7 @@ class OrganizationPanelProvider extends PanelProvider
             ->id($this->panelEnum->value)
             ->path($this->panelEnum->getPath())
             ->tenant(model: Team::class, slugAttribute: 'slug')
+            ->login(LoginPage::class)
             ->colors([
                 'primary' => Color::Amber,
             ])

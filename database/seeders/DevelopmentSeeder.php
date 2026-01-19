@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use Exception;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Candidates\Models\Education;
@@ -29,12 +30,19 @@ final class DevelopmentSeeder extends Seeder
     {
         $this->command->info('Running Development Seeder...');
 
-        $teams = Team::factory()->count(3)
+        Team::factory()->count(3)
             ->has(Department::factory()->count(2))
             ->create();
 
-        $users = User::factory()->count(20)->create();
-        $users->each(fn (User $user) => $user->teams()->attach($teams->random()));
+        $teams = Team::all();
+
+        $users = User::factory()->count(15)->create();
+
+        try {
+            $users->each(fn (User $user) => $user->teams()->attach($teams->random()));
+        } catch (Exception) {
+
+        }
 
         $candidates = Candidate::factory()->count(15)->recycle($users)->create();
 
@@ -80,6 +88,7 @@ final class DevelopmentSeeder extends Seeder
             foreach ($stages as $index => $stageData) {
                 Stage::factory()
                     ->recycle($requisition)
+                    ->recycle($requisition->team)
                     ->create([
                         'stage_type' => $stageData['type'],
                         'name' => $stageData['name'],
@@ -106,6 +115,7 @@ final class DevelopmentSeeder extends Seeder
             $application = Application::factory()
                 ->recycle($requisition)
                 ->recycle($candidate)
+                ->recycle($requisition->team)
                 ->recycle($users)
                 ->state([
                     'current_stage_id' => $requisitionStages->random()->id,
@@ -114,12 +124,14 @@ final class DevelopmentSeeder extends Seeder
 
             ApplicationComment::factory()
                 ->count(fake()->numberBetween(0, 3))
+                ->recycle($application->team)
                 ->recycle($application)
                 ->recycle($users)
                 ->create();
 
             Evaluation::factory()
                 ->count(fake()->numberBetween(0, 2))
+                ->recycle($application->team)
                 ->recycle($application)
                 ->state(['stage_id' => $application->current_stage_id])
                 ->recycle($users)
