@@ -18,7 +18,7 @@ final class DatabaseSeeder extends Seeder
     {
         $this->syncPermissions();
 
-        if (app()->isLocal()) {
+        if (! app()->isProduction()) {
             $this->spawnAdminUser();
             $this->call(DevelopmentSeeder::class);
         }
