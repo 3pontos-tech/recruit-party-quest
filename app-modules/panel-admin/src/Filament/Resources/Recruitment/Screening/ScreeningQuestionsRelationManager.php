@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\RelationManagers;
+namespace He4rt\Admin\Filament\Resources\Recruitment\Screening;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
