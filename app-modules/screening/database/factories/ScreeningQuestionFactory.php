@@ -19,7 +19,8 @@ class ScreeningQuestionFactory extends Factory
     {
         return [
             'team_id' => Team::factory(),
-            'requisition_id' => JobRequisition::factory(),
+            'screenable_type' => JobRequisition::class,
+            'screenable_id' => JobRequisition::factory(),
             'question_text' => fake()->sentence().'?',
             'question_type' => fake()->randomElement(QuestionTypeEnum::cases()),
             'choices' => null,

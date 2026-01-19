@@ -13,7 +13,7 @@ return new class extends Migration
         Schema::create('screening_questions', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->foreignUuid('team_id')->constrained('teams')->cascadeOnDelete();
-            $table->foreignUuid('requisition_id')->constrained('recruitment_job_requisitions')->cascadeOnDelete();
+            $table->morphs('screenable');
 
             $table->text('question_text');
             $table->string('question_type');
