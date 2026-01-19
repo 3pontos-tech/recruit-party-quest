@@ -26,7 +26,7 @@ use Illuminate\Support\Carbon;
  * @property string $screenable_type
  * @property string $question_text
  * @property QuestionTypeEnum $question_type
- * @property object|null $settings
+ * @property array<string, mixed>|null $settings
  * @property bool $is_required
  * @property bool $is_knockout
  * @property array<string, mixed>|null $knockout_criteria

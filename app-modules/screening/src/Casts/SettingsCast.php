@@ -20,8 +20,9 @@ class SettingsCast implements CastsAttributes
      * Cast the given value from the database.
      *
      * @param  array<string, mixed>  $attributes
+     * @return array<string, mixed>|null
      */
-    public function get(Model $model, string $key, mixed $value, array $attributes): ?object
+    public function get(Model $model, string $key, mixed $value, array $attributes): ?array
     {
         if ($value === null || ! isset($attributes['question_type'])) {
             return null;
@@ -36,7 +37,7 @@ class SettingsCast implements CastsAttributes
 
         $data = is_string($value) ? json_decode($value, true) : $value;
 
-        return $settingsClass::fromArray($data ?? []);
+        return $settingsClass::fromArray($data ?? [])->toArray();
     }
 
     /**
