@@ -30,6 +30,7 @@ return [
     ],
     'single_choice' => [
         'label' => 'Single Choice',
+        'select_placeholder' => 'Select an option...',
         'settings' => [
             'layout' => 'Layout',
             'layout_radio' => 'Radio Buttons',
@@ -42,6 +43,9 @@ return [
     ],
     'multiple_choice' => [
         'label' => 'Multiple Choice',
+        'select_between' => 'Select between :min and :max options',
+        'select_min' => 'Select at least :min options',
+        'select_max' => 'Select up to :max options',
         'settings' => [
             'min_selections' => 'Minimum Selections',
             'max_selections' => 'Maximum Selections',

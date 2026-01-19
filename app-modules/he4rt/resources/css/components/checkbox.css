@@ -1,0 +1,37 @@
+.hp-checkbox-group {
+    @apply flex flex-col gap-2;
+}
+
+.hp-checkbox-group--horizontal {
+    @apply flex-row gap-4;
+}
+
+.hp-checkbox-label {
+    @apply flex cursor-pointer items-center gap-2;
+}
+
+.hp-checkbox-label--disabled {
+    @apply cursor-not-allowed opacity-60;
+}
+
+.hp-checkbox {
+    @apply h-5 w-5 shrink-0;
+    @apply appearance-none;
+    @apply border-outline-low rounded-md border-2;
+    @apply bg-transparent;
+    @apply transition-all duration-200 ease-in-out;
+    @apply focus:ring-primary focus:ring-2 focus:ring-offset-2;
+    @apply checked:border-primary checked:bg-primary;
+    @apply disabled:cursor-not-allowed disabled:opacity-60;
+
+    /* Custom checkmark for checked state */
+    position: relative;
+}
+
+.hp-checkbox:checked::after {
+    content: '';
+    @apply absolute top-1/2 left-1/2;
+    @apply -translate-x-1/2 -translate-y-1/2;
+    @apply h-2.5 w-1.5;
+    @apply rotate-45 border-r-2 border-b-2 border-white;
+}

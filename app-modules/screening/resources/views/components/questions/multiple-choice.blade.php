@@ -1,0 +1,86 @@
+@props([
+    'question',
+    'name' => null,
+    'value' => null,
+    'disabled' => false,
+])
+
+@php
+    $settings = $question->settings ?? [];
+    $minSelections = $settings['min_selections'] ?? 0;
+    $maxSelections = $settings['max_selections'] ?? null;
+    $choices = $settings['choices'] ?? [];
+    $inputName = $name ?? "answers[{$question->id}][]";
+    $selectedValues = is_array($value) ? $value : [];
+@endphp
+
+<div
+    {{ $attributes->class('screening-question') }}
+    x-data="{
+        selected: @js($selectedValues),
+        max: @js($maxSelections),
+        isDisabled: @js($disabled),
+        toggle(value) {
+            const index = this.selected.indexOf(value)
+            if (index === -1) {
+                this.selected.push(value)
+            } else {
+                this.selected.splice(index, 1)
+            }
+        },
+        isChecked(value) {
+            return this.selected.includes(value)
+        },
+        shouldDisable(value) {
+            if (this.isDisabled) return true
+            if (this.max === null) return false
+            return this.selected.length >= this.max && ! this.isChecked(value)
+        },
+    }"
+>
+    <div class="mb-2 flex items-center justify-between">
+        <x-he4rt::heading size="2xs">
+            {{ $question->question_text }}
+            @if ($question->is_required)
+                <span class="text-helper-error">*</span>
+            @endif
+        </x-he4rt::heading>
+
+        @if ($question->is_knockout)
+            <x-he4rt::text class="text-helper-warning font-family-secondary shrink-0 self-start text-sm">
+                (pergunta eliminatória)
+            </x-he4rt::text>
+        @endif
+    </div>
+
+    @if ($minSelections > 0 || $maxSelections !== null)
+        <x-he4rt::text class="text-text-medium mb-2 text-sm">
+            @if ($minSelections > 0 && $maxSelections !== null)
+                {{ __('screening::question_types.multiple_choice.select_between', ['min' => $minSelections, 'max' => $maxSelections]) }}
+            @elseif ($minSelections > 0)
+                {{ __('screening::question_types.multiple_choice.select_min', ['min' => $minSelections]) }}
+            @elseif ($maxSelections !== null)
+                {{ __('screening::question_types.multiple_choice.select_max', ['max' => $maxSelections]) }}
+            @endif
+        </x-he4rt::text>
+    @endif
+
+    <div class="hp-checkbox-group">
+        @foreach ($choices as $choice)
+            <label
+                class="hp-checkbox-label"
+                :class="{ 'hp-checkbox-label--disabled': shouldDisable('{{ $choice['value'] }}') }"
+            >
+                <input
+                    type="checkbox"
+                    name="{{ $inputName }}"
+                    value="{{ $choice['value'] }}"
+                    class="hp-checkbox"
+                    x-model="selected"
+                    :disabled="shouldDisable('{{ $choice['value'] }}')"
+                />
+                <x-he4rt::text>{{ $choice['label'] }}</x-he4rt::text>
+            </label>
+        @endforeach
+    </div>
+</div>
