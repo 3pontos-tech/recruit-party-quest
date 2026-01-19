@@ -1,0 +1,27 @@
+{
+    "name": "he4rt/panel-organization",
+    "description": "",
+    "type": "library",
+    "version": "1.0.0",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "He4rt\\Organization\\": "src/",
+            "He4rt\\Organization\\Database\\Factories\\": "database/factories/",
+            "He4rt\\Organization\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "He4rt\\Organization\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "He4rt\\Organization\\PanelOrganizationServiceProvider"
+            ]
+        }
+    }
+}

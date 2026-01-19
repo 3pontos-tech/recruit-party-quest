@@ -15,6 +15,8 @@ use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
+use He4rt\Organization\Filament\Pages\Tenancy\RegisterTenant;
+use He4rt\Teams\Team;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -31,9 +33,15 @@ class OrganizationPanelProvider extends PanelProvider
         return $panel
             ->id($this->panelEnum->value)
             ->path($this->panelEnum->getPath())
+            ->tenant(model: Team::class, slugAttribute: 'slug')
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->tenantRegistration(RegisterTenant::class)
+            ->discoverClusters(in: base_path('app-modules/panel-organization/src/Filament/Clusters'), for: 'He4rt\\Organization\\Filament\\Clusters')
+            ->discoverPages(in: base_path('app-modules/panel-organization/src/Filament/Pages'), for: 'He4rt\\Organization\\Filament\\Pages')
+            ->discoverResources(in: base_path('app-modules/panel-organization/src/Filament/Resources'), for: 'He4rt\\Organization\\Filament\\Resources')
+            ->discoverWidgets(in: base_path('app-modules/panel-organization/src/Filament/Widgets'), for: 'He4rt\\Organization\\Filament\\Widgets')
             ->discoverResources(in: app_path('Filament/Organization/Resources'), for: 'App\Filament\Organization\Resources')
             ->discoverPages(in: app_path('Filament/Organization/Pages'), for: 'App\Filament\Organization\Pages')
             ->pages([
