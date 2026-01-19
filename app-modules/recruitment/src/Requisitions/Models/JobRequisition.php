@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -101,11 +102,11 @@ class JobRequisition extends BaseModel
     }
 
     /**
-     * @return HasMany<ScreeningQuestion, $this>
+     * @return MorphMany<ScreeningQuestion, $this>
      */
-    public function screeningQuestions(): HasMany
+    public function screeningQuestions(): MorphMany
     {
-        return $this->hasMany(ScreeningQuestion::class, 'requisition_id');
+        return $this->morphMany(ScreeningQuestion::class, 'screenable');
     }
 
     /**

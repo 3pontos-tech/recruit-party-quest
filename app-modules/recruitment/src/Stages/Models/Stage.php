@@ -8,11 +8,13 @@ use App\Models\BaseModel;
 use He4rt\Recruitment\Database\Factories\StageFactory;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
+use He4rt\Screening\Models\ScreeningQuestion;
 use He4rt\Teams\Concerns\BelongsToTeam;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -45,6 +47,14 @@ class Stage extends BaseModel
     public function requisition(): BelongsTo
     {
         return $this->belongsTo(JobRequisition::class, 'job_requisition_id');
+    }
+
+    /**
+     * @return MorphMany<ScreeningQuestion, $this>
+     */
+    public function screeningQuestions(): MorphMany
+    {
+        return $this->morphMany(ScreeningQuestion::class, 'screenable');
     }
 
     /**
