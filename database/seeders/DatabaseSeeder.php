@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use He4rt\Permissions\Roles;
+use He4rt\Teams\Team;
 use He4rt\Users\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
@@ -31,11 +32,20 @@ final class DatabaseSeeder extends Seeder
     {
         $this->command->warn('Creating admin user...');
 
-        User::factory()
+        $admin = User::factory()
             ->admin()
-            ->create()
-            ->assignRole(Roles::SuperAdmin);
+            ->create();
 
+        $admin->assignRole(Roles::SuperAdmin);
+
+        $team = Team::factory()
+            ->recycle($admin)
+            ->create([
+                'name' => '3Pontos',
+                'slug' => '3pontos',
+            ]);
+
+        $team->members()->attach($admin);
         $this->command->info('Admin user created successfully.');
     }
 
