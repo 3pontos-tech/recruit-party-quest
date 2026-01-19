@@ -14,6 +14,7 @@ use Filament\Schemas\Schema;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
+use He4rt\Applications\Models\Application;
 
 class ApplicationForm
 {
@@ -27,6 +28,7 @@ class ApplicationForm
                         Select::make('team_id')
                             ->relationship('team', 'name')
                             ->label(__('teams::filament.department.fields.team'))
+                            ->reactive()
                             ->live(),
 
                         Select::make('requisition_id')
@@ -39,6 +41,7 @@ class ApplicationForm
                             ->required()
                             ->preload()
                             ->searchable()
+                            ->reactive()
                             ->live(),
                         Select::make('candidate_id')
                             ->label(__('applications::filament.fields.candidate'))
@@ -51,12 +54,16 @@ class ApplicationForm
                             ->required()
                             ->preload()
                             ->searchable(),
+
                         Select::make('status')
                             ->label(__('applications::filament.fields.status'))
-                            ->options(ApplicationStatusEnum::class)
+                            ->options(fn (Application $record) => $record->current_step->choices())
                             ->default(ApplicationStatusEnum::New)
                             ->required()
+                            ->disabled(fn (Application $record): bool => ! $record->current_step->canChange())
+                            ->reactive()
                             ->live(),
+
                         Select::make('source')
                             ->label(__('applications::filament.fields.source'))
                             ->options(CandidateSourceEnum::class)
@@ -69,8 +76,10 @@ class ApplicationForm
                             ->relationship(
                                 name: 'currentStage',
                                 titleAttribute: 'name',
-                                modifyQueryUsing: fn ($query, $get) => $query->where('job_requisition_id', $get('requisition_id'))
+                                modifyQueryUsing: fn ($query, $get) => $query->where('job_requisition_id',
+                                    $get('requisition_id'))
                             )
+                            ->reactive()
                             ->preload()
                             ->searchable(),
                     ]),

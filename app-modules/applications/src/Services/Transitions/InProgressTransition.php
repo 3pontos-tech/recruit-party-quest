@@ -12,7 +12,6 @@ final class InProgressTransition extends AbstractApplicationTransition
     public function choices(): array
     {
         return [
-            ApplicationStatusEnum::InProgress->value => ApplicationStatusEnum::InProgress->getLabel(),
             ApplicationStatusEnum::OfferExtended->value => ApplicationStatusEnum::OfferExtended->getLabel(),
             ApplicationStatusEnum::Rejected->value => ApplicationStatusEnum::Rejected->getLabel(),
             ApplicationStatusEnum::Withdrawn->value => ApplicationStatusEnum::Withdrawn->getLabel(),
@@ -26,21 +25,39 @@ final class InProgressTransition extends AbstractApplicationTransition
 
     public function processStep(array $meta = []): void
     {
-        if (isset($meta['to_stage_id'])) {
+        // Handle explicit stage movement or an "advance" request
+        if (isset($meta['to_stage_id']) || isset($meta['advance_stage'])) {
             $fromStage = $this->application->current_stage_id;
 
-            $toStage = Stage::query()
-                ->where('job_requisition_id', $this->application->requisition_id)
-                ->where('active', true)
-                ->where('display_order', '>', $this->application->currentStage()?->display_order)
-                ->orderBy('display_order')
-                ->value('id');
+            // Respect explicit to_stage_id when provided
+            if (isset($meta['to_stage_id'])) {
+                $toStage = $meta['to_stage_id'];
+            } else {
+                // Calculate next active stage by display_order
+                $toStage = Stage::query()
+                    ->where('job_requisition_id', $this->application->requisition_id)
+                    ->where('active', true)
+                    ->where('display_order', '>', $this->application->currentStage()?->display_order)
+                    ->orderBy('display_order')
+                    ->value('id');
+            }
 
+            // If no valid target stage was found, just update status
+            if ($toStage === null) {
+                $this->application->update([
+                    'status' => ApplicationStatusEnum::InProgress,
+                ]);
+
+                return;
+            }
+
+            // Persist the new current stage and status
             $this->application->update([
-                'current_stage_id' => $this->application->current_stage_id,
+                'current_stage_id' => $toStage,
                 'status' => ApplicationStatusEnum::InProgress,
             ]);
 
+            // Persist stage history
             $this->application->stageHistory()->create([
                 'from_stage_id' => $fromStage,
                 'to_stage_id' => $toStage,
@@ -62,7 +79,7 @@ final class InProgressTransition extends AbstractApplicationTransition
             ]);
 
             // persist stage history if provided
-            if (isset($meta['to_stage_id']) || isset($meta['from_stage_id'])) {
+            if (isset($meta['from_stage_id'])) {
                 $this->application->stageHistory()->create([
                     'from_stage_id' => $meta['from_stage_id'] ?? null,
                     'to_stage_id' => $meta['to_stage_id'] ?? $this->application->current_stage_id,
