@@ -26,12 +26,6 @@ final class InProgressTransition extends AbstractApplicationTransition
 
     public function processStep(array $meta = []): void
     {
-        //        $this->application->stageHistory()->create([
-        //            'from_stage_id' => $meta['from_stage_id'] ?? null,
-        //            'to_stage_id' => $meta['to_stage_id'] ?? $this->application->current_stage_id,
-        //            'moved_by' => $meta['by_user_id'] ?? null,
-        //            'notes' => $meta['notes'] ?? null,
-        //        ]);
         if (isset($meta['to_stage_id'])) {
             $fromStage = $this->application->current_stage_id;
 
@@ -57,11 +51,6 @@ final class InProgressTransition extends AbstractApplicationTransition
             return;
         }
 
-        match (ApplicationStatusEnum::tryFrom($meta['to_status'])) {
-            ApplicationStatusEnum::InProgress => null,
-            ApplicationStatusEnum::OfferExtended => null,
-            default => null,
-        };
         // Offer extended flow
         if (isset($meta['to_status']) && $meta['to_status'] === ApplicationStatusEnum::OfferExtended->value) {
             $this->application->update([
@@ -72,9 +61,20 @@ final class InProgressTransition extends AbstractApplicationTransition
                 'offer_response_deadline' => $meta['offer_response_deadline'] ?? $this->application->offer_response_deadline,
             ]);
 
+            // persist stage history if provided
+            if (isset($meta['to_stage_id']) || isset($meta['from_stage_id'])) {
+                $this->application->stageHistory()->create([
+                    'from_stage_id' => $meta['from_stage_id'] ?? null,
+                    'to_stage_id' => $meta['to_stage_id'] ?? $this->application->current_stage_id,
+                    'moved_by' => $meta['by_user_id'] ?? null,
+                    'notes' => $meta['notes'] ?? null,
+                ]);
+            }
+
             return;
         }
 
+        // Generic set to in_progress
         $this->application->update(['status' => ApplicationStatusEnum::InProgress]);
     }
 
