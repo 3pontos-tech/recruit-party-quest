@@ -4,36 +4,36 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eeefc87d73af23ca202c5578078dc431",
+    "content-hash": "7ffa471e66a9ce088060acf847357b95",
     "packages": [
         {
             "name": "alizharb/filament-activity-log",
-            "version": "v1.1.3",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AlizHarb/filament-activity-log.git",
-                "reference": "5f2c94e3667bfaa5f42c03ec14efea4a7019f43c"
+                "reference": "2168cccd5f5f26003773316d72640c0bc1a0fa76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AlizHarb/filament-activity-log/zipball/5f2c94e3667bfaa5f42c03ec14efea4a7019f43c",
-                "reference": "5f2c94e3667bfaa5f42c03ec14efea4a7019f43c",
+                "url": "https://api.github.com/repos/AlizHarb/filament-activity-log/zipball/2168cccd5f5f26003773316d72640c0bc1a0fa76",
+                "reference": "2168cccd5f5f26003773316d72640c0bc1a0fa76",
                 "shasum": ""
             },
             "require": {
-                "filament/actions": "^4.2",
-                "filament/filament": "^4.0",
-                "phiki/phiki": "^1.0",
-                "php": "^8.2",
+                "filament/actions": "^4.2|^5.0",
+                "filament/filament": "^4.0|^5.0",
+                "phiki/phiki": "^1.1|^2.0",
+                "php": "^8.3",
                 "spatie/laravel-activitylog": "^4.0"
             },
             "require-dev": {
                 "larastan/larastan": "^3.0",
                 "laravel/pint": "^1.0",
-                "orchestra/testbench": "^10.0",
-                "pestphp/pest": "^3.0",
-                "pestphp/pest-plugin-laravel": "^3.0",
-                "pestphp/pest-plugin-livewire": "^3.0",
+                "orchestra/testbench": "^10.0|^11.0",
+                "pestphp/pest": "^3.0|^4.0",
+                "pestphp/pest-plugin-laravel": "^3.0|^4.0",
+                "pestphp/pest-plugin-livewire": "^3.0|^4.0",
                 "phpstan/phpstan": "^2.0"
             },
             "type": "filament-plugin",
@@ -61,7 +61,7 @@
                     "role": "Developer"
                 }
             ],
-            "description": "A powerful, feature-rich activity logging solution for FilamentPHP v4 with timeline views, dashboard widgets, and revert actions.",
+            "description": "A powerful, feature-rich activity logging solution for FilamentPHP v4 & v5 with timeline views, dashboard widgets, and revert actions.",
             "homepage": "https://github.com/alizharb/filament-activity-log",
             "keywords": [
                 "activity-log",
@@ -72,6 +72,7 @@
                 "filament",
                 "filament-plugin",
                 "filament-v4",
+                "filament-v5",
                 "laravel",
                 "laravel-12",
                 "php",
@@ -89,7 +90,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-12-15T11:32:26+00:00"
+            "time": "2026-01-17T02:04:04+00:00"
         },
         {
             "name": "anourvalar/eloquent-serialize",
@@ -3306,6 +3307,42 @@
             }
         },
         {
+            "name": "he4rt/panel-organization",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "app-modules/panel-organization",
+                "reference": "4170ab540985ffe11bb9b4c97a447c1920ebbdea"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "He4rt\\Organization\\PanelOrganizationServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "He4rt\\Organization\\": "src/",
+                    "He4rt\\Organization\\Database\\Factories\\": "database/factories/",
+                    "He4rt\\Organization\\Database\\Seeders\\": "database/seeders/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "He4rt\\Organization\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "he4rt/permissions",
             "version": "1.0.0",
             "dist": {
@@ -3621,21 +3658,21 @@
         },
         {
             "name": "jeffgreco13/filament-breezy",
-            "version": "v3.0.5",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Jacobtims/filament-breezy.git",
-                "reference": "9585af6688bd9749610660b7504084dcee71401c"
+                "reference": "6c6e32dcafcee9a0d77fcd0ab8a54469961c4124"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Jacobtims/filament-breezy/zipball/9585af6688bd9749610660b7504084dcee71401c",
-                "reference": "9585af6688bd9749610660b7504084dcee71401c",
+                "url": "https://api.github.com/repos/Jacobtims/filament-breezy/zipball/6c6e32dcafcee9a0d77fcd0ab8a54469961c4124",
+                "reference": "6c6e32dcafcee9a0d77fcd0ab8a54469961c4124",
                 "shasum": ""
             },
             "require": {
                 "bacon/bacon-qr-code": "^3.0",
-                "filament/filament": "^4.0",
+                "filament/filament": "^4.0|^5.0",
                 "illuminate/contracts": "^11.0|^12.0",
                 "jenssegers/agent": "^2.6",
                 "php": "^8.2|^8.3|^8.4",
@@ -3690,9 +3727,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Jacobtims/filament-breezy/issues",
-                "source": "https://github.com/Jacobtims/filament-breezy/tree/v3.0.5"
+                "source": "https://github.com/Jacobtims/filament-breezy/tree/v3.1.0"
             },
-            "time": "2025-12-10T08:15:46+00:00"
+            "time": "2026-01-19T06:52:41+00:00"
         },
         {
             "name": "jenssegers/agent",
@@ -6303,34 +6340,41 @@
         },
         {
             "name": "phiki/phiki",
-            "version": "v1.1.6",
+            "version": "v2.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phikiphp/phiki.git",
-                "reference": "3174d8cb309bdccc32b7a33500379de76148256b"
+                "reference": "36d03e4c103b825f2657db966730d43e2035ff00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phikiphp/phiki/zipball/3174d8cb309bdccc32b7a33500379de76148256b",
-                "reference": "3174d8cb309bdccc32b7a33500379de76148256b",
+                "url": "https://api.github.com/repos/phikiphp/phiki/zipball/36d03e4c103b825f2657db966730d43e2035ff00",
+                "reference": "36d03e4c103b825f2657db966730d43e2035ff00",
                 "shasum": ""
             },
             "require": {
+                "ext-mbstring": "*",
                 "league/commonmark": "^2.5.3",
-                "php": "^8.2"
+                "php": "^8.2",
+                "psr/simple-cache": "^3.0"
             },
             "require-dev": {
-                "illuminate/support": "^11.30",
+                "illuminate/support": "^11.45",
                 "laravel/pint": "^1.18.1",
+                "orchestra/testbench": "^9.15",
                 "pestphp/pest": "^3.5.1",
                 "phpstan/extension-installer": "^1.4.3",
                 "phpstan/phpstan": "^2.0",
                 "symfony/var-dumper": "^7.1.6"
             },
-            "bin": [
-                "bin/phiki"
-            ],
             "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Phiki\\Adapters\\Laravel\\PhikiServiceProvider"
+                    ]
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Phiki\\": "src/"
@@ -6351,9 +6395,19 @@
             "description": "Syntax highlighting using TextMate grammars in PHP.",
             "support": {
                 "issues": "https://github.com/phikiphp/phiki/issues",
-                "source": "https://github.com/phikiphp/phiki/tree/v1.1.6"
+                "source": "https://github.com/phikiphp/phiki/tree/v2.0.5"
             },
-            "time": "2025-06-06T20:18:29+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/ryangjchandler",
+                    "type": "github"
+                },
+                {
+                    "url": "https://buymeacoffee.com/ryangjchandler",
+                    "type": "other"
+                }
+            ],
+            "time": "2025-11-04T20:03:45+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -6551,16 +6605,16 @@
         },
         {
             "name": "prism-php/prism",
-            "version": "v0.99.11",
+            "version": "v0.99.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/prism-php/prism.git",
-                "reference": "fa7d043bc2fb683855faad7f67e50ca83742989c"
+                "reference": "2b02cb2cd788a3b42f3fbfdf784f07496c411623"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/prism-php/prism/zipball/fa7d043bc2fb683855faad7f67e50ca83742989c",
-                "reference": "fa7d043bc2fb683855faad7f67e50ca83742989c",
+                "url": "https://api.github.com/repos/prism-php/prism/zipball/2b02cb2cd788a3b42f3fbfdf784f07496c411623",
+                "reference": "2b02cb2cd788a3b42f3fbfdf784f07496c411623",
                 "shasum": ""
             },
             "require": {
@@ -6618,7 +6672,7 @@
             "description": "A powerful Laravel package for integrating Large Language Models (LLMs) into your applications.",
             "support": {
                 "issues": "https://github.com/prism-php/prism/issues",
-                "source": "https://github.com/prism-php/prism/tree/v0.99.11"
+                "source": "https://github.com/prism-php/prism/tree/v0.99.13"
             },
             "funding": [
                 {
@@ -6626,7 +6680,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-05T14:04:40+00:00"
+            "time": "2026-01-17T19:32:19+00:00"
         },
         {
             "name": "psr/cache",
@@ -12442,16 +12496,16 @@
         },
         {
             "name": "larastan/larastan",
-            "version": "v3.8.1",
+            "version": "v3.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/larastan/larastan.git",
-                "reference": "ff3725291bc4c7e6032b5a54776e3e5104c86db9"
+                "reference": "82c18890d0d5b012bc39a3432531e5b6cd1b4b3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/larastan/larastan/zipball/ff3725291bc4c7e6032b5a54776e3e5104c86db9",
-                "reference": "ff3725291bc4c7e6032b5a54776e3e5104c86db9",
+                "url": "https://api.github.com/repos/larastan/larastan/zipball/82c18890d0d5b012bc39a3432531e5b6cd1b4b3a",
+                "reference": "82c18890d0d5b012bc39a3432531e5b6cd1b4b3a",
                 "shasum": ""
             },
             "require": {
@@ -12520,7 +12574,7 @@
             ],
             "support": {
                 "issues": "https://github.com/larastan/larastan/issues",
-                "source": "https://github.com/larastan/larastan/tree/v3.8.1"
+                "source": "https://github.com/larastan/larastan/tree/v3.9.0"
             },
             "funding": [
                 {
@@ -12528,7 +12582,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-12-11T16:37:35+00:00"
+            "time": "2026-01-17T23:00:37+00:00"
         },
         {
             "name": "laravel/boost",
