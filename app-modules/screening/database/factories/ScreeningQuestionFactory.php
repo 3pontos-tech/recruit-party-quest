@@ -9,6 +9,7 @@ use He4rt\Screening\Enums\QuestionTypeEnum;
 use He4rt\Screening\Models\ScreeningQuestion;
 use He4rt\Teams\Team;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 /** @extends Factory<ScreeningQuestion> */
 class ScreeningQuestionFactory extends Factory
@@ -19,7 +20,7 @@ class ScreeningQuestionFactory extends Factory
     {
         return [
             'team_id' => Team::factory(),
-            'screenable_type' => JobRequisition::class,
+            'screenable_type' => Relation::getMorphAlias(JobRequisition::class),
             'screenable_id' => JobRequisition::factory(),
             'question_text' => fake()->sentence().'?',
             'question_type' => fake()->randomElement(QuestionTypeEnum::cases()),

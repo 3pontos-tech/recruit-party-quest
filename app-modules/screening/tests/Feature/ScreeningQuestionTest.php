@@ -52,18 +52,19 @@ it('can create a required question', function (): void {
 
 it('belongs to a requisition', function (): void {
     $requisition = JobRequisition::factory()->create();
-    $question = ScreeningQuestion::factory()->create(['requisition_id' => $requisition->id]);
+    $question = ScreeningQuestion::factory()
+        ->create(['screenable_id' => $requisition->id]);
 
-    expect($question->requisition)->toBeInstanceOf(JobRequisition::class)
-        ->and($question->requisition->id)->toBe($requisition->id);
+    expect($question->screenable)->toBeInstanceOf(JobRequisition::class)
+        ->and($question->screenable_id)->toBe($requisition->id);
 });
 
 it('can be accessed from requisition', function (): void {
     $requisition = JobRequisition::factory()->create();
     $questions = ScreeningQuestion::factory()->count(3)->create([
-        'requisition_id' => $requisition->id,
+        'screenable_id' => $requisition->id,
         'display_order' => fn () => fake()->unique()->numberBetween(1, 100),
     ]);
 
-    expect($requisition->screeningQuestions)->toHaveCount(3);
+    expect($requisition->refresh()->screeningQuestions)->toHaveCount(3);
 });

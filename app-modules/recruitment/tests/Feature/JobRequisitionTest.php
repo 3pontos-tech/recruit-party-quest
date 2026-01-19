@@ -65,7 +65,7 @@ it('has one job posting', function (): void {
 it('has many screening questions', function (): void {
     $requisition = JobRequisition::factory()->create();
     ScreeningQuestion::factory()->count(3)->create([
-        'requisition_id' => $requisition->id,
+        'screenable_id' => $requisition->id,
         'display_order' => fn () => fake()->unique()->numberBetween(1, 100),
     ]);
 
