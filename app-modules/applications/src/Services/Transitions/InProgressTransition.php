@@ -37,7 +37,7 @@ final class InProgressTransition extends AbstractApplicationTransition
                 $toStage = Stage::query()
                     ->where('job_requisition_id', $this->application->requisition_id)
                     ->where('active', true)
-                    ->where('display_order', '>', $this->application->currentStage()?->display_order)
+                    ->where('display_order', '>', $this->application->currentStage->display_order)
                     ->orderBy('display_order')
                     ->value('id');
             }
@@ -81,10 +81,10 @@ final class InProgressTransition extends AbstractApplicationTransition
             // persist stage history if provided
             if (isset($meta['from_stage_id'])) {
                 $this->application->stageHistory()->create([
-                    'from_stage_id' => $meta['from_stage_id'] ?? null,
-                    'to_stage_id' => $meta['to_stage_id'] ?? $this->application->current_stage_id,
-                    'moved_by' => $meta['by_user_id'] ?? null,
-                    'notes' => $meta['notes'] ?? null,
+                    'from_stage_id' => $meta['from_stage_id'],
+                    'to_stage_id' => $meta['to_stage_id'],
+                    'moved_by' => $meta['by_user_id'],
+                    'notes' => $meta['notes'],
                 ]);
             }
 

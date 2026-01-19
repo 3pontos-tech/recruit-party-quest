@@ -44,11 +44,11 @@ abstract class AbstractApplicationTransition
      *
      * @param  array<string,mixed>  $meta
      */
-    public function handle(array $meta = [], ?User $by = null): void
+    public function handle(User $by, array $meta = []): void
     {
         try {
             DB::transaction(function () use ($meta, $by): void {
-                $data = array_merge($meta, ['by_user_id' => $by?->id ?? $meta['by_user_id'] ?? null]);
+                $data = array_merge($meta, ['by_user_id' => $by->getKey()]);
                 $this->processStep($data);
                 $this->notify($data);
             });

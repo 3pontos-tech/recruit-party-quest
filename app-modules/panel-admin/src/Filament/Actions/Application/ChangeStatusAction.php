@@ -14,6 +14,9 @@ use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Models\Application;
 
+/**
+ * @method Application getRecord()
+ */
 final class ChangeStatusAction
 {
     public static function make(): Action
@@ -59,11 +62,12 @@ final class ChangeStatusAction
             ->modalHeading('Change application status')
             ->modalButton('Confirm')
             ->action(function (array $data): void {
+                /** @phpstan-ignore-next-line  */
                 $application = $this->getRecord(); // todo: não sei se esse get record funciona
 
                 //                $this->authorize('transition', [$application, $data['to_status']]);
 
-                $application->current_step->handle($data, auth()->user());
+                $application->current_step->handle(auth()->user(), $data);
 
                 Notification::make()->title('Status updated')->success()->send();
 

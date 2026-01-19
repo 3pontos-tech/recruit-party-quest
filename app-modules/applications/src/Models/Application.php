@@ -52,6 +52,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, Evaluation> $evaluations
  * @property-read Collection<int, ApplicationComment> $comments
  * @property-read JobRequisition $requisition
+ * @property Stage $currentStage
  *
  * @extends BaseModel<ApplicationFactory>
  */
@@ -146,6 +147,9 @@ class Application extends BaseModel
         ];
     }
 
+    /**
+     * @phpstan-ignore missingType.generics
+     */
     protected function currentStep(): Attribute
     {
         return Attribute::make(get: fn () => $this->status->getAction($this));

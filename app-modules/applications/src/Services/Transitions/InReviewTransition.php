@@ -28,22 +28,22 @@ final class InReviewTransition extends AbstractApplicationTransition
         match (ApplicationStatusEnum::tryFrom($meta['to_status'])) {
             ApplicationStatusEnum::InProgress => $this->application->update([
                 'status' => ApplicationStatusEnum::InProgress,
-                'current_stage_id' => $meta['to_stage_id'] ?? null,
+                'current_stage_id' => $meta['to_stage_id'],
             ]),
 
             ApplicationStatusEnum::Rejected => $this->application->update([
                 'status' => ApplicationStatusEnum::Rejected,
                 'rejected_at' => $meta['rejected_at'] ?? now(),
-                'rejected_by' => $meta['by_user_id'] ?? null,
-                'rejection_reason_category' => $meta['rejection_reason_category'] ?? null,
-                'rejection_reason_details' => $meta['rejection_reason_details'] ?? null,
+                'rejected_by' => $meta['by_user_id'],
+                'rejection_reason_category' => $meta['rejection_reason_category'],
+                'rejection_reason_details' => $meta['rejection_reason_details'],
             ]),
 
             ApplicationStatusEnum::Withdrawn => $this->application->update([
                 'status' => ApplicationStatusEnum::Withdrawn,
             ]),
 
-            default => throw new InvalidTransitionException('Transition from New to '.($to->value ?? '').' is not allowed'),
+            default => throw new InvalidTransitionException(sprintf('Transition from New to %s is not allowed', $meta['to_status'])),
         };
     }
 
