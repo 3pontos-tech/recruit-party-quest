@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f69b3f937da3fa7bc2dfbf6efd1f964c",
+    "content-hash": "eeefc87d73af23ca202c5578078dc431",
     "packages": [
         {
             "name": "alizharb/filament-activity-log",
@@ -12216,28 +12216,6 @@
                 }
             ],
             "time": "2025-08-14T07:29:31+00:00"
-        },
-        {
-            "name": "filament/blueprint",
-            "version": "v1.0.1",
-            "dist": {
-                "type": "zip",
-                "url": "https://packages.filamentphp.com/composer/10/126/download"
-            },
-            "require": {
-                "filament/support": "^4.0",
-                "laravel/boost": "^1.8"
-            },
-            "type": "library",
-            "license": [
-                "proprietary"
-            ],
-            "description": "Guidelines for AI agents to produce detailed Filament implementation plans.",
-            "homepage": "https://github.com/filamentphp/filament",
-            "support": {
-                "issues": "https://github.com/filamentphp/filament/issues",
-                "source": "https://github.com/filamentphp/filament"
-            }
         },
         {
             "name": "filp/whoops",
