@@ -19,6 +19,7 @@ use He4rt\Screening\Models\ScreeningQuestion;
 use He4rt\Teams\Department;
 use He4rt\Teams\Team;
 use He4rt\Users\User;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Seeder;
 
 final class DevelopmentSeeder extends Seeder
@@ -72,9 +73,11 @@ final class DevelopmentSeeder extends Seeder
         $requisitions->each(function (JobRequisition $requisition): void {
             ScreeningQuestion::factory()
                 ->count(fake()->numberBetween(2, 4))
-                ->recycle($requisition)
+                ->recycle($requisition->team)
                 ->create([
                     'display_order' => fake()->randomDigit(),
+                    'screenable_type' => Relation::getMorphAlias(JobRequisition::class),
+                    'screenable_id' => $requisition->id,
                 ]);
 
             $stages = [
