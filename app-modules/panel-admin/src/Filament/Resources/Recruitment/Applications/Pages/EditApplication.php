@@ -6,6 +6,7 @@ namespace He4rt\Admin\Filament\Resources\Recruitment\Applications\Pages;
 
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
+use He4rt\Admin\Filament\Actions\Application\ChangeStatusAction;
 use He4rt\Admin\Filament\Resources\Recruitment\Applications\ApplicationResource;
 
 class EditApplication extends EditRecord
@@ -15,6 +16,8 @@ class EditApplication extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            ChangeStatusAction::make(),
+
             DeleteAction::make(),
         ];
     }
