@@ -8,11 +8,20 @@ use Filament\Panel;
 use He4rt\Teams\Team;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Collection;
 
 trait InteractsWithTenants
 {
+    /**
+     * @return HasMany<Team, $this>
+     */
+    public function ownedTenants(): HasMany
+    {
+        return $this->hasMany(Team::class, 'owner_id');
+    }
+
     /**
      * @return BelongsToMany<Team, $this, Pivot>
      */
