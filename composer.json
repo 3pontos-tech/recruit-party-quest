@@ -27,8 +27,8 @@
         "he4rt/teams": ">=1",
         "he4rt/users": ">=1",
         "internachi/modular": "dev-main#ad95fe9",
-        "jeffgreco13/filament-breezy": "^3.1",
-        "laravel/framework": "^12.47.0",
+        "jeffgreco13/filament-breezy": "^3.1.0",
+        "laravel/framework": "^12.48.1",
         "laravel/tinker": "^2.11.0",
         "monicahq/laravel-cloudflare": "^4.0.0",
         "owenvoke/blade-fontawesome": "^3.0.0",
@@ -42,7 +42,6 @@
         "barryvdh/laravel-debugbar": "^3.16.3",
         "driftingly/rector-laravel": "^2.1.9",
         "fakerphp/faker": "^1.24.1",
-        "filament/upgrade": "^5.0",
         "larastan/larastan": "^3.9.0",
         "laravel/boost": "^1.8.10",
         "laravel/pail": "^1.2.4",
@@ -55,7 +54,7 @@
         "pestphp/pest-plugin-laravel": "^4.0.0",
         "pestphp/pest-plugin-livewire": "^4.1.0",
         "phpstan/extension-installer": "^1.4.3",
-        "rector/rector": "^2.3.1"
+        "rector/rector": "^2.3.2"
     },
     "autoload": {
         "psr-4": {
@@ -151,11 +150,6 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "repositories": [
-        {
-            "name": "filament",
-            "type": "composer",
-            "url": "https://packages.filamentphp.com/composer"
-        },
         {
             "type": "path",
             "url": "app-modules/*",

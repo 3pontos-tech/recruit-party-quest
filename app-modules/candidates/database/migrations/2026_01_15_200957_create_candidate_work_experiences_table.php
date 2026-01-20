@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('company_name');
             $table->text('description');
             $table->timestamp('start_date');
-            $table->timestamp('end_date');
+            $table->timestamp('end_date')->nullable();
             $table->boolean('is_currently_working_here');
-            $table->jsonb('metadata');
+            $table->jsonb('metadata')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
