@@ -92,6 +92,29 @@ class KanbanStages extends BoardResourcePage
                 StateTransitionAction::make(),
                 EditAction::make()
                     ->model(Application::class),
+                ViewAction::make()
+                    ->slideOver()
+                    ->schema(fn (Schema $schema) => $schema->components([
+                        Section::make('Candidate Information')
+                            ->schema([
+                                TextEntry::make('candidate.user.name')
+                                    ->label('Name'),
+                                TextEntry::make('candidate.user.email')
+                                    ->label('Email'),
+                                TextEntry::make('status')
+                                    ->badge(),
+                            ]),
+                        Section::make('Application Comments')
+                            ->schema([
+                                RepeatableEntry::make('comments')
+                                    ->schema([
+                                        TextEntry::make('author.name'),
+                                        TextEntry::make('content')
+                                            ->columnSpan(2),
+                                    ]),
+                            ]),
+                    ])
+                    ),
             ])
             ->query(
                 Application::query()
