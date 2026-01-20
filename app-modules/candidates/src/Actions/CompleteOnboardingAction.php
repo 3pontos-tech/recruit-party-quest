@@ -10,7 +10,6 @@ use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\DTOs\CandidateWorkExperienceDTO;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
-use Prism\Prism\Enums\Provider;
 use Prism\Prism\Facades\Prism;
 use Prism\Prism\Schema\ArraySchema;
 use Prism\Prism\Schema\BooleanSchema;
@@ -28,7 +27,7 @@ final class CompleteOnboardingAction implements AiAutocompleteInterface
     {
         /** @var Response $response */
         $response = Prism::structured()
-            ->using(Provider::Gemini, 'gemini-2.5-flash')
+            ->using(config('ai.provider.gemini.enum'), config('ai.provider.gemini.model'))
             ->withSchema($this->structureSchema())
             ->withPrompt(
                 'Extraia os dados do currículo anexado para preencher o formulário conforme o esquema.',

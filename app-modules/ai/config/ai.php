@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Prism\Prism\Enums\Provider;
+
 return [
     /**
      * @see https://docs.cloud.llamaindex.ai/llamaparse/features/supported_document_types
@@ -89,5 +91,12 @@ return [
         'audio/x-wav',
         'audio/webm',
         'video/webm',
+    ],
+    'provider' => [
+        'gemini' => [
+            'enum' => Provider::Gemini->name,
+            'model' => 'gemini-2.5-flash',
+            'key' => env('GEMINI_API_KEY'),
+        ],
     ],
 ];
