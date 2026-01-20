@@ -58,6 +58,11 @@ return [
     ],
     'file_upload' => [
         'label' => 'File Upload',
+        'click_to_upload' => 'Click to upload',
+        'or_drag' => 'or drag and drop',
+        'max_size_hint' => 'Max :size',
+        'allowed_hint' => 'Allowed: :extensions',
+        'max_files_hint' => 'Up to :count files',
         'settings' => [
             'max_size_kb' => 'Maximum File Size',
             'max_size_help' => '5120 KB = 5 MB',

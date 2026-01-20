@@ -14,14 +14,8 @@ use Filament\Schemas\Components\Group;
 use He4rt\Screening\Enums\QuestionTypeEnum;
 use He4rt\Screening\QuestionTypes\QuestionTypeRegistry;
 
-/**
- * Reusable form schema for building screening questions.
- */
 final class ScreeningQuestionsFormSchema
 {
-    /**
-     * Create the repeater component for screening questions.
-     */
     public static function make(): Repeater
     {
         return Repeater::make('screeningQuestions')
