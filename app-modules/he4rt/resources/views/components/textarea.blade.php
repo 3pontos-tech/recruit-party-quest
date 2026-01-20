@@ -4,11 +4,13 @@
     'label' => null,
     'disabled' => false,
     'rows' => 3,
+    'resizable' => false,
 ])
 
 @php
     $inputId = $id ?? ($name ?? 'hp-input-' . \Illuminate\Support\Str::random(4));
     $isDisabled = (bool) $disabled;
+    $resizeClass = $resizable ? 'resize-y' : 'resize-none';
 @endphp
 
 <div {{ $attributes->class('hp-input-field') }}>
@@ -23,6 +25,6 @@
         id="{{ $inputId }}"
         rows="{{ $rows }}"
         @if ($isDisabled) disabled @endif
-        {{ $attributes->class('hp-input resize-none') }}
+        {{ $attributes->class(['hp-input', $resizeClass]) }}
     ></textarea>
 </div>

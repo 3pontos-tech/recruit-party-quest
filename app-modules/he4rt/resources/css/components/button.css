@@ -5,20 +5,22 @@
 
     @apply gap-2;
 
-    @apply transition-all duration-300 hover:scale-[1.02] active:scale-95;
+    @apply transition-all duration-200;
 
     @apply disabled:pointer-events-none disabled:opacity-60;
+
     &[aria-disabled='true'] {
         @apply pointer-events-none opacity-60;
     }
 }
 
 .hp-button-solid {
-    @apply from-primary to-secondary text-text-high bg-gradient-to-br font-semibold;
+    @apply from-primary to-secondary text-text-light bg-gradient-to-br font-semibold;
+    @apply border border-transparent;
 }
 
 .hp-button-outline {
-    @apply text-text-high border-outline-dark hover:border-primary hover:bg-primary/10 border bg-transparent;
+    @apply text-text-high border-outline-light hover:border-outline-low dark:border-outline-dark dark:hover:border-outline-high hover:bg-primary/10 border bg-transparent;
 }
 
 .hp-button-size-xs {
@@ -76,15 +78,19 @@
 .hp-button-rounded-sm {
     @apply rounded-sm;
 }
+
 .hp-button-rounded-md {
     @apply rounded-md;
 }
+
 .hp-button-rounded-lg {
     @apply rounded-lg;
 }
+
 .hp-button-rounded-xl {
     @apply rounded-xl;
 }
+
 .hp-button-rounded-full {
     @apply rounded-full;
 }
@@ -107,8 +113,4 @@
 
 .hp-button-spinner {
     @apply absolute inline-flex items-center justify-center;
-}
-
-.hp-button:hover .hp-button-icon {
-    @apply translate-x-0.5;
 }

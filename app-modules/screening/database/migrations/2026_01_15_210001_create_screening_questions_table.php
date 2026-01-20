@@ -18,8 +18,7 @@ return new class extends Migration
             $table->text('question_text');
             $table->string('question_type');
 
-            // For choice questions
-            $table->json('choices')->nullable();
+            $table->json('settings')->nullable();
 
             // Validation
             $table->boolean('is_required')->default(false);

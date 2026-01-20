@@ -1,0 +1,36 @@
+.hp-radio-group {
+    @apply flex gap-4;
+}
+
+.hp-radio-group--vertical {
+    @apply flex-col gap-2;
+}
+
+.hp-radio-label {
+    @apply flex cursor-pointer items-center gap-2;
+}
+
+.hp-radio-label--disabled {
+    @apply cursor-not-allowed opacity-60;
+}
+
+.hp-radio {
+    @apply h-5 w-5 shrink-0;
+    @apply appearance-none;
+    @apply border-outline-low rounded-full border-2;
+    @apply bg-transparent;
+    @apply transition-all duration-200 ease-in-out;
+    @apply focus:ring-primary focus:ring-2 focus:ring-offset-2;
+    @apply checked:border-primary checked:bg-primary;
+    @apply disabled:cursor-not-allowed disabled:opacity-60;
+
+    /* Custom inner circle for checked state */
+    position: relative;
+}
+
+.hp-radio:checked::after {
+    content: '';
+    @apply absolute top-1/2 left-1/2 h-2 w-2;
+    @apply -translate-x-1/2 -translate-y-1/2;
+    @apply rounded-full bg-white;
+}

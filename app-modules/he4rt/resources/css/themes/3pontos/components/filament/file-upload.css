@@ -1,0 +1,37 @@
+.he4rt-file-upload {
+    & .filepond--root {
+        @apply dark:ring-outline-dark ring-outline-light;
+    }
+
+    & .filepond--panel-root {
+        @apply bg-elevation-surface;
+    }
+
+    & .filepond--drop-label {
+        @apply bg-elevation-01dp;
+
+        & label {
+            @apply text-sm;
+        }
+    }
+
+    & .filepond--label-action {
+        @apply underline;
+    }
+
+    & .filepond--item-panel {
+        @apply bg-elevation-01dp;
+    }
+
+    & .filepond--file-info {
+        @apply text-text-high;
+    }
+
+    & .filepond--file-status {
+        @apply text-text-high;
+    }
+
+    & .filepond--credits {
+        @apply hidden;
+    }
+}

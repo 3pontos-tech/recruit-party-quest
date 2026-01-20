@@ -11,7 +11,7 @@
     $isDisabled = (bool) $disabled;
 @endphp
 
-<div {{ $attributes->class('hp-input-field') }}>
+<div {{ $attributes->only('class')->class('hp-input-field') }}>
     @if ($label)
         <x-he4rt::heading size="2xs" for="{{ $inputId }}">
             {{ $label }}
@@ -23,6 +23,6 @@
         name="{{ $name }}"
         id="{{ $inputId }}"
         @if ($isDisabled) disabled @endif
-        {{ $attributes->class('hp-input') }}
+        {{ $attributes->except('class')->class('hp-input') }}
     />
 </div>

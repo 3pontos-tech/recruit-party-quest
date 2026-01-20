@@ -1,0 +1,29 @@
+.fi-topbar {
+    @apply bg-elevation-surface p-4 px-12 shadow-none ring-0;
+    @apply justify-between;
+
+    & .fi-topbar-nav-groups {
+        @apply my-auto;
+
+        & .fi-topbar-item {
+            & .fi-topbar-item-btn {
+                @apply relative hover:bg-transparent;
+
+                & .fi-topbar-item-label {
+                    @apply text-text-high font-bold;
+                }
+
+                &::after {
+                    content: '';
+                    @apply bg-primary absolute bottom-0 left-0 h-0.5 w-full;
+                    @apply origin-left scale-x-0 transform;
+                    @apply transition-transform duration-200 ease-in-out;
+                }
+
+                &:hover::after {
+                    @apply scale-x-100;
+                }
+            }
+        }
+    }
+}
