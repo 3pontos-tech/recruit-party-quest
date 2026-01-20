@@ -61,8 +61,8 @@
 
         <section>
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <x-screening::questions.multiple-choice
-                    :question="\He4rt\Screening\Models\ScreeningQuestion::query()->where('id', '019bd69f-132c-72a8-a8db-14493d2ec938')->firstOrFail()"
+                <x-screening::questions.file-upload
+                    :question="\He4rt\Screening\Models\ScreeningQuestion::query()->where('id', '019bdc78-9f02-7264-860b-25e9a2c6c814')->firstOrFail()"
                 />
             </div>
         </section>

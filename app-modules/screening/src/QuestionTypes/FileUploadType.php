@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace He4rt\Screening\QuestionTypes;
 
-use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use He4rt\Screening\Contracts\QuestionTypeContract;
+use He4rt\Screening\Enums\FileExtensionEnum;
 use He4rt\Screening\Enums\QuestionTypeEnum;
 use He4rt\Screening\QuestionTypes\Settings\FileUploadSettings;
 
@@ -49,11 +50,10 @@ final class FileUploadType implements QuestionTypeContract
                 ->default(1)
                 ->placeholder('1'),
 
-            TagsInput::make('settings.allowed_extensions')
+            Select::make('settings.allowed_extensions')
                 ->label(__('screening::question_types.file_upload.settings.allowed_extensions'))
-                ->placeholder(__('screening::question_types.file_upload.settings.extensions_placeholder'))
-                ->helperText(__('screening::question_types.file_upload.settings.extensions_help'))
-                ->suggestions(['pdf', 'doc', 'docx', 'txt', 'jpg', 'png'])
+                ->options(FileExtensionEnum::class)
+                ->multiple()
                 ->columnSpanFull(),
         ];
     }
