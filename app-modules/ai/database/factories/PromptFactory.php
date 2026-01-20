@@ -19,10 +19,10 @@ final class PromptFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => str(fake()->unique()->words(asText: true))->ucfirst()->toString(),
-            'description' => fake()->optional()->sentences(asText: true),
-            'prompt' => fake()->sentences(asText: true),
-            'type_id' => PromptType::query()->inRandomOrder()->first() ?? PromptType::factory()->create(),
+            'title' => str(fake()->unique()->words(true))->ucfirst()->toString(),
+            'description' => fake()->optional()->sentences(true),
+            'prompt' => fake()->sentences(true),
+            'type_id' => PromptType::factory(),
         ];
     }
 }

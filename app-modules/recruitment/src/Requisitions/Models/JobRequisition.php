@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Recruitment\Requisitions\Models;
 
 use App\Models\BaseModel;
+use He4rt\Applications\Models\Application;
 use He4rt\Recruitment\Database\Factories\JobRequisitionFactory;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
@@ -57,6 +58,8 @@ use Illuminate\Support\Carbon;
  * @property-read User $hiringManager
  * @property-read User $createdBy
  * @property-read Collection<int, ScreeningQuestion> $screeningQuestions
+ * @property-read Collection<int, Stage> $stages
+ * @property-read JobPosting $post
  *
  * @extends BaseModel<JobRequisitionFactory>
  */
@@ -115,6 +118,14 @@ class JobRequisition extends BaseModel
     public function stages(): HasMany
     {
         return $this->hasMany(Stage::class, 'job_requisition_id');
+    }
+
+    /**
+     * @return HasMany<Application, $this>
+     */
+    public function applications(): HasMany
+    {
+        return $this->hasMany(Application::class, 'requisition_id');
     }
 
     protected function casts(): array

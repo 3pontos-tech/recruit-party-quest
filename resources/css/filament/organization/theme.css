@@ -1,0 +1,7 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/Admin/**/*';
+@source '../../../../app-modules/**/resources/views/**/*';
+@source '../../../../vendor/jeffgreco13/filament-breezy/resources/**/*';
+@source '../../../../resources/views/filament/admin/**/*';
+@source '../../../../vendor/relaticle/flowforge/resources/views/**/*.blade.php';
