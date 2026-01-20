@@ -20,16 +20,29 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
 use Filament\Schemas\Schema;
 use Filament\Support\Concerns\EvaluatesClosures;
+use Filament\Support\Enums\Width;
+use He4rt\Candidates\Actions\StoreCandidateEducation;
+use He4rt\Candidates\Actions\StoreCandidateWorkExperiences;
+use He4rt\Candidates\Actions\UpdateCandidateAction;
+use He4rt\Candidates\AiAutocompleteInterface;
+use He4rt\Candidates\DTOs\CandidateDTO;
+use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
+use He4rt\Candidates\DTOs\Collections\CandidateEducationCollection;
+use He4rt\Candidates\DTOs\Collections\CandidateWorkExperienceCollection;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 /**
- * @property-read Schema $form
+ * @property-read Schema $content
  */
 class OnboardingWizard extends Page
 {
@@ -47,6 +60,12 @@ class OnboardingWizard extends Page
 
     protected static string|null|BackedEnum $navigationIcon = 'heroicon-o-academic-cap';
 
+    protected static string $layout = 'filament-panels::components.layout.simple';
+
+    protected Width|string|null $maxContentWidth = Width::ScreenExtraLarge;
+
+    //    protected string $view = 'filament-panels::pages.simple';
+
     protected static bool $isDiscovered = true;
 
     protected static bool $shouldRegisterNavigation = false;
@@ -63,7 +82,7 @@ class OnboardingWizard extends Page
     public function mount(): void
     {
         $this->record = auth()->user()->candidate;
-        $this->form->fill();
+        $this->content->fill();
     }
 
     public function saveProgress(): void
@@ -78,7 +97,7 @@ class OnboardingWizard extends Page
             ->send();
     }
 
-    public function form(Schema $schema): Schema
+    public function content(Schema $schema): Schema
     {
         return $schema
             ->components(function (): Wizard {
@@ -131,38 +150,34 @@ class OnboardingWizard extends Page
             return;
         }
 
-        if (count($data['work_experiences'] ?? []) < 1) {
-            Notification::make()
-                ->title(__('panel-app::pages/onboarding.notifications.work_experience_required.title'))->danger()
-                ->send();
+        $experiences = CandidateWorkExperienceCollection::fromArray($data['work_experiences']);
+        resolve(StoreCandidateWorkExperiences::class)->execute($experiences);
 
-            return;
-        }
+        $education = CandidateEducationCollection::fromArray($data['education']);
+        resolve(StoreCandidateEducation::class)->execute($education);
 
-        if (count($data['education'] ?? []) < 1) {
-            Notification::make()
-                ->title(__('panel-app::pages/onboarding.notifications.education_required.title'))->danger()
-                ->send();
-
-            return;
-        }
-
-        auth()->user()->candidate()->update([
-            'phone_number' => $data['phone'] ?? null,
-            'headline' => $data['headline'] ?? null,
-            'summary' => $data['summary'] ?? null,
-            'expected_salary' => $data['expected_salary'] ?? null,
-            'expected_salary_currency' => $data['expected_salary_currency'] ?? 'USD',
-            'availability_date' => $data['availability_date'] ?? null,
-            'willing_to_relocate' => $data['willing_to_relocate'] ?? false,
-            'is_open_to_remote' => $data['is_open_to_remote'] ?? true,
-            'experience_level' => $data['experience_level'] ?? null,
-            'timezone' => $data['timezone'] ?? 'UTC',
-            'preferred_language' => $data['preferred_language'] ?? 'en',
-            'data_consent_given' => true,
-            'is_onboarded' => true,
-            'onboarding_completed_at' => now(),
-        ]);
+        resolve(UpdateCandidateAction::class)->execute(new CandidateDTO(
+            userID: auth()->user()->id,
+            phoneNumber: $data['phone'] ?? null,
+            headline: $data['headline'] ?? null,
+            summary: $data['summary'] ?? null,
+            availabilityDate: Date::parse($data['availability_date']),
+            willingToRelocate: $data['willing_to_relocate'] ?? false,
+            is_open_to_remote: $data['is_open_to_remote'] ?? true,
+            expectedSalary: (float) $data['expected_salary'],
+            expectedSalaryCurrency: $data['expected_salary_currency'] ?? 'USD',
+            linkedin_url: null,
+            portfolio_url: null,
+            experienceLevel: $data['experience_level'] ?? null,
+            contactLinks: null,
+            selfIdentifiedGender: null,
+            source: null,
+            isOnboarded: true,
+            onboardingCompletedAt: now(),
+            timezone: $data['timezone'] ?? 'UTC',
+            preferredLanguage: $data['preferred_language'] ?? 'en',
+            dataConsentGiven: true,
+        ));
 
         session()->forget('onboarding_data');
 
@@ -170,12 +185,34 @@ class OnboardingWizard extends Page
             ->title(__('panel-app::pages/onboarding.notifications.onboarding_complete.title'))->success()
             ->send();
 
-        redirect(route('filament.app.pages.dashboard'));
+        redirect(route('filament.app.pages.app-dashboard'));
     }
 
     public function getTitle(): string|Htmlable
     {
         return __('panel-app::pages/onboarding.title');
+    }
+
+    protected function cvUploaded(TemporaryUploadedFile $file): void
+    {
+        $currentFile = is_array($this->data['cv_file'])
+            ? head($this->data['cv_file'])
+            : $this->data['cv_file'];
+
+        /** @var CandidateOnboardingDTO $fields */
+        $fields = resolve(AiAutocompleteInterface::class)->execute($file);
+        $this->fillFields($fields, $currentFile);
+    }
+
+    protected function fillFields(CandidateOnboardingDTO $dto, TemporaryUploadedFile $cv): void
+    {
+        $workState = collect($dto->work)->mapWithKeys(fn ($item) => [(string) Str::uuid() => $item->jsonSerialize()])->all();
+
+        $educationState = collect($dto->education)->mapWithKeys(fn ($item) => [(string) Str::uuid() => $item->jsonSerialize()])->all();
+
+        $this->data['work_experiences'] = $workState;
+        $this->data['education'] = $educationState;
+        $this->data['cv_file'] = [$cv];
     }
 
     /**
@@ -249,6 +286,7 @@ class OnboardingWizard extends Page
                             ->directory('cv-uploads')
                             ->visibility('private')
                             ->required()
+                            ->afterStateUpdated(fn (TemporaryUploadedFile $state) => $this->cvUploaded($state))
                             ->helperText(__('panel-app::pages/onboarding.steps.cv.fields.cv_file_helper')),
                     ]),
             ],
@@ -281,11 +319,10 @@ class OnboardingWizard extends Page
                                     ->required(),
                                 DatePicker::make('end_date')
                                     ->label(__('panel-app::pages/onboarding.steps.profile.fields.end_date'))
-                                    ->required(),
+                                    ->required(fn (Get $get) => $get('is_currently_working_here') === false),
                                 Toggle::make('is_currently_working_here')
                                     ->label(__('panel-app::pages/onboarding.steps.profile.fields.is_currently_working_here')),
                             ])
-                            ->minItems(1)
                             ->itemLabel(fn (array $state): ?string => $state['company_name'] ?? null)
                             ->columnSpanFull(),
                     ]),
@@ -308,22 +345,21 @@ class OnboardingWizard extends Page
                                     ->required(),
                                 DatePicker::make('end_date')
                                     ->label(__('panel-app::pages/onboarding.steps.profile.fields.end_date'))
-                                    ->required(),
+                                    ->required(fn (Get $get) => $get('is_enrolled') === false),
                                 Toggle::make('is_enrolled')
                                     ->label(__('panel-app::pages/onboarding.steps.profile.fields.is_enrolled')),
                             ])
-                            ->minItems(1)
                             ->itemLabel(fn (array $state): ?string => $state['institution'] ?? null)
                             ->columnSpanFull(),
                     ]),
-                Section::make(__('panel-app::pages/onboarding.steps.profile.sections.skills'))
-                    ->schema([
-                        TextInput::make('skills_count')
-                            ->label(__('panel-app::pages/onboarding.steps.profile.fields.skills'))
-                            ->helperText(__('panel-app::pages/onboarding.steps.profile.fields.skills_helper'))
-                            ->disabled()
-                            ->dehydrated(false),
-                    ]),
+                //                Section::make(__('panel-app::pages/onboarding.steps.profile.sections.skills'))
+                //                    ->schema([
+                //                        TextInput::make('skills_count')
+                //                            ->label(__('panel-app::pages/onboarding.steps.profile.fields.skills'))
+                //                            ->helperText(__('panel-app::pages/onboarding.steps.profile.fields.skills_helper'))
+                //                            ->nullable()
+                //                            ->dehydrated(false),
+                //                    ]),
             ],
         ];
     }
@@ -389,23 +425,24 @@ class OnboardingWizard extends Page
             'schema' => [
                 Section::make(__('panel-app::pages/onboarding.steps.review.sections.review_summary'))
                     ->schema([
-                        TextInput::make('email_review')
-                            ->label(__('panel-app::pages/onboarding.steps.review.fields.email'))
-                            ->disabled()
-                            ->dehydrated(false),
-                        TextInput::make('phone_review')
-                            ->label(__('panel-app::pages/onboarding.steps.review.fields.phone'))
-                            ->disabled()
-                            ->dehydrated(false),
-                        TextInput::make('headline_review')
-                            ->label(__('panel-app::pages/onboarding.steps.review.fields.headline'))
-                            ->disabled()
-                            ->dehydrated(false),
-                        TextInput::make('salary_review')
-                            ->label(__('panel-app::pages/onboarding.steps.review.fields.expected_salary'))
-                            ->disabled()
-                            ->dehydrated(false)
-                            ->prefix('$'),
+                        //                        TextInput::make('email_review')
+                        //                            ->label(__('panel-app::pages/onboarding.steps.review.fields.email'))
+                        //                            ->disabled()
+                        //                            ->default(auth()->user()->email)
+                        //                            ->dehydrated(false),
+                        //                        TextInput::make('phone_review')
+                        //                            ->label(__('panel-app::pages/onboarding.steps.review.fields.phone'))
+                        //                            ->disabled()
+                        //                            ->dehydrated(false),
+                        //                        TextInput::make('headline_review')
+                        //                            ->label(__('panel-app::pages/onboarding.steps.review.fields.headline'))
+                        //                            ->disabled()
+                        //                            ->dehydrated(false),
+                        //                        TextInput::make('salary_review')
+                        //                            ->label(__('panel-app::pages/onboarding.steps.review.fields.expected_salary'))
+                        //                            ->disabled()
+                        //                            ->dehydrated(false)
+                        //                            ->prefix('$'),
                         Toggle::make('confirm_submission')
                             ->label(__('panel-app::pages/onboarding.steps.review.fields.confirm_submission'))
                             ->required()
