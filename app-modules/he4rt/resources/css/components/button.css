@@ -5,9 +5,10 @@
 
     @apply gap-2;
 
-    @apply transition-all duration-300 hover:scale-[1.02] active:scale-95;
+    @apply transition-all duration-300;
 
     @apply disabled:pointer-events-none disabled:opacity-60;
+
     &[aria-disabled='true'] {
         @apply pointer-events-none opacity-60;
     }
@@ -15,6 +16,7 @@
 
 .hp-button-solid {
     @apply from-primary to-secondary text-text-high bg-gradient-to-br font-semibold;
+    @apply border border-transparent;
 }
 
 .hp-button-outline {
@@ -76,15 +78,19 @@
 .hp-button-rounded-sm {
     @apply rounded-sm;
 }
+
 .hp-button-rounded-md {
     @apply rounded-md;
 }
+
 .hp-button-rounded-lg {
     @apply rounded-lg;
 }
+
 .hp-button-rounded-xl {
     @apply rounded-xl;
 }
+
 .hp-button-rounded-full {
     @apply rounded-full;
 }
@@ -107,8 +113,4 @@
 
 .hp-button-spinner {
     @apply absolute inline-flex items-center justify-center;
-}
-
-.hp-button:hover .hp-button-icon {
-    @apply translate-x-0.5;
 }
