@@ -43,7 +43,6 @@
         "barryvdh/laravel-debugbar": "^3.16.3",
         "driftingly/rector-laravel": "^2.1.9",
         "fakerphp/faker": "^1.24.1",
-        "filament/upgrade": "^5.0",
         "larastan/larastan": "^3.9.0",
         "laravel/boost": "^1.8.10",
         "laravel/pail": "^1.2.4",
