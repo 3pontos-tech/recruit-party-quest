@@ -26,6 +26,12 @@ class KanbanStages extends BoardResourcePage
 
     protected static string $resource = JobRequisitionResource::class;
 
+    /**
+     * Initialize component state and panel UI when the page mounts.
+     *
+     * Sets the component's requisitionId from the route `record` parameter and ensures
+     * the current Filament panel's sidebar is collapsible on desktop.
+     */
     public function mount(): void
     {
         $this->requisitionId = request()->route('record');
@@ -35,11 +41,22 @@ class KanbanStages extends BoardResourcePage
             ->sidebarCollapsibleOnDesktop();
     }
 
+    /**
+     * Close the application's sidebar when the component is rendered.
+     *
+     * Triggers the client-side sidebar store to ensure the sidebar is closed after render.
+     */
     public function rendered(): void
     {
         $this->js('$store.sidebar.close()');
     }
 
+    /**
+     * Configure and return a Kanban board populated with columns for the job requisition's stages.
+     *
+     * @param Board $board The board instance to configure.
+     * @return Board The configured board: columns built from the requisition's stages (stage id as identifier, label and color from stage data), card schema showing a `status` badge, an edit action bound to the JobRequisition model, a query restricted to Application records for the requisition, and `current_stage_id` set as the column identifier.
+     */
     public function board(Board $board): Board
     {
         // 1. Columns precisam de identificação única. (usar stage->getKey())

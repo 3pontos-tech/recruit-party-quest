@@ -54,6 +54,8 @@ class Stage extends BaseModel
     }
 
     /**
+     * Retrieve the screening questions associated with this stage.
+     *
      * @return MorphMany<ScreeningQuestion, $this>
      */
     public function screeningQuestions(): MorphMany
@@ -62,7 +64,9 @@ class Stage extends BaseModel
     }
 
     /**
-     * @return HasMany<Application, $this>
+     * Retrieve the applications currently in this stage.
+     *
+     * @return HasMany<Application, $this> A has-many relation of Application models where `current_stage_id` equals this stage's id.
      */
     public function participants(): HasMany
     {

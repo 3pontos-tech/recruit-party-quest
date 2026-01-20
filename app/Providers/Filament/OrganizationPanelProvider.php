@@ -29,6 +29,12 @@ class OrganizationPanelProvider extends PanelProvider
 {
     private FilamentPanel $panelEnum = FilamentPanel::Organization;
 
+    /**
+     * Configure the organization Filament panel (id/path, tenant model and registration, login page, colors and Vite theme, discovery of clusters/pages/resources/widgets, explicit pages/widgets, and middleware) and return the configured panel.
+     *
+     * @param Panel $panel The Panel instance to configure.
+     * @return Panel The configured Panel instance.
+     */
     public function panel(Panel $panel): Panel
     {
         return $panel

@@ -25,7 +25,12 @@ use Illuminate\Database\Seeder;
 final class DevelopmentSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Seed the database with interconnected development data to simulate a recruitment workflow.
+     *
+     * Creates teams and departments; generates users and assigns them to teams; creates candidates
+     * (recycling users) and attaches education, work experience, and skills; creates job requisitions
+     * with posts, screening questions, and a standard set of stages; pairs every requisition with
+     * every candidate to create applications and associated comments and evaluations.
      */
     public function run(): void
     {

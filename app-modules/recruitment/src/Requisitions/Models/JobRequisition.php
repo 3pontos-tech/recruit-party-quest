@@ -113,7 +113,9 @@ class JobRequisition extends BaseModel
     }
 
     /**
-     * @return HasMany<Stage, $this>
+     * Retrieve the stages associated with the job requisition.
+     *
+     * @return HasMany<int, Stage> A HasMany relation for the Stage models linked by `job_requisition_id`.
      */
     public function stages(): HasMany
     {
@@ -121,13 +123,22 @@ class JobRequisition extends BaseModel
     }
 
     /**
-     * @return HasMany<Application, $this>
+     * Defines the one-to-many relationship between this requisition and its applications.
+     *
+     * @return HasMany<Application, $this> The related Application models keyed by `requisition_id`.
      */
     public function applications(): HasMany
     {
         return $this->hasMany(Application::class, 'requisition_id');
     }
 
+    /**
+     * Define the model's attribute casting rules.
+     *
+     * Maps attribute names to their cast types or enum classes used by Eloquent.
+     *
+     * @return array<string, string> Attribute name => cast type or class.
+     */
     protected function casts(): array
     {
         return [

@@ -47,6 +47,11 @@ class JobRequisitionResource extends Resource
         return JobRequisitionsTable::configure($table);
     }
 
+    /**
+     * Register the resource pages and their routes for the JobRequisition resource.
+     *
+     * @return array Associative array mapping page identifiers ('index', 'create', 'edit', 'kanban') to their route definitions.
+     */
     public static function getPages(): array
     {
         return [

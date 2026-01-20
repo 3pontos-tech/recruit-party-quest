@@ -62,6 +62,16 @@ class PipelineStagesRelationManager extends RelationManager
             ]);
     }
 
+    /**
+     * Configure the relation table for pipeline stages shown on the parent resource.
+     *
+     * Sets visible columns (name, stage type badge, display order, expected duration, active participants count, active flag),
+     * default sorting and reorder key, row actions (edit, delete), header create action that injects the owner record's team_id into new stages,
+     * and a toolbar bulk delete action.
+     *
+     * @param Table $table The table builder to configure.
+     * @return Table The configured table instance.
+     */
     public function table(Table $table): Table
     {
         return $table
