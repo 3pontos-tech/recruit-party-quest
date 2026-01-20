@@ -18,7 +18,8 @@ readonly class ScreeningQuestionDTO
      * @param  KnockoutCriteriaArray|null  $knockoutCriteria
      */
     public function __construct(
-        public string $requisitionId,
+        public string $screenableId,
+        public string $screenableType,
         public string $teamId,
         public string $questionText,
         public QuestionTypeEnum $questionType,
@@ -34,7 +35,8 @@ readonly class ScreeningQuestionDTO
      * Create a DTO from an associative array.
      *
      * @param  array{
-     *     requisition_id: string,
+     *     screenable_id: string,
+     *     screenable_type: string,
      *     team_id: string,
      *     question_text: string,
      *     question_type: string|QuestionTypeEnum,
@@ -49,7 +51,8 @@ readonly class ScreeningQuestionDTO
     public static function fromArray(array $data): self
     {
         return new self(
-            requisitionId: $data['requisition_id'],
+            screenableId: $data['screenable_id'],
+            screenableType: $data['screenable_type'],
             teamId: $data['team_id'],
             questionText: $data['question_text'],
             questionType: $data['question_type'] instanceof QuestionTypeEnum
@@ -79,7 +82,8 @@ readonly class ScreeningQuestionDTO
 
         foreach ($repeaterData as $index => $item) {
             $dtos[] = self::fromArray([
-                'requisition_id' => $requisitionId,
+                'screenable_id' => $requisitionId,
+                'screenable_type' => $requisitionId,
                 'team_id' => $teamId,
                 'question_text' => $item['question_text'],
                 'question_type' => $item['question_type'],
@@ -103,7 +107,7 @@ readonly class ScreeningQuestionDTO
     public function toArray(): array
     {
         return [
-            'requisition_id' => $this->requisitionId,
+            'screenable_id' => $this->screenableId,
             'team_id' => $this->teamId,
             'question_text' => $this->questionText,
             'question_type' => $this->questionType,

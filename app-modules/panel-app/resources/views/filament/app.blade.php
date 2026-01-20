@@ -59,14 +59,6 @@
             </div>
         </section>
 
-        <section>
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <x-screening::questions.file-upload
-                    :question="\He4rt\Screening\Models\ScreeningQuestion::query()->where('id', '019bdc78-9f02-7264-860b-25e9a2c6c814')->firstOrFail()"
-                />
-            </div>
-        </section>
-
         <section class="py-6">
             <livewire:user-latest-applications />
         </section>

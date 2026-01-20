@@ -13,6 +13,9 @@ use He4rt\Screening\QuestionTypes\Settings\FileUploadSettings;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
+/**
+ * @property Schema $form
+ */
 class FileUploadQuestion extends Component implements HasForms
 {
     use InteractsWithForms;
