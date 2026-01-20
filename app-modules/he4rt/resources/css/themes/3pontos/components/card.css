@@ -3,7 +3,7 @@
 }
 
 .hp-card-interactive {
-    @apply border-outline-dark/80 hover:bg-elevation-05dp/32 hover:border-outline-high/32 transition-all duration-500 hover:scale-[1.005];
+    @apply border-outline-light dark:border-outline-dark/80 hover:bg-elevation-05dp/32 hover:border-outline-high/32 transition-all duration-500 hover:scale-[1.005];
 }
 
 .hp-card-variant-solid {

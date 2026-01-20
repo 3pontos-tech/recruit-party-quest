@@ -1,5 +1,5 @@
 .fi-wi-stats-overview-stat {
-    @apply bg-elevation-surface ring-outline-low dark:ring-outline-low relative block h-full rounded-xl p-6 shadow-sm ring-1;
+    @apply bg-elevation-surface ring-outline-light dark:ring-outline-dark relative block h-full rounded-xl p-6 shadow-sm ring-1;
 
     & .fi-icon {
         @apply text-icon-medium shrink-0;
