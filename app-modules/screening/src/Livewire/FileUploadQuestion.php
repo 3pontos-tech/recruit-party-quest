@@ -13,13 +13,6 @@ use He4rt\Screening\QuestionTypes\Settings\FileUploadSettings;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
-/**
- * Livewire component for rendering file upload screening questions.
- *
- * Uses Filament's FileUpload component (built on Filepond) for handling uploads.
- *
- * @property-read Schema $form
- */
 class FileUploadQuestion extends Component implements HasForms
 {
     use InteractsWithForms;

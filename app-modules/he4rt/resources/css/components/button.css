@@ -5,7 +5,7 @@
 
     @apply gap-2;
 
-    @apply transition-all duration-300;
+    @apply transition-all duration-200;
 
     @apply disabled:pointer-events-none disabled:opacity-60;
 
@@ -15,12 +15,12 @@
 }
 
 .hp-button-solid {
-    @apply from-primary to-secondary text-text-high bg-gradient-to-br font-semibold;
+    @apply from-primary to-secondary text-text-light bg-gradient-to-br font-semibold;
     @apply border border-transparent;
 }
 
 .hp-button-outline {
-    @apply text-text-high border-outline-dark hover:border-primary hover:bg-primary/10 border bg-transparent;
+    @apply text-text-high border-outline-light hover:border-outline-low dark:border-outline-dark dark:hover:border-outline-high hover:bg-primary/10 border bg-transparent;
 }
 
 .hp-button-size-xs {
