@@ -29,34 +29,50 @@ final class NewTransition extends AbstractApplicationTransition
      */
     public function processStep(array $meta = []): void
     {
-        match (ApplicationStatusEnum::tryFrom($meta['to_status'])) {
-            ApplicationStatusEnum::InReview => $this->application->update([
-                'status' => ApplicationStatusEnum::InReview,
-                'current_stage_id' => Stage::query()
-                    ->where('job_requisition_id', $this->application->requisition_id)
-                    ->where('active', true)
-                    ->orderBy('display_order')
-                    ->value('id'),
-            ]),
-
-            ApplicationStatusEnum::Withdrawn => $this->application->update([
-                'status' => ApplicationStatusEnum::Withdrawn,
-            ]),
-
-            ApplicationStatusEnum::Rejected => $this->application->update([
-                'status' => ApplicationStatusEnum::Rejected,
-                'rejected_at' => $meta['rejected_at'] ?? now(),
-                'rejected_by' => $meta['by_user_id'] ?? null,
-                'rejection_reason_category' => $meta['rejection_reason_category'] ?? null,
-                'rejection_reason_details' => $meta['rejection_reason_details'] ?? null,
-            ]),
-
-            default => throw new InvalidTransitionException('Transition from New to '.($meta['to_status'] ?? '').' is not allowed'),
+        /** @var ApplicationStatusEnum $status */
+        $status = $meta['status'];
+        match ($status) {
+            ApplicationStatusEnum::InReview => $this->forwardToReview(),
+            ApplicationStatusEnum::Withdrawn => $this->forwardToWithdrawn(),
+            ApplicationStatusEnum::Rejected => $this->rejectApplication($meta),
+            default => throw InvalidTransitionException::notAllowed($status),
         };
     }
 
     public function notify(array $meta = []): void
     {
         // TODO: adicionar notificações conforme necessário
+    }
+
+    public function forwardToReview(): bool
+    {
+        $payload = ['status' => ApplicationStatusEnum::InReview];
+
+        $application = $this->application;
+        $nextStage = $application->getNextStage();
+
+        if ($nextStage instanceof Stage) {
+            $payload['current_stage_id'] = $nextStage->getKey();
+        }
+
+        return $application->update($payload);
+    }
+
+    public function forwardToWithdrawn(): bool
+    {
+        return $this->application->update([
+            'status' => ApplicationStatusEnum::Withdrawn,
+        ]);
+    }
+
+    public function rejectApplication(array $meta): bool
+    {
+        return $this->application->update([
+            'status' => ApplicationStatusEnum::Rejected,
+            'rejected_at' => $meta['rejected_at'] ?? now(),
+            'rejected_by' => $meta['by_user_id'] ?? null,
+            'rejection_reason_category' => $meta['rejection_reason_category'] ?? null,
+            'rejection_reason_details' => $meta['rejection_reason_details'] ?? null,
+        ]);
     }
 }

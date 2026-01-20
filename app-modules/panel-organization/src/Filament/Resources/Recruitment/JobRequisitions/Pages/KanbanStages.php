@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages;
 
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
+use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
@@ -64,10 +67,26 @@ class KanbanStages extends BoardResourcePage
             ->cardSchema(fn (Schema $schema) => $schema
                 ->components([
                     TextEntry::make('status')->badge(),
+                    TextEntry::make('tracking_code'),
                 ])
             )
             ->cardActions([
-                EditAction::make()->model(JobRequisition::class),
+                Action::make('process-placement')
+                    ->outlined()
+                    ->label('Processar Aporte')
+                    ->icon('heroicon-o-play')
+                    ->disabled(fn (Application $record): bool => ! $record->current_step->canChange())
+                    ->tooltip(fn (Application $record): ?string => $record->current_step->canChange() ? null : 'O processo atual não permite mudanças.')
+                    ->schema([
+                        Select::make('status')
+                            ->label('Status')
+                            ->options(fn (Application $record) => $record->current_step->choices())
+                            ->enum(ApplicationStatusEnum::class)
+                            ->required(),
+                    ])
+                    ->action(fn (Application $record, array $data) => $record->current_step->handle(auth()->user(), $data))
+                    ->requiresConfirmation(),
+                EditAction::make()->model(Application::class),
             ])
             ->query(
                 Application::query()

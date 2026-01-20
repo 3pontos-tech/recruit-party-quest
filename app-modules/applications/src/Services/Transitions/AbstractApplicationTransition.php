@@ -7,7 +7,6 @@ namespace He4rt\Applications\Services\Transitions;
 use He4rt\Applications\Models\Application;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\DB;
-use Throwable;
 
 abstract class AbstractApplicationTransition
 {
@@ -46,15 +45,15 @@ abstract class AbstractApplicationTransition
      */
     public function handle(User $by, array $meta = []): void
     {
-        try {
-            DB::transaction(function () use ($meta, $by): void {
-                $data = array_merge($meta, ['by_user_id' => $by->getKey()]);
-                $this->processStep($data);
-                $this->notify($data);
-            });
-        } catch (Throwable) {
-            // Todo: notify about failure
-        }
+        //        try {
+        DB::transaction(function () use ($meta, $by): void {
+            $data = array_merge($meta, ['by_user_id' => $by->getKey()]);
+            $this->processStep($data);
+            $this->notify($data);
+        });
+        //        } catch (Throwable) {
+        //            // Todo: notify about failure
+        //        }
 
     }
 }

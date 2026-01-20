@@ -134,6 +134,21 @@ class Application extends BaseModel
         return $this->hasMany(ApplicationComment::class);
     }
 
+    public function getNextStage(): ?Stage
+    {
+        $availableStages = $this
+            ->requisition
+            ->stages
+            ->filter(fn (Stage $stage) => $stage->display_order > $this->currentStage->display_order)
+            ->sortBy('display_order');
+
+        if ($availableStages->isEmpty()) {
+            return null;
+        }
+
+        return $availableStages->first();
+    }
+
     protected function casts(): array
     {
         return [

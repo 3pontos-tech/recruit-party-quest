@@ -128,6 +128,19 @@ class JobRequisition extends BaseModel
         return $this->hasMany(Application::class, 'requisition_id');
     }
 
+    public function getNextStage(Stage $currentStage): ?Stage
+    {
+        $availableStages = $this
+            ->stages
+            ->filter(fn (Stage $stage) => $stage->display_order > $currentStage->display_order);
+
+        if ($availableStages->isEmpty()) {
+            return null;
+        }
+
+        return $availableStages->first();
+    }
+
     protected function casts(): array
     {
         return [
