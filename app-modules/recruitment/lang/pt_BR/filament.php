@@ -64,6 +64,7 @@ return [
             'display_order' => 'Ordem de Exibição',
             'description' => 'Descrição',
             'expected_duration_days' => 'Duração Esperada (Dias)',
+            'active_participants' => 'Participantes ativos',
             'active' => 'Ativo',
         ],
     ],

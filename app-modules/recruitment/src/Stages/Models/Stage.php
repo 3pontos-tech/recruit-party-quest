@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Recruitment\Stages\Models;
 
 use App\Models\BaseModel;
+use He4rt\Applications\Models\Application;
 use He4rt\Recruitment\Database\Factories\StageFactory;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
@@ -14,15 +15,17 @@ use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 /**
  * @property string $id
  * @property string $job_requisition_id
  * @property string $name
- * @property string $stage_type
+ * @property StageTypeEnum $stage_type
  * @property int $display_order
  * @property string $description
  * @property int $expected_duration_days
@@ -30,6 +33,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read Collection<int, Application> $participants
  *
  * @extends BaseModel<StageFactory>
  */
@@ -55,6 +59,14 @@ class Stage extends BaseModel
     public function screeningQuestions(): MorphMany
     {
         return $this->morphMany(ScreeningQuestion::class, 'screenable');
+    }
+
+    /**
+     * @return HasMany<Application, $this>
+     */
+    public function participants(): HasMany
+    {
+        return $this->hasMany(Application::class, 'current_stage_id');
     }
 
     /**

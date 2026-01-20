@@ -7,9 +7,12 @@ namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Page
 use Filament\Actions\EditAction;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
+use He4rt\Applications\Models\Application;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
-use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use He4rt\Recruitment\Stages\Models\Stage;
+use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\Locked;
 use Relaticle\Flowforge\Board;
 use Relaticle\Flowforge\BoardResourcePage;
 use Relaticle\Flowforge\Column;
@@ -19,30 +22,64 @@ class KanbanStages extends BoardResourcePage
 {
     use InteractsWithBoard;
 
+    #[Locked]
+    public ?string $requisitionId = null;
+
     protected static string $resource = JobRequisitionResource::class;
+
+    public function mount(): void
+    {
+        $this->requisitionId = request()->route('record');
+
+        filament()
+            ->getCurrentPanel()
+            ->sidebarCollapsibleOnDesktop();
+    }
+
+    public function rendered(): void
+    {
+        $this->js('$store.sidebar.close()');
+    }
 
     public function board(Board $board): Board
     {
-        $columns = collect(RequisitionStatusEnum::cases())
-            ->map(fn (RequisitionStatusEnum $status) => Column::make($status->value)->label($status->getLabel())->color($status->getColor()))
-            ->toArray();
+        // 1. Columns precisam de identificação única. (usar stage->getKey())
+        //
+        // 2. Applications with some validations.
+
+        $jobRequisition = JobRequisition::query()
+            ->with([
+                'stages',
+                'post',
+            ])
+            ->findOrFail($this->requisitionId);
+
+        $columns = collect($jobRequisition->stages)
+            ->map(fn (Stage $stage) => Column::make($stage->id)
+                ->label(sprintf('%s (%s)', $stage->name, $stage->stage_type->getLabel()))
+                ->color($stage->stage_type->getColor())
+            )->toArray();
 
         return $board
-            ->recordTitleAttribute('post.title')
+            ->recordTitleAttribute('candidate.user.name')
             ->cardSchema(fn (Schema $schema) => $schema
                 ->components([
-                    TextEntry::make('priority'),
-                    TextEntry::make('work_arrangement'),
-                    TextEntry::make('employment_type'),
-                    TextEntry::make('experience_level'),
+                    TextEntry::make('status')->badge(),
                 ])
             )
             ->cardActions([
                 EditAction::make()->model(JobRequisition::class),
             ])
-            ->query(JobRequisition::query()->with('stages'))
-            ->columnIdentifier('status')
-            ->positionIdentifier('display_order')
+            ->query(
+                Application::query()
+                    ->where('requisition_id', $jobRequisition->getKey())
+            )
+            ->columnIdentifier('current_stage_id')
             ->columns($columns);
+    }
+
+    public function getBoardQuery(): ?Builder
+    {
+        dd(parent::getBoardQuery());
     }
 }

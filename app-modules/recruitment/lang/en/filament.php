@@ -64,6 +64,7 @@ return [
             'display_order' => 'Display Order',
             'description' => 'Description',
             'expected_duration_days' => 'Expected Duration (Days)',
+            'active_participants' => 'Active Participants',
             'active' => 'Active',
         ],
     ],

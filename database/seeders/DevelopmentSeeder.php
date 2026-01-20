@@ -37,7 +37,8 @@ final class DevelopmentSeeder extends Seeder
 
         $teams = Team::all();
 
-        $users = User::factory()->count(15)->create();
+        $entitiesCount = 200;
+        $users = User::factory()->count($entitiesCount)->create();
 
         try {
             $users->each(fn (User $user) => $user->teams()->attach($teams->random()));
@@ -45,7 +46,7 @@ final class DevelopmentSeeder extends Seeder
 
         }
 
-        $candidates = Candidate::factory()->count(15)->recycle($users)->create();
+        $candidates = Candidate::factory()->count($entitiesCount)->recycle($users)->create();
 
         $skills = Skill::factory()->count(10)->create();
 
@@ -100,7 +101,7 @@ final class DevelopmentSeeder extends Seeder
             }
         });
 
-        $applications = collect();
+        collect();
         $pairs = [];
         foreach ($requisitions as $requisition) {
             foreach ($candidates as $candidate) {
@@ -108,7 +109,7 @@ final class DevelopmentSeeder extends Seeder
             }
         }
 
-        $selectedPairs = collect($pairs)->shuffle()->take(20);
+        $selectedPairs = collect($pairs)->shuffle()->all();
 
         foreach ($selectedPairs as $pair) {
             $requisition = $requisitions->firstWhere('id', $pair['requisition_id']);
@@ -139,8 +140,6 @@ final class DevelopmentSeeder extends Seeder
                 ->state(['stage_id' => $application->current_stage_id])
                 ->recycle($users)
                 ->create();
-
-            $applications->push($application);
         }
 
         $this->command->info('Development Seeder completed.');

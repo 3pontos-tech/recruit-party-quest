@@ -80,6 +80,9 @@ class PipelineStagesRelationManager extends RelationManager
                 TextColumn::make('expected_duration_days')
                     ->label(__('recruitment::filament.stage.fields.expected_duration_days'))
                     ->sortable(),
+                TextColumn::make('participants_count')
+                    ->label(__('recruitment::filament.stage.fields.active_participants'))
+                    ->counts('participants'),
                 IconColumn::make('active')
                     ->label(__('recruitment::filament.stage.fields.active'))
                     ->boolean(),
