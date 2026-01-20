@@ -39,6 +39,7 @@ class OrganizationPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->viteTheme(sprintf('resources/css/filament/%s/theme.css', $this->panelEnum->value))
             ->tenantRegistration(RegisterTenant::class)
             ->discoverClusters(in: base_path('app-modules/panel-organization/src/Filament/Clusters'), for: 'He4rt\\Organization\\Filament\\Clusters')
             ->discoverPages(in: base_path('app-modules/panel-organization/src/Filament/Pages'), for: 'He4rt\\Organization\\Filament\\Pages')

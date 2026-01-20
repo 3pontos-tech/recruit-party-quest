@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignUuid('job_requisition_id')->constrained('recruitment_job_requisitions');
             $table->string('name');
             $table->string('stage_type');
-            $table->integer('display_order');
+            $table->decimal('display_order', 20, 10)->nullable();
             $table->string('description');
             $table->integer('expected_duration_days');
             $table->boolean('active');
