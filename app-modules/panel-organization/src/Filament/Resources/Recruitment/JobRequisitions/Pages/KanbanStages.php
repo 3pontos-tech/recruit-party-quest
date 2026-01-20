@@ -11,7 +11,6 @@ use He4rt\Applications\Models\Application;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Models\Stage;
-use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\Locked;
 use Relaticle\Flowforge\Board;
 use Relaticle\Flowforge\BoardResourcePage;
@@ -76,10 +75,5 @@ class KanbanStages extends BoardResourcePage
             )
             ->columnIdentifier('current_stage_id')
             ->columns($columns);
-    }
-
-    public function getBoardQuery(): ?Builder
-    {
-        dd(parent::getBoardQuery());
     }
 }
