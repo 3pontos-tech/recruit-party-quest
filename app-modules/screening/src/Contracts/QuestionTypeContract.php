@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Screening\Contracts;
 
+use Filament\Schemas\Components\Component;
 use He4rt\Screening\Enums\QuestionTypeEnum;
 
 /**
@@ -32,7 +33,7 @@ interface QuestionTypeContract
     /**
      * Get the Filament form fields for type-specific settings.
      *
-     * @return array<int, \Filament\Forms\Components\Component>
+     * @return array<int, Component>
      */
     public static function settingsSchema(): array;
 
