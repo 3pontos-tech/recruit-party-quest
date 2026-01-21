@@ -154,4 +154,4 @@ describe('screeningQuestionDTO()', function (): void {
             ->and($existingDto->isExisting())->toBeTrue();
     });
 
-})->skip();
+});
