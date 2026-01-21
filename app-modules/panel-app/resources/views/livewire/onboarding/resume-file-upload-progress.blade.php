@@ -1,60 +1,83 @@
-<div @class(['space-y-6', 'hidden' => ! $this->visible])>
+<div
+    x-data="{
+        status: @entangle('status'),
+        progress: 0,
+        visible: @entangle('visible'),
+    }"
+    x-on:update-bar.window="progress = $event.detail.value"
+    x-on:finished.window="progress = 100; status = 'finished'"
+    x-show="visible"
+    x-cloak
+    class="space-y-6 pt-4"
+>
     <div class="flex items-center justify-between px-2">
-        <!-- Step: Sent -->
-        <x-panel-app::shared.step
-            label="Sent"
-            :active="$status !== 'idle'"
-            :completed="in_array($status, ['processing', 'finished'])"
-            :icon="\Filament\Support\Icons\Heroicon::PaperAirplane"
-        />
+        {{-- Step: Sent --}}
+        <div class="flex flex-col items-center gap-2">
+            <x-filament::icon
+                :icon="\Filament\Support\Icons\Heroicon::PaperAirplane"
+                class="h-5 w-5"
+                x-bind:class="status !== 'idle' ? 'text-white' : 'text-zinc-500'"
+            />
+            <span
+                class="text-[10px] font-bold tracking-widest uppercase"
+                x-bind:class="status !== 'idle' ? 'text-white' : 'text-zinc-500'"
+            >
+                Sent
+            </span>
+        </div>
 
-        <!-- Divider -->
+        {{-- Divider 1 --}}
         <div class="mx-4 h-0.5 flex-1 rounded-full bg-zinc-800">
             <div
-                @class([
-                    'h-full bg-white transition-all duration-1000',
-                    'w-full' => $status !== 'idle',
-                    'w-0' => $status === 'idle',
-                ])
+                class="h-full bg-white transition-all duration-500"
+                x-bind:style="status !== 'idle' ? 'width: 100%' : 'width: 0%'"
             ></div>
         </div>
 
-        <!-- Step: Processing -->
-        <x-panel-app::shared.step
-            label="Processing"
-            :active="in_array($status, ['processing', 'finished'])"
-            :completed="$status === 'finished'"
-            :icon="\Filament\Support\Icons\Heroicon::ArrowPath"
-            :animate="$status === 'processing'"
-        />
+        {{-- Step: Processing --}}
+        <div class="flex flex-col items-center gap-2">
+            <x-filament::icon
+                :icon="\Filament\Support\Icons\Heroicon::ArrowPath"
+                class="h-5 w-5"
+                x-bind:class="['processing', 'finished'].includes(status) ? 'text-white' : 'text-zinc-500'"
+                x-bind:class="status === 'processing' ? 'animate-spin' : ''"
+            />
+            <span
+                class="text-[10px] font-bold tracking-widest uppercase"
+                x-bind:class="['processing', 'finished'].includes(status) ? 'text-white' : 'text-zinc-500'"
+            >
+                Processing
+            </span>
+        </div>
 
-        <!-- Divider -->
+        {{-- Divider 2 --}}
         <div class="mx-4 h-0.5 flex-1 rounded-full bg-zinc-800">
             <div
-                @class([
-                    'h-full bg-white transition-all duration-1000',
-                    'w-full' => in_array($status, ['processing', 'finished']),
-                    'w-0' => ! in_array($status, ['processing', 'finished']),
-                ])
+                class="h-full bg-white transition-all duration-500"
+                x-bind:style="status === 'finished' ? 'width: 100%' : 'width: 0%'"
             ></div>
         </div>
 
-        <!-- Step: Finished -->
-        <x-panel-app::shared.step
-            label="Finished"
-            :active="$status === 'finished'"
-            :completed="$status === 'finished'"
-            :icon="\Filament\Support\Icons\Heroicon::Check"
-        />
+        {{-- Step: Finished --}}
+        <div class="flex flex-col items-center gap-2">
+            <x-filament::icon
+                :icon="\Filament\Support\Icons\Heroicon::Check"
+                class="h-5 w-5"
+                x-bind:class="status === 'finished' ? 'text-white' : 'text-zinc-500'"
+            />
+            <span
+                class="text-[10px] font-bold tracking-widest uppercase"
+                x-bind:class="status === 'finished' ? 'text-white' : 'text-zinc-500'"
+            >
+                Finished
+            </span>
+        </div>
     </div>
 
-    <!-- Progress bar -->
-    <div class="relative h-2 w-full overflow-hidden rounded-full border border-zinc-700 bg-zinc-800 shadow-inner">
+    <div class="relative h-1.5 w-full overflow-hidden rounded-full bg-zinc-800">
         <div
-            class="absolute top-0 left-0 flex h-full items-center justify-end overflow-hidden bg-white transition-all duration-700 ease-out"
-            style="width: {{ $progress }}%"
-        >
-            <div class="progress-bar-shine absolute inset-0"></div>
-        </div>
+            class="absolute top-0 left-0 h-full bg-white transition-all duration-700 ease-out"
+            x-bind:style="'width: ' + progress + '%'"
+        ></div>
     </div>
 </div>

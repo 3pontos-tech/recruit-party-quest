@@ -201,7 +201,7 @@ class OnboardingWizard extends Page
             )));
     }
 
-    protected function fillFields(CandidateOnboardingDTO $dto, TemporaryUploadedFile $cv): void
+    public function fillFields(CandidateOnboardingDTO $dto, TemporaryUploadedFile $cv): void
     {
         $workState = collect($dto->work)->mapWithKeys(fn ($item) => [(string) Str::uuid() => $item->jsonSerialize()])->all();
 

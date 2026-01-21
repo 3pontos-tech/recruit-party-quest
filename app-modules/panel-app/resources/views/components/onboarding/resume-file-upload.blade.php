@@ -109,16 +109,21 @@
                     uploadingMessage: @js($getUploadingMessage()),
                     uploadProgressIndicatorPosition: @js($getUploadProgressIndicatorPosition()),
                     uploadUsing: (fileKey, file, success, error, progress) => {
+                        $wire.dispatch('queued')
                         $wire.upload(
                             `{{ $statePath }}.${fileKey}`,
                             file,
                             () => {
+                                window.dispatchEvent(
+                                    new CustomEvent('update-bar', {
+                                        detail: { value: 50, status: 'processing' },
+                                    }),
+                                )
+
+                                $wire.dispatch('processing')
                                 success(fileKey)
                             },
                             error,
-                            (progressEvent) => {
-                                progress(true, progressEvent.detail.progress, 100)
-                            },
                         )
                     },
                 })"
@@ -126,9 +131,11 @@
         wire:key="{{ $livewireKey }}.{{
             substr(
                 md5(
-                    serialize([
-                        $isDisabled,
-                    ]),
+                    serialize(
+                        [
+                            $isDisabled,
+                        ],
+                    ),
                 ),
                 0,
                 64,

@@ -25,6 +25,7 @@ final class CompleteOnboardingAction implements AiAutocompleteInterface
      */
     public function execute(TemporaryUploadedFile $file): CandidateOnboardingDTO
     {
+        dd(1);
         /** @var Response $response */
         $response = Prism::structured()
             ->using(config('ai.provider.gemini.enum'), config('ai.provider.gemini.model'))
