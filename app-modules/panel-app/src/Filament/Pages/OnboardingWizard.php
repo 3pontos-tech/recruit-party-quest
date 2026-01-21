@@ -26,6 +26,7 @@ use Filament\Schemas\Components\Wizard\Step;
 use Filament\Schemas\Schema;
 use Filament\Support\Concerns\EvaluatesClosures;
 use Filament\Support\Enums\Width;
+use He4rt\App\Filament\Schemas\ResumeFileUpload;
 use He4rt\Candidates\Actions\StoreCandidateEducation;
 use He4rt\Candidates\Actions\StoreCandidateWorkExperiences;
 use He4rt\Candidates\Actions\UpdateCandidateAction;
@@ -56,6 +57,8 @@ class OnboardingWizard extends Page
      */
     public ?array $data = [];
 
+    public bool $wizardVisible = false;
+
     protected static ?string $slug = 'onboarding';
 
     protected static string|null|BackedEnum $navigationIcon = 'heroicon-o-academic-cap';
@@ -74,6 +77,8 @@ class OnboardingWizard extends Page
 
     public static function canAccess(): bool
     {
+        return true;
+
         $candidate = auth()->user()?->candidate;
 
         return $candidate !== null && ! $candidate->is_onboarded;
@@ -85,41 +90,23 @@ class OnboardingWizard extends Page
         $this->content->fill();
     }
 
-    public function saveProgress(): void
-    {
-        $data = $this->data;
-
-        unset($data['cv_file']);
-        session(['onboarding_data' => $data]);
-
-        Notification::make()
-            ->title(__('panel-app::pages/onboarding.notifications.progress_saved.title'))->success()
-            ->send();
-    }
 
     public function content(Schema $schema): Schema
     {
         return $schema
-            ->components(function (): Wizard {
-                $steps = collect($this->getSteps())
-                    ->map(fn (array $data) => Step::make($data['label'])
-                        ->schema($data['schema']))
-                    ->toArray();
-
-                return Wizard::make()
-                    ->steps($steps)
-                    ->persistStepInQueryString()
-                    ->submitAction(new HtmlString(Blade::render(<<<'BLADE'
-                        <x-filament::button
-                            type="submit"
-                            wire:click="handleRegistration"
-                            size="sm"
-                        >
-                            Finalizar
-                        </x-filament::button>
-                    BLADE
-                    )));
-            })
+            ->components([
+                Section::make(__('panel-app::pages/onboarding.steps.cv.sections.upload_cv'))
+                    ->visible(fn () => ! $this->wizardVisible)
+                    ->schema([
+                        ResumeFileUpload::make('cv_file'),
+                        Action::make('continue-onboarding')
+                            ->label('Continuar sem enviar')
+                            ->action(function () {
+                                $this->wizardVisible = true;
+                            }),
+                    ]),
+                $this->prepareWizard(),
+            ])
             ->record(fn () => $this->record)
             ->statePath('data');
     }
@@ -131,7 +118,6 @@ class OnboardingWizard extends Page
     {
         return [
             $this->getAccountStep(),
-            $this->getCvStep(),
             $this->getProfileStep(),
             $this->getPreferencesStep(),
             $this->getReviewStep(),
@@ -193,6 +179,30 @@ class OnboardingWizard extends Page
         return __('panel-app::pages/onboarding.title');
     }
 
+    public function prepareWizard(): Wizard
+    {
+
+        $steps = collect($this->getSteps())
+            ->map(fn (array $data) => Step::make($data['label'])
+                ->schema($data['schema']))
+            ->toArray();
+
+        return Wizard::make()
+            ->steps($steps)
+            ->visible(fn () => $this->wizardVisible)
+            ->persistStepInQueryString()
+            ->submitAction(new HtmlString(Blade::render(<<<'BLADE'
+                        <x-filament::button
+                            type="submit"
+                            wire:click="handleRegistration"
+                            size="sm"
+                        >
+                            Finalizar
+                        </x-filament::button>
+                    BLADE
+            )));
+    }
+
     protected function cvUploaded(TemporaryUploadedFile $file): void
     {
         $currentFile = is_array($this->data['cv_file'])
@@ -213,18 +223,6 @@ class OnboardingWizard extends Page
         $this->data['work_experiences'] = $workState;
         $this->data['education'] = $educationState;
         $this->data['cv_file'] = [$cv];
-    }
-
-    /**
-     * @return Action[]
-     */
-    protected function getHeaderActions(): array
-    {
-        return [
-            Action::make('save_progress')
-                ->label(__('panel-app::pages/onboarding.actions.save_progress'))
-                ->action('saveProgress'),
-        ];
     }
 
     /**
