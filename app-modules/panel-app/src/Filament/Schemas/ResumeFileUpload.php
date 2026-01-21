@@ -8,8 +8,8 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Utilities\Get;
 use He4rt\App\Filament\Pages\OnboardingWizard;
-use He4rt\Candidates\AiAutocompleteInterface;
-use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
+use He4rt\Candidates\Jobs\AnaliseResumeJob;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class ResumeFileUpload extends FileUpload
 {
@@ -29,11 +29,19 @@ class ResumeFileUpload extends FileUpload
 
     private function uploadHooks(Get $get, OnboardingWizard $livewire): void
     {
+        /** @var TemporaryUploadedFile $temporaryFile */
         $temporaryFile = $get('cv_file');
-        /** @var CandidateOnboardingDTO $fields */
-        $fields = resolve(AiAutocompleteInterface::class)->execute($temporaryFile);
-        $livewire->fillFields($fields, $temporaryFile);
-        $livewire->dispatch('finished');
+
+        if ($temporaryFile->getFilename() === null) {
+            return;
+        }
+
+        dispatch(new AnaliseResumeJob($temporaryFile->getFilename(), auth()->user()->getKey()));
+
+        //        /** @var CandidateOnboardingDTO $fields */
+        //        $fields = resolve(AiAutocompleteInterface::class)->execute($temporaryFile);
+        //        $livewire->fillFields($fields, $temporaryFile);
+        //        $livewire->dispatch('finished');
 
         // Simulate processing after a short delay or async
         // For now just dispatching the next ones to show it works

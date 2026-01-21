@@ -201,6 +201,7 @@ class OnboardingWizard extends Page
             )));
     }
 
+    //    #[On('resume-analyzed')]
     public function fillFields(CandidateOnboardingDTO $dto, TemporaryUploadedFile $cv): void
     {
         $workState = collect($dto->work)->mapWithKeys(fn ($item) => [(string) Str::uuid() => $item->jsonSerialize()])->all();

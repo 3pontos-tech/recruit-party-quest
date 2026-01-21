@@ -33,7 +33,7 @@ class ResumeFileUploadProgress extends Component
         $this->progress = 50;
     }
 
-    #[On('finished')]
+    #[On('resume-analyzed')]
     public function finished(): void
     {
         $this->status = 'finished';
