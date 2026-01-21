@@ -8,13 +8,13 @@ use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Exceptions\InvalidTransitionException;
 use He4rt\Applications\Exceptions\MissingTransitionDataException;
-use He4rt\Recruitment\Stages\Models\Stage;
 
 final class InProgressTransition extends AbstractApplicationTransition
 {
     public function choices(): array
     {
         return [
+            ApplicationStatusEnum::InProgress->value => ApplicationStatusEnum::InProgress->getLabel(),
             ApplicationStatusEnum::OfferExtended->value => ApplicationStatusEnum::OfferExtended->getLabel(),
             ApplicationStatusEnum::Rejected->value => ApplicationStatusEnum::Rejected->getLabel(),
             ApplicationStatusEnum::Withdrawn->value => ApplicationStatusEnum::Withdrawn->getLabel(),
@@ -94,12 +94,7 @@ final class InProgressTransition extends AbstractApplicationTransition
     {
         return match (true) {
             $data->toStageId !== null => $data->toStageId,
-            $data->advanceStage === true => Stage::query()
-                ->where('job_requisition_id', $this->application->requisition_id)
-                ->where('active', true)
-                ->where('display_order', '>', $this->application->currentStage->display_order ?? -1)
-                ->orderBy('display_order')
-                ->value('id'),
+            $data->advanceStage === true => $this->application->getNextStage()->getKey(),
             default => null,
         };
     }

@@ -11,7 +11,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\CreateJobRequisition;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\EditJobRequisition;
-use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\KanbanStages;
+use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\KanbanStages;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\ListJobRequisitions;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\RelationManagers\PipelineStagesRelationManager;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\RelationManagers\ScreeningQuestionsRelationManager;

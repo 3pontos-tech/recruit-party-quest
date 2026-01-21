@@ -15,6 +15,7 @@ use He4rt\Candidates\Models\Candidate;
 use He4rt\Feedback\Models\ApplicationComment;
 use He4rt\Feedback\Models\Evaluation;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use He4rt\Recruitment\Stages\Models\Concerns\InteractsWithStages;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Screening\Models\ScreeningResponse;
 use He4rt\Teams\Concerns\BelongsToTeam;
@@ -61,6 +62,7 @@ use Illuminate\Support\Carbon;
 class Application extends BaseModel
 {
     use BelongsToTeam;
+    use InteractsWithStages;
 
     /**
      * @return BelongsTo<JobRequisition, $this>
