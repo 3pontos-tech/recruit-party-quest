@@ -7,10 +7,13 @@ namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Page
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
+use He4rt\Applications\Services\Transitions\TransitionData;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Models\Stage;
@@ -67,6 +70,7 @@ class KanbanStages extends BoardResourcePage
             ->cardSchema(fn (Schema $schema) => $schema
                 ->components([
                     TextEntry::make('status')->badge(),
+                    TextEntry::make('candidate.total_work_experience_years'),
                     TextEntry::make('tracking_code'),
                 ])
             )
@@ -77,16 +81,46 @@ class KanbanStages extends BoardResourcePage
                     ->icon('heroicon-o-play')
                     ->disabled(fn (Application $record): bool => ! $record->current_step->canChange())
                     ->tooltip(fn (Application $record): ?string => $record->current_step->canChange() ? null : 'O processo atual não permite mudanças.')
-                    ->schema([
-                        Select::make('status')
-                            ->label('Status')
-                            ->options(fn (Application $record) => $record->current_step->choices())
-                            ->enum(ApplicationStatusEnum::class)
-                            ->required(),
-                    ])
-                    ->action(fn (Application $record, array $data) => $record->current_step->handle(auth()->user(), $data))
+                    ->schema(function (Application $record): array {
+                        $choices = $record->current_step->choices();
+
+                        return [
+                            Select::make('to_status')
+                                ->label('Novo Status')
+                                ->options($choices)
+                                ->enum(ApplicationStatusEnum::class)
+                                ->required()
+                                ->live(),
+
+                            Select::make('to_stage_id')
+                                ->label('Estágio')
+                                ->options(fn () => $record->requisition->stages
+                                    ->where('active', true)
+                                    ->pluck('name', 'id'))
+                                ->visible(fn (Get $get) => $get('to_status') === ApplicationStatusEnum::InProgress
+                                    || $get('to_status') === ApplicationStatusEnum::InReview
+                                )
+                                ->helperText('Selecione um estágio específico ou deixe vazio para avançar automaticamente'),
+
+                            Textarea::make('rejection_reason_details')
+                                ->label('Motivo da Recusa')
+                                ->rows(3)
+                                ->visible(fn (Get $get) => $get('to_status') === ApplicationStatusEnum::Rejected
+                                )
+                                ->required(fn (Get $get) => $get('to_status') === ApplicationStatusEnum::Rejected),
+
+                            Textarea::make('notes')
+                                ->label('Notas')
+                                ->rows(2),
+                        ];
+                    })
+                    ->action(function (Application $record, array $data): void {
+                        $transitionData = TransitionData::fromArray($data, auth()->id());
+                        $record->current_step->handle($transitionData);
+                    })
                     ->requiresConfirmation(),
-                EditAction::make()->model(Application::class),
+                EditAction::make()
+                    ->model(Application::class),
             ])
             ->query(
                 Application::query()
