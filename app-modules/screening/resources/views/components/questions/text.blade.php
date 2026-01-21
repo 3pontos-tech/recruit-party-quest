@@ -24,7 +24,7 @@
 
         @if ($question->is_knockout)
             <x-he4rt::text class="text-helper-warning font-family-secondary shrink-0 self-start text-sm">
-                (pergunta eliminatória)
+                {{ __('screening::question_types.knockout_helper') }}
             </x-he4rt::text>
         @endif
     </div>
@@ -36,6 +36,7 @@
             :resizable="true"
             maxlength="{{ $maxLength }}"
             rows="4"
+            :required="$question->is_required && !$disabled"
             {{ $inputAttributes }}
         />
     @else
@@ -44,6 +45,7 @@
             :disabled="$disabled"
             :placeholder="$placeholder"
             maxlength="{{ $maxLength }}"
+            :required="$question->is_required && !$disabled"
             {{ $inputAttributes }}
         />
     @endif

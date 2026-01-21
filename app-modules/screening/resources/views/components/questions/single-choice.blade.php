@@ -23,13 +23,17 @@
 
         @if ($question->is_knockout)
             <x-he4rt::text class="text-helper-warning font-family-secondary shrink-0 self-start text-sm">
-                (pergunta eliminatória)
+                {{ __('screening::question_types.knockout_helper') }}
             </x-he4rt::text>
         @endif
     </div>
 
     @if ($layout === 'dropdown')
-        <select {{ $inputAttributes->class('hp-input') }} @if ($disabled) disabled @endif>
+        <select
+            {{ $inputAttributes->class('hp-input') }}
+            @if ($disabled) disabled @endif
+            @if ($question->is_required && !$disabled) required @endif
+        >
             <option value="">{{ __('screening::question_types.single_choice.select_placeholder') }}</option>
             @foreach ($choices as $choice)
                 <option value="{{ $choice['value'] }}">
@@ -44,6 +48,7 @@
                     :value="$choice['value']"
                     :label="$choice['label']"
                     :disabled="$disabled"
+                    :required="$question->is_required && !$disabled && $loop->first"
                     {{ $inputAttributes }}
                 />
             @endforeach

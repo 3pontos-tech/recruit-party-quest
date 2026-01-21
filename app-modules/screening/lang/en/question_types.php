@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 return [
+    'knockout_helper' => '(knockout question)',
+
     'yes_no' => [
         'label' => 'Yes/No',
         'yes' => 'Yes',
