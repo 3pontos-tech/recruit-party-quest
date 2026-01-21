@@ -36,8 +36,14 @@ class OrganizationPanelProvider extends PanelProvider
             ->path($this->panelEnum->getPath())
             ->tenant(model: Team::class, slugAttribute: 'slug')
             ->login(LoginPage::class)
+            ->topbar(false)
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Gray,
+                'success' => Color::Green,
+                'warning' => Color::Yellow,
+                'danger' => Color::Red,
+                'info' => Color::Indigo,
+                'gray' => Color::Gray,
             ])
             ->viteTheme(sprintf('resources/css/filament/%s/theme.css', $this->panelEnum->value))
             ->tenantRegistration(RegisterTenant::class)
