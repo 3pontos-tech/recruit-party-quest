@@ -24,6 +24,10 @@
 .hp-tag-size-xs {
     @apply text-xs;
     @apply px-1.5 py-0.75;
+
+    & .hp-icon {
+        @apply h-4 w-4;
+    }
 }
 
 .hp-tag-size-sm {

@@ -29,7 +29,7 @@
     </div>
 
     <div class="relative">
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col">
             @foreach ($stages as $index => $stage)
                 @php
                     $isCompleted = $index < $currentStageIndex;
@@ -37,15 +37,13 @@
                     $isFuture = $index > $currentStageIndex;
                 @endphp
 
-                <div
-                    @class([
-                        'group relative flex items-center gap-6',
-                    ])
-                >
+                <div @class([
+                    'group relative flex items-center gap-6',
+                ])>
                     {{-- Timeline Line Segment --}}
                     @if (! $loop->last)
                         <div
-                            class="bg-outline-low/30 absolute top-4 left-3.5 z-10 h-full w-0.5"
+                            class="bg-outline-low/30 absolute top-1/2 bottom-0 left-3.5 z-10 h-full w-0.5"
                             aria-hidden="true"
                         ></div>
                     @endif
@@ -67,7 +65,7 @@
                         @endif
                     </div>
 
-                    <div class="flex flex-col gap-1 pt-0.5">
+                    <div class="flex flex-col gap-1 py-4">
                         <x-he4rt::text
                             size="sm"
                             @class([
