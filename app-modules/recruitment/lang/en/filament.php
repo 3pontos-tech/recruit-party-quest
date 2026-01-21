@@ -81,9 +81,11 @@ return [
             'position_details' => 'Position Details',
             'compensation' => 'Compensation',
             'settings' => 'Settings',
+            'job_posting' => 'Job Posting',
         ],
         'fields' => [
             'id' => 'ID',
+            'slug' => 'Slug',
             'team' => 'Team',
             'department' => 'Department',
             'hiring_manager' => 'Hiring Manager',
@@ -104,6 +106,10 @@ return [
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'deleted_at' => 'Deleted At',
+            'post' => [
+                'title' => 'Title',
+                'summary' => 'Summary',
+            ],
         ],
         'filters' => [
             'status' => 'Status',

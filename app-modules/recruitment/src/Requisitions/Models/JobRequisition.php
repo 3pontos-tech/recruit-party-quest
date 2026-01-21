@@ -31,6 +31,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property string $slug
  * @property string $team_id
  * @property string $department_id
  * @property string $work_arrangement

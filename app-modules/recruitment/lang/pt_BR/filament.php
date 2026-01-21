@@ -80,6 +80,7 @@ return [
         ],
         'fields' => [
             'id' => 'ID',
+            'slug' => 'Slug',
             'team' => 'Time',
             'department' => 'Departamento',
             'hiring_manager' => 'Gestor Responsável',

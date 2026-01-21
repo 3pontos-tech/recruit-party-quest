@@ -15,6 +15,7 @@ use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use Illuminate\Support\Str;
 
 class JobRequisitionForm
 {
@@ -25,6 +26,13 @@ class JobRequisitionForm
                 Section::make(__('recruitment::filament.requisition.sections.basic_information'))
                     ->columns(2)
                     ->schema([
+                        TextInput::make('slug')
+                            ->label(__('recruitment::filament.requisition.fields.slug'))
+                            ->required()
+                            ->unique(ignoreRecord: true)
+                            ->default(fn () => (string) Str::uuid())
+                            ->dehydrated()
+                            ->columnSpanFull(),
                         Select::make('team_id')
                             ->label(__('recruitment::filament.requisition.fields.team'))
                             ->relationship('team', 'name')

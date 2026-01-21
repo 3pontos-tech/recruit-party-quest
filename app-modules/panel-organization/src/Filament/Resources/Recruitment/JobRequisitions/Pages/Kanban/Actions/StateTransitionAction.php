@@ -10,6 +10,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Components\Utilities\Get;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
+use He4rt\Applications\Services\Transitions\TransitionData;
 
 class StateTransitionAction extends Action
 {

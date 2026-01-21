@@ -31,6 +31,11 @@ class JobRequisitionsTable
                     ->label(__('recruitment::filament.requisition.fields.id'))
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->copyable(),
+                TextColumn::make('slug')
+                    ->label(__('recruitment::filament.requisition.fields.slug'))
+                    ->searchable()
+                    ->sortable()
+                    ->copyable(),
                 TextColumn::make('team.name')
                     ->label(__('recruitment::filament.requisition.fields.team'))
                     ->searchable()
