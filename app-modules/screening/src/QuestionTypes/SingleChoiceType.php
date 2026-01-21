@@ -47,12 +47,13 @@ final class SingleChoiceType implements QuestionTypeContract
                 ->schema([
                     TextInput::make('value')
                         ->label(__('screening::question_types.single_choice.settings.choice_value'))
-                        ->required(),
+                        ->required()
+                        ->distinct(),
                     TextInput::make('label')
                         ->label(__('screening::question_types.single_choice.settings.choice_label'))
                         ->required(),
                 ])
-                ->columns(2)
+                ->columns()
                 ->minItems(2)
                 ->defaultItems(2)
                 ->addActionLabel(__('screening::question_types.single_choice.settings.add_choice'))

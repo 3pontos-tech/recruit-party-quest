@@ -36,6 +36,7 @@ final class TextType implements QuestionTypeContract
             TextInput::make('settings.max_length')
                 ->label(__('screening::question_types.text.settings.max_length'))
                 ->numeric()
+                ->nullable()
                 ->minValue(1)
                 ->maxValue(10000)
                 ->placeholder('500'),
