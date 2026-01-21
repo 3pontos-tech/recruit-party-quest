@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions;
 
 use BackedEnum;
+use Filament\Pages\Enums\SubNavigationPosition;
+use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -37,6 +39,8 @@ class JobRequisitionResource extends Resource
 
     protected static ?int $navigationSort = 10;
 
+    protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
+
     public static function form(Schema $schema): Schema
     {
         return JobRequisitionForm::configure($schema);
@@ -55,6 +59,14 @@ class JobRequisitionResource extends Resource
             'edit' => EditJobRequisition::route('/{record}/edit'),
             'kanban' => KanbanStages::route('/{record}/kanban'),
         ];
+    }
+
+    public static function getRecordSubNavigation(Page $page): array
+    {
+        return $page->generateNavigationItems([
+            EditJobRequisition::class,
+            KanbanStages::class,
+        ]);
     }
 
     public static function getRelations(): array

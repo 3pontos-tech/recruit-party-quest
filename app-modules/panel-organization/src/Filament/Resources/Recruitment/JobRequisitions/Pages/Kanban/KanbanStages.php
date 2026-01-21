@@ -6,7 +6,9 @@ namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Page
 
 use Filament\Actions\EditAction;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Navigation\NavigationItem;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use He4rt\Applications\Models\Application;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
@@ -26,6 +28,21 @@ class KanbanStages extends BoardResourcePage
     public ?string $requisitionId = null;
 
     protected static string $resource = JobRequisitionResource::class;
+
+    public function getSubNavigation(): array
+    {
+        return [
+            NavigationItem::make('Edit Stages')
+                ->icon(Heroicon::OutlinedPencilSquare)
+                ->url(JobRequisitionResource::getUrl('edit', ['record' => $this->requisitionId]))
+                ->label('Editar'),
+            NavigationItem::make('Kanban Stages')
+                ->url(self::getUrl(['record' => $this->requisitionId]))
+                ->isActiveWhen(fn () => true)
+                ->icon(Heroicon::Calendar)
+                ->activeIcon(Heroicon::Calendar),
+        ];
+    }
 
     public function mount(): void
     {

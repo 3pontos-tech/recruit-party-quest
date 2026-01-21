@@ -45,6 +45,7 @@ class OrganizationPanelProvider extends PanelProvider
                 'info' => Color::Indigo,
                 'gray' => Color::Gray,
             ])
+            ->sidebarCollapsibleOnDesktop()
             ->viteTheme(sprintf('resources/css/filament/%s/theme.css', $this->panelEnum->value))
             ->tenantRegistration(RegisterTenant::class)
             ->discoverClusters(in: base_path('app-modules/panel-organization/src/Filament/Clusters'), for: 'He4rt\\Organization\\Filament\\Clusters')
