@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace He4rt\App\Livewire;
 
-use Filament\Notifications\Notification;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -24,6 +23,7 @@ class ResumeFileUploadProgress extends Component
         $this->visible = true;
         $this->status = 'sending';
         $this->progress = 33;
+        $this->dispatch('processing');
     }
 
     #[On('processing')]
@@ -31,11 +31,6 @@ class ResumeFileUploadProgress extends Component
     {
         $this->status = 'processing';
         $this->progress = 50;
-
-        Notification::make()
-            ->info()
-            ->title('Upload foi feito, aguarde enquanto estamos preenchendo suas informações no cadastro!!!!')
-            ->send();
     }
 
     #[On('finished')]

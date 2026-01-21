@@ -4,8 +4,10 @@
         progress: 0,
         visible: @entangle('visible'),
     }"
+    x-on:queued.window="visible = true; status = 'sending'; progress = 5"
     x-on:update-bar.window="progress = $event.detail.value"
-    x-on:finished.window="progress = 100; status = 'finished'"
+    x-on:processing.window="status = 'processing'; progress = 50"
+    x-on:finished.window="status = 'finished'; progress = 100"
     x-show="visible"
     x-cloak
     class="space-y-6 pt-4"
