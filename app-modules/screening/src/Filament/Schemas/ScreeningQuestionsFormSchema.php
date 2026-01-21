@@ -42,7 +42,6 @@ final class ScreeningQuestionsFormSchema
                     ->live()
                     ->afterStateUpdated(function ($set): void {
                         $set('settings', null);
-                        $set('choices', null);
                     }),
 
                 TextInput::make('display_order')
@@ -64,11 +63,15 @@ final class ScreeningQuestionsFormSchema
 
                 Group::make()
                     ->schema(function ($get): array {
-                        $type = $get('question_type');
+                        $typeValue = $get('question_type');
 
-                        if ($type === null) {
+                        if ($typeValue === null) {
                             return [];
                         }
+
+                        $type = $typeValue instanceof QuestionTypeEnum
+                            ? $typeValue
+                            : QuestionTypeEnum::tryFrom($typeValue);
 
                         return QuestionTypeRegistry::getSettingsSchema($type);
                     })

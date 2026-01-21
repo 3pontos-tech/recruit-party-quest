@@ -36,12 +36,14 @@ final class MultipleChoiceType implements QuestionTypeContract
             TextInput::make('settings.min_selections')
                 ->label(__('screening::question_types.multiple_choice.settings.min_selections'))
                 ->numeric()
+                ->nullable()
                 ->minValue(0)
                 ->placeholder('0'),
 
             TextInput::make('settings.max_selections')
                 ->label(__('screening::question_types.multiple_choice.settings.max_selections'))
                 ->numeric()
+                ->nullable()
                 ->minValue(1)
                 ->placeholder(__('screening::question_types.multiple_choice.settings.no_limit')),
 

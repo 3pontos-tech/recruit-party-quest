@@ -1,7 +1,5 @@
 @props([
     'question',
-    'name' => null,
-    'value' => null,
     'disabled' => false,
 ])
 
@@ -10,14 +8,15 @@
     $minSelections = $settings['min_selections'] ?? 0;
     $maxSelections = $settings['max_selections'] ?? null;
     $choices = $settings['choices'] ?? [];
-    $inputName = $name ?? "answers[{$question->id}][]";
-    $selectedValues = is_array($value) ? $value : [];
+
+    $wrapperAttributes = $attributes->only('class');
+    $inputAttributes = $attributes->except('class');
 @endphp
 
 <div
-    {{ $attributes->class('screening-question') }}
+    {{ $wrapperAttributes->class('screening-question') }}
     x-data="{
-        selected: @js($selectedValues),
+        selected: [],
         max: @js($maxSelections),
         isDisabled: @js($disabled),
         toggle(value) {
@@ -48,7 +47,7 @@
 
         @if ($question->is_knockout)
             <x-he4rt::text class="text-helper-warning font-family-secondary shrink-0 self-start text-sm">
-                (pergunta eliminatória)
+                {{ __('screening::question_types.knockout_helper') }}
             </x-he4rt::text>
         @endif
     </div>
@@ -67,17 +66,21 @@
 
     <div class="hp-checkbox-group">
         @foreach ($choices as $choice)
+            @php
+                $escapedValue = json_encode($choice['value']);
+            @endphp
+
             <label
                 class="hp-checkbox-label"
-                :class="{ 'hp-checkbox-label--disabled': shouldDisable('{{ $choice['value'] }}') }"
+                :class="{ 'hp-checkbox-label--disabled': shouldDisable({{ $escapedValue }}) }"
             >
                 <input
                     type="checkbox"
-                    name="{{ $inputName }}"
                     value="{{ $choice['value'] }}"
                     class="hp-checkbox"
                     x-model="selected"
-                    :disabled="shouldDisable('{{ $choice['value'] }}')"
+                    :disabled="shouldDisable({{ $escapedValue }})"
+                    {{ $inputAttributes }}
                 />
                 <x-he4rt::text>{{ $choice['label'] }}</x-he4rt::text>
             </label>

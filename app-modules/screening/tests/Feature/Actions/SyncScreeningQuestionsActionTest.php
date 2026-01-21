@@ -42,8 +42,10 @@ describe('SyncScreeningQuestionsAction', function (): void {
 
     it('can update existing questions', function (): void {
         $requisition = JobRequisition::factory()->create();
+        $morphAlias = Relation::getMorphAlias(JobRequisition::class);
         $question = ScreeningQuestion::factory()->create([
-            'requisition_id' => $requisition->id,
+            'screenable_id' => $requisition->id,
+            'screenable_type' => $morphAlias,
             'team_id' => $requisition->team_id,
             'question_text' => 'Original question',
             'question_type' => QuestionTypeEnum::Text,
@@ -53,6 +55,7 @@ describe('SyncScreeningQuestionsAction', function (): void {
         $dtos = [
             new ScreeningQuestionDTO(
                 screenableId: $requisition->id,
+                screenableType: $morphAlias,
                 teamId: $requisition->team_id,
                 questionText: 'Updated question',
                 questionType: QuestionTypeEnum::Number,
@@ -73,13 +76,16 @@ describe('SyncScreeningQuestionsAction', function (): void {
 
     it('can delete removed questions', function (): void {
         $requisition = JobRequisition::factory()->create();
+        $morphAlias = Relation::getMorphAlias(JobRequisition::class);
         $questionToKeep = ScreeningQuestion::factory()->create([
-            'requisition_id' => $requisition->id,
+            'screenable_id' => $requisition->id,
+            'screenable_type' => $morphAlias,
             'team_id' => $requisition->team_id,
             'display_order' => 1,
         ]);
         $questionToDelete = ScreeningQuestion::factory()->create([
-            'requisition_id' => $requisition->id,
+            'screenable_id' => $requisition->id,
+            'screenable_type' => $morphAlias,
             'team_id' => $requisition->team_id,
             'display_order' => 2,
         ]);
@@ -88,6 +94,7 @@ describe('SyncScreeningQuestionsAction', function (): void {
         $dtos = [
             new ScreeningQuestionDTO(
                 screenableId: $requisition->id,
+                screenableType: $morphAlias,
                 teamId: $requisition->team_id,
                 questionText: $questionToKeep->question_text,
                 questionType: $questionToKeep->question_type,
@@ -106,14 +113,17 @@ describe('SyncScreeningQuestionsAction', function (): void {
 
     it('can handle mixed create, update, and delete operations', function (): void {
         $requisition = JobRequisition::factory()->create();
+        $morphAlias = Relation::getMorphAlias(JobRequisition::class);
         $existingQuestion = ScreeningQuestion::factory()->create([
-            'requisition_id' => $requisition->id,
+            'screenable_id' => $requisition->id,
+            'screenable_type' => $morphAlias,
             'team_id' => $requisition->team_id,
             'question_text' => 'Existing question',
             'display_order' => 1,
         ]);
         $questionToDelete = ScreeningQuestion::factory()->create([
-            'requisition_id' => $requisition->id,
+            'screenable_id' => $requisition->id,
+            'screenable_type' => $morphAlias,
             'team_id' => $requisition->team_id,
             'display_order' => 2,
         ]);
@@ -122,6 +132,7 @@ describe('SyncScreeningQuestionsAction', function (): void {
             // Update existing
             new ScreeningQuestionDTO(
                 screenableId: $requisition->id,
+                screenableType: $morphAlias,
                 teamId: $requisition->team_id,
                 questionText: 'Updated existing',
                 questionType: $existingQuestion->question_type,
@@ -131,6 +142,7 @@ describe('SyncScreeningQuestionsAction', function (): void {
             // Create new
             new ScreeningQuestionDTO(
                 screenableId: $requisition->id,
+                screenableType: $morphAlias,
                 teamId: $requisition->team_id,
                 questionText: 'Brand new question',
                 questionType: QuestionTypeEnum::SingleChoice,
@@ -159,8 +171,10 @@ describe('SyncScreeningQuestionsAction', function (): void {
 
     it('deletes all questions when empty array is passed', function (): void {
         $requisition = JobRequisition::factory()->create();
+        $morphAlias = Relation::getMorphAlias(JobRequisition::class);
         ScreeningQuestion::factory()->count(3)->create([
-            'requisition_id' => $requisition->id,
+            'screenable_id' => $requisition->id,
+            'screenable_type' => $morphAlias,
             'team_id' => $requisition->team_id,
         ]);
 
@@ -172,4 +186,4 @@ describe('SyncScreeningQuestionsAction', function (): void {
         expect($requisition->screeningQuestions()->count())->toBe(0);
     });
 
-})->skip();
+});

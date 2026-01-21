@@ -35,16 +35,19 @@ final class NumberType implements QuestionTypeContract
             TextInput::make('settings.min')
                 ->label(__('screening::question_types.number.settings.min'))
                 ->numeric()
+                ->nullable()
                 ->placeholder('0'),
 
             TextInput::make('settings.max')
                 ->label(__('screening::question_types.number.settings.max'))
                 ->numeric()
+                ->nullable()
                 ->placeholder('100'),
 
             TextInput::make('settings.step')
                 ->label(__('screening::question_types.number.settings.step'))
                 ->numeric()
+                ->nullable()
                 ->minValue(0.01)
                 ->placeholder('1'),
 
