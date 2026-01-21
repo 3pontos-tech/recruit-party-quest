@@ -75,15 +75,16 @@ readonly class ScreeningQuestionDTO
      */
     public static function collectionFromRepeater(
         array $repeaterData,
-        string $requisitionId,
+        string $screenableId,
+        string $screenableType,
         string $teamId,
     ): array {
         $dtos = [];
 
         foreach ($repeaterData as $index => $item) {
             $dtos[] = self::fromArray([
-                'screenable_id' => $requisitionId,
-                'screenable_type' => $requisitionId,
+                'screenable_id' => $screenableId,
+                'screenable_type' => $screenableType,
                 'team_id' => $teamId,
                 'question_text' => $item['question_text'],
                 'question_type' => $item['question_type'],
@@ -108,6 +109,7 @@ readonly class ScreeningQuestionDTO
     {
         return [
             'screenable_id' => $this->screenableId,
+            'screenable_type' => $this->screenableType,
             'team_id' => $this->teamId,
             'question_text' => $this->questionText,
             'question_type' => $this->questionType,

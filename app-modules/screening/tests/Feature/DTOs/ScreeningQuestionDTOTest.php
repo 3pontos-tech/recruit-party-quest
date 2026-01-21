@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Screening\DTOs\ScreeningQuestionDTO;
 use He4rt\Screening\Enums\QuestionTypeEnum;
 
@@ -10,6 +11,7 @@ describe('screeningQuestionDTO()', function (): void {
     it('can create a DTO from constructor', function (): void {
         $dto = new ScreeningQuestionDTO(
             screenableId: 'req-123',
+            screenableType: JobRequisition::class,
             teamId: 'team-456',
             questionText: 'Are you authorized to work?',
             questionType: QuestionTypeEnum::YesNo,
@@ -28,7 +30,8 @@ describe('screeningQuestionDTO()', function (): void {
 
     it('can create a DTO from array', function (): void {
         $dto = ScreeningQuestionDTO::fromArray([
-            'requisition_id' => 'req-123',
+            'screenable_id' => 'req-123',
+            'screenable_type' => JobRequisition::class,
             'team_id' => 'team-456',
             'question_text' => 'Years of experience?',
             'question_type' => 'number',
@@ -47,7 +50,8 @@ describe('screeningQuestionDTO()', function (): void {
 
     it('can create a DTO from array with enum instance and settings', function (): void {
         $dto = ScreeningQuestionDTO::fromArray([
-            'requisition_id' => 'req-123',
+            'screenable_id' => 'req-123',
+            'screenable_type' => JobRequisition::class,
             'team_id' => 'team-456',
             'question_text' => 'Select your skills',
             'question_type' => QuestionTypeEnum::MultipleChoice,
@@ -84,7 +88,8 @@ describe('screeningQuestionDTO()', function (): void {
 
         $dtos = ScreeningQuestionDTO::collectionFromRepeater(
             repeaterData: $repeaterData,
-            requisitionId: 'req-123',
+            screenableId: 'req-123',
+            screenableType: JobRequisition::class,
             teamId: 'team-456',
         );
 
@@ -98,6 +103,7 @@ describe('screeningQuestionDTO()', function (): void {
     it('can convert to array', function (): void {
         $dto = new ScreeningQuestionDTO(
             screenableId: 'req-123',
+            screenableType: JobRequisition::class,
             teamId: 'team-456',
             questionText: 'Test question',
             questionType: QuestionTypeEnum::Text,
@@ -109,7 +115,8 @@ describe('screeningQuestionDTO()', function (): void {
         $array = $dto->toArray();
 
         expect($array)->toHaveKeys([
-            'requisition_id',
+            'screenable_id',
+            'screenable_type',
             'team_id',
             'question_text',
             'question_type',
@@ -119,13 +126,14 @@ describe('screeningQuestionDTO()', function (): void {
             'settings',
             'knockout_criteria',
         ])
-            ->and($array['requisition_id'])->toBe('req-123')
+            ->and($array['screenable_id'])->toBe('req-123')
             ->and($array['question_type'])->toBe(QuestionTypeEnum::Text);
     });
 
     it('correctly identifies existing vs new questions', function (): void {
         $newDto = new ScreeningQuestionDTO(
             screenableId: 'req-123',
+            screenableType: JobRequisition::class,
             teamId: 'team-456',
             questionText: 'New question',
             questionType: QuestionTypeEnum::Text,
@@ -134,6 +142,7 @@ describe('screeningQuestionDTO()', function (): void {
 
         $existingDto = new ScreeningQuestionDTO(
             screenableId: 'req-123',
+            screenableType: JobRequisition::class,
             teamId: 'team-456',
             questionText: 'Existing question',
             questionType: QuestionTypeEnum::Text,
