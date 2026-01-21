@@ -9,11 +9,13 @@
 
 @php
     $inputId = $id ?? ($name ? $name . '-' . $value : 'hp-radio-' . \Illuminate\Support\Str::random(4));
-    $isDisabled = (bool) $disabled;
-    $isChecked = (bool) $checked;
+    $isDisabled = $disabled;
+    $isChecked = $checked;
+    $labelAttributes = $attributes->only('class');
+    $inputAttributes = $attributes->except('class');
 @endphp
 
-<label {{ $attributes->class(['hp-radio-label', 'hp-radio-label--disabled' => $isDisabled]) }}>
+<label {{ $labelAttributes->class(['hp-radio-label', 'hp-radio-label--disabled' => $isDisabled]) }}>
     <input
         type="radio"
         name="{{ $name }}"
@@ -21,7 +23,7 @@
         value="{{ $value }}"
         @if ($isChecked) checked @endif
         @if ($isDisabled) disabled @endif
-        class="hp-radio"
+        {{ $inputAttributes->class('hp-radio') }}
     />
 
     @if ($label)
