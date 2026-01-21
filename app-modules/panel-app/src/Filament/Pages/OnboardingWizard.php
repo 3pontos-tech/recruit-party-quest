@@ -30,7 +30,6 @@ use He4rt\App\Filament\Schemas\ResumeFileUpload;
 use He4rt\Candidates\Actions\StoreCandidateEducation;
 use He4rt\Candidates\Actions\StoreCandidateWorkExperiences;
 use He4rt\Candidates\Actions\UpdateCandidateAction;
-use He4rt\Candidates\AiAutocompleteInterface;
 use He4rt\Candidates\DTOs\CandidateDTO;
 use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\DTOs\Collections\CandidateEducationCollection;
@@ -65,7 +64,9 @@ class OnboardingWizard extends Page
 
     protected static string $layout = 'filament-panels::components.layout.simple';
 
-    protected Width|string|null $maxContentWidth = Width::ScreenExtraLarge;
+    protected ?string $heading = '';
+
+    protected Width|string|null $maxContentWidth = Width::ScreenSmall;
 
     //    protected string $view = 'filament-panels::pages.simple';
 
@@ -78,10 +79,6 @@ class OnboardingWizard extends Page
     public static function canAccess(): bool
     {
         return true;
-
-        $candidate = auth()->user()?->candidate;
-
-        return $candidate !== null && ! $candidate->is_onboarded;
     }
 
     public function mount(): void
@@ -90,19 +87,20 @@ class OnboardingWizard extends Page
         $this->content->fill();
     }
 
-
     public function content(Schema $schema): Schema
     {
         return $schema
             ->components([
                 Section::make(__('panel-app::pages/onboarding.steps.cv.sections.upload_cv'))
                     ->visible(fn () => ! $this->wizardVisible)
+                    ->compact()
                     ->schema([
                         ResumeFileUpload::make('cv_file'),
                         Action::make('continue-onboarding')
                             ->label('Continuar sem enviar')
-                            ->action(function () {
+                            ->action(function (): void {
                                 $this->wizardVisible = true;
+                                $this->maxContentWidth = Width::ScreenExtraLarge;
                             }),
                     ]),
                 $this->prepareWizard(),
@@ -201,17 +199,6 @@ class OnboardingWizard extends Page
                         </x-filament::button>
                     BLADE
             )));
-    }
-
-    protected function cvUploaded(TemporaryUploadedFile $file): void
-    {
-        $currentFile = is_array($this->data['cv_file'])
-            ? head($this->data['cv_file'])
-            : $this->data['cv_file'];
-
-        /** @var CandidateOnboardingDTO $fields */
-        $fields = resolve(AiAutocompleteInterface::class)->execute($file);
-        $this->fillFields($fields, $currentFile);
     }
 
     protected function fillFields(CandidateOnboardingDTO $dto, TemporaryUploadedFile $cv): void
