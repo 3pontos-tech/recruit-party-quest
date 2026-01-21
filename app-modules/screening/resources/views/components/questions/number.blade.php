@@ -1,7 +1,5 @@
 @props([
     'question',
-    'name' => null,
-    'value' => null,
     'disabled' => false,
 ])
 
@@ -12,10 +10,12 @@
     $step = $settings['step'] ?? null;
     $prefix = $settings['prefix'] ?? null;
     $suffix = $settings['suffix'] ?? null;
-    $inputName = $name ?? "answers[{$question->id}]";
+
+    $wrapperAttributes = $attributes->only('class');
+    $inputAttributes = $attributes->except('class');
 @endphp
 
-<div {{ $attributes->class('screening-question') }}>
+<div {{ $wrapperAttributes->class('screening-question') }}>
     <div class="mb-2 flex items-center justify-between">
         <x-he4rt::heading size="2xs">
             {{ $question->question_text }}
@@ -38,13 +38,11 @@
 
         <x-he4rt::input
             type="number"
-            :name="$inputName"
-            :id="$inputName"
             :disabled="$disabled"
             min="{{ $min }}"
             max="{{ $max }}"
             step="{{ $step }}"
-            value="{{ $value }}"
+            {{ $inputAttributes }}
         />
 
         @if ($suffix)
