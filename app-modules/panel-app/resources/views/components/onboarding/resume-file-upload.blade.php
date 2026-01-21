@@ -19,15 +19,11 @@
     $alignment = $getAlignment() ?? Alignment::Start;
 
     if (! $alignment instanceof Alignment) {
-        $alignment = filled($alignment) ? (Alignment::tryFrom($alignment) ?? $alignment) : null;
+        $alignment = filled($alignment) ? Alignment::tryFrom($alignment) ?? $alignment : null;
     }
 @endphp
 
-<x-dynamic-component
-    :component="$fieldWrapperView"
-    :field="$field"
-    label-tag="div"
->
+<x-dynamic-component :component="$fieldWrapperView" :field="$field" label-tag="div">
     <div
         x-load
         x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('file-upload', 'filament/forms') }}"
@@ -128,23 +124,32 @@
                 })"
         wire:ignore
         wire:key="{{ $livewireKey }}.{{
-            substr(md5(serialize([
-                $isDisabled,
-            ])), 0, 64)
+            substr(
+                md5(
+                    serialize([
+                        $isDisabled,
+                    ]),
+                ),
+                0,
+                64,
+            )
         }}"
         {{
             $attributes
-                ->merge([
-                    'aria-labelledby' => "{$id}-label",
-                    'id' => $id,
-                    'role' => 'group',
-                ], escape: false)
+                ->merge(
+                    [
+                        'aria-labelledby' => "{$id}-label",
+                        'id' => $id,
+                        'role' => 'group',
+                    ],
+                    escape: false,
+                )
                 ->merge($getExtraAttributes(), escape: false)
                 ->merge($getExtraAlpineAttributes(), escape: false)
                 ->class([
                     'fi-fo-file-upload',
                     'fi-fo-file-upload-avatar' => $isAvatar,
-                    ($alignment instanceof Alignment) ? "fi-align-{$alignment->value}" : $alignment,
+                    $alignment instanceof Alignment ? "fi-align-{$alignment->value}" : $alignment,
                 ])
         }}
     >
@@ -152,25 +157,22 @@
             <input
                 x-ref="input"
                 {{
-                    $getExtraInputAttributeBag()
-                        ->merge([
+                    $getExtraInputAttributeBag()->merge(
+                        [
                             'aria-labelledby' => "{$id}-label",
                             'disabled' => $isDisabled,
                             'multiple' => $isMultiple,
                             'type' => 'file',
-                        ], escape: false)
+                        ],
+                        escape: false,
+                    )
                 }}
             />
         </div>
 
-        <div
-            x-show="error"
-            x-text="error"
-            x-cloak
-            class="fi-fo-file-upload-error-message"
-        ></div>
+        <div x-show="error" x-text="error" x-cloak class="fi-fo-file-upload-error-message"></div>
 
-        @if ($hasImageEditor && (! $isDisabled))
+        @if ($hasImageEditor && ! $isDisabled)
             <div
                 x-show="isEditorOpen"
                 x-cloak
@@ -183,59 +185,50 @@
                     'fi-fo-file-upload-editor-crop-only' => ! $isImageEditorExplicitlyEnabled,
                 ])
             >
-                <div
-                    aria-hidden="true"
-                    class="fi-fo-file-upload-editor-overlay"
-                ></div>
+                <div aria-hidden="true" class="fi-fo-file-upload-editor-overlay"></div>
 
                 <div class="fi-fo-file-upload-editor-window">
                     <div class="fi-fo-file-upload-editor-image-ctn">
-                        <img
-                            x-ref="editor"
-                            class="fi-fo-file-upload-editor-image"
-                        />
+                        <img x-ref="editor" class="fi-fo-file-upload-editor-image" />
                     </div>
 
                     <div class="fi-fo-file-upload-editor-control-panel">
                         @if ($isImageEditorExplicitlyEnabled)
-                            <div
-                                class="fi-fo-file-upload-editor-control-panel-main"
-                            >
-                                <div
-                                    class="fi-fo-file-upload-editor-control-panel-group"
-                                >
+                            <div class="fi-fo-file-upload-editor-control-panel-main">
+                                <div class="fi-fo-file-upload-editor-control-panel-group">
                                     @foreach ([
-                                        [
-                                            'label' => __('filament-forms::components.file_upload.editor.fields.x_position.label'),
-                                            'ref' => 'xPositionInput',
-                                            'unit' => __('filament-forms::components.file_upload.editor.fields.x_position.unit'),
-                                            'alpineSaveHandler' => 'editor.setData({...editor.getData(true), x: +$el.value})',
-                                        ],
-                                        [
-                                            'label' => __('filament-forms::components.file_upload.editor.fields.y_position.label'),
-                                            'ref' => 'yPositionInput',
-                                            'unit' => __('filament-forms::components.file_upload.editor.fields.y_position.unit'),
-                                            'alpineSaveHandler' => 'editor.setData({...editor.getData(true), y: +$el.value})',
-                                        ],
-                                        [
-                                            'label' => __('filament-forms::components.file_upload.editor.fields.width.label'),
-                                            'ref' => 'widthInput',
-                                            'unit' => __('filament-forms::components.file_upload.editor.fields.width.unit'),
-                                            'alpineSaveHandler' => 'editor.setData({...editor.getData(true), width: +$el.value})',
-                                        ],
-                                        [
-                                            'label' => __('filament-forms::components.file_upload.editor.fields.height.label'),
-                                            'ref' => 'heightInput',
-                                            'unit' => __('filament-forms::components.file_upload.editor.fields.height.unit'),
-                                            'alpineSaveHandler' => 'editor.setData({...editor.getData(true), height: +$el.value})',
-                                        ],
-                                        [
-                                            'label' => __('filament-forms::components.file_upload.editor.fields.rotation.label'),
-                                            'ref' => 'rotationInput',
-                                            'unit' => __('filament-forms::components.file_upload.editor.fields.rotation.unit'),
-                                            'alpineSaveHandler' => 'editor.rotateTo(+$el.value)',
-                                        ],
-                                    ] as $input)
+                                            [
+                                                'label' => __('filament-forms::components.file_upload.editor.fields.x_position.label'),
+                                                'ref' => 'xPositionInput',
+                                                'unit' => __('filament-forms::components.file_upload.editor.fields.x_position.unit'),
+                                                'alpineSaveHandler' => 'editor.setData({...editor.getData(true), x: +$el.value})'
+                                            ],
+                                            [
+                                                'label' => __('filament-forms::components.file_upload.editor.fields.y_position.label'),
+                                                'ref' => 'yPositionInput',
+                                                'unit' => __('filament-forms::components.file_upload.editor.fields.y_position.unit'),
+                                                'alpineSaveHandler' => 'editor.setData({...editor.getData(true), y: +$el.value})'
+                                            ],
+                                            [
+                                                'label' => __('filament-forms::components.file_upload.editor.fields.width.label'),
+                                                'ref' => 'widthInput',
+                                                'unit' => __('filament-forms::components.file_upload.editor.fields.width.unit'),
+                                                'alpineSaveHandler' => 'editor.setData({...editor.getData(true), width: +$el.value})'
+                                            ],
+                                            [
+                                                'label' => __('filament-forms::components.file_upload.editor.fields.height.label'),
+                                                'ref' => 'heightInput',
+                                                'unit' => __('filament-forms::components.file_upload.editor.fields.height.unit'),
+                                                'alpineSaveHandler' => 'editor.setData({...editor.getData(true), height: +$el.value})'
+                                            ],
+                                            [
+                                                'label' => __('filament-forms::components.file_upload.editor.fields.rotation.label'),
+                                                'ref' => 'rotationInput',
+                                                'unit' => __('filament-forms::components.file_upload.editor.fields.rotation.unit'),
+                                                'alpineSaveHandler' => 'editor.rotateTo(+$el.value)'
+                                            ]
+                                        ]
+                                        as $input)
                                         <label>
                                             <x-filament::input.wrapper>
                                                 <x-slot name="prefix">
@@ -259,9 +252,7 @@
                                     @endforeach
                                 </div>
 
-                                <div
-                                    class="fi-fo-file-upload-editor-control-panel-group"
-                                >
+                                <div class="fi-fo-file-upload-editor-control-panel-group">
                                     @foreach ($getImageEditorActions() as $groupedActions)
                                         <div class="fi-btn-group">
                                             @foreach ($groupedActions as $action)
@@ -280,12 +271,8 @@
                                 </div>
 
                                 @if (count($aspectRatios = $getImageEditorAspectRatioOptionsForJs()))
-                                    <div
-                                        class="fi-fo-file-upload-editor-control-panel-group"
-                                    >
-                                        <div
-                                            class="fi-fo-file-upload-editor-control-panel-group-title"
-                                        >
+                                    <div class="fi-fo-file-upload-editor-control-panel-group">
+                                        <div class="fi-fo-file-upload-editor-control-panel-group-title">
                                             {{ __('filament-forms::components.file_upload.editor.aspect_ratios.label') }}
                                         </div>
 
@@ -312,9 +299,7 @@
                             </div>
                         @endif
 
-                        <div
-                            class="fi-fo-file-upload-editor-control-panel-footer"
-                        >
+                        <div class="fi-fo-file-upload-editor-control-panel-footer">
                             @if ($isImageEditorExplicitlyEnabled)
                                 <button
                                     type="button"
@@ -328,7 +313,7 @@
                                     type="button"
                                     x-on:click.prevent.stop="editor.reset()"
                                     {{
-                                        (new \Illuminate\View\ComponentAttributeBag)
+                                        (new \Illuminate\View\ComponentAttributeBag())
                                             ->color(\Filament\Support\View\Components\ButtonComponent::class, 'danger')
                                             ->class(['fi-btn fi-fo-file-upload-editor-control-panel-reset-action'])
                                     }}
@@ -340,7 +325,7 @@
                                     type="button"
                                     x-on:click.prevent="saveEditor"
                                     {{
-                                        (new \Illuminate\View\ComponentAttributeBag)
+                                        (new \Illuminate\View\ComponentAttributeBag())
                                             ->color(\Filament\Support\View\Components\ButtonComponent::class, 'success')
                                             ->class(['fi-btn'])
                                     }}
@@ -352,7 +337,7 @@
                                     type="button"
                                     x-on:click.prevent="saveEditor"
                                     {{
-                                        (new \Illuminate\View\ComponentAttributeBag)
+                                        (new \Illuminate\View\ComponentAttributeBag())
                                             ->color(\Filament\Support\View\Components\ButtonComponent::class, 'success')
                                             ->class(['fi-btn'])
                                     }}
@@ -375,89 +360,5 @@
         @endif
     </div>
 
-    <div class="space-y-6">
-        <div class="flex justify-between items-center px-2">
-            <!-- Step: Sent -->
-            <div class="flex flex-col items-center gap-3">
-                <div
-                    class="
-          w-10 h-10 rounded-full flex items-center justify-center
-          transition-all duration-500 border
-          bg-white text-black border-white
-          shadow-[0_0_15px_rgba(255,255,255,0.3)]
-        "
-                >
-                    <x-filament::icon :icon="\Filament\Support\Icons\Heroicon::Check" />
-                </div>
-                <span
-                    class="text-[9px] font-black uppercase tracking-[0.2em] transition-colors duration-500 text-white"
-                >
-        Sent
-      </span>
-            </div>
-
-            <!-- Divider -->
-            <div class="h-0.5 flex-1 mx-4 bg-zinc-800 rounded-full">
-                <div class="h-full bg-white transition-all duration-1000 w-full"></div>
-            </div>
-
-            <!-- Step: Processing -->
-            <div class="flex flex-col items-center gap-3">
-                <div
-                    class="
-          w-10 h-10 rounded-full flex items-center justify-center
-          transition-all duration-500 border
-          bg-white text-black border-white
-          shadow-[0_0_15px_rgba(255,255,255,0.3)]
-        "
-                >
-                    <x-filament::icon :icon="\Filament\Support\Icons\Heroicon::Check" />
-                </div>
-                <span
-                    class="text-[9px] font-black uppercase tracking-[0.2em] transition-colors duration-500 text-white"
-                >
-        Processing
-      </span>
-            </div>
-
-            <!-- Divider -->
-            <div class="h-0.5 flex-1 mx-4 bg-zinc-800 rounded-full">
-                <div class="h-full bg-white transition-all duration-1000 w-full"></div>
-            </div>
-
-            <!-- Step: Finished -->
-            <div class="flex flex-col items-center gap-3">
-                <div
-                    class="
-          w-10 h-10 rounded-full flex items-center justify-center
-          transition-all duration-500 border
-          bg-white text-black border-white
-          shadow-[0_0_15px_rgba(255,255,255,0.3)]
-        "
-                >
-                    <x-filament::icon :icon="\Filament\Support\Icons\Heroicon::Check" />
-                </div>
-                <span
-                    class="text-[9px] font-black uppercase tracking-[0.2em] transition-colors duration-500 text-white"
-                >
-        Finished
-      </span>
-            </div>
-        </div>
-
-        <!-- Progress bar -->
-        <div
-            class="relative h-2 w-full bg-zinc-800 rounded-full overflow-hidden shadow-inner border border-zinc-700"
-        >
-            <div
-                class="absolute top-0 left-0 h-full bg-white transition-all duration-700 ease-out flex items-center justify-end overflow-hidden"
-                style="width: 100%;"
-            >
-                <div class="progress-bar-shine absolute inset-0"></div>
-            </div>
-        </div>
-    </div>
-
-
-
+    <livewire:resume-file-upload-progress />
 </x-dynamic-component>
