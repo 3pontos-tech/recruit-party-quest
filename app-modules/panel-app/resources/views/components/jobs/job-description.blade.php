@@ -93,10 +93,10 @@
             </div>
 
             <div class="flex w-full flex-col items-center gap-3 sm:flex-row md:w-auto">
-                <x-he4rt::button variant="solid" size="md" class="w-full sm:w-auto">Apply for job</x-he4rt::button>
+                <x-he4rt::button variant="solid" class="w-full sm:w-auto">Apply for job</x-he4rt::button>
                 <div class="flex w-full justify-center gap-3 sm:w-auto">
-                    <x-he4rt::button variant="outline" size="md" icon-only icon="heroicon-o-bookmark" rounded="md" />
-                    <x-he4rt::button variant="outline" size="md" icon-only icon="heroicon-o-share" rounded="md" />
+                    <x-he4rt::button variant="outline" icon="heroicon-o-bookmark" />
+                    <x-he4rt::button variant="outline" icon="heroicon-o-share" />
                 </div>
             </div>
         </header>
