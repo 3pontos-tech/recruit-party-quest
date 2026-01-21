@@ -136,15 +136,13 @@ class Application extends BaseModel
 
     public function getNextStage(): ?Stage
     {
+        $currentDisplayOrder = $this->currentStage->display_order ?? -1;
+
         $availableStages = $this
             ->requisition
             ->stages
-            ->filter(fn (Stage $stage) => $stage->display_order > $this->currentStage->display_order)
+            ->filter(fn (Stage $stage) => $stage->display_order > $currentDisplayOrder)
             ->sortBy('display_order');
-
-        if ($availableStages->isEmpty()) {
-            return null;
-        }
 
         return $availableStages->first();
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Applications\Services\Transitions;
 
+use He4rt\Applications\Events\ApplicationStatusChanged;
 use He4rt\Applications\Models\Application;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\DB;
@@ -20,18 +21,14 @@ abstract class AbstractApplicationTransition
     abstract public function choices(): array;
 
     /**
-     * Perform the domain update for this step (should persist model changes)
-     *
-     * @param  array<string,mixed>  $meta
+     * Perform domain update for this step (should persist model changes)
      */
-    abstract public function processStep(array $meta = []): void;
+    abstract public function processStep(TransitionData $data): void;
 
     /**
      * Notify after successful process (send emails, push notifications, etc.)
-     *
-     * @param  array<string,mixed>  $meta
      */
-    abstract public function notify(array $meta = []): void;
+    abstract public function notify(TransitionData $data): void;
 
     /**
      * Whether this transition can be triggered (additional guard)
@@ -39,21 +36,42 @@ abstract class AbstractApplicationTransition
     abstract public function canChange(): bool;
 
     /**
-     * Handle the transition: processStep, notify, dispatch event
-     *
-     * @param  array<string,mixed>  $meta
+     * Validate transition parameters before processing
      */
-    public function handle(User $by, array $meta = []): void
+    abstract public function validate(TransitionData $data): void;
+
+    /**
+     * Handle the transition: validate, processStep, notify, create stage history, dispatch event
+     */
+    public function handle(TransitionData $data): void
     {
-        //        try {
-        DB::transaction(function () use ($meta, $by): void {
-            $data = array_merge($meta, ['by_user_id' => $by->getKey()]);
+        $fromStatus = $this->application->status->value;
+        $fromStage = $this->application->current_stage_id;
+
+        DB::transaction(function () use ($data, $fromStage): void {
+            $this->validate($data);
             $this->processStep($data);
             $this->notify($data);
-        });
-        //        } catch (Throwable) {
-        //            // Todo: notify about failure
-        //        }
 
+            $this->application->stageHistory()->create([
+                'from_stage_id' => $fromStage,
+                'to_stage_id' => $this->application->current_stage_id,
+                'moved_by' => $data->byUserId,
+                'notes' => $data->notes,
+                'team_id' => $this->application->team_id,
+            ]);
+        });
+
+        $toStatus = $this->application->refresh()->status->value;
+
+        if ($fromStatus !== $toStatus && $data->isStatusChange()) {
+            event(new ApplicationStatusChanged(
+                $this->application,
+                $fromStatus,
+                $toStatus,
+                User::query()->findOrFail($data->byUserId),
+                $data->toArray()
+            ));
+        }
     }
 }

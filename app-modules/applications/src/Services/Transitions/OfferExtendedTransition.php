@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace He4rt\Applications\Services\Transitions;
 
 use He4rt\Applications\Enums\ApplicationStatusEnum;
+use He4rt\Applications\Exceptions\InvalidTransitionException;
+use He4rt\Applications\Exceptions\MissingTransitionDataException;
 
 use function now;
 
@@ -24,29 +26,25 @@ final class OfferExtendedTransition extends AbstractApplicationTransition
         return true;
     }
 
-    public function processStep(array $meta = []): void
+    public function validate(TransitionData $data): void
     {
-        $fromStage = $this->application->current_stage_id;
+        match (true) {
+            ! in_array($data->toStatus->value, array_keys($this->choices()), true) => throw InvalidTransitionException::notAllowed($data->toStatus),
+            $data->toStatus === ApplicationStatusEnum::OfferAccepted && $data->toStageId === null => throw MissingTransitionDataException::forField('to_stage_id'),
+            default => null,
+        };
+    }
 
+    public function processStep(TransitionData $data): void
+    {
         $this->application->update([
             'status' => ApplicationStatusEnum::OfferExtended,
-            'offer_extended_at' => $meta['offer_extended_at'] ?? now(),
-            'offer_extended_by' => $meta['by_user_id'] ?? null,
-            'offer_amount' => $meta['offer_amount'] ?? $this->application->offer_amount,
-            'offer_response_deadline' => $meta['offer_response_deadline'] ?? $this->application->offer_response_deadline,
-        ]);
-
-        // persist stage history
-        $this->application->stageHistory()->create([
-            'from_stage_id' => $fromStage,
-            'to_stage_id' => $meta['to_stage_id'] ?? $this->application->current_stage_id,
-            'moved_by' => $meta['by_user_id'] ?? null,
-            'notes' => $meta['notes'] ?? null,
+            'offer_extended_at' => $data->offerExtendedAt ?? now(),
+            'offer_extended_by' => $data->byUserId,
+            'offer_amount' => $data->offerAmount ?? $this->application->offer_amount,
+            'offer_response_deadline' => $data->offerResponseDeadline ?? $this->application->offer_response_deadline,
         ]);
     }
 
-    public function notify(array $meta = []): void
-    {
-        // handler-specific notifications (emails, webhooks, etc.)
-    }
+    public function notify(TransitionData $data): void {}
 }

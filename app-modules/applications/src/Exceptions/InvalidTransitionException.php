@@ -13,4 +13,9 @@ final class InvalidTransitionException extends Exception
     {
         return new self(sprintf('Transition from New to %s is not allowed', $status->getLabel()), 500);
     }
+
+    public static function invalidTarget(string $status): self
+    {
+        return new self(sprintf('Invalid target status: %s', $status), 400);
+    }
 }

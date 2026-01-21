@@ -18,24 +18,14 @@ final class HiredTransition extends AbstractApplicationTransition
         return false;
     }
 
-    public function processStep(array $meta = []): void
-    {
-        $fromStage = $this->application->current_stage_id;
+    public function validate(TransitionData $data): void {}
 
+    public function processStep(TransitionData $data): void
+    {
         $this->application->update([
             'status' => ApplicationStatusEnum::Hired,
         ]);
-
-        $this->application->stageHistory()->create([
-            'from_stage_id' => $fromStage,
-            'to_stage_id' => $this->application->current_stage_id,
-            'moved_by' => $meta['by_user_id'] ?? null,
-            'notes' => $meta['notes'] ?? null,
-        ]);
     }
 
-    public function notify(array $meta = []): void
-    {
-        // handler-specific notifications (emails, webhooks, etc.)
-    }
+    public function notify(TransitionData $data): void {}
 }

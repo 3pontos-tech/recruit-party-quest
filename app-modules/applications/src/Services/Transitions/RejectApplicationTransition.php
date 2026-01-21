@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Applications\Services\Transitions;
 
 use He4rt\Applications\Enums\ApplicationStatusEnum;
+use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Exceptions\MissingTransitionDataException;
 
 use function now;
@@ -21,32 +22,24 @@ final class RejectApplicationTransition extends AbstractApplicationTransition
         return false;
     }
 
-    public function processStep(array $meta = []): void
+    public function validate(TransitionData $data): void
     {
-        throw_if(blank($meta['rejection_reason_category']), MissingTransitionDataException::class, 'Rejection reason category is required to reject an application');
+        match (true) {
+            ! $data->rejectionReasonCategory instanceof RejectionReasonCategoryEnum => throw MissingTransitionDataException::forField('rejection_reason_category'),
+            default => null,
+        };
+    }
 
-        $fromStage = $this->application->current_stage_id;
-
+    public function processStep(TransitionData $data): void
+    {
         $this->application->update([
             'status' => ApplicationStatusEnum::Rejected,
-            'rejected_at' => $meta['rejected_at'] ?? now(),
-            'rejected_by' => $meta['by_user_id'] ?? null,
-            'rejection_reason_category' => $meta['rejection_reason_category'],
-            'rejection_reason_details' => $meta['rejection_reason_details'] ?? null,
-        ]);
-
-        // persist stage history
-        $this->application->stageHistory()->create([
-            'from_stage_id' => $fromStage,
-            'to_stage_id' => $this->application->current_stage_id,
-            'moved_by' => $meta['by_user_id'] ?? null,
-            'notes' => $meta['notes'] ?? null,
+            'rejected_at' => $data->rejectedAt ?? now(),
+            'rejected_by' => $data->byUserId,
+            'rejection_reason_category' => $data->rejectionReasonCategory?->value,
+            'rejection_reason_details' => $data->rejectionReasonDetails,
         ]);
     }
 
-    public function notify(array $meta = []): void
-    {
-        // handler-specific notifications (emails, webhooks, etc.)
-        // The general ApplicationStatusChanged event is now dispatched by AbstractApplicationTransition::handle().
-    }
+    public function notify(TransitionData $data): void {}
 }

@@ -24,55 +24,54 @@ final class NewTransition extends AbstractApplicationTransition
         return true;
     }
 
-    /**
-     * @param  array<string,mixed>  $meta
-     */
-    public function processStep(array $meta = []): void
+    public function validate(TransitionData $data): void
     {
-        /** @var ApplicationStatusEnum $status */
-        $status = $meta['status'];
-        match ($status) {
-            ApplicationStatusEnum::InReview => $this->forwardToReview(),
-            ApplicationStatusEnum::Withdrawn => $this->forwardToWithdrawn(),
-            ApplicationStatusEnum::Rejected => $this->rejectApplication($meta),
-            default => throw InvalidTransitionException::notAllowed($status),
+        match (true) {
+            ! in_array($data->toStatus->value, array_keys($this->choices()), true) => throw InvalidTransitionException::notAllowed($data->toStatus),
+            default => null,
         };
     }
 
-    public function notify(array $meta = []): void
+    public function processStep(TransitionData $data): void
     {
-        // TODO: adicionar notificações conforme necessário
+        match ($data->toStatus) {
+            ApplicationStatusEnum::InReview => $this->forwardToReview($data),
+            ApplicationStatusEnum::Withdrawn => $this->forwardToWithdrawn($data),
+            ApplicationStatusEnum::Rejected => $this->rejectApplication($data),
+            default => throw InvalidTransitionException::notAllowed($data->toStatus),
+        };
     }
 
-    public function forwardToReview(): bool
+    public function notify(TransitionData $data): void {}
+
+    public function forwardToReview(TransitionData $data): bool
     {
         $payload = ['status' => ApplicationStatusEnum::InReview];
+        $nextStage = $this->application->getNextStage();
 
-        $application = $this->application;
-        $nextStage = $application->getNextStage();
+        match (true) {
+            $nextStage instanceof Stage => $payload['current_stage_id'] = $nextStage->getKey(),
+            default => null,
+        };
 
-        if ($nextStage instanceof Stage) {
-            $payload['current_stage_id'] = $nextStage->getKey();
-        }
-
-        return $application->update($payload);
+        return $this->application->update($payload);
     }
 
-    public function forwardToWithdrawn(): bool
+    public function forwardToWithdrawn(TransitionData $data): bool
     {
         return $this->application->update([
             'status' => ApplicationStatusEnum::Withdrawn,
         ]);
     }
 
-    public function rejectApplication(array $meta): bool
+    public function rejectApplication(TransitionData $data): bool
     {
         return $this->application->update([
             'status' => ApplicationStatusEnum::Rejected,
-            'rejected_at' => $meta['rejected_at'] ?? now(),
-            'rejected_by' => $meta['by_user_id'] ?? null,
-            'rejection_reason_category' => $meta['rejection_reason_category'] ?? null,
-            'rejection_reason_details' => $meta['rejection_reason_details'] ?? null,
+            'rejected_at' => $data->rejectedAt ?? now(),
+            'rejected_by' => $data->byUserId,
+            'rejection_reason_category' => $data->rejectionReasonCategory?->value,
+            'rejection_reason_details' => $data->rejectionReasonDetails,
         ]);
     }
 }

@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace He4rt\Applications\Services\Transitions;
 
 use He4rt\Applications\Enums\ApplicationStatusEnum;
+use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
+use He4rt\Applications\Exceptions\InvalidTransitionException;
+use He4rt\Applications\Exceptions\MissingTransitionDataException;
 use He4rt\Recruitment\Stages\Models\Stage;
 
 final class InProgressTransition extends AbstractApplicationTransition
@@ -23,80 +26,81 @@ final class InProgressTransition extends AbstractApplicationTransition
         return true;
     }
 
-    public function processStep(array $meta = []): void
+    public function validate(TransitionData $data): void
     {
-        // Handle explicit stage movement or an "advance" request
-        if (isset($meta['to_stage_id']) || isset($meta['advance_stage'])) {
-            $fromStage = $this->application->current_stage_id;
+        match (true) {
+            ! $data->isStatusChange() && ! $data->isStageOnlyChange() => throw new InvalidTransitionException('Must provide to_status or to_stage_id/advance_stage'),
 
-            // Respect explicit to_stage_id when provided
-            if (isset($meta['to_stage_id'])) {
-                $toStage = $meta['to_stage_id'];
-            } else {
-                // Calculate next active stage by display_order
-                $toStage = Stage::query()
-                    ->where('job_requisition_id', $this->application->requisition_id)
-                    ->where('active', true)
-                    ->where('display_order', '>', $this->application->currentStage->display_order)
-                    ->orderBy('display_order')
-                    ->value('id');
-            }
+            $data->isStatusChange() && ! in_array($data->toStatus->value, array_keys($this->choices()), true) => throw InvalidTransitionException::notAllowed($data->toStatus),
 
-            // If no valid target stage was found, just update status
-            if ($toStage === null) {
-                $this->application->update([
-                    'status' => ApplicationStatusEnum::InProgress,
-                ]);
+            $data->isRejection() && ! $data->rejectionReasonCategory instanceof RejectionReasonCategoryEnum => throw MissingTransitionDataException::forField('rejection_reason_category'),
 
-                return;
-            }
-
-            // Persist the new current stage and status
-            $this->application->update([
-                'current_stage_id' => $toStage,
-                'status' => ApplicationStatusEnum::InProgress,
-            ]);
-
-            // Persist stage history
-            $this->application->stageHistory()->create([
-                'from_stage_id' => $fromStage,
-                'to_stage_id' => $toStage,
-                'moved_by' => $meta['by_user_id'] ?? null,
-                'notes' => $meta['notes'] ?? null,
-            ]);
-
-            return;
-        }
-
-        // Offer extended flow
-        if (isset($meta['to_status']) && $meta['to_status'] === ApplicationStatusEnum::OfferExtended->value) {
-            $this->application->update([
-                'status' => ApplicationStatusEnum::OfferExtended,
-                'offer_extended_at' => $meta['offer_extended_at'] ?? now(),
-                'offer_extended_by' => $meta['by_user_id'] ?? null,
-                'offer_amount' => $meta['offer_amount'] ?? $this->application->offer_amount,
-                'offer_response_deadline' => $meta['offer_response_deadline'] ?? $this->application->offer_response_deadline,
-            ]);
-
-            // persist stage history if provided
-            if (isset($meta['from_stage_id'])) {
-                $this->application->stageHistory()->create([
-                    'from_stage_id' => $meta['from_stage_id'],
-                    'to_stage_id' => $meta['to_stage_id'],
-                    'moved_by' => $meta['by_user_id'],
-                    'notes' => $meta['notes'],
-                ]);
-            }
-
-            return;
-        }
-
-        // Generic set to in_progress
-        $this->application->update(['status' => ApplicationStatusEnum::InProgress]);
+            default => null,
+        };
     }
 
-    public function notify(array $meta = []): void
+    public function processStep(TransitionData $data): void
     {
-        // no-op
+        match (true) {
+            $data->isOfferExtension() => $this->processOfferExtension($data),
+            $data->isRejection() => $this->processRejection($data),
+            $data->isWithdrawal() => $this->processWithdrawal(),
+            $data->isStageOnlyChange() => $this->processStageMove($data),
+            default => throw new InvalidTransitionException('Invalid transition parameters'),
+        };
+    }
+
+    public function notify(TransitionData $data): void {}
+
+    private function processOfferExtension(TransitionData $data): void
+    {
+        $this->application->update([
+            'status' => ApplicationStatusEnum::OfferExtended,
+            'offer_extended_at' => $data->offerExtendedAt ?? now(),
+            'offer_extended_by' => $data->byUserId,
+            'offer_amount' => $data->offerAmount ?? $this->application->offer_amount,
+            'offer_response_deadline' => $data->offerResponseDeadline ?? $this->application->offer_response_deadline,
+        ]);
+    }
+
+    private function processRejection(TransitionData $data): void
+    {
+        $this->application->update([
+            'status' => ApplicationStatusEnum::Rejected,
+            'rejected_at' => $data->rejectedAt ?? now(),
+            'rejected_by' => $data->byUserId,
+            'rejection_reason_category' => $data->rejectionReasonCategory?->value,
+            'rejection_reason_details' => $data->rejectionReasonDetails,
+        ]);
+    }
+
+    private function processWithdrawal(): void
+    {
+        $this->application->update(['status' => ApplicationStatusEnum::Withdrawn]);
+    }
+
+    private function processStageMove(TransitionData $data): void
+    {
+        $toStageId = $this->resolveTargetStage($data);
+
+        throw_unless($toStageId, InvalidTransitionException::class, 'No valid target stage found');
+
+        $this->application->update([
+            'current_stage_id' => $toStageId,
+        ]);
+    }
+
+    private function resolveTargetStage(TransitionData $data): ?string
+    {
+        return match (true) {
+            $data->toStageId !== null => $data->toStageId,
+            $data->advanceStage === true => Stage::query()
+                ->where('job_requisition_id', $this->application->requisition_id)
+                ->where('active', true)
+                ->where('display_order', '>', $this->application->currentStage->display_order ?? -1)
+                ->orderBy('display_order')
+                ->value('id'),
+            default => null,
+        };
     }
 }
