@@ -29,6 +29,7 @@
             value="yes"
             :label="__('screening::question_types.yes_no.yes')"
             :disabled="$disabled"
+            :required="$question->is_required && !$disabled"
             {{ $inputAttributes }}
         />
 
