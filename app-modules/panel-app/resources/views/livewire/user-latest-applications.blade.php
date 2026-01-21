@@ -12,6 +12,7 @@
             <div class="flex items-center gap-2">
                 <x-he4rt::input
                     type="text"
+                    wire:model.live="search"
                     placeholder="{{ __('panel-app::livewire/user-latest-applications.search.placeholder') }}"
                     class="text-sm"
                 />
