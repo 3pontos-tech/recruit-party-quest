@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Candidates\Actions;
+namespace He4rt\Candidates\Actions\Onboarding;
 
 use He4rt\Candidates\DTOs\Collections\CandidateEducationCollection;
 use He4rt\Candidates\Models\Candidate;

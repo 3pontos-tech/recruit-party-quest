@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Candidates\Jobs;
+namespace He4rt\Candidates\Actions\Onboarding;
 
 use He4rt\Candidates\AiAutocompleteInterface;
 use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
-use He4rt\Candidates\Events\ResumeAnalyzedEvent;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -14,7 +13,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
-class AnaliseResumeJob implements ShouldQueue
+final class AiAnalyzeResumeJob implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -28,12 +27,14 @@ class AnaliseResumeJob implements ShouldQueue
 
     public function handle(): void
     {
+        broadcast(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Processing, [], $this->userId));
+
         $temporaryFile = TemporaryUploadedFile::createFromLivewire($this->temporaryFile);
 
         /** @var CandidateOnboardingDTO $fields */
         $fields = resolve(AiAutocompleteInterface::class)->execute($temporaryFile);
 
-        broadcast(new ResumeAnalyzedEvent($fields->jsonSerialize(), $this->userId));
+        broadcast(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Finished, $fields->jsonSerialize(), $this->userId));
 
     }
 }

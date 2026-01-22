@@ -27,11 +27,10 @@ use Filament\Schemas\Schema;
 use Filament\Support\Concerns\EvaluatesClosures;
 use Filament\Support\Enums\Width;
 use He4rt\App\Filament\Schemas\ResumeFileUpload;
-use He4rt\Candidates\Actions\StoreCandidateEducation;
-use He4rt\Candidates\Actions\StoreCandidateWorkExperiences;
-use He4rt\Candidates\Actions\UpdateCandidateAction;
+use He4rt\Candidates\Actions\Onboarding\StoreCandidateEducation;
+use He4rt\Candidates\Actions\Onboarding\StoreCandidateWorkExperiences;
+use He4rt\Candidates\Actions\Onboarding\UpdateCandidateAction;
 use He4rt\Candidates\DTOs\CandidateDTO;
-use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\DTOs\Collections\CandidateEducationCollection;
 use He4rt\Candidates\DTOs\Collections\CandidateWorkExperienceCollection;
 use Illuminate\Contracts\Support\Htmlable;
@@ -201,16 +200,24 @@ class OnboardingWizard extends Page
             )));
     }
 
-    //    #[On('resume-analyzed')]
-    public function fillFields(CandidateOnboardingDTO $dto, TemporaryUploadedFile $cv): void
+    //    #[On('echo-private:candidate-onboarding.resume.{record.user_id},.finished')]
+    public function onResumeAnalyzed(array $payload): void
     {
-        $workState = collect($dto->work)->mapWithKeys(fn ($item) => [(string) Str::uuid() => $item->jsonSerialize()])->all();
+        $fields = $payload['fields'];
 
-        $educationState = collect($dto->education)->mapWithKeys(fn ($item) => [(string) Str::uuid() => $item->jsonSerialize()])->all();
+        $workState = collect($fields['work_experiences'])->mapWithKeys(fn ($item) => [(string) Str::uuid() => $item])->all();
+
+        $educationState = collect($fields['education'])->mapWithKeys(fn ($item) => [(string) Str::uuid() => $item])->all();
 
         $this->data['work_experiences'] = $workState;
         $this->data['education'] = $educationState;
-        $this->data['cv_file'] = [$cv];
+
+        $this->wizardVisible = true;
+
+        Notification::make()
+            ->title(__('panel-app::pages/onboarding.steps.cv.fields.cv_file'))
+            ->success()
+            ->send();
     }
 
     /**

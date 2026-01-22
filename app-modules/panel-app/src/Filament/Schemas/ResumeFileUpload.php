@@ -8,7 +8,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Utilities\Get;
 use He4rt\App\Filament\Pages\OnboardingWizard;
-use He4rt\Candidates\Jobs\AnaliseResumeJob;
+use He4rt\Candidates\Actions\Onboarding\AiAnalyzeResumeJob;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class ResumeFileUpload extends FileUpload
@@ -36,7 +36,7 @@ class ResumeFileUpload extends FileUpload
             return;
         }
 
-        dispatch(new AnaliseResumeJob($temporaryFile->getFilename(), auth()->user()->getKey()));
+        dispatch(new AiAnalyzeResumeJob($temporaryFile->getFilename(), auth()->user()->getKey()));
 
         //        /** @var CandidateOnboardingDTO $fields */
         //        $fields = resolve(AiAutocompleteInterface::class)->execute($temporaryFile);
