@@ -37,7 +37,7 @@
             >
                 <x-he4rt::card class="h-fit gap-4">
                     <x-slot:icon class="items-center gap-4">
-                        <x-he4rt::icon size="sm" class="rounded-sm" />
+                        <x-he4rt::icon size="sm" class="rounded-sm" :icon="\Filament\Support\Icons\Heroicon::User" />
                         <x-he4rt::heading size="2xs">Ipê</x-he4rt::heading>
                     </x-slot>
                     <x-slot:description class="leading-[1.5]">
@@ -49,7 +49,7 @@
 
                 <x-he4rt::card class="h-fit gap-4">
                     <x-slot:icon class="items-center gap-4">
-                        <x-he4rt::icon size="sm" class="rounded-sm" />
+                        <x-he4rt::icon size="sm" class="rounded-sm" :icon="\Filament\Support\Icons\Heroicon::User" />
                         <x-he4rt::heading size="2xs">Flamma</x-he4rt::heading>
                     </x-slot>
                     <x-slot:description class="leading-[1.5]">
@@ -61,7 +61,7 @@
 
                 <x-he4rt::card class="h-fit gap-4">
                     <x-slot:icon class="items-center gap-4">
-                        <x-he4rt::icon size="sm" class="rounded-sm" />
+                        <x-he4rt::icon size="sm" class="rounded-sm" :icon="\Filament\Support\Icons\Heroicon::User" />
                         <x-he4rt::heading size="2xs">Flare</x-he4rt::heading>
                     </x-slot>
                     <x-slot:description class="leading-[1.5]">
