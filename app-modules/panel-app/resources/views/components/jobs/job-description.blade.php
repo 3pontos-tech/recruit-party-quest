@@ -98,8 +98,8 @@
             <div class="flex w-full flex-col items-center gap-3 sm:flex-row md:w-auto">
                 <x-he4rt::button variant="solid" class="w-full sm:w-auto">Apply for job</x-he4rt::button>
                 <div class="flex w-full justify-center gap-3 sm:w-auto">
-                    <x-he4rt::button variant="outline" icon="heroicon-o-bookmark" />
-                    <x-he4rt::button variant="outline" icon="heroicon-o-share" />
+                    <x-he4rt::button variant="outline" icon="heroicon-o-bookmark" class="flex-1" />
+                    <x-he4rt::button variant="outline" icon="heroicon-o-share" class="flex-1" />
                 </div>
             </div>
         </header>
