@@ -36,7 +36,7 @@
                 x-transition:leave="duration-200 ease-in"
                 x-transition:leave-start="translate-y-0 opacity-100 sm:scale-100"
                 x-transition:leave-end="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95"
-                class="{{ $maxWidthClass }} bg-elevation-02dp relative w-full transform overflow-hidden rounded-md px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:p-6"
+                class="{{ $maxWidthClass }} bg-elevation-02dp relative w-full transform rounded-md px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:p-6"
                 @click.away="{{ $show }} = false"
             >
                 @if (isset($title))

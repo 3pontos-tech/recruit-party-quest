@@ -47,6 +47,13 @@ class JobApplicationForm extends Component
 
     public function render(): View|Factory|\Illuminate\View\View
     {
-        return view('screening::livewire.job-application-form');
+        $requiredQuestionIds = $this->requisition->screeningQuestions
+            ->where('is_required', true)
+            ->pluck('id')
+            ->toArray();
+
+        return view('screening::livewire.job-application-form', [
+            'requiredQuestionIds' => $requiredQuestionIds,
+        ]);
     }
 }
