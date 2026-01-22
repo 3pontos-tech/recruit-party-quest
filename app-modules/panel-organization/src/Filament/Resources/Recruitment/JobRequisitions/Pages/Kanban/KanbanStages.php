@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban;
 
-use Filament\Actions\EditAction;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Navigation\NavigationItem;
 use Filament\Schemas\Schema;
@@ -12,6 +11,7 @@ use Filament\Support\Icons\Heroicon;
 use He4rt\Applications\Models\Application;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
+use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\ViewCandidateAction;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Models\Stage;
 use Livewire\Attributes\Locked;
@@ -89,9 +89,8 @@ class KanbanStages extends BoardResourcePage
                 ])
             )
             ->cardActions([
+                ViewCandidateAction::make()->model(Application::class),
                 StateTransitionAction::make(),
-                EditAction::make()
-                    ->model(Application::class),
             ])
             ->query(
                 Application::query()
