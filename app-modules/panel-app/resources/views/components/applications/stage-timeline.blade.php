@@ -18,7 +18,7 @@
     }
 @endphp
 
-<div class="bg-elevation-01dp/50 border-outline-low space-y-6 rounded-2xl border p-6 lg:p-8">
+<div class="bg-elevation-01dp border-outline-light dark:border-outline-dark space-y-6 rounded-md border p-6 lg:p-8">
     <div class="flex items-center justify-between">
         <x-he4rt::heading level="3" size="3xs" class="text-text-high">Application Status</x-he4rt::heading>
         @if ($currentStage)
