@@ -47,6 +47,10 @@ class JobApplicationForm extends Component
                 'status' => ApplicationStatusEnum::New,
                 'source' => CandidateSourceEnum::CareerPage,
             ]);
+
+            $this->application->update([
+                'current_stage_id' => $this->application->first_stage->getKey(),
+            ]);
         }
 
         foreach ($this->responses as $questionId => $value) {
@@ -55,6 +59,7 @@ class JobApplicationForm extends Component
             }
 
             ScreeningResponse::query()->create([
+                'team_id' => $this->requisition->team_id,
                 'application_id' => $this->application->id,
                 'question_id' => $questionId,
                 'response_value' => is_array($value) ? $value : ['value' => $value],
