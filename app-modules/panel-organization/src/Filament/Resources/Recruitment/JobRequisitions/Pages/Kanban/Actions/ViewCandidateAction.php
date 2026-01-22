@@ -30,6 +30,12 @@ class ViewCandidateAction extends Action
                         TextEntry::make('status')
                             ->badge(),
                     ]),
+                Section::make('Skills')
+                    ->schema([
+                        TextEntry::make('candidate.skills.name')
+                            ->label('Skill Name')
+                            ->badge(),
+                    ]),
                 Section::make(__('recruitment::filament.requisition.kanban.sections.application_comments'))
                     ->schema([
                         RepeatableEntry::make('comments')
