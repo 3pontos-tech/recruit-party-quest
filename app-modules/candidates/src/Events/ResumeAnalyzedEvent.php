@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace He4rt\Candidates\Events;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Foundation\Events\Dispatchable;
 
 class ResumeAnalyzedEvent implements ShouldBroadcast
 {
-    use Dispatchable;
     use InteractsWithSockets;
 
     public function __construct(
@@ -19,13 +17,8 @@ class ResumeAnalyzedEvent implements ShouldBroadcast
         public readonly string $userId
     ) {}
 
-    public function broadcastOn()
+    public function broadcastOn(): PrivateChannel
     {
-        return new Channel('fuedase');
-    }
-
-    public function broadcastAs(): string
-    {
-        return 'fodase';
+        return new PrivateChannel('candidate-onboarding.resume.'.$this->userId);
     }
 }
