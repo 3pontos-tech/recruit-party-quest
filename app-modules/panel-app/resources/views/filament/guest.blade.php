@@ -1,11 +1,5 @@
 <x-filament-panels::page class="relative" full-height="true">
     <x-panel-app::sections.hero />
-    <x-panel-app::sections.foundations />
-    <x-panel-app::sections.projects />
-    <x-panel-app::sections.video />
-    <x-panel-app::sections.community />
-    <x-panel-app::sections.events />
-    <x-panel-app::sections.contact />
 
     <div class="absolute bottom-[5%] z-0 translate-x-[90%] lg:-translate-x-[60%] lg:translate-y-1/3">
         <img
