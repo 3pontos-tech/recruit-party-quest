@@ -9,7 +9,6 @@ use DateTimeZone;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithRecord;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -26,20 +25,20 @@ use Filament\Schemas\Components\Wizard\Step;
 use Filament\Schemas\Schema;
 use Filament\Support\Concerns\EvaluatesClosures;
 use Filament\Support\Enums\Width;
-use He4rt\Candidates\Actions\StoreCandidateEducation;
-use He4rt\Candidates\Actions\StoreCandidateWorkExperiences;
-use He4rt\Candidates\Actions\UpdateCandidateAction;
-use He4rt\Candidates\AiAutocompleteInterface;
+use He4rt\App\Filament\Schemas\ResumeFileUpload;
+use He4rt\Candidates\Actions\Onboarding\StoreCandidateEducation;
+use He4rt\Candidates\Actions\Onboarding\StoreCandidateWorkExperiences;
+use He4rt\Candidates\Actions\Onboarding\UpdateCandidateAction;
 use He4rt\Candidates\DTOs\CandidateDTO;
-use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\DTOs\Collections\CandidateEducationCollection;
 use He4rt\Candidates\DTOs\Collections\CandidateWorkExperienceCollection;
+use He4rt\Users\User;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Livewire\Attributes\On;
 
 /**
  * @property-read Schema $content
@@ -56,13 +55,21 @@ class OnboardingWizard extends Page
      */
     public ?array $data = [];
 
+    public ?User $user = null;
+
+    public bool $wizardVisible = false;
+
+    public bool $canSkipResumeAnalysis = true;
+
     protected static ?string $slug = 'onboarding';
 
     protected static string|null|BackedEnum $navigationIcon = 'heroicon-o-academic-cap';
 
     protected static string $layout = 'filament-panels::components.layout.simple';
 
-    protected Width|string|null $maxContentWidth = Width::ScreenExtraLarge;
+    protected ?string $heading = '';
+
+    protected Width|string|null $maxContentWidth = Width::ScreenSmall;
 
     //    protected string $view = 'filament-panels::pages.simple';
 
@@ -80,44 +87,29 @@ class OnboardingWizard extends Page
     public function mount(): void
     {
         $this->record = auth()->user()->candidate;
+        $this->user = auth()->user();
         $this->content->fill();
-    }
-
-    public function saveProgress(): void
-    {
-        $data = $this->data;
-
-        unset($data['cv_file']);
-        session(['onboarding_data' => $data]);
-
-        Notification::make()
-            ->title(__('panel-app::pages/onboarding.notifications.progress_saved.title'))->success()
-            ->send();
     }
 
     public function content(Schema $schema): Schema
     {
         return $schema
-            ->components(function (): Wizard {
-                $steps = collect($this->getSteps())
-                    ->map(fn (array $data) => Step::make($data['label'])
-                        ->schema($data['schema']))
-                    ->toArray();
-
-                return Wizard::make()
-                    ->steps($steps)
-                    ->persistStepInQueryString()
-                    ->submitAction(new HtmlString(Blade::render(<<<'BLADE'
-                        <x-filament::button
-                            type="submit"
-                            wire:click="handleRegistration"
-                            size="sm"
-                        >
-                            Finalizar
-                        </x-filament::button>
-                    BLADE
-                    )));
-            })
+            ->components([
+                Section::make(__('panel-app::pages/onboarding.steps.cv.sections.upload_cv'))
+                    ->visible(fn () => ! $this->wizardVisible)
+                    ->compact()
+                    ->schema([
+                        ResumeFileUpload::make('cv_file')->visible(fn () => $this->canSkipResumeAnalysis),
+                        Action::make('continue-onboarding')
+                            ->disabled(fn () => ! $this->canSkipResumeAnalysis)
+                            ->label('Continuar sem enviar')
+                            ->action(function (): void {
+                                $this->wizardVisible = true;
+                                $this->maxContentWidth = Width::ScreenExtraLarge;
+                            }),
+                    ]),
+                $this->prepareWizard(),
+            ])
             ->record(fn () => $this->record)
             ->statePath('data');
     }
@@ -129,7 +121,6 @@ class OnboardingWizard extends Page
     {
         return [
             $this->getAccountStep(),
-            $this->getCvStep(),
             $this->getProfileStep(),
             $this->getPreferencesStep(),
             $this->getReviewStep(),
@@ -191,38 +182,53 @@ class OnboardingWizard extends Page
         return __('panel-app::pages/onboarding.title');
     }
 
-    protected function cvUploaded(TemporaryUploadedFile $file): void
+    public function prepareWizard(): Wizard
     {
-        $currentFile = is_array($this->data['cv_file'])
-            ? head($this->data['cv_file'])
-            : $this->data['cv_file'];
 
-        /** @var CandidateOnboardingDTO $fields */
-        $fields = resolve(AiAutocompleteInterface::class)->execute($file);
-        $this->fillFields($fields, $currentFile);
+        $steps = collect($this->getSteps())
+            ->map(fn (array $data) => Step::make($data['label'])
+                ->schema($data['schema']))
+            ->toArray();
+
+        return Wizard::make()
+            ->steps($steps)
+            ->visible(fn () => $this->wizardVisible)
+            ->persistStepInQueryString()
+            ->submitAction(new HtmlString(Blade::render(<<<'BLADE'
+                        <x-filament::button
+                            type="submit"
+                            wire:click="handleRegistration"
+                            size="sm"
+                        >
+                            Finalizar
+                        </x-filament::button>
+                    BLADE
+            )));
     }
 
-    protected function fillFields(CandidateOnboardingDTO $dto, TemporaryUploadedFile $cv): void
+    #[On('echo-private:candidate-onboarding.resume.{user.id},.finished')]
+    /**
+     * @phpstan-ignore argument.templateType
+     * @phpstan-ignore missingType.iterableValue
+     */
+    public function onResumeAnalyzed(array $payload): void
     {
-        $workState = collect($dto->work)->mapWithKeys(fn ($item) => [(string) Str::uuid() => $item->jsonSerialize()])->all();
+        $this->canSkipResumeAnalysis = true;
+        $fields = $payload['fields'];
 
-        $educationState = collect($dto->education)->mapWithKeys(fn ($item) => [(string) Str::uuid() => $item->jsonSerialize()])->all();
+        $workState = collect($fields['work_experiences'])->mapWithKeys(fn ($item) => [(string) Str::uuid() => $item])->all();
+
+        $educationState = collect($fields['education'])->mapWithKeys(fn ($item) => [(string) Str::uuid() => $item])->all();
 
         $this->data['work_experiences'] = $workState;
         $this->data['education'] = $educationState;
-        $this->data['cv_file'] = [$cv];
-    }
 
-    /**
-     * @return Action[]
-     */
-    protected function getHeaderActions(): array
-    {
-        return [
-            Action::make('save_progress')
-                ->label(__('panel-app::pages/onboarding.actions.save_progress'))
-                ->action('saveProgress'),
-        ];
+        $this->wizardVisible = true;
+
+        Notification::make()
+            ->title(__('panel-app::pages/onboarding.steps.cv.fields.cv_file'))
+            ->success()
+            ->send();
     }
 
     /**
@@ -260,32 +266,6 @@ class OnboardingWizard extends Page
                             ->label(__('panel-app::pages/onboarding.steps.account.fields.data_consent'))
                             ->accepted(fn ($state) => $state === true)
                             ->helperText(__('panel-app::pages/onboarding.steps.account.fields.data_consent_helper')),
-                    ]),
-            ],
-        ];
-    }
-
-    /**
-     * @phpstan-ignore missingType.iterableValue
-     */
-    protected function getCvStep(): array
-    {
-        return [
-            'id' => 'cv',
-            'label' => __('panel-app::pages/onboarding.steps.cv.label'),
-            'description' => __('panel-app::pages/onboarding.steps.cv.description'),
-            'schema' => [
-                Section::make(__('panel-app::pages/onboarding.steps.cv.sections.upload_cv'))
-                    ->schema([
-                        FileUpload::make('cv_file')
-                            ->label(__('panel-app::pages/onboarding.steps.cv.fields.cv_file'))
-                            ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
-                            ->maxSize(10240)
-                            ->directory('cv-uploads')
-                            ->visibility('private')
-                            ->required()
-                            ->afterStateUpdated(fn (TemporaryUploadedFile $state) => $this->cvUploaded($state))
-                            ->helperText(__('panel-app::pages/onboarding.steps.cv.fields.cv_file_helper')),
                     ]),
             ],
         ];

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Candidates;
 
-use He4rt\Candidates\Actions\CompleteOnboardingAction;
+use He4rt\Candidates\Actions\Onboarding\CompleteOnboardingAction;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Candidates\Models\Education;
 use He4rt\Candidates\Models\Skill;
@@ -19,6 +19,7 @@ class CandidatesServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'candidates');
+        $this->loadRoutesFrom(__DIR__.'/../routes/channels.php');
 
         Relation::morphMap([
             'candidates' => Candidate::class,
