@@ -23,4 +23,21 @@ return [
             'label' => 'Upload de Arquivo',
         ],
     ],
+    'file_extension' => [
+        'pdf' => [
+            'label' => 'PDF (.pdf)',
+        ],
+        'doc' => [
+            'label' => 'Word 97-2003 (.doc)',
+        ],
+        'docx' => [
+            'label' => 'Word (.docx)',
+        ],
+        'txt' => [
+            'label' => 'Texto (.txt)',
+        ],
+        'rtf' => [
+            'label' => 'Rich Text (.rtf)',
+        ],
+    ],
 ];
