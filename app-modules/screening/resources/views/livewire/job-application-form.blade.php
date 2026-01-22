@@ -1,17 +1,12 @@
 @php
     use He4rt\Screening\Enums\QuestionTypeEnum;
+    use He4rt\Screening\QuestionTypes\QuestionTypeRegistry;
 @endphp
 
 <form wire:submit="submit" class="space-y-6">
     @foreach ($requisition->screeningQuestions as $question)
         @php
-            $component = match ($question->question_type) {
-                QuestionTypeEnum::YesNo => 'screening::questions.yes-no',
-                QuestionTypeEnum::Text => 'screening::questions.text',
-                QuestionTypeEnum::Number => 'screening::questions.number',
-                QuestionTypeEnum::SingleChoice => 'screening::questions.single-choice',
-                QuestionTypeEnum::MultipleChoice => 'screening::questions.multiple-choice',
-            };
+            $component = QuestionTypeRegistry::get($question->question_type)::component();
         @endphp
 
         <x-dynamic-component
