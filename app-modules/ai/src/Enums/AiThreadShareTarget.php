@@ -27,6 +27,6 @@ enum AiThreadShareTarget: string implements HasLabel
 
     public function getLabel(): string
     {
-        return $this->name;
+        return __('ai::filament.enums.thread_share_target.'.$this->value.'.label');
     }
 }

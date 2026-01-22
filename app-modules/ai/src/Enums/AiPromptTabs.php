@@ -16,10 +16,6 @@ enum AiPromptTabs: string implements HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::Newest => 'Newest',
-            self::MostLoved => 'Most 🥰',
-            self::MostViewed => 'Most Viewed',
-        };
+        return __('ai::filament.enums.prompt_tabs.'.$this->value.'.label');
     }
 }

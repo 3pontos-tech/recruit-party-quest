@@ -21,11 +21,11 @@ class StateTransitionAction extends Action
 
         $this
             ->outlined()
-            ->label('Gerenciar Aplicação')
+            ->label(__('applications::filament.actions.change_status.label'))
             ->icon('heroicon-o-play')
             ->visible(fn (Application $record): bool => ! $record->is_last_stage)
             ->disabled(fn (Application $record): bool => ! $record->current_step->canChange() || $record->is_last_stage)
-            ->tooltip(fn (Application $record): ?string => $record->current_step->canChange() ? null : 'O processo atual não permite mudanças.')
+            ->tooltip(fn (Application $record): ?string => $record->current_step->canChange() ? null : __('applications::filament.actions.change_status.no_transitions_tooltip'))
             ->schema($this->buildSchema(...))
             ->action($this->processAction(...))
             ->requiresConfirmation();
@@ -53,14 +53,14 @@ class StateTransitionAction extends Action
 
         return [
             Select::make('to_status')
-                ->label('Novo Status')
+                ->label(__('applications::filament.fields.status'))
                 ->options($choices)
                 ->enum(ApplicationStatusEnum::class)
                 ->required()
                 ->live(),
 
             Select::make('to_stage_id')
-                ->label('Estágio')
+                ->label(__('applications::filament.fields.current_stage'))
                 ->options(fn () => $record->requisition->stages
                     ->where('active', true)
                     ->where('display_order', '>', $record->currentStage->display_order)
@@ -69,13 +69,13 @@ class StateTransitionAction extends Action
                 ->visible(fn (Get $get) => in_array($get('to_status'), [ApplicationStatusEnum::InProgress, ApplicationStatusEnum::OfferExtended])),
 
             Textarea::make('rejection_reason_details')
-                ->label('Motivo da Recusa')
+                ->label(__('applications::filament.fields.rejection_reason_details'))
                 ->rows(3)
                 ->visible(fn (Get $get) => $get('to_status') === ApplicationStatusEnum::Rejected)
                 ->required(fn (Get $get) => $get('to_status') === ApplicationStatusEnum::Rejected),
 
             Textarea::make('notes')
-                ->label('Notas')
+                ->label(__('applications::filament.fields.transition_notes'))
                 ->rows(2),
         ];
 

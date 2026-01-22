@@ -35,6 +35,7 @@ return [
         'offer_response_deadline' => 'Prazo de Resposta',
         'created_at' => 'Criado em',
         'updated_at' => 'Atualizado em',
+        'transition_notes' => 'Notas',
     ],
     'filters' => [
         'status' => 'Status',
@@ -117,6 +118,17 @@ return [
             'reason_details' => 'Detalhes da Rejeição',
             'offer_amount' => 'Valor da Proposta',
             'response_deadline' => 'Prazo de Resposta (dias)',
+        ],
+        'change_status' => [
+            'label' => 'Alterar status',
+            'modal_heading' => 'Alterar status da candidatura',
+            'modal_submit' => 'Confirmar',
+            'no_transitions_tooltip' => 'Nenhuma transição de status disponível',
+            'notifications' => [
+                'updated' => [
+                    'title' => 'Status atualizado',
+                ],
+            ],
         ],
     ],
 ];

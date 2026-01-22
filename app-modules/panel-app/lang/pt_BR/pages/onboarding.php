@@ -6,6 +6,8 @@ return [
     'title' => 'Onboarding do Candidato',
     'actions' => [
         'save_progress' => 'Salvar Progresso',
+        'continue_without_upload' => 'Continuar sem enviar',
+        'finish' => 'Finalizar',
     ],
     'notifications' => [
         'progress_saved' => [
@@ -34,6 +36,12 @@ return [
             'label' => 'Conta & Identidade',
             'sections' => [
                 'account_info' => 'Informações da Conta',
+            ],
+            'options' => [
+                'preferred_language' => [
+                    'pt_BR' => 'Português (Brasil)',
+                    'en_US' => 'English (United States)',
+                ],
             ],
             'fields' => [
                 'email' => 'E-mail',
@@ -93,6 +101,7 @@ return [
                 'is_open_to_remote' => 'Aberto a Trabalho Remoto',
                 'experience_level' => 'Nível de Experiência',
                 'employment_type_interests' => 'Tipos de Emprego (separados por vírgula)',
+                'employment_type_interests_placeholder' => 'full_time_employee, contractor, intern',
                 'employment_type_interests_helper' => 'Tempo integral, contratado, estagiário, etc.',
             ],
             'options' => [

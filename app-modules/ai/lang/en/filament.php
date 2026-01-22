@@ -49,7 +49,58 @@ return [
     ],
     'enums' => [
         'application' => [
-            'personal_assistant' => 'Custom Advisor',
+            'personal_assistant' => [
+                'label' => 'Custom Advisor',
+            ],
+            'test' => [
+                'label' => 'Test',
+            ],
+        ],
+        'prompt_tabs' => [
+            'newest' => [
+                'label' => 'Newest',
+            ],
+            'most_loved' => [
+                'label' => 'Most Loved',
+            ],
+            'most_viewed' => [
+                'label' => 'Most Viewed',
+            ],
+        ],
+        'message_log_feature' => [
+            'draft_with_ai' => [
+                'label' => 'Draft With AI',
+            ],
+            'conversations' => [
+                'label' => 'Conversations',
+            ],
+        ],
+        'thread_share_target' => [
+            'user' => [
+                'label' => 'User',
+            ],
+            'team' => [
+                'label' => 'Team',
+            ],
+        ],
+        'reasoning_effort' => [
+            'low' => [
+                'label' => 'Low',
+            ],
+            'medium' => [
+                'label' => 'Medium',
+            ],
+            'high' => [
+                'label' => 'High',
+            ],
+        ],
+        'model' => [
+            'gpt-5-mini' => [
+                'label' => 'GPT-5 Mini',
+            ],
+            'test' => [
+                'label' => 'Test',
+            ],
         ],
     ],
     'sections' => [

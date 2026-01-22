@@ -24,5 +24,8 @@ class PanelAdminServiceProvider extends ServiceProvider
         );
     }
 
-    public function boot(): void {}
+    public function boot(): void
+    {
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'panel-admin');
+    }
 }

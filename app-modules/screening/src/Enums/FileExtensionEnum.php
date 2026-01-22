@@ -30,13 +30,7 @@ enum FileExtensionEnum: string implements HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::Pdf => 'PDF (.pdf)',
-            self::Doc => 'Word 97-2003 (.doc)',
-            self::Docx => 'Word (.docx)',
-            self::Txt => 'Text (.txt)',
-            self::Rtf => 'Rich Text (.rtf)',
-        };
+        return __('screening::enums.file_extension.'.$this->value.'.label');
     }
 
     public function getMimeType(): string

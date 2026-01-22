@@ -14,11 +14,11 @@ class RoleInfolist
         return $schema
             ->components([
                 TextEntry::make('created_at')
-                    ->label('Created Date')
+                    ->label(__('permissions::filament.fields.created_at'))
                     ->dateTime(),
 
                 TextEntry::make('updated_at')
-                    ->label('Last Modified Date')
+                    ->label(__('permissions::filament.fields.updated_at'))
                     ->dateTime(),
 
                 TextEntry::make('guard_name'),

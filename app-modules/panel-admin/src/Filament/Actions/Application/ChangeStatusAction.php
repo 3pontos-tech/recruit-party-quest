@@ -21,10 +21,11 @@ final class ChangeStatusAction
 {
     public static function make(): Action
     {
+        // TODO: essa action pravavelmente não deve ser mais util.
         return Action::make('change-status')
-            ->label('Change status')
+            ->label(__('applications::filament.actions.change_status.label'))
             ->disabled(fn (Application $record) => ! $record->current_step->canChange())
-            ->tooltip(fn (Application $record) => $record->current_step->canChange() ? null : 'No available status transitions')
+            ->tooltip(fn (Application $record) => $record->current_step->canChange() ? null : __('applications::filament.actions.change_status.no_transitions_tooltip'))
             ->schema([
                 Select::make('to_status')
                     ->label(__('applications::filament.fields.status'))
@@ -59,8 +60,8 @@ final class ChangeStatusAction
                     ->label(__('applications::filament.fields.transition_notes'))
                     ->rows(3),
             ])
-            ->modalHeading('Change application status')
-            ->modalButton('Confirm')
+            ->modalHeading(__('applications::filament.actions.change_status.modal_heading'))
+            ->modalButton(__('applications::filament.actions.change_status.modal_submit'))
             ->action(function (array $data): void {
                 /** @phpstan-ignore-next-line  */
                 $application = $this->getRecord(); // todo: não sei se esse get record funciona
@@ -69,7 +70,7 @@ final class ChangeStatusAction
 
                 $application->current_step->handle(auth()->user(), $data);
 
-                Notification::make()->title('Status updated')->success()->send();
+                Notification::make()->title(__('applications::filament.actions.change_status.notifications.updated.title'))->success()->send();
 
                 //                $this->redirect($this->getResource()::getUrl('edit', ['record' => $application->id]));
             });
