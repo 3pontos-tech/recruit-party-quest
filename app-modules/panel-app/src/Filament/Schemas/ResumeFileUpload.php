@@ -8,7 +8,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Utilities\Get;
 use He4rt\App\Filament\Pages\OnboardingWizard;
-use He4rt\Candidates\Actions\Onboarding\AiAnalyzeResumeJob;
+use He4rt\Candidates\Jobs\AiAnalyzeResumeJob;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class ResumeFileUpload extends FileUpload

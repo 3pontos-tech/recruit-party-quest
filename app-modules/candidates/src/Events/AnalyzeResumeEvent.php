@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Candidates\Actions\Onboarding;
+namespace He4rt\Candidates\Events;
 
+use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
+use He4rt\Candidates\Enums\ResumeAnalyzeStatus;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -15,7 +17,7 @@ final class AnalyzeResumeEvent implements ShouldBroadcast
 
     public function __construct(
         public readonly ResumeAnalyzeStatus $status,
-        public readonly array $fields,
+        public readonly CandidateOnboardingDTO $fields,
         public readonly string $userId
     ) {}
 

@@ -30,6 +30,7 @@ use He4rt\Candidates\Actions\Onboarding\StoreCandidateEducation;
 use He4rt\Candidates\Actions\Onboarding\StoreCandidateWorkExperiences;
 use He4rt\Candidates\Actions\Onboarding\UpdateCandidateAction;
 use He4rt\Candidates\DTOs\CandidateDTO;
+use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\DTOs\Collections\CandidateEducationCollection;
 use He4rt\Candidates\DTOs\Collections\CandidateWorkExperienceCollection;
 use He4rt\Users\User;
@@ -38,6 +39,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
+use JsonSerializable;
 use Livewire\Attributes\On;
 
 /**
@@ -130,7 +132,6 @@ class OnboardingWizard extends Page
     public function handleRegistration(): void
     {
         $data = $this->data;
-
         if (! ($data['data_consent_given'] ?? false)) {
             Notification::make()
                 ->title(__('panel-app::pages/onboarding.notifications.consent_required.title'))->danger()
@@ -213,12 +214,21 @@ class OnboardingWizard extends Page
      */
     public function onResumeAnalyzed(array $payload): void
     {
+        $fields = CandidateOnboardingDTO::make($payload['fields']);
+
         $this->canSkipResumeAnalysis = true;
-        $fields = $payload['fields'];
 
-        $workState = collect($fields['work_experiences'])->mapWithKeys(fn ($item) => [(string) Str::uuid() => $item])->all();
+        $workState = collect($fields->work_experiences)->mapWithKeys(fn ($item) => [
+            (string) Str::uuid() => $item instanceof JsonSerializable
+            ? $item->jsonSerialize()
+            : $item,
+        ])->all();
 
-        $educationState = collect($fields['education'])->mapWithKeys(fn ($item) => [(string) Str::uuid() => $item])->all();
+        $educationState = collect($fields->education)->mapWithKeys(fn ($item) => [
+            (string) Str::uuid() => $item instanceof JsonSerializable
+                ? $item->jsonSerialize()
+                : $item,
+        ])->all();
 
         $this->data['work_experiences'] = $workState;
         $this->data['education'] = $educationState;

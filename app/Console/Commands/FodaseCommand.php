@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use He4rt\Candidates\Actions\Onboarding\AnalyzeResumeEvent;
-use He4rt\Candidates\Actions\Onboarding\ResumeAnalyzeStatus;
+use He4rt\Candidates\Enums\ResumeAnalyzeStatus;
+use He4rt\Candidates\Events\AnalyzeResumeEvent;
 use He4rt\Users\User;
 use Illuminate\Console\Command;
 

@@ -51,12 +51,15 @@ describe('wizard steps', function (): void {
     });
 
     it('should set fields after uploading curriculum', function (): void {
-        instanceFakeClass();
-        Storage::fake('public');
-        $file = UploadedFile::fake()->create('curriculum.pdf');
+        $dto = generateDto();
+        $dto = [
+            'fields' => [
+                'education' => $dto->education,
+                'work_experiences' => $dto->work_experiences,
+            ]];
 
         $livewire = livewire(OnboardingWizard::class)
-            ->set('data.cv_file', [$file])
+            ->call('onResumeAnalyzed', $dto)
             ->assertOk();
 
         $componentData = $livewire->getData();
@@ -81,8 +84,15 @@ describe('wizard steps', function (): void {
 });
 
 it('should be able to onboard', function (): void {
+
     instanceFakeClass();
+    $dto = generateDto();
     Storage::fake('public');
+    $dto = [
+        'fields' => [
+            'education' => $dto->education,
+            'work_experiences' => $dto->work_experiences,
+        ]];
     $file = UploadedFile::fake()->create('curriculum.pdf');
     livewire(OnboardingWizard::class)
         ->set('data.cv_file', [$file])
@@ -95,6 +105,7 @@ it('should be able to onboard', function (): void {
         ->set('data.employment_type_interests', 'whatever')
         ->set('data.confirm_submission', true)
         ->set('data.data_consent_given', true)
+        ->call('onResumeAnalyzed', $dto)
         ->call('handleRegistration')
         ->assertOk()
         ->assertHasNoFormErrors()
@@ -127,25 +138,30 @@ function instanceFakeClass(): void
     {
         public function execute(TemporaryUploadedFile $file): CandidateOnboardingDTO
         {
-            $education = new CandidateEducationDTO(
-                institution: 'FATEC',
-                degree: 'Bacharelado',
-                fieldOfStudy: 'Analise Desenvolvimento de Sistemas',
-                isEnrolled: true,
-                startDate: Date::parse('08/01/2024'),
-                endDate: Date::parse('08/01/2027'),
-            );
-            $work = new CandidateWorkExperienceDTO(
-                companyName: '3-Pontos',
-                description: 'working with php, filament, writing some tests',
-                isCurrentlyWorking: true,
-                startDate: Date::parse('08/01/2024'),
-            );
-
-            return CandidateOnboardingDTO::make([
-                'education' => [$education],
-                'work' => [$work],
-            ]);
+            return generateDto();
         }
     });
+}
+
+function generateDto(): CandidateOnboardingDTO
+{
+    $education = new CandidateEducationDTO(
+        institution: 'FATEC',
+        degree: 'Bacharelado',
+        fieldOfStudy: 'Analise Desenvolvimento de Sistemas',
+        isEnrolled: true,
+        startDate: Date::parse('08/01/2024'),
+        endDate: Date::parse('08/01/2027'),
+    );
+    $work = new CandidateWorkExperienceDTO(
+        companyName: '3-Pontos',
+        description: 'working with php, filament, writing some tests',
+        isCurrentlyWorking: true,
+        startDate: Date::parse('08/01/2024'),
+    );
+
+    return CandidateOnboardingDTO::make([
+        'education' => [$education],
+        'work_experiences' => [$work],
+    ]);
 }

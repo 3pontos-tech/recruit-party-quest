@@ -58,7 +58,7 @@ final class CompleteOnboardingAction implements AiAutocompleteInterface
 
         return CandidateOnboardingDTO::make([
             'education' => $education,
-            'work' => $workExperiences,
+            'work_experiences' => $workExperiences,
         ]);
 
     }
