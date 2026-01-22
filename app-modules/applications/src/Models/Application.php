@@ -10,16 +10,19 @@ use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Policies\ApplicationPolicy;
+use He4rt\Applications\Services\Transitions\AbstractApplicationTransition;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Feedback\Models\ApplicationComment;
 use He4rt\Feedback\Models\Evaluation;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use He4rt\Recruitment\Stages\Models\Concerns\InteractsWithStages;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Screening\Models\ScreeningResponse;
 use He4rt\Teams\Concerns\BelongsToTeam;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -42,6 +45,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $offer_extended_at
  * @property string|null $offer_extended_by
  * @property float|null $offer_amount
+ * @property AbstractApplicationTransition $current_step
  * @property Carbon|null $offer_response_deadline
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -49,6 +53,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, Evaluation> $evaluations
  * @property-read Collection<int, ApplicationComment> $comments
  * @property-read JobRequisition $requisition
+ * @property Stage $currentStage
  *
  * @extends BaseModel<ApplicationFactory>
  */
@@ -57,6 +62,7 @@ use Illuminate\Support\Carbon;
 class Application extends BaseModel
 {
     use BelongsToTeam;
+    use InteractsWithStages;
 
     /**
      * @return BelongsTo<JobRequisition, $this>
@@ -130,6 +136,19 @@ class Application extends BaseModel
         return $this->hasMany(ApplicationComment::class);
     }
 
+    public function getNextStage(): ?Stage
+    {
+        $currentDisplayOrder = $this->currentStage->display_order ?? -1;
+
+        $availableStages = $this
+            ->requisition
+            ->stages
+            ->filter(fn (Stage $stage) => $stage->display_order > $currentDisplayOrder)
+            ->sortBy('display_order');
+
+        return $availableStages->first();
+    }
+
     protected function casts(): array
     {
         return [
@@ -141,5 +160,13 @@ class Application extends BaseModel
             'offer_response_deadline' => 'datetime',
             'offer_amount' => 'decimal:2',
         ];
+    }
+
+    /**
+     * @phpstan-ignore missingType.generics
+     */
+    protected function currentStep(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->status->getAction($this));
     }
 }

@@ -74,9 +74,7 @@ class OnboardingWizard extends Page
 
     public static function canAccess(): bool
     {
-        $candidate = auth()->user()?->candidate;
-
-        return $candidate !== null && ! $candidate->is_onboarded;
+        return true;
     }
 
     public function mount(): void

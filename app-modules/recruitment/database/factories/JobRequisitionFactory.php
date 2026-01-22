@@ -15,6 +15,7 @@ use He4rt\Teams\Team;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Str;
 
 /** @extends Factory<JobRequisition> */
 class JobRequisitionFactory extends Factory
@@ -24,6 +25,7 @@ class JobRequisitionFactory extends Factory
     public function definition(): array
     {
         return [
+            'slug' => (string) Str::uuid(),
             'work_arrangement' => fake()->randomElement(WorkArrangementEnum::cases()),
             'employment_type' => fake()->randomElement(EmploymentTypeEnum::cases()),
             'experience_level' => fake()->randomElement(ExperienceLevelEnum::cases()),
