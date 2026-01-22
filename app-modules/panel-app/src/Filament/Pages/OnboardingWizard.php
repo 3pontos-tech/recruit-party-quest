@@ -33,11 +33,13 @@ use He4rt\Candidates\Actions\Onboarding\UpdateCandidateAction;
 use He4rt\Candidates\DTOs\CandidateDTO;
 use He4rt\Candidates\DTOs\Collections\CandidateEducationCollection;
 use He4rt\Candidates\DTOs\Collections\CandidateWorkExperienceCollection;
+use He4rt\Users\User;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
+use Livewire\Attributes\On;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 /**
@@ -55,7 +57,11 @@ class OnboardingWizard extends Page
      */
     public ?array $data = [];
 
+    public ?User $user = null;
+
     public bool $wizardVisible = false;
+
+    public bool $canSkipResumeAnalysis = true;
 
     protected static ?string $slug = 'onboarding';
 
@@ -83,6 +89,7 @@ class OnboardingWizard extends Page
     public function mount(): void
     {
         $this->record = auth()->user()->candidate;
+        $this->user = auth()->user();
         $this->content->fill();
     }
 
@@ -94,8 +101,9 @@ class OnboardingWizard extends Page
                     ->visible(fn () => ! $this->wizardVisible)
                     ->compact()
                     ->schema([
-                        ResumeFileUpload::make('cv_file'),
+                        ResumeFileUpload::make('cv_file')->visible(fn () => $this->canSkipResumeAnalysis),
                         Action::make('continue-onboarding')
+                            ->disabled(fn () => ! $this->canSkipResumeAnalysis)
                             ->label('Continuar sem enviar')
                             ->action(function (): void {
                                 $this->wizardVisible = true;
@@ -200,9 +208,10 @@ class OnboardingWizard extends Page
             )));
     }
 
-    //    #[On('echo-private:candidate-onboarding.resume.{record.user_id},.finished')]
+    #[On('echo-private:candidate-onboarding.resume.{user.id},.finished')]
     public function onResumeAnalyzed(array $payload): void
     {
+        $this->canSkipResumeAnalysis = true;
         $fields = $payload['fields'];
 
         $workState = collect($fields['work_experiences'])->mapWithKeys(fn ($item) => [(string) Str::uuid() => $item])->all();

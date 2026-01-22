@@ -36,12 +36,9 @@ class ResumeFileUpload extends FileUpload
             return;
         }
 
-        dispatch(new AiAnalyzeResumeJob($temporaryFile->getFilename(), auth()->user()->getKey()));
+        $livewire->canSkipResumeAnalysis = false;
 
-        //        /** @var CandidateOnboardingDTO $fields */
-        //        $fields = resolve(AiAutocompleteInterface::class)->execute($temporaryFile);
-        //        $livewire->fillFields($fields, $temporaryFile);
-        //        $livewire->dispatch('finished');
+        dispatch(new AiAnalyzeResumeJob($temporaryFile->getFilename(), auth()->user()->getKey()));
 
         // Simulate processing after a short delay or async
         // For now just dispatching the next ones to show it works
