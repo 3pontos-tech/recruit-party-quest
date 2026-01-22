@@ -27,6 +27,6 @@ class ScreeningServiceProvider extends ServiceProvider
         ]);
 
         Livewire::component('screening-file-upload-question', FileUploadQuestion::class);
-        Livewire::component('job-application-form', JobApplicationForm::class);
+        Livewire::component('screening.job-application-form', JobApplicationForm::class);
     }
 }

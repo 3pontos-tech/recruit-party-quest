@@ -2,9 +2,7 @@
     use He4rt\Screening\Enums\QuestionTypeEnum;
 @endphp
 
-<form wire:submit="submit">
-    <h2>{{ $requisition->title }}</h2>
-
+<form wire:submit="submit" class="space-y-6">
     @foreach ($requisition->screeningQuestions as $question)
         @php
             $component = match ($question->question_type) {
@@ -23,5 +21,7 @@
         />
     @endforeach
 
-    <button type="submit">Apply</button>
+    <div class="flex justify-end pt-4">
+        <x-he4rt::button type="submit" variant="solid">Submit Application</x-he4rt::button>
+    </div>
 </form>

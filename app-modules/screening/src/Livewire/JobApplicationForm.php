@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Screening\Livewire;
 
+use He4rt\Applications\Models\Application;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Screening\Models\ScreeningResponse;
 use Illuminate\Contracts\View\Factory;
@@ -13,6 +14,8 @@ use Livewire\Component;
 class JobApplicationForm extends Component
 {
     public JobRequisition $requisition;
+
+    public ?Application $application = null;
 
     public array $responses = [];
 
@@ -27,6 +30,11 @@ class JobApplicationForm extends Component
 
     public function submit(): void
     {
+        if (! $this->application instanceof Application) {
+            // TODO: Create application or handle logic when application is provided
+            return;
+        }
+
         foreach ($this->responses as $questionId => $value) {
             ScreeningResponse::query()->create([
                 'application_id' => $this->application->id,
@@ -38,6 +46,6 @@ class JobApplicationForm extends Component
 
     public function render(): View|Factory|\Illuminate\View\View
     {
-        return view('screening::job-application-form');
+        return view('screening::livewire.job-application-form');
     }
 }

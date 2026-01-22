@@ -12,7 +12,10 @@
         <x-he4rt::text>Job posting details are currently unavailable.</x-he4rt::text>
     </div>
 @else
-    <div {{ $attributes->merge(['mx-auto w-full max-w-7xl space-y-8 py-8 lg:py-12']) }}>
+    <div
+        x-data="{ showApplicationModal: false }"
+        {{ $attributes->merge(['mx-auto w-full max-w-7xl space-y-8 py-8 lg:py-12']) }}
+    >
         {{-- Job Header --}}
         <header class="border-outline-low grid grid-cols-1 items-start gap-8 border-b pb-8 md:grid-cols-[1fr_auto]">
             <div class="flex flex-col items-start gap-6 sm:flex-row">
@@ -96,7 +99,13 @@
             </div>
 
             <div class="flex w-full flex-col items-center gap-3 sm:flex-row md:w-auto">
-                <x-he4rt::button variant="solid" class="w-full sm:w-auto">Apply for job</x-he4rt::button>
+                <x-he4rt::button
+                    variant="solid"
+                    class="w-full sm:w-auto"
+                    @click="{{ $jobRequisition->screeningQuestions->isNotEmpty() ? 'showApplicationModal = true' : '' }}"
+                >
+                    Apply for job
+                </x-he4rt::button>
                 <div class="flex w-full justify-center gap-3 sm:w-auto">
                     <x-he4rt::button variant="outline" icon="heroicon-o-bookmark" class="flex-1" />
                     <x-he4rt::button variant="outline" icon="heroicon-o-share" class="flex-1" />
@@ -194,5 +203,11 @@
                 </section>
             @endif
         </div>
+
+        @if ($jobRequisition->screeningQuestions->isNotEmpty())
+            <x-he4rt::modal show="showApplicationModal" title="Apply for {{ $posting->title }}">
+                <livewire:screening.job-application-form :requisition="$jobRequisition" />
+            </x-he4rt::modal>
+        @endif
     </div>
 @endif
