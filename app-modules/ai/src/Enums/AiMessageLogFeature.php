@@ -23,9 +23,6 @@ enum AiMessageLogFeature: string implements HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::DraftWithAi => 'Draft With AI',
-            self::Conversations => 'Conversations',
-        };
+        return __('ai::filament.enums.message_log_feature.'.$this->value.'.label');
     }
 }

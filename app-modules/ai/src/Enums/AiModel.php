@@ -22,13 +22,9 @@ enum AiModel: string implements HasLabel
         return self::tryFrom($value);
     }
 
-    public function getLabel(): ?string
+    public function getLabel(): string
     {
-
-        return match ($this) {
-            self::OpenAiGpt4oMini => 'Gp4oMini',
-            self::Test => 'Test',
-        };
+        return __('ai::filament.enums.model.'.$this->value.'.label');
     }
 
     /**

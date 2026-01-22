@@ -35,6 +35,6 @@ enum CandidateSkillCategory: string implements HasColor, HasLabel
 
     public function getLabel(): string
     {
-        return __('candidate::skill_category.'.$this->value.'.label');
+        return __('candidates::skill_category.'.$this->value.'.label');
     }
 }
