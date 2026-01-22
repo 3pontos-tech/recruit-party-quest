@@ -16,12 +16,6 @@
                 <span class="text-helper-error">*</span>
             @endif
         </x-he4rt::heading>
-
-        @if ($question->is_knockout)
-            <x-he4rt::text class="text-helper-warning font-family-secondary shrink-0 self-start text-sm">
-                {{ __('screening::question_types.knockout_helper') }}
-            </x-he4rt::text>
-        @endif
     </div>
 
     <div class="hp-radio-group">
@@ -30,14 +24,14 @@
             :label="__('screening::question_types.yes_no.yes')"
             :disabled="$disabled"
             :required="$question->is_required && !$disabled"
-            {{ $inputAttributes }}
+            :attributes="$inputAttributes"
         />
 
         <x-he4rt::radio
             value="no"
             :label="__('screening::question_types.yes_no.no')"
             :disabled="$disabled"
-            {{ $inputAttributes }}
+            :attributes="$inputAttributes"
         />
     </div>
 </div>

@@ -5,12 +5,14 @@
     'label' => null,
     'checked' => false,
     'disabled' => false,
+    'required' => false,
 ])
 
 @php
     $inputId = $id ?? ($name ? $name . '-' . $value : 'hp-radio-' . \Illuminate\Support\Str::random(4));
     $isDisabled = $disabled;
     $isChecked = $checked;
+    $isRequired = $required;
     $labelAttributes = $attributes->only('class');
     $inputAttributes = $attributes->except('class');
 @endphp
@@ -23,6 +25,7 @@
         value="{{ $value }}"
         @if ($isChecked) checked @endif
         @if ($isDisabled) disabled @endif
+        @if ($isRequired) required @endif
         {{ $inputAttributes->class('hp-radio') }}
     />
 

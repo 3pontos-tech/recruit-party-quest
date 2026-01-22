@@ -1,0 +1,94 @@
+.hp-button {
+    @apply relative inline-flex h-fit items-center justify-center font-medium;
+
+    @apply gap-2;
+
+    @apply disabled:pointer-events-none disabled:opacity-60;
+    &[aria-disabled='true'] {
+        @apply pointer-events-none opacity-60;
+    }
+}
+
+.hp-button-solid {
+    @apply bg-primary hover:bg-primary-400/90 border-primary-400 text-text-dark dark:text-text-light border;
+}
+
+.hp-button-outline {
+    @apply text-text-dark dark:text-text-high bg-primary/8 border-primary/32 hover:bg-primary/32 border;
+}
+
+.hp-button-ghost {
+    @apply text-text-high hover:bg-primary/32 border border-transparent bg-transparent;
+}
+
+.hp-button-size-xs {
+    @apply px-2 py-1 text-xs;
+
+    &.hp-button-square {
+        @apply h-6 w-6 p-0;
+    }
+
+    & .hp-button-spinner svg,
+    & .hp-icon {
+        @apply h-3 w-3;
+    }
+}
+
+.hp-button-size-sm {
+    @apply px-3 py-1.5 text-sm;
+
+    &.hp-button-square {
+        @apply h-8 w-8 p-0;
+    }
+
+    & .hp-button-spinner svg,
+    & .hp-icon {
+        @apply h-3.5 w-3.5;
+    }
+}
+
+.hp-button-size-md {
+    @apply px-4 py-2 text-base;
+
+    &.hp-button-square {
+        @apply h-10 w-10 p-0;
+    }
+
+    & .hp-button-spinner svg,
+    & .hp-icon {
+        @apply h-4 w-4;
+    }
+}
+
+.hp-button-size-lg {
+    @apply px-5 py-2.5 text-lg;
+
+    &.hp-button-square {
+        @apply h-12 w-12 p-0;
+    }
+
+    & .hp-button-spinner svg,
+    & .hp-icon {
+        @apply h-4.5 w-4.5;
+    }
+}
+
+.hp-button-rounded-sm {
+    @apply rounded-sm;
+}
+.hp-button-rounded-md {
+    @apply rounded-md;
+}
+.hp-button-rounded-lg {
+    @apply rounded-lg;
+}
+.hp-button-rounded-xl {
+    @apply rounded-xl;
+}
+.hp-button-rounded-full {
+    @apply rounded-full;
+}
+
+.hp-button-spinner {
+    @apply absolute inline-flex items-center justify-center;
+}

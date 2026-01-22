@@ -1,4 +1,9 @@
-<x-he4rt::card variant="solid" density="normal" class="bg-elevation-01dp/50 border-outline-low">
+<x-he4rt::card
+    variant="solid"
+    density="normal"
+    :interactive="false"
+    class="bg-elevation-01dp border-outline-light dark:border-outline-dark"
+>
     <div class="flex flex-col gap-4">
         {{-- Header Section --}}
         <div class="flex flex-col gap-2">
@@ -30,13 +35,10 @@
                     class="group hover:bg-elevation-02dp flex items-center justify-between rounded-lg p-3 transition-colors duration-200"
                 >
                     <div class="flex items-center gap-3">
-                        <div class="text-icon-medium group-hover:text-primary transition-colors">
-                            <x-dynamic-component :component="$link['icon']" class="h-5 w-5" />
+                        <div class="text-icon-medium transition-colors">
+                            <x-he4rt::icon :icon="$link['icon']" />
                         </div>
-                        <x-he4rt::text
-                            size="sm"
-                            class="text-text-high group-hover:text-primary font-medium transition-colors"
-                        >
+                        <x-he4rt::text size="sm" class="text-text-high font-medium transition-colors">
                             {{ $link['name'] }}
                         </x-he4rt::text>
                     </div>
@@ -47,9 +49,7 @@
                         >
                             Access
                         </span>
-                        <x-heroicon-m-chevron-right
-                            class="text-icon-low group-hover:text-icon-medium h-4 w-4 transition-colors"
-                        />
+                        <x-he4rt::icon icon="heroicon-m-chevron-right" size="sm" class="text-icon-low" />
                     </div>
                 </a>
                 @if (! $loop->last)

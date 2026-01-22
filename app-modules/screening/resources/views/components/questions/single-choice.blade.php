@@ -20,12 +20,6 @@
                 <span class="text-helper-error">*</span>
             @endif
         </x-he4rt::heading>
-
-        @if ($question->is_knockout)
-            <x-he4rt::text class="text-helper-warning font-family-secondary shrink-0 self-start text-sm">
-                {{ __('screening::question_types.knockout_helper') }}
-            </x-he4rt::text>
-        @endif
     </div>
 
     @if ($layout === 'dropdown')
@@ -49,7 +43,7 @@
                     :label="$choice['label']"
                     :disabled="$disabled"
                     :required="$question->is_required && !$disabled && $loop->first"
-                    {{ $inputAttributes }}
+                    :attributes="$inputAttributes"
                 />
             @endforeach
         </div>

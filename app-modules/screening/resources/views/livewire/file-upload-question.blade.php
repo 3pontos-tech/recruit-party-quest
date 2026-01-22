@@ -6,12 +6,6 @@
                 <span class="text-helper-error">*</span>
             @endif
         </x-he4rt::heading>
-
-        @if ($question->is_knockout)
-            <x-he4rt::text class="text-helper-warning font-family-secondary shrink-0 self-start text-sm">
-                (pergunta eliminatória)
-            </x-he4rt::text>
-        @endif
     </div>
 
     {{ $this->form }}
