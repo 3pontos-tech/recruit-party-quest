@@ -89,7 +89,7 @@ return [
         'fields' => [
             'id' => 'ID',
             'slug' => 'Slug',
-            'team' => 'Time',
+            'team' => 'Empresa',
             'department' => 'Departamento',
             'hiring_manager' => 'Gestor Responsável',
             'status' => 'Status',
@@ -139,7 +139,7 @@ return [
             'work_arrangement' => 'Regime de Trabalho',
             'employment_type' => 'Tipo de Contratação',
             'experience_level' => 'Nível de Experiência',
-            'team' => 'Time',
+            'team' => 'Empresa',
             'department' => 'Departamento',
             'is_internal_only' => 'Apenas Interno',
             'is_confidential' => 'Confidencial',

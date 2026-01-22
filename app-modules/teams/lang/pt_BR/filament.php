@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 return [
     'resource' => [
-        'label' => 'Time',
-        'plural_label' => 'Times',
-        'navigation_label' => 'Times',
+        'label' => 'Empresa',
+        'plural_label' => 'Empresas',
+        'navigation_label' => 'Empresas',
     ],
     'fields' => [
         'id' => 'ID',
@@ -49,7 +49,7 @@ return [
         'navigation_label' => 'Departamentos',
         'fields' => [
             'id' => 'ID',
-            'team' => 'Time',
+            'team' => 'Empresa',
             'name' => 'Nome',
             'description' => 'Descrição',
             'head_user' => 'Responsável',
@@ -59,7 +59,7 @@ return [
             'deleted_at' => 'Excluído em',
         ],
         'filters' => [
-            'team' => 'Time',
+            'team' => 'Empresa',
         ],
         'create_action' => 'Criar Departamento',
     ],
@@ -74,7 +74,7 @@ return [
             'instructions' => 'Por favor, faça login usando estas credenciais. Recomendamos alterar sua senha após o primeiro acesso.',
             'login_button' => 'Entrar Agora',
             'forgot_password_button' => 'Esqueceu Sua Senha?',
-            'footer' => 'Time :team_name',
+            'footer' => 'Empresa :team_name',
         ],
     ],
 ];
