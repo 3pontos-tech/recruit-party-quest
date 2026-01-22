@@ -19,6 +19,7 @@ it('can create a job requisition', function (): void {
 
     expect($requisition)->toBeInstanceOf(JobRequisition::class)
         ->and($requisition->id)->not->toBeNull()
+        ->and($requisition->slug)->not->toBeNull()
         ->and($requisition->status)->toBeInstanceOf(RequisitionStatusEnum::class)
         ->and($requisition->priority)->toBeInstanceOf(RequisitionPriorityEnum::class);
 });

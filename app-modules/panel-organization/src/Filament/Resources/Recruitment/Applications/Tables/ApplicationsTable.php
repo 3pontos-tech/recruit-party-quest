@@ -12,6 +12,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\CandidateSourceEnum;
+use He4rt\Applications\Models\Application;
 
 class ApplicationsTable
 {
@@ -31,10 +32,11 @@ class ApplicationsTable
                 TextColumn::make('candidate.user.name')
                     ->label(__('applications::filament.fields.candidate'))
                     ->searchable()
+                    ->description(fn (Application $record) => $record->requisition->post->title)
                     ->sortable(),
                 TextColumn::make('requisition.id')
                     ->label(__('applications::filament.fields.requisition'))
-                    ->toggleable()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->copyable(),
                 TextColumn::make('status')
                     ->label(__('applications::filament.fields.status'))

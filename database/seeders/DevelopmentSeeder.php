@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use Exception;
+use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Candidates\Models\Education;
@@ -37,7 +38,7 @@ final class DevelopmentSeeder extends Seeder
 
         $teams = Team::all();
 
-        $entitiesCount = 200;
+        $entitiesCount = 3;
         $users = User::factory()->count($entitiesCount)->create();
 
         try {
@@ -82,6 +83,7 @@ final class DevelopmentSeeder extends Seeder
                 ]);
 
             $stages = [
+                ['type' => StageTypeEnum::New, 'name' => 'Newcomers'],
                 ['type' => StageTypeEnum::Screening, 'name' => 'Initial Screening'],
                 ['type' => StageTypeEnum::Assessment, 'name' => 'Technical Challenge'],
                 ['type' => StageTypeEnum::Interview, 'name' => 'Technical Interview'],
@@ -122,7 +124,8 @@ final class DevelopmentSeeder extends Seeder
                 ->recycle($requisition->team)
                 ->recycle($users)
                 ->state([
-                    'current_stage_id' => $requisitionStages->random()->id,
+                    'current_stage_id' => $requisitionStages->first()->getKey(),
+                    'status' => ApplicationStatusEnum::New,
                 ])
                 ->create();
 

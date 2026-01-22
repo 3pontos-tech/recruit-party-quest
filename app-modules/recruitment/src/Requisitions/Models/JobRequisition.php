@@ -31,6 +31,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property string $slug
  * @property string $team_id
  * @property string $department_id
  * @property string $work_arrangement
@@ -126,6 +127,19 @@ class JobRequisition extends BaseModel
     public function applications(): HasMany
     {
         return $this->hasMany(Application::class, 'requisition_id');
+    }
+
+    public function getNextStage(Stage $currentStage): ?Stage
+    {
+        $availableStages = $this
+            ->stages
+            ->filter(fn (Stage $stage) => $stage->display_order > $currentStage->display_order);
+
+        if ($availableStages->isEmpty()) {
+            return null;
+        }
+
+        return $availableStages->first();
     }
 
     protected function casts(): array

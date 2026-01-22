@@ -2,19 +2,19 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="mb-4 flex flex-col justify-between gap-4 md:flex-row md:items-center">
             <div>
-                <x-he4rt::heading level="2" size="sm" class="italic">
+                <x-he4rt::heading level="2" size="sm" class="mb-1 italic">
                     {{ __('panel-app::livewire/user-latest-applications.title') }}
                 </x-he4rt::heading>
-                <x-he4rt::text size="xs" class="text-text-medium mt-0.5">
+                <x-he4rt::text size="sm" class="text-text-medium mt-0.5">
                     {{ __('panel-app::livewire/user-latest-applications.subtitle') }}
                 </x-he4rt::text>
             </div>
             <div class="flex items-center gap-2">
-                <input
+                <x-he4rt::input
                     type="text"
                     wire:model.live="search"
                     placeholder="{{ __('panel-app::livewire/user-latest-applications.search.placeholder') }}"
-                    class="border-outline-low focus:ring-primary/50 rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
+                    class="text-sm"
                 />
             </div>
         </div>

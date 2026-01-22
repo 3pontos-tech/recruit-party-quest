@@ -21,4 +21,7 @@ return [
     'rejected' => [
         'label' => 'Reprovado',
     ],
+    'new' => [
+        'label' => 'Nova Aplicação',
+    ],
 ];

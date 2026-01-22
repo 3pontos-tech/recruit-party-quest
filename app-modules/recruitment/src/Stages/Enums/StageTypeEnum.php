@@ -12,6 +12,8 @@ use Filament\Support\Icons\Heroicon;
 
 enum StageTypeEnum: string implements HasColor, HasIcon, HasLabel
 {
+    case New = 'new';
+
     case Screening = 'screening';
     case Assessment = 'assessment';
     case Interview = 'interview';
@@ -22,6 +24,7 @@ enum StageTypeEnum: string implements HasColor, HasIcon, HasLabel
     public function getColor(): array
     {
         return match ($this) {
+            self::New => Color::Gray,
             self::Screening => Color::Yellow,
             self::Assessment => Color::Blue,
             self::Interview => Color::Emerald,
@@ -34,6 +37,7 @@ enum StageTypeEnum: string implements HasColor, HasIcon, HasLabel
     public function getIcon(): Heroicon
     {
         return match ($this) {
+            self::New => Heroicon::ArchiveBox,
             self::Screening => Heroicon::CursorArrowRipple,
             self::Assessment => Heroicon::ChatBubbleOvalLeftEllipsis,
             self::Interview => Heroicon::BuildingOffice2,

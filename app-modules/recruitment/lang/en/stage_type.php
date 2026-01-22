@@ -21,4 +21,7 @@ return [
     'rejected' => [
         'label' => 'Rejected',
     ],
+    'new' => [
+        'label' => 'New Application',
+    ],
 ];
