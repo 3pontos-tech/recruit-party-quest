@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * @property-read Stage $last_stage
+ * @property-read Stage $first_stage
  * @property-read bool $is_last_stage
  */
 trait InteractsWithStages
@@ -29,9 +30,17 @@ trait InteractsWithStages
     /**
      * @return Attribute<Stage, never>
      */
+    protected function firstStage(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->requisition->stages->sortBy('display_order')->first());
+    }
+
+    /**
+     * @return Attribute<Stage, never>
+     */
     protected function lastStage(): Attribute
     {
-        return Attribute::make(get: fn () => $this->requisition->stages->last());
+        return Attribute::make(get: fn () => $this->requisition->stages->sortBy('display_order')->last());
     }
 
     /**
