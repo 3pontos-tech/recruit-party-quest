@@ -15,9 +15,17 @@ final class CoreManagementCluster extends Cluster
 
     protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
-    protected static ?string $navigationLabel = 'Core Management';
-
     protected static ?int $navigationSort = 30;
 
-    protected static ?string $clusterBreadcrumb = 'Admin';
+    protected static ?string $clusterBreadcrumb = null;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('panel-admin::filament.cluster.core_management.navigation_label');
+    }
+
+    public static function getClusterBreadcrumb(): string
+    {
+        return __('panel-admin::filament.cluster.core_management.breadcrumb');
+    }
 }
