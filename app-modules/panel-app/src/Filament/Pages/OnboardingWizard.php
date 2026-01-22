@@ -9,7 +9,6 @@ use DateTimeZone;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithRecord;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -40,7 +39,6 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 /**
  * @property-read Schema $content
@@ -209,6 +207,10 @@ class OnboardingWizard extends Page
     }
 
     #[On('echo-private:candidate-onboarding.resume.{user.id},.finished')]
+    /**
+     * @phpstan-ignore argument.templateType
+     * @phpstan-ignore missingType.iterableValue
+     */
     public function onResumeAnalyzed(array $payload): void
     {
         $this->canSkipResumeAnalysis = true;
@@ -264,32 +266,6 @@ class OnboardingWizard extends Page
                             ->label(__('panel-app::pages/onboarding.steps.account.fields.data_consent'))
                             ->accepted(fn ($state) => $state === true)
                             ->helperText(__('panel-app::pages/onboarding.steps.account.fields.data_consent_helper')),
-                    ]),
-            ],
-        ];
-    }
-
-    /**
-     * @phpstan-ignore missingType.iterableValue
-     */
-    protected function getCvStep(): array
-    {
-        return [
-            'id' => 'cv',
-            'label' => __('panel-app::pages/onboarding.steps.cv.label'),
-            'description' => __('panel-app::pages/onboarding.steps.cv.description'),
-            'schema' => [
-                Section::make(__('panel-app::pages/onboarding.steps.cv.sections.upload_cv'))
-                    ->schema([
-                        FileUpload::make('cv_file')
-                            ->label(__('panel-app::pages/onboarding.steps.cv.fields.cv_file'))
-                            ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
-                            ->maxSize(10240)
-                            ->directory('cv-uploads')
-                            ->visibility('private')
-                            ->required()
-                            ->afterStateUpdated(fn (TemporaryUploadedFile $state) => $this->cvUploaded($state))
-                            ->helperText(__('panel-app::pages/onboarding.steps.cv.fields.cv_file_helper')),
                     ]),
             ],
         ];
