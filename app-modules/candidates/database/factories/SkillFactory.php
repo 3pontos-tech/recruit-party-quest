@@ -16,9 +16,17 @@ class SkillFactory extends Factory
 
     public function definition(): array
     {
+        $category = fake()->randomElement(CandidateSkillCategory::cases());
+
+        $categorySkills = [
+            CandidateSkillCategory::Language->value => ['PHP', 'JavaScript', 'Python', 'Java'],
+            CandidateSkillCategory::SoftSkill->value => ['Teamwork', 'Communication', 'Leadership'],
+            CandidateSkillCategory::HardSkill->value => ['Database', 'Web Development', 'Software Engineering'],
+        ];
+
         return [
-            'name' => fake()->name(),
-            'category' => fake()->randomElement(CandidateSkillCategory::cases()),
+            'name' => fake()->randomElement($categorySkills[$category->value]),
+            'category' => $category,
             'created_at' => Date::now(),
             'updated_at' => Date::now(),
         ];

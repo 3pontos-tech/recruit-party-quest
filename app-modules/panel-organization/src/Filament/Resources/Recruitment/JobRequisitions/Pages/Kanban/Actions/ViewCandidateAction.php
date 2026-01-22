@@ -30,6 +30,12 @@ class ViewCandidateAction extends Action
                         TextEntry::make('status')
                             ->badge(),
                     ]),
+                Section::make('Skills')
+                    ->schema([
+                        TextEntry::make('candidate.skills.name')
+                            ->label('Skill Name')
+                            ->badge(),
+                    ]),
                 Section::make('Application Comments')
                     ->schema([
                         RepeatableEntry::make('comments')
