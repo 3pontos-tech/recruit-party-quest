@@ -144,5 +144,21 @@ return [
             'is_internal_only' => 'Apenas Interno',
             'is_confidential' => 'Confidencial',
         ],
+        'kanban' => [
+            'nav' => [
+                'edit_stages' => 'Editar Etapas',
+                'edit_label' => 'Editar',
+                'kanban_stages' => 'Etapas do Kanban',
+            ],
+            'actions' => [
+                'view_candidate' => [
+                    'label' => 'Ver Informações',
+                ],
+            ],
+            'sections' => [
+                'candidate_information' => 'Informações do Candidato',
+                'application_comments' => 'Comentários da Candidatura',
+            ],
+        ],
     ],
 ];
