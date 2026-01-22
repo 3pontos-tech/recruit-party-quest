@@ -32,6 +32,7 @@ class ResumeFileUpload extends FileUpload
         /** @var TemporaryUploadedFile $temporaryFile */
         $temporaryFile = $get('cv_file');
 
+        /** @phpstan-ignore-next-line identical.alwaysFalse */
         if ($temporaryFile->getFilename() === null) {
             return;
         }
