@@ -26,11 +26,17 @@ trait InteractsWithStages
         return $availableStages->first();
     }
 
+    /**
+     * @return Attribute<Stage, never>
+     */
     protected function lastStage(): Attribute
     {
         return Attribute::make(get: fn () => $this->requisition->stages->last());
     }
 
+    /**
+     * @return Attribute<bool, never>
+     */
     protected function isLastStage(): Attribute
     {
         return Attribute::make(get: fn () => $this->last_stage->getKey() === $this->current_stage_id);

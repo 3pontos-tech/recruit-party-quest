@@ -64,7 +64,7 @@ abstract class AbstractApplicationTransition
 
         $toStatus = $this->application->refresh()->status->value;
 
-        if ($fromStatus !== $toStatus && $data->isStatusChange()) {
+        if ($fromStatus !== $toStatus) {
             event(new ApplicationStatusChanged(
                 $this->application,
                 $fromStatus,

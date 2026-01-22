@@ -29,9 +29,7 @@ final class InProgressTransition extends AbstractApplicationTransition
     public function validate(TransitionData $data): void
     {
         match (true) {
-            ! $data->isStatusChange() && ! $data->isStageOnlyChange() => throw new InvalidTransitionException('Must provide to_status or to_stage_id/advance_stage'),
-
-            $data->isStatusChange() && ! in_array($data->toStatus->value, array_keys($this->choices()), true) => throw InvalidTransitionException::notAllowed($data->toStatus),
+            ! in_array($data->toStatus->value, array_keys($this->choices()), true) => throw InvalidTransitionException::notAllowed($data->toStatus),
 
             $data->isRejection() && ! $data->rejectionReasonCategory instanceof RejectionReasonCategoryEnum => throw MissingTransitionDataException::forField('rejection_reason_category'),
 

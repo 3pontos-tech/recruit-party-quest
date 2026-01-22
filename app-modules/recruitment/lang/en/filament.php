@@ -73,8 +73,11 @@ return [
         'plural_label' => 'Job Requisitions',
         'navigation_label' => 'Job Requisitions',
         'tabs' => [
-            'details' => 'Requisition Details',
-            'screening_questions' => 'Screening Questions',
+            'basic_information' => 'Basic Information',
+            'position_details' => 'Position Details',
+            'compensation' => 'Compensation',
+            'settings' => 'Settings',
+            'job_posting' => 'Job Posting',
         ],
         'sections' => [
             'basic_information' => 'Basic Information',
@@ -106,9 +109,28 @@ return [
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'deleted_at' => 'Deleted At',
-            'post' => [
+        ],
+        'job_posting' => [
+            'label' => 'Job Posting',
+            'plural_label' => 'Job Postings',
+            'fields' => [
                 'title' => 'Title',
+                'slug' => 'Slug',
                 'summary' => 'Summary',
+                'description' => 'Description',
+                'responsibilities' => 'Responsibilities',
+                'required_qualifications' => 'Required Qualifications',
+                'preferred_qualifications' => 'Preferred Qualifications',
+                'benefits' => 'Benefits',
+                'about_company' => 'About Company',
+                'about_team' => 'About Team',
+                'work_schedule' => 'Work Schedule',
+                'accessibility_accommodations' => 'Accessibility Accommodations',
+                'is_disability_confident' => 'Disability Confident Employer',
+                'external_post_url' => 'External Post URL',
+            ],
+            'helpers' => [
+                'one_per_line' => 'Enter one item per line',
             ],
         ],
         'filters' => [

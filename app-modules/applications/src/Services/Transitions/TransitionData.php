@@ -100,11 +100,6 @@ final readonly class TransitionData
         ];
     }
 
-    public function isStatusChange(): bool
-    {
-        return $this->toStatus instanceof ApplicationStatusEnum;
-    }
-
     public function isStageOnlyChange(): bool
     {
         return $this->toStageId !== null || $this->advanceStage === true;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions;
 
 use Filament\Actions\Action;
+use Filament\Forms\Components\Field;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Components\Utilities\Get;
@@ -35,12 +36,16 @@ class StateTransitionAction extends Action
         return 'state-transition-action';
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     private function processAction(Application $record, array $data): void
     {
         $transitionData = TransitionData::fromArray($data, auth()->id());
         $record->current_step->handle($transitionData);
     }
 
+    /** @return array<int, Field> */
     private function buildSchema(Application $record): array
     {
 
