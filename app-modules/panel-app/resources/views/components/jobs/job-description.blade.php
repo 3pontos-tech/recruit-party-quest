@@ -1,5 +1,6 @@
 @props([
     'jobRequisition',
+    'hasAction' => false,
 ])
 
 @php
@@ -99,17 +100,19 @@
             </div>
 
             <div class="flex w-full flex-col items-center gap-3 sm:flex-row md:w-auto">
-                <x-he4rt::button
-                    variant="solid"
-                    class="w-full sm:w-auto"
-                    @click="{{ $jobRequisition->screeningQuestions->isNotEmpty() ? 'showApplicationModal = true' : '' }}"
-                >
-                    Apply for job
-                </x-he4rt::button>
-                <div class="flex w-full justify-center gap-3 sm:w-auto">
-                    <x-he4rt::button variant="outline" icon="heroicon-o-bookmark" class="flex-1" />
-                    <x-he4rt::button variant="outline" icon="heroicon-o-share" class="flex-1" />
-                </div>
+                @if ($hasAction)
+                    <x-he4rt::button
+                        variant="solid"
+                        class="w-full sm:w-auto"
+                        @click="{{ $jobRequisition->screeningQuestions->isNotEmpty() ? 'showApplicationModal = true' : '' }}"
+                    >
+                        Apply for job
+                    </x-he4rt::button>
+                    <div class="flex w-full justify-center gap-3 sm:w-auto">
+                        <x-he4rt::button variant="outline" icon="heroicon-o-bookmark" class="flex-1" />
+                        <x-he4rt::button variant="outline" icon="heroicon-o-share" class="flex-1" />
+                    </div>
+                @endif
             </div>
         </header>
 
@@ -204,10 +207,12 @@
             @endif
         </div>
 
-        @if ($jobRequisition->screeningQuestions->isNotEmpty())
-            <x-he4rt::modal show="showApplicationModal" title="Apply for {{ $posting->title }}">
-                <livewire:screening.job-application-form :requisition="$jobRequisition" />
-            </x-he4rt::modal>
+        @if ($hasAction)
+            @if ($jobRequisition->screeningQuestions->isNotEmpty())
+                <x-he4rt::modal show="showApplicationModal" title="Apply for {{ $posting->title }}">
+                    <livewire:screening.job-application-form :requisition="$jobRequisition" />
+                </x-he4rt::modal>
+            @endif
         @endif
     </div>
 @endif
