@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace He4rt\Screening\Livewire;
 
+use He4rt\Applications\Enums\ApplicationStatusEnum;
+use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Models\Application;
+use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Screening\Models\ScreeningResponse;
 use Illuminate\Contracts\View\Factory;
@@ -31,16 +34,29 @@ class JobApplicationForm extends Component
     public function submit(): void
     {
         if (! $this->application instanceof Application) {
-            dd();
+            $user = auth()->user();
 
-            return;
+            /** @var Candidate $candidate */
+            $candidate = $user->candidate;
+
+            $this->application = Application::query()->create([
+                'requisition_id' => $this->requisition->id,
+                'candidate_id' => $candidate->id,
+                'team_id' => $this->requisition->team_id,
+                'status' => ApplicationStatusEnum::New,
+                'source' => CandidateSourceEnum::CareerPage,
+            ]);
         }
 
         foreach ($this->responses as $questionId => $value) {
+            if ($value === null) {
+                continue;
+            }
+
             ScreeningResponse::query()->create([
                 'application_id' => $this->application->id,
                 'question_id' => $questionId,
-                'response_value' => ['value' => $value],
+                'response_value' => is_array($value) ? $value : ['value' => $value],
             ]);
         }
     }

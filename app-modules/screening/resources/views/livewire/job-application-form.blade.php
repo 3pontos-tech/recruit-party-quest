@@ -26,7 +26,7 @@
         <x-dynamic-component
             :component="$component"
             :question="$question"
-            wire:model.live="responses.{{ $question->id }}"
+            wire:model.defer="responses.{{ $question->id }}"
         />
     @endforeach
 
