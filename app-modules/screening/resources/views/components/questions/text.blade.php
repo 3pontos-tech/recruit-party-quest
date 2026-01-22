@@ -37,7 +37,7 @@
             maxlength="{{ $maxLength }}"
             rows="4"
             :required="$question->is_required && !$disabled"
-            {{ $inputAttributes }}
+            :attributes="$inputAttributes"
         />
     @else
         <x-he4rt::input
@@ -46,7 +46,7 @@
             :placeholder="$placeholder"
             maxlength="{{ $maxLength }}"
             :required="$question->is_required && !$disabled"
-            {{ $inputAttributes }}
+            :attributes="$inputAttributes"
         />
     @endif
 </div>

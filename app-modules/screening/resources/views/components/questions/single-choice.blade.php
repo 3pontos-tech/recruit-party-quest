@@ -49,7 +49,7 @@
                     :label="$choice['label']"
                     :disabled="$disabled"
                     :required="$question->is_required && !$disabled && $loop->first"
-                    {{ $inputAttributes }}
+                    :attributes="$inputAttributes"
                 />
             @endforeach
         </div>

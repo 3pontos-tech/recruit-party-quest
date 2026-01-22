@@ -42,7 +42,7 @@
             min="{{ $min }}"
             max="{{ $max }}"
             step="{{ $step }}"
-            {{ $inputAttributes }}
+            :attributes="$inputAttributes"
         />
 
         @if ($suffix)

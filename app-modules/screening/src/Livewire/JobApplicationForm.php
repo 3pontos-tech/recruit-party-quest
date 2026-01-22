@@ -31,7 +31,8 @@ class JobApplicationForm extends Component
     public function submit(): void
     {
         if (! $this->application instanceof Application) {
-            // TODO: Create application or handle logic when application is provided
+            dd();
+
             return;
         }
 

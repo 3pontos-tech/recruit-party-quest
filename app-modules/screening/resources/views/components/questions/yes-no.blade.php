@@ -30,14 +30,14 @@
             :label="__('screening::question_types.yes_no.yes')"
             :disabled="$disabled"
             :required="$question->is_required && !$disabled"
-            {{ $inputAttributes }}
+            :attributes="$inputAttributes"
         />
 
         <x-he4rt::radio
             value="no"
             :label="__('screening::question_types.yes_no.no')"
             :disabled="$disabled"
-            {{ $inputAttributes }}
+            :attributes="$inputAttributes"
         />
     </div>
 </div>
