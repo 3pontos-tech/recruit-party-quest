@@ -20,6 +20,7 @@ class JobApplicationForm extends Component
 
     public ?Application $application = null;
 
+    /** @var array<string, mixed> */
     public array $responses = [];
 
     public function mount(JobRequisition $requisition): void
