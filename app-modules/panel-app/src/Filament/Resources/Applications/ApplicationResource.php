@@ -47,4 +47,19 @@ class ApplicationResource extends Resource
             'view' => ViewApplication::route('/{record}'),
         ];
     }
+
+    public static function getModelLabel(): string
+    {
+        return __('applications::filament.resource.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('applications::filament.resource.plural_label');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('applications::filament.resource.navigation_label');
+    }
 }

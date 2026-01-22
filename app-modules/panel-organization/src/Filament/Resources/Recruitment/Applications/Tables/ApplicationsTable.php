@@ -32,7 +32,7 @@ class ApplicationsTable
                 TextColumn::make('candidate.user.name')
                     ->label(__('applications::filament.fields.candidate'))
                     ->searchable()
-                    ->description(fn (Application $record) => $record->requisition->post->title)
+                    ->description(fn (Application $record) => $record->requisition->post?->title ?? 'N/A')
                     ->sortable(),
                 TextColumn::make('requisition.id')
                     ->label(__('applications::filament.fields.requisition'))
