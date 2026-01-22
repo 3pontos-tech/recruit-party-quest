@@ -12,6 +12,7 @@ return [
         'name' => 'Name',
         'guard_name' => 'Guard Name',
         'permissions' => 'Permissions',
+        'created_at' => 'Created Date',
         'updated_at' => 'Updated At',
     ],
     'tabs' => [

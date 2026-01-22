@@ -25,6 +25,6 @@ enum AiReasoningEffort: string implements HasLabel
 
     public function getLabel(): string
     {
-        return $this->name;
+        return __('ai::filament.enums.reasoning_effort.'.$this->value.'.label');
     }
 }

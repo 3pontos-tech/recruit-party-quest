@@ -79,7 +79,7 @@
                         criam oportunidades.
                     </x-slot>
                     <x-slot:actions>
-                        <x-he4rt::button icon="heroicon-s-chevron-right" variant="outline">
+                        <x-he4rt::button icon:trailing="heroicon-s-chevron-right" variant="outline">
                             Conheça nossa história
                         </x-he4rt::button>
                     </x-slot>

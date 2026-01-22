@@ -1,40 +1,38 @@
 @props([
-    'as' => 'div',
-    'href' => null,
-    'disabled' => false,
+    'variant' => 'outline',
+    'size' => 'md',
+    'rounded' => 'md',
+    'icon' => null,
+    'iconTrailing' => null,
+    'iconLeading' => null,
 ])
-
 @php
-    $tag = $href ? 'a' : $as;
+    $iconTrailing ??= $attributes->get('icon:trailing');
+    $iconLeading ??= $icon ??= $iconLeading;
 
-    $linkAttrs = [];
-    if ($href) {
-        $linkAttrs['href'] = $href;
-        if ($target === '_blank' && is_null($rel)) {
-            $linkAttrs['rel'] = 'noopener noreferrer';
-        }
-        if ($target) {
-            $linkAttrs['target'] = $target;
-        }
-        if ($rel) {
-            $linkAttrs['rel'] = $rel;
-        }
-    }
-
-    if ($disabled) {
-        $linkAttrs['aria-disabled'] = 'true';
-        $linkAttrs['tabindex'] = '-1';
-    }
+    $classes = Arr::toCssClasses([
+        'hp-tag',
+        "hp-tag-$variant",
+        "hp-tag-size-$size",
+        "hp-tag-rounded-$rounded",
+    ]);
 @endphp
 
-<{{ $tag }} {{ $attributes->merge(['class' => 'hp-tag'])->merge($linkAttrs) }}>
-    @isset($icon)
-        <div {{ $icon->attributes->class('hp-tag-icon') }}>
-            {{ $icon }}
+<x-he4rt::interactive-as {{ $attributes->class($classes) }}>
+    @if ($iconLeading)
+        <x-he4rt::icon :icon="$iconLeading" class="hp-tag-icon" />
+    @elseif (isset($leading))
+        <div class="hp-tag-icon">
+            {{ $leading }}
         </div>
-    @endisset
+    @endif
+    {{ $slot }}
 
-    <span class="hp-tag-text">
-        {{ $slot }}
-    </span>
-</{{ $tag }}>
+    @if ($iconTrailing)
+        <x-he4rt::icon :icon="$iconTrailing" class="hp-tag-icon" />
+    @elseif (isset($trailing))
+        <div class="hp-tag-icon">
+            {{ $trailing }}
+        </div>
+    @endif
+</x-he4rt::interactive-as>

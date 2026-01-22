@@ -29,14 +29,12 @@ enum AiAssistantApplication: string implements HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::PersonalAssistant => 'Personal Assistant',
-            self::Test => 'Test',
-        };
+        return __('ai::filament.enums.application.'.$this->value.'.label');
     }
 
     public function getDefaultModel(): AiModel
     {
+        // TODO: Essa classe não existe nesse projeto
         $settings = resolve(AiSettings::class);
 
         return match ($this) {

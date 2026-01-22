@@ -8,21 +8,22 @@
     "block" => false,
     "disabled" => false,
     "loading" => false,
-    "iconOnly" => false,
     "icon" => null,
-    "iconPosition" => "trailing",
+    "iconTrailing" => null,
+    "iconLeading" => null,
 ])
-
-@aware(["interactive" => false])
 
 @php
     $isLink = filled($href);
     $tag = $isLink ? "a" : $as;
-    $isBusy = (bool) $loading;
-    $isDisabled = (bool) $disabled || $isBusy;
+    $isBusy = $loading;
+    $isDisabled = $disabled || $isBusy;
 
-    $hasLeading = isset($leading) || (filled($icon) && $iconPosition === "leading");
-    $hasTrailing = isset($trailing) || (filled($icon) && $iconPosition === "trailing");
+    $iconTrailing ??= $attributes->get("icon:trailing");
+    $iconLeading = $icon ??= $iconLeading;
+
+    $hasLabel = $slot->isNotEmpty();
+    $isSquare = ! $hasLabel;
 
     $classes = collect([
         "hp-button",
@@ -30,7 +31,7 @@
         "hp-button-size-" . $size,
         "hp-button-rounded-" . $rounded,
         $block ? "hp-button-block" : null,
-        $iconOnly ? "hp-button-icon-only" : null,
+        $isSquare ? "hp-button-square" : null,
     ])
         ->filter()
         ->implode(" ");
@@ -52,30 +53,22 @@
     @if ($isBusy) aria-busy="true" @endif
     {{ $attributes->class($classes) }}
 >
-    @if ($hasLeading)
-        <span class="hp-button-icon">
-            @if ($icon)
-                <x-dynamic-component :component="$icon" class="h-full w-full" />
-            @else
-                {{ $leading }}
-            @endif
+    @if ($iconLeading)
+        <x-he4rt::icon :icon="$iconLeading" />
+    @elseif (isset($leading))
+        {{ $leading }}
+    @endif
+
+    @if ($hasLabel)
+        <span class="{{ $isBusy ? "opacity-0" : "opacity-100" }}">
+            {{ $slot }}
         </span>
     @endif
 
-    @unless ($iconOnly)
-        <span class="hp-button-label {{ $isBusy ? "opacity-0" : "opacity-100" }}">
-            {{ $slot }}
-        </span>
-    @endunless
-
-    @if ($hasTrailing)
-        <span class="hp-button-icon">
-            @if ($icon)
-                <x-dynamic-component :component="$icon" class="h-full w-full" />
-            @else
-                {{ $trailing }}
-            @endif
-        </span>
+    @if ($iconTrailing)
+        <x-he4rt::icon :icon="$iconTrailing" />
+    @elseif (isset($trailing))
+        {{ $trailing }}
     @endif
 
     @if ($isBusy)

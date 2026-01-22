@@ -1,25 +1,26 @@
 @props([
-    'icon' => 'fas-fire-flame-curved',
-    'as' => 'div',
-    'interactive' => true,
-    'size' => 'lg',
+    'icon',
+    'size' => 'md',
 ])
 
 @php
-    if ($attributes->has('href')) {
-        $as = 'a';
+    $componentName = $icon;
+
+    if ($icon instanceof \Filament\Support\Icons\Heroicon) {
+        $componentName = 'heroicon-o-' . $icon->value;
+    } elseif ($icon instanceof \BackedEnum) {
+        $componentName = $icon->value;
     }
 
     $iconSizeCls = 'hp-icon-size-' . $size;
 @endphp
 
-<{{ $as }}
+<x-dynamic-component
+    :component="$componentName"
     {{
-        $attributes->class([
-            'hp-icon',
-            'hp-icon-interactive' => $interactive,
-        ])
-    }}
->
-    <x-filament::icon :icon="$icon" class="{{ $iconSizeCls }}" />
-</{{ $as }}>
+    $attributes->class([
+        'hp-icon',
+        $iconSizeCls,
+    ])
+}}
+/>

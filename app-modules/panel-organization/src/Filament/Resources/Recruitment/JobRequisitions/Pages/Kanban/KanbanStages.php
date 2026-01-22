@@ -32,11 +32,11 @@ class KanbanStages extends BoardResourcePage
     public function getSubNavigation(): array
     {
         return [
-            NavigationItem::make('Edit Stages')
+            NavigationItem::make(__('recruitment::filament.requisition.kanban.nav.edit_stages'))
                 ->icon(Heroicon::OutlinedPencilSquare)
                 ->url(JobRequisitionResource::getUrl('edit', ['record' => $this->requisitionId]))
-                ->label('Editar'),
-            NavigationItem::make('Kanban Stages')
+                ->label(__('recruitment::filament.requisition.kanban.nav.edit_label')),
+            NavigationItem::make(__('recruitment::filament.requisition.kanban.nav.kanban_stages'))
                 ->url(self::getUrl(['record' => $this->requisitionId]))
                 ->isActiveWhen(fn () => true)
                 ->icon(Heroicon::Calendar)
@@ -82,7 +82,7 @@ class KanbanStages extends BoardResourcePage
             ->cardSchema(fn (Schema $schema) => $schema
                 ->components([
                     TextEntry::make('status')
-                        ->label('Application Status')
+                        ->label(__('applications::filament.fields.status'))
                         ->badge(),
                     TextEntry::make('candidate.total_work_experience_years'),
                     TextEntry::make('tracking_code'),

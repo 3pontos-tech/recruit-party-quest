@@ -35,6 +35,7 @@ return [
         'offer_response_deadline' => 'Response Deadline',
         'created_at' => 'Created At',
         'updated_at' => 'Updated At',
+        'transition_notes' => 'Notes',
     ],
     'filters' => [
         'status' => 'Status',
@@ -113,6 +114,18 @@ return [
             'modal_description' => 'Are you sure you want to withdraw this application? The candidate will be notified.',
             'modal_submit' => 'Withdraw Application',
             'notification' => 'Application withdrawn.',
+        ],
+
+        'change_status' => [
+            'label' => 'Change status',
+            'modal_heading' => 'Change application status',
+            'modal_submit' => 'Confirm',
+            'no_transitions_tooltip' => 'No available status transitions',
+            'notifications' => [
+                'updated' => [
+                    'title' => 'Status updated',
+                ],
+            ],
         ],
 
     ],

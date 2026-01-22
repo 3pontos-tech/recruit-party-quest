@@ -12,7 +12,10 @@
         <x-he4rt::text>Job posting details are currently unavailable.</x-he4rt::text>
     </div>
 @else
-    <div {{ $attributes->merge(['mx-auto w-full max-w-7xl space-y-8 py-8 lg:py-12']) }}>
+    <div
+        x-data="{ showApplicationModal: false }"
+        {{ $attributes->merge(['mx-auto w-full max-w-7xl space-y-8 py-8 lg:py-12']) }}
+    >
         {{-- Job Header --}}
         <header class="border-outline-low grid grid-cols-1 items-start gap-8 border-b pb-8 md:grid-cols-[1fr_auto]">
             <div class="flex flex-col items-start gap-6 sm:flex-row">
@@ -20,7 +23,7 @@
                 <div
                     class="bg-elevation-01dp border-outline-low flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border"
                 >
-                    <x-heroicon-o-briefcase class="text-icon-medium h-8 w-8" />
+                    <x-he4rt::icon icon="heroicon-o-briefcase" class="text-icon-medium h-8 w-8" />
                 </div>
 
                 <div class="space-y-3">
@@ -36,24 +39,26 @@
                     <div class="flex flex-wrap gap-x-6 gap-y-3 pt-1">
                         {{-- Location - Fallback to Remote if not available --}}
                         <div class="text-text-medium flex items-center gap-2 text-sm">
-                            <x-heroicon-o-map-pin class="text-icon-medium h-4 w-4" />
+                            <x-he4rt::icon icon="heroicon-o-map-pin" size="sm" class="text-icon-medium" />
                             <span>Remote</span>
                         </div>
 
                         {{-- Work Model --}}
                         <div class="text-text-medium flex items-center gap-2 text-sm">
-                            <x-filament::icon
+                            <x-he4rt::icon
                                 :icon="$jobRequisition->work_arrangement->getIcon()"
-                                class="text-icon-medium h-4 w-4"
+                                size="sm"
+                                class="text-icon-medium"
                             />
                             <span>{{ $jobRequisition->work_arrangement->getLabel() }}</span>
                         </div>
 
                         {{-- Contract Type --}}
                         <div class="text-text-medium flex items-center gap-2 text-sm">
-                            <x-filament::icon
+                            <x-he4rt::icon
                                 :icon="$jobRequisition->employment_type->getIcon()"
-                                class="text-icon-medium h-4 w-4"
+                                size="sm"
+                                class="text-icon-medium"
                             />
                             <span>{{ $jobRequisition->employment_type->getLabel() }}</span>
                         </div>
@@ -61,7 +66,7 @@
                         {{-- Salary --}}
                         @if ($jobRequisition->salary_range_min)
                             <div class="text-text-medium flex items-center gap-2 text-sm">
-                                <x-heroicon-o-currency-dollar class="text-icon-medium h-4 w-4" />
+                                <x-he4rt::icon icon="heroicon-o-currency-dollar" size="sm" class="text-icon-medium" />
                                 <span>
                                     {{ $jobRequisition->salary_currency }}
                                     {{ number_format($jobRequisition->salary_range_min, 0, ',', '.') }}
@@ -74,9 +79,10 @@
 
                         {{-- Seniority --}}
                         <div class="text-text-medium flex items-center gap-2 text-sm">
-                            <x-filament::icon
+                            <x-he4rt::icon
                                 :icon="$jobRequisition->experience_level->getIcon()"
-                                class="text-icon-medium h-4 w-4"
+                                size="sm"
+                                class="text-icon-medium"
                             />
                             <span>{{ $jobRequisition->experience_level->getLabel() }}</span>
                         </div>
@@ -84,7 +90,7 @@
                         {{-- Diversity Tag --}}
                         @if ($posting->is_disability_confident)
                             <div class="text-text-medium flex items-center gap-2 text-sm">
-                                <x-heroicon-o-heart class="text-icon-medium h-4 w-4" />
+                                <x-he4rt::icon icon="heroicon-o-heart" size="sm" class="text-icon-medium" />
                                 <span>Diversity</span>
                             </div>
                         @endif
@@ -93,10 +99,16 @@
             </div>
 
             <div class="flex w-full flex-col items-center gap-3 sm:flex-row md:w-auto">
-                <x-he4rt::button variant="solid" size="md" class="w-full sm:w-auto">Apply for job</x-he4rt::button>
+                <x-he4rt::button
+                    variant="solid"
+                    class="w-full sm:w-auto"
+                    @click="{{ $jobRequisition->screeningQuestions->isNotEmpty() ? 'showApplicationModal = true' : '' }}"
+                >
+                    Apply for job
+                </x-he4rt::button>
                 <div class="flex w-full justify-center gap-3 sm:w-auto">
-                    <x-he4rt::button variant="outline" size="md" icon-only icon="heroicon-o-bookmark" rounded="md" />
-                    <x-he4rt::button variant="outline" size="md" icon-only icon="heroicon-o-share" rounded="md" />
+                    <x-he4rt::button variant="outline" icon="heroicon-o-bookmark" class="flex-1" />
+                    <x-he4rt::button variant="outline" icon="heroicon-o-share" class="flex-1" />
                 </div>
             </div>
         </header>
@@ -127,7 +139,7 @@
                     <ul class="space-y-3">
                         @foreach ($posting->responsibilities as $item)
                             <li class="flex items-start gap-3">
-                                <x-heroicon-m-check-circle class="text-primary mt-0.5 h-5 w-5 shrink-0" />
+                                <x-he4rt::icon icon="heroicon-m-check-circle" class="text-primary mt-0.5" />
                                 <x-he4rt::text size="md">{{ $item }}</x-he4rt::text>
                             </li>
                         @endforeach
@@ -142,7 +154,7 @@
                     <ul class="space-y-3">
                         @foreach ($posting->required_qualifications as $item)
                             <li class="flex items-start gap-3">
-                                <x-heroicon-m-check-circle class="text-primary mt-0.5 h-5 w-5 shrink-0" />
+                                <x-he4rt::icon icon="heroicon-m-check-circle" class="text-primary mt-0.5" />
                                 <x-he4rt::text size="md">{{ $item }}</x-he4rt::text>
                             </li>
                         @endforeach
@@ -171,7 +183,7 @@
                     <ul class="space-y-3">
                         @foreach ($posting->benefits as $item)
                             <li class="flex items-start gap-3">
-                                <x-heroicon-m-check-circle class="text-primary mt-0.5 h-5 w-5 shrink-0" />
+                                <x-he4rt::icon icon="heroicon-m-check-circle" class="text-primary mt-0.5" />
                                 <x-he4rt::text size="md">{{ $item }}</x-he4rt::text>
                             </li>
                         @endforeach
@@ -191,5 +203,11 @@
                 </section>
             @endif
         </div>
+
+        @if ($jobRequisition->screeningQuestions->isNotEmpty())
+            <x-he4rt::modal show="showApplicationModal" title="Apply for {{ $posting->title }}">
+                <livewire:screening.job-application-form :requisition="$jobRequisition" />
+            </x-he4rt::modal>
+        @endif
     </div>
 @endif

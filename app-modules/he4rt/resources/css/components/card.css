@@ -1,5 +1,5 @@
 .hp-card {
-    @apply flex h-full flex-col rounded-lg;
+    @apply flex h-full flex-col rounded-md;
     @apply gap-4;
     @apply p-6;
     @apply border-outline-low border;
