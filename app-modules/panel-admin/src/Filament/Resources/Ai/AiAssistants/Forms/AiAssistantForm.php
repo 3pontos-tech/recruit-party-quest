@@ -44,7 +44,7 @@ final class AiAssistantForm
                     ->columnSpanFull(),
                 Select::make('application')
                     ->options([
-                        AiAssistantApplication::PersonalAssistant->value => __('ai::filament.enums.application.personal_assistant'),
+                        AiAssistantApplication::PersonalAssistant->value => __('ai::filament.enums.application.personal_assistant.label'),
                     ])
                     ->dehydratedWhenHidden()
                     ->default(AiAssistantApplication::getDefault())

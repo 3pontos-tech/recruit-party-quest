@@ -102,7 +102,7 @@ class OnboardingWizard extends Page
                         ResumeFileUpload::make('cv_file')->visible(fn () => $this->canSkipResumeAnalysis),
                         Action::make('continue-onboarding')
                             ->disabled(fn () => ! $this->canSkipResumeAnalysis)
-                            ->label('Continuar sem enviar')
+                            ->label(__('panel-app::pages/onboarding.actions.continue_without_upload'))
                             ->action(function (): void {
                                 $this->wizardVisible = true;
                                 $this->maxContentWidth = Width::ScreenExtraLarge;
@@ -200,7 +200,7 @@ class OnboardingWizard extends Page
                             wire:click="handleRegistration"
                             size="sm"
                         >
-                            Finalizar
+                            {{ __('panel-app::pages/onboarding.actions.finish') }}
                         </x-filament::button>
                     BLADE
             )));
@@ -257,8 +257,8 @@ class OnboardingWizard extends Page
                         Select::make('preferred_language')
                             ->label(__('panel-app::pages/onboarding.steps.account.fields.preferred_language'))
                             ->options([
-                                'pt_BR' => 'Português (Brasil)',
-                                'en_US' => 'English (United States)',
+                                'pt_BR' => __('panel-app::pages/onboarding.steps.account.options.preferred_language.pt_BR'),
+                                'en_US' => __('panel-app::pages/onboarding.steps.account.options.preferred_language.en_US'),
                             ])
                             ->required()
                             ->default('en'),
@@ -385,7 +385,7 @@ class OnboardingWizard extends Page
                             ->required(),
                         TextInput::make('employment_type_interests')
                             ->label(__('panel-app::pages/onboarding.steps.preferences.fields.employment_type_interests'))
-                            ->placeholder('full_time_employee, contractor, intern')
+                            ->placeholder(__('panel-app::pages/onboarding.steps.preferences.fields.employment_type_interests_placeholder'))
                             ->helperText(__('panel-app::pages/onboarding.steps.preferences.fields.employment_type_interests_helper')),
                     ]),
             ],
