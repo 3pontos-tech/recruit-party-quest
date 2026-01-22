@@ -83,6 +83,7 @@ class AppPanelProvider extends PanelProvider
                     ->enableBrowserSessions(),
             ])
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'He4rt\App\Filament\Widgets')
+            ->globalSearch(false)
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
