@@ -30,6 +30,9 @@
 
                     <div class="flex items-center gap-4">
                         <x-he4rt::button icon="heroicon-o-funnel">Filtrar</x-he4rt::button>
+                        <x-he4rt::button icon:trailing="heroicon-o-chevron-down" variant="outline">
+                            Tipo de vaga
+                        </x-he4rt::button>
                     </div>
                 </div>
 
