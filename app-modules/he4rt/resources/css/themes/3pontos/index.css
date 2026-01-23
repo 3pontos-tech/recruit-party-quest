@@ -4,11 +4,8 @@
 @import './components/button.css' layer(components);
 @import './components/card.css' layer(components);
 @import './components/section-title.css' layer(components);
-@import './components/section.css' layer(components);
 @import './components/heading.css' layer(components);
 @import './components/partials/footer.css' layer(components);
 @import './components/filament/stats-overview-widget.css' layer(components);
 @import './components/filament/file-upload.css' layer(components);
 @import './components/filament/topbar.css' layer(components);
-@import './components/filament/sidebar.css' layer(components);
-@import './components/filament/page.css' layer(components);
