@@ -11,7 +11,7 @@
     } elseif ($href) {
         $tag = 'a';
     } else {
-        $tag = 'button';
+        $tag = 'div';
     }
 
     if ($current === null && $href) {
