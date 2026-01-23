@@ -49,12 +49,14 @@
                                 />
                             </div>
                             <div class="flex flex-1 flex-col gap-0.5">
-                                <x-he4rt::heading class="text-2xl" size="sm" :level="2">
-                                    Consultor financeiro
-                                </x-he4rt::heading>
+                                <x-he4rt::heading class="text-2xl" :level="2">Consultor financeiro</x-he4rt::heading>
                                 <x-he4rt::text class="group-hover:text-text-high transition duration-500">
                                     3 Pontos
                                 </x-he4rt::text>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <x-he4rt::button icon="heroicon-o-bookmark" variant="outline" size="sm" />
+                                <x-he4rt::button icon="heroicon-o-share" variant="outline" size="sm" />
                             </div>
                         </x-slot>
 
