@@ -28,6 +28,15 @@ beforeEach(function (): void {
     $this->candidate = Candidate::factory()->create();
     actingAs($this->candidate->user);
     filament()->setCurrentPanel(FilamentPanel::App->value);
+    instanceFakeClass();
+    $this->dto = generateDto();
+    Storage::fake('public');
+    $this->dto = [
+        'fields' => [
+            'education' => $this->dto->education,
+            'work_experiences' => $this->dto->work_experiences,
+        ]];
+    $this->file = UploadedFile::fake()->create('curriculum.pdf');
 });
 it('render', function (): void {
     livewire(OnboardingWizard::class)
@@ -51,15 +60,8 @@ describe('wizard steps', function (): void {
     });
 
     it('should set fields after uploading curriculum', function (): void {
-        $dto = generateDto();
-        $dto = [
-            'fields' => [
-                'education' => $dto->education,
-                'work_experiences' => $dto->work_experiences,
-            ]];
-
         $livewire = livewire(OnboardingWizard::class)
-            ->call('onResumeAnalyzed', $dto)
+            ->call('onResumeAnalyzed', $this->dto)
             ->assertOk();
 
         $componentData = $livewire->getData();
@@ -84,18 +86,8 @@ describe('wizard steps', function (): void {
 });
 
 it('should be able to onboard', function (): void {
-
-    instanceFakeClass();
-    $dto = generateDto();
-    Storage::fake('public');
-    $dto = [
-        'fields' => [
-            'education' => $dto->education,
-            'work_experiences' => $dto->work_experiences,
-        ]];
-    $file = UploadedFile::fake()->create('curriculum.pdf');
     livewire(OnboardingWizard::class)
-        ->set('data.cv_file', [$file])
+        ->set('data.cv_file', [$this->file])
         ->set('data.expected_salary', '1500')
         ->set('data.expected_salary_currency', 'USD')
         ->set('data.availability_date', now()->subDay())
@@ -105,7 +97,7 @@ it('should be able to onboard', function (): void {
         ->set('data.employment_type_interests', 'whatever')
         ->set('data.confirm_submission', true)
         ->set('data.data_consent_given', true)
-        ->call('onResumeAnalyzed', $dto)
+        ->call('onResumeAnalyzed', $this->dto)
         ->call('handleRegistration')
         ->assertOk()
         ->assertHasNoFormErrors()
@@ -130,6 +122,28 @@ it('should be able to onboard', function (): void {
         'description' => 'working with php, filament, writing some tests',
         'is_currently_working_here' => true,
     ]);
+});
+
+it('should disable file uploader when it is uploading a file', function (): void {
+    livewire(OnboardingWizard::class)
+        ->set('data.cv_file', [$this->file])
+        ->call('onResumeAnalyzed', $this->dto)
+        ->assertOk()
+        ->assertHasNoFormErrors()
+        ->assertDontSeeText(__('panel-app::pages/onboarding.steps.cv.fields.cv_file_helper'))
+        ->assertNotified(__('panel-app::pages/onboarding.steps.cv.fields.cv_file_uploading'));
+});
+
+test('after uploading the resume, should see wizard steps', function (): void {
+    livewire(OnboardingWizard::class)
+        ->set('data.cv_file', [$this->file])
+        ->call('onResumeAnalyzed', $this->dto)
+        ->assertOk()
+        ->assertHasNoFormErrors()
+        ->assertDontSeeText(__('panel-app::pages/onboarding.steps.cv.fields.cv_file_helper'))
+        ->assertSeeText(__('panel-app::pages/onboarding.steps.profile.sections.work_experience'))
+        ->assertSeeText(__('panel-app::pages/onboarding.steps.preferences.fields.expected_salary'))
+        ->assertSeeText(__('panel-app::pages/onboarding.steps.review.sections.review_summary'));
 });
 
 function instanceFakeClass(): void

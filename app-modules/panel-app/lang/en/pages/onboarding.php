@@ -52,6 +52,7 @@ return [
             'fields' => [
                 'cv_file' => 'Upload CV',
                 'cv_file_helper' => 'PDF or DOC files up to 10MB',
+                'cv_file_uploading' => 'Wait while uploading your CV',
             ],
         ],
         'profile' => [

@@ -46,7 +46,8 @@ class ResumeFileUpload extends FileUpload
         // Ideally these would be dispatched by background jobs or AI processing events
 
         Notification::make()
-            ->title(__('panel-app::pages/onboarding.steps.cv.fields.cv_file'))
+            ->title(__('panel-app::pages/onboarding.steps.cv.fields.cv_file_uploading'))
+            ->info()
             ->send();
     }
 }
