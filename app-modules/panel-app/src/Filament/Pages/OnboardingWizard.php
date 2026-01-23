@@ -101,8 +101,9 @@ class OnboardingWizard extends Page
                     ->visible(fn () => ! $this->wizardVisible)
                     ->compact()
                     ->schema([
-                        ResumeFileUpload::make('cv_file')->visible(fn () => $this->canSkipResumeAnalysis),
+                        ResumeFileUpload::make('cv_file'),
                         Action::make('continue-onboarding')
+                            ->visible(fn () => $this->canSkipResumeAnalysis)
                             ->disabled(fn () => ! $this->canSkipResumeAnalysis)
                             ->label(__('panel-app::pages/onboarding.actions.continue_without_upload'))
                             ->action(function (): void {

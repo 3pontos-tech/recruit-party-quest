@@ -33,17 +33,13 @@ class ResumeFileUpload extends FileUpload
         $temporaryFile = $get('cv_file');
 
         /** @phpstan-ignore-next-line identical.alwaysFalse */
-        if ($temporaryFile->getFilename() === null) {
+        if (is_null($temporaryFile) === null) {
             return;
         }
 
         $livewire->canSkipResumeAnalysis = false;
 
         dispatch(new AiAnalyzeResumeJob($temporaryFile->getFilename(), auth()->user()->getKey()));
-
-        // Simulate processing after a short delay or async
-        // For now just dispatching the next ones to show it works
-        // Ideally these would be dispatched by background jobs or AI processing events
 
         Notification::make()
             ->title(__('panel-app::pages/onboarding.steps.cv.fields.cv_file_uploading'))

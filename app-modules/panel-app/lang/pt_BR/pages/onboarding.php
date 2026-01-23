@@ -60,7 +60,12 @@ return [
             'fields' => [
                 'cv_file' => 'Upload de Currículo',
                 'cv_file_helper' => 'Arquivos PDF ou DOC de até 10MB',
-                'cv_file_uploading' => 'Aguarde, estamos preenchendo os formulários com os dados do seu currículo',
+                'cv_file_uploading' => 'Aguarde, enquanto estamos preenchendo os formulários com os dados do seu currículo',
+            ],
+            'status_bar' => [
+                'processing' => 'Processando',
+                'finished' => 'Finalizado',
+                'sent' => 'Enviado',
             ],
         ],
         'profile' => [
@@ -98,7 +103,7 @@ return [
                 'currency' => 'Moeda',
                 'availability_date' => 'Data de Disponibilidade',
                 'availability_date_helper' => 'Quando você está disponível para começar?',
-                'willing_to_relocate' => 'Disponível para Relocação',
+                'willing_to_relocate' => 'Disponível para Realocação',
                 'is_open_to_remote' => 'Aberto a Trabalho Remoto',
                 'experience_level' => 'Nível de Experiência',
                 'employment_type_interests' => 'Tipos de Emprego (separados por vírgula)',
