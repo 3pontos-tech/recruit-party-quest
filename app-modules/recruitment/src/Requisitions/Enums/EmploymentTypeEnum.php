@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Recruitment\Requisitions\Enums;
 
+use App\Enums\Concerns\StringifyEnum;
 use Filament\Support\Colors\Color;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
@@ -12,6 +13,8 @@ use Filament\Support\Icons\Heroicon;
 
 enum EmploymentTypeEnum: string implements HasColor, HasIcon, HasLabel
 {
+    use StringifyEnum;
+
     case FullTimeEmployee = 'full_time_employee';
     case Contractor = 'contractor';
     case Intern = 'intern';

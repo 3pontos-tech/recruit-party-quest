@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace He4rt\Feedback\Enums;
 
+use App\Enums\Concerns\StringifyEnum;
 use Filament\Support\Colors\Color;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
 enum EvaluationRatingEnum: string implements HasColor, HasLabel
 {
+    use StringifyEnum;
+
     case StrongNo = 'strong_no';
     case No = 'no';
     case Maybe = 'maybe';

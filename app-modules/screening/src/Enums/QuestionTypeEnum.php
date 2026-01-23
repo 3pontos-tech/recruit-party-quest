@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace He4rt\Screening\Enums;
 
+use App\Enums\Concerns\StringifyEnum;
 use Filament\Support\Contracts\HasLabel;
 
 enum QuestionTypeEnum: string implements HasLabel
 {
+    use StringifyEnum;
+
     case YesNo = 'yes_no';
     case Text = 'text';
     case Number = 'number';

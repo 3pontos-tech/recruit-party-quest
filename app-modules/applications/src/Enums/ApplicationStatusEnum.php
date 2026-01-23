@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Applications\Enums;
 
+use App\Enums\Concerns\StringifyEnum;
 use Filament\Support\Contracts\HasLabel;
 use He4rt\Applications\Models\Application;
 use He4rt\Applications\Services\Transitions\AbstractApplicationTransition;
@@ -19,6 +20,8 @@ use He4rt\Applications\Services\Transitions\WithdrawnTransition;
 
 enum ApplicationStatusEnum: string implements HasLabel
 {
+    use StringifyEnum;
+
     case New = 'new';
     case InReview = 'in_review';
     case InProgress = 'in_progress';

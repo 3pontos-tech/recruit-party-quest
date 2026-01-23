@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace He4rt\Ai\Enums;
 
+use App\Enums\Concerns\StringifyEnum;
 use Filament\Support\Contracts\HasLabel;
 use Prism\Prism\Enums\Provider;
 
 enum AiModel: string implements HasLabel
 {
+    use StringifyEnum;
+
     case OpenAiGpt4oMini = 'gpt-5-mini';
 
     case Test = 'test';

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use He4rt\Feedback\Enums\EvaluationRatingEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +18,7 @@ return new class extends Migration
             $table->foreignUuid('stage_id')->constrained('recruitment_pipeline_stages')->cascadeOnDelete();
             $table->foreignUuid('evaluator_id')->constrained('users');
 
-            $table->string('overall_rating');
+            $table->string('overall_rating')->comment(EvaluationRatingEnum::stringifyCases());
             $table->text('recommendation')->nullable();
             $table->text('strengths')->nullable();
             $table->text('concerns')->nullable();

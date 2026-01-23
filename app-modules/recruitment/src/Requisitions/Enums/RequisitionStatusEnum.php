@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Recruitment\Requisitions\Enums;
 
+use App\Enums\Concerns\StringifyEnum;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
@@ -11,6 +12,8 @@ use Filament\Support\Icons\Heroicon;
 
 enum RequisitionStatusEnum: string implements HasColor, HasIcon, HasLabel
 {
+    use StringifyEnum;
+
     case Draft = 'draft';
     case PendingApproval = 'pending_approval';
     case Approved = 'approved';

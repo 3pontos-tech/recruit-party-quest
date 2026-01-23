@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use He4rt\Applications\Enums\ApplicationStatusEnum;
+use He4rt\Applications\Enums\CandidateSourceEnum;
+use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,10 +23,10 @@ return new class extends Migration
             $table->foreignUuid('current_stage_id')->nullable()->constrained('recruitment_pipeline_stages')->nullOnDelete();
 
             // Status
-            $table->string('status')->default('new');
+            $table->string('status')->default('new')->comment(ApplicationStatusEnum::stringifyCases());
 
             // Source
-            $table->string('source');
+            $table->string('source')->comment(CandidateSourceEnum::stringifyCases());
             $table->text('source_details')->nullable();
 
             // Cover Letter
@@ -35,7 +38,7 @@ return new class extends Migration
             // Rejection
             $table->timestamp('rejected_at')->nullable();
             $table->foreignUuid('rejected_by')->nullable()->constrained('users')->nullOnDelete();
-            $table->string('rejection_reason_category')->nullable();
+            $table->string('rejection_reason_category')->nullable()->comment(RejectionReasonCategoryEnum::stringifyCases());
             $table->text('rejection_reason_details')->nullable();
 
             // Offer

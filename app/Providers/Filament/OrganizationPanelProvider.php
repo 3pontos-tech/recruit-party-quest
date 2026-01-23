@@ -44,6 +44,7 @@ class OrganizationPanelProvider extends PanelProvider
                 'danger' => Color::Red,
                 'info' => Color::Indigo,
                 'gray' => Color::Gray,
+                ...Color::all(),
             ])
             ->sidebarCollapsibleOnDesktop()
             ->viteTheme(sprintf('resources/css/filament/%s/theme.css', $this->panelEnum->value))

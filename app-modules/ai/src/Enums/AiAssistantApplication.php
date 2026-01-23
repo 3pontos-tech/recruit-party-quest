@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace He4rt\Ai\Enums;
 
+use App\Enums\Concerns\StringifyEnum;
 use Filament\Support\Contracts\HasLabel;
 use He4rt\Ai\Settings\AiSettings;
 
 enum AiAssistantApplication: string implements HasLabel
 {
+    use StringifyEnum;
+
     case PersonalAssistant = 'personal_assistant';
 
     case Test = 'test';

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use He4rt\Screening\Enums\QuestionTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,7 +17,7 @@ return new class extends Migration
             $table->morphs('screenable');
 
             $table->text('question_text');
-            $table->string('question_type');
+            $table->string('question_type')->comment(QuestionTypeEnum::stringifyCases());
 
             $table->json('settings')->nullable();
 
