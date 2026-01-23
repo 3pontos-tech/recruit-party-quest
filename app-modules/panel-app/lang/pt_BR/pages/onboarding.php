@@ -52,7 +52,7 @@ return [
             'fields' => [
                 'cv_file' => 'Upload de Currículo',
                 'cv_file_helper' => 'Arquivos PDF ou DOC de até 10MB',
-                'cv_file_uploading' => 'Aguarde estamos preenchendo os formulários com os dados do seu currículo',
+                'cv_file_uploading' => 'Aguarde, estamos preenchendo os formulários com os dados do seu currículo',
             ],
         ],
         'profile' => [

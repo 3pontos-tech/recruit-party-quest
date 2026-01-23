@@ -207,11 +207,10 @@ class OnboardingWizard extends Page
             )));
     }
 
-    #[On('echo-private:candidate-onboarding.resume.{user.id},.finished')]
     /**
-     * @phpstan-ignore argument.templateType
-     * @phpstan-ignore missingType.iterableValue
+     * @param  array<string, mixed>  $payload
      */
+    #[On('echo-private:candidate-onboarding.resume.{user.id},.finished')]
     public function onResumeAnalyzed(array $payload): void
     {
         $fields = CandidateOnboardingDTO::make($payload['fields']);
