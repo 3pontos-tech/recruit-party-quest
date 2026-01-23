@@ -55,42 +55,33 @@
                             </div>
                         </x-slot>
 
-                        <x-slot:tags class="grid grid-cols-4 gap-x-8 gap-y-3">
-                            <div class="flex items-center gap-0.5">
-                                <x-he4rt::icon
-                                    icon="heroicon-o-map-pin"
-                                    size="sm"
-                                    class="text-icon-medium group-hover:text-text-high transition duration-500"
-                                />
-                                <x-he4rt::text size="sm" class="group-hover:text-text-high transition duration-500">
-                                    Remote
-                                </x-he4rt::text>
-                            </div>
+                        <x-slot:tags class="grid grid-cols-3 gap-x-8 gap-y-3">
+                            <x-he4rt::tag
+                                icon="heroicon-o-map-pin"
+                                variant="ghost"
+                                class="group-hover:text-text-high transition duration-500"
+                            >
+                                Remote
+                            </x-he4rt::tag>
                         </x-slot>
 
                         <x-slot:footer>
                             <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2">
-                                    <x-he4rt::icon
-                                        icon="heroicon-o-user"
-                                        size="sm"
-                                        class="text-icon-medium group-hover:text-text-high transition duration-500"
-                                    />
-                                    <x-he4rt::text size="sm" class="group-hover:text-text-high transition duration-500">
-                                        100 aplicações
-                                    </x-he4rt::text>
-                                </div>
+                                <x-he4rt::tag
+                                    icon="heroicon-o-user"
+                                    variant="ghost"
+                                    class="group-hover:text-text-high gap-2 transition duration-500"
+                                >
+                                    100 aplicações
+                                </x-he4rt::tag>
 
-                                <div class="flex items-center gap-2">
-                                    <x-he4rt::icon
-                                        icon="heroicon-o-clock"
-                                        size="sm"
-                                        class="text-icon-medium group-hover:text-text-high transition duration-500"
-                                    />
-                                    <x-he4rt::text size="sm" class="group-hover:text-text-high transition duration-500">
-                                        06/01/2026
-                                    </x-he4rt::text>
-                                </div>
+                                <x-he4rt::tag
+                                    icon="heroicon-o-clock"
+                                    variant="ghost"
+                                    class="group-hover:text-text-high gap-2 transition duration-500"
+                                >
+                                    06/01/2026
+                                </x-he4rt::tag>
                             </div>
                         </x-slot>
                     </x-he4rt::card>
