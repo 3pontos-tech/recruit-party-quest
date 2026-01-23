@@ -60,6 +60,9 @@ class JobRequisitionResource extends Resource
         ];
     }
 
+    /**
+     * @return Builder<JobRequisition>
+     */
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
         return parent::getRecordRouteBindingEloquentQuery()

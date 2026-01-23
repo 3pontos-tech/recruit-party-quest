@@ -8,8 +8,12 @@ use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\Width;
 use He4rt\App\Filament\Resources\Applications\ApplicationResource;
 use He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource;
+use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Users\User;
 
+/**
+ * @property JobRequisition $record
+ */
 class ViewJobRequisition extends ViewRecord
 {
     protected static string $resource = JobRequisitionResource::class;
@@ -27,7 +31,7 @@ class ViewJobRequisition extends ViewRecord
 
         if ($user?->candidate) {
             $application = $user->candidate->applications()
-                ->where('requisition_id', $this->record->id)
+                ->where('requisition_id', $this->record->getKey())
                 ->first();
 
             if ($application) {

@@ -22,13 +22,13 @@ class SearchJobs extends Component
 {
     use WithPagination;
 
-    public $query;
+    public string $query;
 
     #[Url]
-    public $search = '';
+    public string $search = '';
 
     #[Url]
-    public $location = '';
+    public string $location = '';
 
     public int $perPage = 4;
 
@@ -46,7 +46,7 @@ class SearchJobs extends Component
     {
         $baseQuery = JobRequisition::query();
 
-        if ($this->query) {
+        if ($this->query !== '' && $this->query !== '0') {
             $baseQuery->fromRaw(sprintf('(%s) as recruitment_job_requisitions', $this->query));
         }
 
