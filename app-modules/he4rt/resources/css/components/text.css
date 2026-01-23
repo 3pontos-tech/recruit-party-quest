@@ -1,5 +1,5 @@
 .hp-text {
-    @apply text-text-medium;
+    @apply text-text-medium font-medium;
 }
 
 .hp-text-size-xs {
@@ -7,7 +7,7 @@
 }
 
 .hp-text-size-sm {
-    @apply text-xs sm:text-sm;
+    @apply text-sm;
 }
 
 .hp-text-size-md {
