@@ -1,5 +1,5 @@
 .hp-section {
-    @apply mb-25 flex scroll-mt-20 flex-col sm:mb-30 lg:scroll-mt-8;
+    @apply mb-64 flex scroll-mt-20 flex-col lg:scroll-mt-8;
 
     .hp-container {
         @apply flex flex-col space-y-12 px-8 sm:px-12 md:px-16 lg:px-24;
