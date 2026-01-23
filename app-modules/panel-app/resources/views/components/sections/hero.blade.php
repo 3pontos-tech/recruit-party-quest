@@ -25,15 +25,10 @@
         <div class="grid grid-cols-1">
             <div class="flex flex-col gap-4">
                 <x-he4rt::headline align="center" size="2xl">
-                    <x-slot:title>
-                        3 Pontos Recruitment: Onde a Tecnologia Encontra o Crescimento e vice versa
-                    </x-slot>
+                    <x-slot:title>Construa sua carreira com a 3 pontos</x-slot>
 
                     <x-slot:description>
-                        Somos o ecossistema que une solução e conhecimento em um único lugar.
-                    </x-slot>
-                    <x-slot:actions>
-                        <x-he4rt::button href="/login">Faça Login</x-he4rt::button>
+                        Explore oportunidades em diferentes áreas, modelos de trabalho e níveis de experiência
                     </x-slot>
                 </x-he4rt::headline>
             </div>
