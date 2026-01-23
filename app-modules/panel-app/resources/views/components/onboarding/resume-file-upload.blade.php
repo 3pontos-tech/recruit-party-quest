@@ -25,6 +25,7 @@
 
 <x-dynamic-component :component="$fieldWrapperView" :field="$field" label-tag="div">
     <div
+        x-show="$wire.canSkipResumeAnalysis"
         x-load
         x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('file-upload', 'filament/forms') }}"
         x-data="fileUploadFormComponent({
@@ -366,6 +367,6 @@
             </div>
         @endif
     </div>
-
-    <livewire:resume-file-upload-progress />
 </x-dynamic-component>
+
+<livewire:resume-file-upload-progress />

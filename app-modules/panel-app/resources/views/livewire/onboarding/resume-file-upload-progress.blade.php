@@ -24,7 +24,7 @@
                 class="text-[10px] font-bold tracking-widest uppercase"
                 x-bind:class="status !== 'idle' ? 'text-white' : 'text-zinc-500'"
             >
-                Sent
+                {{ __('panel-app::pages/onboarding.steps.cv.status_bar.sent') }}
             </span>
         </div>
 
@@ -48,7 +48,7 @@
                 class="text-[10px] font-bold tracking-widest uppercase"
                 x-bind:class="['processing', 'finished'].includes(status) ? 'text-white' : 'text-zinc-500'"
             >
-                Processing
+                {{ __('panel-app::pages/onboarding.steps.cv.status_bar.processing') }}
             </span>
         </div>
 
@@ -71,7 +71,7 @@
                 class="text-[10px] font-bold tracking-widest uppercase"
                 x-bind:class="status === 'finished' ? 'text-white' : 'text-zinc-500'"
             >
-                Finished
+                {{ __('panel-app::pages/onboarding.steps.cv.status_bar.finished') }}
             </span>
         </div>
     </div>
