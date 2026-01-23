@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Candidates\Actions\Onboarding;
+namespace He4rt\Candidates\Enums;
 
 enum ResumeAnalyzeStatus: string
 {

@@ -8,7 +8,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Utilities\Get;
 use He4rt\App\Filament\Pages\OnboardingWizard;
-use He4rt\Candidates\Actions\Onboarding\AiAnalyzeResumeJob;
+use He4rt\Candidates\Jobs\AiAnalyzeResumeJob;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class ResumeFileUpload extends FileUpload
@@ -32,6 +32,7 @@ class ResumeFileUpload extends FileUpload
         /** @var TemporaryUploadedFile $temporaryFile */
         $temporaryFile = $get('cv_file');
 
+        /** @phpstan-ignore-next-line identical.alwaysFalse */
         if ($temporaryFile->getFilename() === null) {
             return;
         }
@@ -45,7 +46,8 @@ class ResumeFileUpload extends FileUpload
         // Ideally these would be dispatched by background jobs or AI processing events
 
         Notification::make()
-            ->title(__('panel-app::pages/onboarding.steps.cv.fields.cv_file'))
+            ->title(__('panel-app::pages/onboarding.steps.cv.fields.cv_file_uploading'))
+            ->info()
             ->send();
     }
 }

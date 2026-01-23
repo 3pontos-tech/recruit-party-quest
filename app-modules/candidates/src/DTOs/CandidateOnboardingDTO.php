@@ -10,21 +10,21 @@ final class CandidateOnboardingDTO implements JsonSerializable
 {
     /**
      * @param  array<int|CandidateEducationDTO>  $education
-     * @param  array<int|CandidateWorkExperienceDTO>  $work
+     * @param  array<int|CandidateWorkExperienceDTO>  $work_experiences
      */
     public function __construct(
         public array $education,
-        public array $work,
+        public array $work_experiences,
     ) {}
 
     /**
-     * @param  array{education: array<int, CandidateEducationDTO>, work: array<int, CandidateWorkExperienceDTO>}  $data
+     * @param  array{education: array<int, CandidateEducationDTO>, work_experiences: array<int, CandidateWorkExperienceDTO>}  $data
      */
     public static function make(array $data): self
     {
         return new self(
             education: $data['education'],
-            work: $data['work'],
+            work_experiences: $data['work_experiences'],
         );
     }
 
@@ -35,7 +35,7 @@ final class CandidateOnboardingDTO implements JsonSerializable
     {
         return [
             'education' => $this->education,
-            'work_experiences' => $this->work,
+            'work_experiences' => $this->work_experiences,
         ];
     }
 }
