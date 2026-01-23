@@ -10,6 +10,8 @@
     {{-- /> --}}
     {{-- </div> --}}
 
+    <x-panel-app::sections.contact />
+
     <x-he4rt::partials.footer
         logoPath="images/3pontos/logo.svg"
         logoSize="sm"

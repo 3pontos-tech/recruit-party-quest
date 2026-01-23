@@ -17,3 +17,7 @@
 .hp-text-size-lg {
     @apply text-base sm:text-lg;
 }
+
+.hp-text-size-2xl {
+    @apply text-2xl;
+}
