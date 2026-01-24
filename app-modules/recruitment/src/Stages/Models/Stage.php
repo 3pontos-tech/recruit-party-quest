@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -71,7 +70,7 @@ class Stage extends BaseModel
     }
 
     /**
-     * @return BelongsToMany<Recruiter, $this, Pivot>
+     * @return BelongsToMany<Recruiter, $this, InterviewerPivot>
      */
     public function interviewers(): BelongsToMany
     {
