@@ -42,7 +42,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
                     <x-he4rt::card class="group">
                         <x-slot:header class="gap-4">
                             <div
