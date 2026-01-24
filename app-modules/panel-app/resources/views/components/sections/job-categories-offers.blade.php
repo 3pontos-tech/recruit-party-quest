@@ -1,6 +1,6 @@
 <section class="hp-section relative z-10" id="contact">
     <div class="hp-container flex flex-col gap-16">
-        <div class="mb-0 grid grid-cols-1 items-start gap-x-16 lg:grid-cols-[1fr_7fr]">
+        <div class="mb-0 grid grid-cols-1 items-start gap-x-16 sm:grid-cols-[1fr_7fr]">
             <div
                 x-data="{ visible: false }"
                 x-intersect.once="visible = true"

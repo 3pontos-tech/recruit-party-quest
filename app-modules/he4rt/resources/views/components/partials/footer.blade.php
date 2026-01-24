@@ -122,7 +122,7 @@
                         <a
                             target="_blank"
                             rel="noopener noreferrer"
-                            :href="$social['link']"
+                            href="{{ $social['link'] }}"
                             class="group cursor-pointer"
                         >
                             <x-he4rt::icon
