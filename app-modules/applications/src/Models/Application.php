@@ -149,6 +149,38 @@ class Application extends BaseModel
         return $availableStages->first();
     }
 
+    public function getPipelineStages(): Collection
+    {
+        return $this->requisition
+            ->stages()
+            ->orderBy('display_order')
+            ->get();
+    }
+
+    public function getLastMovement(): ?ApplicationStageHistory
+    {
+        return $this->stageHistory()
+            ->with(['toStage'])
+            ->latest()
+            ->first();
+    }
+
+    public function isStageCompleted(Stage $stage): bool
+    {
+        if (! $this->current_stage_id) {
+            return false;
+        }
+
+        $currentStageOrder = $this->currentStage->display_order ?? 0;
+
+        return $stage->display_order < $currentStageOrder;
+    }
+
+    public function isCurrentStage(Stage $stage): bool
+    {
+        return $this->current_stage_id === $stage->id;
+    }
+
     protected function casts(): array
     {
         return [
