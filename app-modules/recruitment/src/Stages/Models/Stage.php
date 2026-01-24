@@ -78,7 +78,7 @@ class Stage extends BaseModel
             User::class,
             'recruitment_stage_interviewer',
             'pipeline_stage_id',
-            'interviewer_user_id',
+            'recruiter_id',
         )->withTimestamps()
             ->using(InterviewerPivot::class);
     }

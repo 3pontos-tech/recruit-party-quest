@@ -6,16 +6,16 @@ namespace He4rt\Recruitment\Stages\Models;
 
 use App\Models\BasePivot;
 use He4rt\Recruitment\Database\Factories\InterviewerPivotFactory;
-use He4rt\Users\User;
+use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $id
  * @property string $pipeline_stage_id
- * @property string $interviewer_user_id
+ * @property string $recruiter_id
  * @property-read Stage $stage
- * @property-read User $interviewer
+ * @property-read Recruiter $interviewer
  *
  * @extends BasePivot<InterviewerPivotFactory>
  */
@@ -25,11 +25,11 @@ class InterviewerPivot extends BasePivot
     protected $table = 'recruitment_stage_interviewer';
 
     /**
-     * @return BelongsTo<User, $this>
+     * @return BelongsTo<Recruiter, $this>
      */
     public function interviewer(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'interviewer_user_id', 'id');
+        return $this->belongsTo(Recruiter::class, 'recruiter_id', 'id');
     }
 
     /**

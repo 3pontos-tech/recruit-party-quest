@@ -79,7 +79,7 @@ class JobRequisitionResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['team.name', 'department.name', 'hiringManager.name'];
+        return ['team.name', 'department.name', 'recruiter.user.name'];
     }
 
     public static function getModelLabel(): string

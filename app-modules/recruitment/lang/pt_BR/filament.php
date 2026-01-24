@@ -92,6 +92,7 @@ return [
             'team' => 'Empresa',
             'department' => 'Departamento',
             'hiring_manager' => 'Gestor Responsável',
+            'recruiter' => 'Recrutador',
             'status' => 'Status',
             'priority' => 'Prioridade',
             'work_arrangement' => 'Regime de Trabalho',
