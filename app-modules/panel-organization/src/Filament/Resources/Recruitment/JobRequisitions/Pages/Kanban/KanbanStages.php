@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban;
 
+use Filament\Actions\Action;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Navigation\NavigationItem;
 use Filament\Schemas\Schema;
@@ -13,11 +14,11 @@ use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisi
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\ViewCandidateAction;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use He4rt\Recruitment\Stages\Filament\Schema\KanbanColumn;
 use He4rt\Recruitment\Stages\Models\Stage;
 use Livewire\Attributes\Locked;
 use Relaticle\Flowforge\Board;
 use Relaticle\Flowforge\BoardResourcePage;
-use Relaticle\Flowforge\Column;
 use Relaticle\Flowforge\Concerns\InteractsWithBoard;
 
 class KanbanStages extends BoardResourcePage
@@ -72,9 +73,12 @@ class KanbanStages extends BoardResourcePage
             ->findOrFail($this->requisitionId);
 
         $columns = collect($jobRequisition->stages)
-            ->map(fn (Stage $stage) => Column::make($stage->id)
-                ->label(sprintf('%s (%s)', $stage->name, $stage->stage_type->getLabel()))
+            ->map(fn (Stage $stage) => KanbanColumn::make($stage->id)
+                ->label($stage->name)
+                ->icon($stage->stage_type->getIcon())
                 ->color($stage->stage_type->getColor())
+                ->description($stage->stage_type)
+                ->recruiters($stage->interviewers)
             )->toArray();
 
         return $board
@@ -88,6 +92,12 @@ class KanbanStages extends BoardResourcePage
                     TextEntry::make('tracking_code'),
                 ])
             )
+            ->columnActions([
+                Action::make('123')
+                    ->label('fodase'),
+                Action::make('1234')
+                    ->label('fodase1'),
+            ])
             ->cardActions([
                 ViewCandidateAction::make()->model(Application::class),
                 StateTransitionAction::make(),
