@@ -19,6 +19,8 @@
 
 <label {{ $labelAttributes->class(['hp-radio-label', 'hp-radio-label--disabled' => $isDisabled]) }}>
     <input
+        wire:key="{{ $inputId }}"
+        {{ $attributes->merge() }}
         type="radio"
         name="{{ $name }}"
         id="{{ $inputId }}"
