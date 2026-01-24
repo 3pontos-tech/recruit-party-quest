@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace He4rt\Recruitment\Staff\Recruiter;
 
 use App\Models\BaseModel;
-use He4rt\Recruitment\Database\Factories\JobRequisitionFactory;
 use He4rt\Recruitment\Database\Factories\RecruiterFactory;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Teams\Team;
@@ -31,7 +30,7 @@ use Illuminate\Support\Collection;
  * @property Team $team
  * @property Collection<int, JobRequisition> $requisition
  *
- * @extends BaseModel<JobRequisitionFactory>
+ * @extends BaseModel<RecruiterFactory>
  */
 #[UseFactory(RecruiterFactory::class)]
 class Recruiter extends BaseModel
