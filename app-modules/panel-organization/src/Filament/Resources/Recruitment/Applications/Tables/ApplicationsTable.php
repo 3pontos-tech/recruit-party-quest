@@ -24,8 +24,7 @@ class ApplicationsTable
                 ->with([
                     'currentStage',
                     'requisition' => function ($q): void {
-                        $q->with(['post', 'department', 'team'])
-                            ->withCount('applications');
+                        $q->with(['post', 'department', 'team']);
                     },
                     'requisition.stages' => fn ($q) => $q->orderBy('display_order'),
                     'stageHistory' => fn ($q) => $q->with('toStage')->latest()->limit(1),
