@@ -34,6 +34,7 @@ class JobApplicationForm extends Component
 
     public function submit(): void
     {
+        $this->validate();
         if (! $this->application instanceof Application) {
             $user = auth()->user();
 
@@ -77,5 +78,38 @@ class JobApplicationForm extends Component
         return view('screening::livewire.job-application-form', [
             'requiredQuestionIds' => $requiredQuestionIds,
         ]);
+    }
+
+    /**
+     * @return array<string, array<int, string>|string>
+     */
+    protected function rules(): array
+    {
+        $rules = [];
+
+        foreach ($this->requisition->screeningQuestions as $question) {
+            $rules['responses.'.$question->id] = $question->is_required
+                ? ['required']
+                : ['nullable'];
+        }
+
+        return $rules;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function messages(): array
+    {
+        $messages = [];
+
+        foreach ($this->requisition->screeningQuestions as $question) {
+            if ($question->is_required) {
+                $messages[sprintf('responses.%s.required', $question->id)]
+                    = 'This question is required.';
+            }
+        }
+
+        return $messages;
     }
 }

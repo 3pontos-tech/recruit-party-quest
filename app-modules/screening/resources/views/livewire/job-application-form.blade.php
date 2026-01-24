@@ -33,9 +33,7 @@
     <div class="flex justify-end pt-4">
         <div class="relative" x-data="{ showTooltip: false }">
             <div @mouseenter="if (!isValid) showTooltip = true" @mouseleave="showTooltip = false">
-                <x-he4rt::button type="submit" variant="solid" x-bind:disabled="!isValid">
-                    Submit Application
-                </x-he4rt::button>
+                <x-he4rt::button type="submit" variant="solid">Submit Application</x-he4rt::button>
             </div>
 
             <div
