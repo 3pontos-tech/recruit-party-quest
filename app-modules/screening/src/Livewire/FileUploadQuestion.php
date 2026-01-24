@@ -11,7 +11,10 @@ use Filament\Schemas\Schema;
 use He4rt\Screening\Models\ScreeningQuestion;
 use He4rt\Screening\QuestionTypes\Settings\FileUploadSettings;
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Modelable;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Livewire\WithFileUploads;
 
 /**
  * @property Schema $form
@@ -19,9 +22,11 @@ use Livewire\Component;
 class FileUploadQuestion extends Component implements HasForms
 {
     use InteractsWithForms;
+    use WithFileUploads;
 
     /** @var array<string, mixed> */
-    public ?array $data = [];
+    #[Modelable]
+    public ?array $data = ['files' => []];
 
     public ScreeningQuestion $question;
 
@@ -46,6 +51,22 @@ class FileUploadQuestion extends Component implements HasForms
                     ->directory('screening-responses')
                     ->visibility('private')
                     ->required($this->question->is_required)
+                    ->afterStateUpdated(function ($data, $get): void {
+                        /** @var TemporaryUploadedFile $temporaryFile */
+                        $temporaryFile = $get('files');
+
+                        if (blank($temporaryFile)) {
+                            return;
+                        }
+
+                        $this->data['files'] = $temporaryFile->getFilename();
+
+                        $this->dispatch('file-uploaded', [
+                            'questionId' => $this->question->id,
+                            'files' => $this->data['files'],
+                        ]);
+                    })
+                    ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
                     ->extraAttributes(['class' => 'he4rt-file-upload']),
             ])
             ->statePath('data');

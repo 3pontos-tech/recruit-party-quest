@@ -9,9 +9,11 @@ use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use He4rt\Screening\Enums\QuestionTypeEnum;
 use He4rt\Screening\Models\ScreeningResponse;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class JobApplicationForm extends Component
@@ -28,8 +30,23 @@ class JobApplicationForm extends Component
         $this->requisition = $requisition;
 
         foreach ($requisition->screeningQuestions as $question) {
+
             $this->responses[$question->id] = null;
+
+            if ($question->question_type === QuestionTypeEnum::FileUpload) {
+                $this->responses[$question->id] = ['files' => []];
+            }
         }
+    }
+
+    /**
+     * @param  array<string<string,string>,string>  $data
+     */
+    #[On('file-uploaded')]
+    public function handleFileUploaded(array $data): void
+    {
+        // we got the name of the file that will be saved
+        $this->responses[$data['questionId']] = ['files' => $data['files']];
     }
 
     public function submit(): void
