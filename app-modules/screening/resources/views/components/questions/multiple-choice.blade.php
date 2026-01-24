@@ -40,16 +40,7 @@
 >
     <div class="mb-2 flex items-center justify-between">
         <x-he4rt::heading size="2xs">
-            {{ $question->question_text }}
-            @if ($question->is_required)
-                <span class="text-helper-error">*</span>
-            @endif
-
-            @error("responses.{$question->id}")
-                <p class="mt-1 text-sm text-red-500">
-                    {{ $message }}
-                </p>
-            @enderror
+            <x-screening::questions.question-base :$question />
         </x-he4rt::heading>
     </div>
 
