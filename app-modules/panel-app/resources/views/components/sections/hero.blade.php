@@ -46,7 +46,7 @@
                     <x-he4rt::card class="group">
                         <x-slot:header class="gap-4">
                             <div
-                                class="bg-elevation-01dp border-outline-dark flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md border"
+                                class="bg-elevation-01dp border-outline-dark group-hover:bg-elevation-05dp flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md border transition duration-500"
                             >
                                 <x-he4rt::icon
                                     size="lg"
