@@ -47,7 +47,7 @@ class JobRequisitionFactory extends Factory
 
             'team_id' => Team::factory(),
             'department_id' => Department::factory(),
-            'recruiter_id' => fn (array $attributes) => Recruiter::factory()->create(['team_id' => $attributes['team_id']])->id,
+            'recruiter_id' => fn (array $attributes) => Recruiter::factory()->create(['team_id' => $attributes['team_id']])->getKey(),
             'created_by_id' => User::factory(),
         ];
     }
