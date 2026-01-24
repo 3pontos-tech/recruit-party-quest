@@ -8,15 +8,16 @@ use App\Models\BaseModel;
 use He4rt\Applications\Models\Application;
 use He4rt\Recruitment\Database\Factories\StageFactory;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 use He4rt\Screening\Models\ScreeningQuestion;
 use He4rt\Teams\Concerns\BelongsToTeam;
-use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -70,12 +71,12 @@ class Stage extends BaseModel
     }
 
     /**
-     * @return BelongsToMany<User, $this, InterviewerPivot>
+     * @return BelongsToMany<Recruiter, $this, Pivot>
      */
     public function interviewers(): BelongsToMany
     {
         return $this->belongsToMany(
-            User::class,
+            Recruiter::class,
             'recruitment_stage_interviewer',
             'pipeline_stage_id',
             'recruiter_id',
