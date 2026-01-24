@@ -119,12 +119,17 @@
                                 <x-he4rt::text class="font-medium">Siga nas redes sociais</x-he4rt::text>
                                 <div class="flex gap-6">
                                     @foreach ($socials as $social)
-                                        <x-he4rt::icon
+                                        <a
+                                            class="cursor-pointer"
+                                            href="{{ $social['link'] }}"
                                             target="_blank"
-                                            :href="$social['link']"
-                                            :icon="$social['icon']"
-                                            class="border-none bg-transparent p-0"
-                                        />
+                                            rel="noopener noreferrer"
+                                        >
+                                            <x-he4rt::icon
+                                                :icon="$social['icon']"
+                                                class="border-none bg-transparent p-0"
+                                            />
+                                        </a>
                                     @endforeach
                                 </div>
                             </div>

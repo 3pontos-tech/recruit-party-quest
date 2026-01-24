@@ -23,15 +23,21 @@
 
             <div class="flex flex-col gap-16">
                 <div class="flex flex-col items-center gap-8 sm:flex-row sm:justify-between">
-                    <div class="flex flex-col gap-2 sm:items-start">
+                    <div class="flex flex-col gap-4 sm:items-start">
                         <x-he4rt::heading class="text-2xl">Confira todas as nossas vagas</x-he4rt::heading>
                         <x-he4rt::text>12 vagas disponíveis</x-he4rt::text>
                     </div>
 
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-8">
                         <x-he4rt::button icon="heroicon-o-funnel">Filtrar</x-he4rt::button>
                         <x-he4rt::button icon:trailing="heroicon-o-chevron-down" variant="outline">
                             Tipo de vaga
+                        </x-he4rt::button>
+                        <x-he4rt::button icon:trailing="heroicon-o-chevron-down" variant="outline">
+                            Modelo de trabalho
+                        </x-he4rt::button>
+                        <x-he4rt::button icon:trailing="heroicon-o-chevron-down" variant="outline">
+                            Local de trabalho
                         </x-he4rt::button>
                     </div>
                 </div>
