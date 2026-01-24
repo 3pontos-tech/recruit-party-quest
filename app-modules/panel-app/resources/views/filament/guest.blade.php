@@ -10,6 +10,8 @@
     {{-- /> --}}
     {{-- </div> --}}
 
+    <x-panel-app::sections.job-categories-offers />
+
     <x-panel-app::sections.contact />
 
     <x-he4rt::partials.footer

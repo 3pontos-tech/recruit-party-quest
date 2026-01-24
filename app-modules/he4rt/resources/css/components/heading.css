@@ -32,7 +32,7 @@
 }
 
 .hp-heading-size-2xl {
-    @apply text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-4xl;
+    @apply text-2xl;
 }
 
 .hp-heading-size-3xl {

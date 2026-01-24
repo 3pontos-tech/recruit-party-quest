@@ -6,7 +6,7 @@
 }
 
 .hp-card-density-compact {
-    @apply p-4;
+    @apply gap-4 p-4;
 }
 
 .hp-card-variant-solid {

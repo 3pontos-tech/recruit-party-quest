@@ -11,7 +11,7 @@
 }
 
 .hp-text-size-md {
-    @apply text-sm sm:text-base;
+    @apply text-base;
 }
 
 .hp-text-size-lg {

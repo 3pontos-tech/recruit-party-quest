@@ -7,7 +7,7 @@
 }
 
 .hp-card-title {
-    @apply font-family-secondary font-regular text-base;
+    @apply text-2xl font-bold;
 }
 
 .hp-card-body {

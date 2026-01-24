@@ -24,7 +24,7 @@
             <div class="flex flex-col gap-16">
                 <div class="flex flex-col items-center gap-8 sm:flex-row sm:justify-between">
                     <div class="flex flex-col gap-4 sm:items-start">
-                        <x-he4rt::heading class="text-2xl">Confira todas as nossas vagas</x-he4rt::heading>
+                        <x-he4rt::heading size="2xl">Confira todas as nossas vagas</x-he4rt::heading>
                         <x-he4rt::text>12 vagas disponíveis</x-he4rt::text>
                     </div>
 
@@ -55,7 +55,7 @@
                                 />
                             </div>
                             <div class="flex flex-1 flex-col gap-0.5">
-                                <x-he4rt::heading class="text-2xl" :level="2">Consultor financeiro</x-he4rt::heading>
+                                <x-he4rt::heading size="2xl" :level="2">Consultor financeiro</x-he4rt::heading>
                                 <x-he4rt::text class="group-hover:text-text-high transition duration-500">
                                     3 Pontos
                                 </x-he4rt::text>
