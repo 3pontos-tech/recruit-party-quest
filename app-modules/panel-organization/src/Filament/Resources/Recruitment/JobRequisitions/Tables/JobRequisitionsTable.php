@@ -67,8 +67,8 @@ class JobRequisitionsTable
                     ->toggleable()
                     ->icon(fn ($record) => $record->is_confidential ? Heroicon::LockClosed : null
                     ),
-                TextColumn::make('hiringManager.name')
-                    ->label(__('recruitment::filament.requisition.fields.hiring_manager')),
+                TextColumn::make('recruiter.user.name')
+                    ->label(__('recruitment::filament.requisition.fields.recruiter')),
                 TextColumn::make('published_at')
                     ->label(__('recruitment::filament.requisition.fields.published_at'))
                     ->date()

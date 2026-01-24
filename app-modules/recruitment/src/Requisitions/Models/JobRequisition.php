@@ -13,6 +13,7 @@ use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 use He4rt\Recruitment\Requisitions\Policies\JobRequisitionPolicy;
+use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Screening\Models\ScreeningQuestion;
 use He4rt\Teams\Concerns\BelongsToTeam;
@@ -41,7 +42,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $salary_range_min
  * @property int|null $salary_range_max
  * @property string $salary_currency
- * @property string $hiring_manager_id
+ * @property string $recruiter_id
  * @property string $created_by_id
  * @property RequisitionStatusEnum $status
  * @property string $priority
@@ -56,7 +57,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read Team $team
  * @property-read Department $department
- * @property-read User $hiringManager
+ * @property-read Recruiter $recruiter
  * @property-read User $createdBy
  * @property-read Collection<int, ScreeningQuestion> $screeningQuestions
  * @property-read Collection<int, Stage> $stages
@@ -90,11 +91,11 @@ class JobRequisition extends BaseModel
     }
 
     /**
-     * @return BelongsTo<User, $this>
+     * @return BelongsTo<Recruiter, $this>
      */
-    public function hiringManager(): BelongsTo
+    public function recruiter(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'hiring_manager_id');
+        return $this->belongsTo(Recruiter::class);
     }
 
     /**

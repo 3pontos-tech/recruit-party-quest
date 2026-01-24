@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 use He4rt\Recruitment\Stages\Models\InterviewerPivot;
 use He4rt\Recruitment\Stages\Models\Stage;
-use He4rt\Users\User;
 
 it('can create a stage', function (): void {
     $stage = Stage::factory()->create();
@@ -27,12 +27,12 @@ it('belongs to a job requisition', function (): void {
 
 it('has many interviewers', function (): void {
     $stage = Stage::factory()->create();
-    $users = User::factory()->count(2)->create();
+    $recruiters = Recruiter::factory()->recycle($stage->team)->count(2)->create();
 
-    foreach ($users as $user) {
+    foreach ($recruiters as $recruiter) {
         InterviewerPivot::factory()->create([
-            'pipeline_stage_id' => $stage->id,
-            'interviewer_user_id' => $user->id,
+            'pipeline_stage_id' => $stage->getKey(),
+            'recruiter_id' => $recruiter->getKey(),
         ]);
     }
 

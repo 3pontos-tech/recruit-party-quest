@@ -92,6 +92,7 @@ return [
             'team' => 'Team',
             'department' => 'Department',
             'hiring_manager' => 'Hiring Manager',
+            'recruiter' => 'Recruiter',
             'status' => 'Status',
             'priority' => 'Priority',
             'work_arrangement' => 'Work Arrangement',

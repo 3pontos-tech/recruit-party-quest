@@ -9,6 +9,7 @@ use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Screening\Models\ScreeningQuestion;
 use He4rt\Teams\Department;
 use He4rt\Teams\Team;
@@ -40,12 +41,13 @@ it('belongs to a department', function (): void {
         ->and($requisition->department->id)->toBe($department->id);
 });
 
-it('belongs to a hiring manager', function (): void {
-    $user = User::factory()->create();
-    $requisition = JobRequisition::factory()->create(['hiring_manager_id' => $user->id]);
+it('belongs to a recruiter', function (): void {
+    $team = Team::factory()->create();
+    $recruiter = Recruiter::factory()->create(['team_id' => $team->id]);
+    $requisition = JobRequisition::factory()->create(['team_id' => $team->id, 'recruiter_id' => $recruiter->id]);
 
-    expect($requisition->hiringManager)->toBeInstanceOf(User::class)
-        ->and($requisition->hiringManager->id)->toBe($user->id);
+    expect($requisition->recruiter)->toBeInstanceOf(Recruiter::class)
+        ->and($requisition->recruiter->id)->toBe($recruiter->id);
 });
 
 it('belongs to a created by user', function (): void {

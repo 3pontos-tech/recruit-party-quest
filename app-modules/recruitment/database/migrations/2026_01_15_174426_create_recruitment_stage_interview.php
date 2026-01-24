@@ -13,7 +13,7 @@ return new class extends Migration
         Schema::create('recruitment_stage_interviewer', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->foreignUuid('pipeline_stage_id')->constrained('recruitment_pipeline_stages');
-            $table->foreignUuid('interviewer_user_id')->constrained('users');
+            $table->foreignUuid('recruiter_id')->constrained('recruiters');
             $table->timestamps();
         });
     }
