@@ -8,6 +8,7 @@ use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\Width;
 use He4rt\App\Filament\Resources\Applications\ApplicationResource;
 use He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource;
+use He4rt\Applications\Actions\ApplyToJobRequisitionAction;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Users\User;
 
@@ -38,6 +39,26 @@ class ViewJobRequisition extends ViewRecord
                 $this->redirect(ApplicationResource::getUrl('view', ['record' => $application]));
             }
         }
+    }
+
+    /**
+     * Apply directly to the job requisition (for jobs without screening questions).
+     */
+    public function applyDirectly(ApplyToJobRequisitionAction $action): void
+    {
+        $user = auth()->user();
+
+        if (! $user?->candidate) {
+            return;
+        }
+
+        if ($action->hasApplied($this->record, $user->candidate)) {
+            return;
+        }
+
+        $application = $action->execute($this->record, $user->candidate);
+
+        $this->redirect(ApplicationResource::getUrl('view', ['record' => $application]));
     }
 
     public function getBreadcrumbs(): array
