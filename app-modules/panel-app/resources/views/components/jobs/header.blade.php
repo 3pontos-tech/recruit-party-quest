@@ -1,6 +1,6 @@
 @props(['jobsCount' => 0])
 
-<div class="border-border bg-card/50 border-b">
+<div class="border-border bg-card/50 border-outline-light dark:border-outline-dark border-b">
     <div class="hp-container py-8">
         <div class="mb-6 flex items-center gap-3">
             <div class="bg-primary/20 flex h-10 w-10 items-center justify-center rounded-lg">
