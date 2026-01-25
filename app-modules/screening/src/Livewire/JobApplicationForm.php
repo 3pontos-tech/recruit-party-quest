@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace He4rt\Screening\Livewire;
 
+use He4rt\Applications\DTOs\ApplicationDTO;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\CandidateSourceEnum;
+use He4rt\Applications\Events\JobAppliedEvent;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use He4rt\Screening\Actions\ScreeningResponse\StoreScreeningResponse;
+use He4rt\Screening\Collections\ScreeningResponseCollection;
+use He4rt\Screening\DTOs\ScreeningResponseDTO;
 use He4rt\Screening\Enums\QuestionTypeEnum;
-use He4rt\Screening\Models\ScreeningResponse;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Ramsey\Uuid\Uuid;
 
 class JobApplicationForm extends Component
 {
@@ -52,38 +57,37 @@ class JobApplicationForm extends Component
     public function submit(): void
     {
         $this->validate();
+        $applicationId = Uuid::uuid4();
         if (! $this->application instanceof Application) {
             /** @var Candidate $candidate */
             $candidate = auth()->user()->candidate;
 
-            $this->application = Application::query()->create([
-                'requisition_id' => $this->requisition->id,
+            event(new JobAppliedEvent(ApplicationDTO::make([
+                'application_id' => (string) $applicationId,
+                'requisition_id' => $this->requisition->getKey(),
                 'candidate_id' => $candidate->getKey(),
                 'team_id' => $this->requisition->team_id,
-                'status' => ApplicationStatusEnum::New,
-                'source' => CandidateSourceEnum::CareerPage,
-            ]);
+                'status' => ApplicationStatusEnum::New->value,
+                'source' => CandidateSourceEnum::CareerPage->value,
+            ])));
 
-            $this->application->update([
-                'current_stage_id' => $this->application->first_stage->getKey(),
-            ]);
-            // TODO: refactor dispatch an event because this belongs to Application module,
-            // we could use some dto and then extract to an action
         }
 
-        // TODO: extract this to an exclusive action, maybe create a custom collection
+        $screeningCollection = new ScreeningResponseCollection();
         foreach ($this->responses as $questionId => $value) {
             if ($value === null) {
                 continue;
             }
 
-            ScreeningResponse::query()->create([
-                'team_id' => $this->requisition->team_id,
-                'application_id' => $this->application->id,
-                'question_id' => $questionId,
-                'response_value' => is_array($value) ? $value : ['value' => $value],
-            ]);
+            $screeningCollection->add(new ScreeningResponseDTO(
+                teamId: $this->requisition->team_id,
+                applicationId: $applicationId->toString(),
+                questionId: (string) $questionId,
+                response_value: $value,
+            ));
         }
+
+        resolve(StoreScreeningResponse::class)->execute($screeningCollection);
     }
 
     public function render(): View|Factory|\Illuminate\View\View
