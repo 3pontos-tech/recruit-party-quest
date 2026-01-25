@@ -10,14 +10,18 @@
         </div>
 
         <div class="flex items-center gap-8">
-            <input
-                type="text"
+            <x-he4rt::input
+                id="search-input"
                 wire:model.live.debounce.300ms="search"
-                placeholder="Buscar vagas..."
-                class="border-outline-dark bg-elevation-01dp rounded-md p-2 text-sm"
+                class="border-border focus:border-primary w-64"
+                placeholder="Job title, keywords, or company"
+                aria-label="Search jobs by title, keywords, or company"
             />
 
-            <select wire:model.live="workModel" class="border-outline-dark bg-elevation-01dp rounded-md p-2 text-sm">
+            <select
+                wire:model.live="workModel"
+                class="border-outline-dark bg-icon-high/95 hover:bg-icon-high text-text-light dark:text-text-dark rounded-md p-2 text-sm"
+            >
                 <option value="">Modelo de trabalho</option>
                 @foreach (WorkArrangementEnum::cases() as $case)
                     <option value="{{ $case->value }}">{{ $case->getLabel() }}</option>

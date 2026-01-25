@@ -7,22 +7,22 @@
 ])
 
 @php
-    $inputId = $id ?? ($name ?? 'hp-input-' . \Illuminate\Support\Str::random(4));
+    $inputId = $id ?? $name;
     $isDisabled = (bool) $disabled;
 @endphp
 
-<div {{ $attributes->only('class')->class('hp-input-field') }}>
+<div @class(['hp-input-field', $attributes->get('class')])>
     @if ($label)
-        <x-he4rt::heading size="2xs" for="{{ $inputId }}">
+        <x-he4rt::heading size="2xs" :for="$inputId">
             {{ $label }}
         </x-he4rt::heading>
     @endif
 
     <input
         type="{{ $type }}"
-        name="{{ $name }}"
-        id="{{ $inputId }}"
-        @if ($isDisabled) disabled @endif
+        @if($name) name="{{ $name }}" @endif
+        @if($inputId) id="{{ $inputId }}" @endif
+        @disabled($isDisabled)
         {{ $attributes->except('class')->class('hp-input') }}
     />
 </div>
