@@ -45,7 +45,7 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-col space-y-4">
+                    <div class="flex flex-col space-y-4" wire:transition>
                         @forelse ($this->jobs as $job)
                             <x-panel-app::jobs.job-card :job="$job" wire:key="job-{{ $job->id }}" />
                         @empty
