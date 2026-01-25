@@ -16,9 +16,7 @@ final class StoreScreeningResponse
                 'team_id' => $response->teamId,
                 'application_id' => $response->applicationId,
                 'question_id' => $response->questionId,
-                'response_value' => is_array($response->response_value)
-                    ? $response->response_value
-                    : ['value' => $response->response_value],
+                'response_value' => $response->response_value,
             ]);
         }
     }

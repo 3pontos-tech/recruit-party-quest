@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace He4rt\Applications\DTOs;
 
+use Carbon\CarbonImmutable;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
 use Ramsey\Uuid\Uuid;
 
@@ -23,18 +23,36 @@ final readonly class ApplicationDTO
         public ?string $source_details = null,
         public ?string $cover_letter = null,
         public ?string $tracking_code = null,
-        public ?Carbon $rejected_at = null,
+        public ?CarbonImmutable $rejected_at = null,
         public ?string $rejected_by = null,
         public ?RejectionReasonCategoryEnum $rejection_reason_category = null,
         public ?string $rejection_reason_details = null,
-        public ?Carbon $offer_extended_at = null,
+        public ?CarbonImmutable $offer_extended_at = null,
         public ?string $offer_extended_by = null,
         public ?float $offer_amount = null,
-        public ?Carbon $offer_response_deadline = null,
+        public ?CarbonImmutable $offer_response_deadline = null,
     ) {}
 
     /**
-     * @params array<int,mixed> $data
+     * @param array{
+     *   application_id: string,
+     *   requisition_id: string,
+     *   candidate_id: string,
+     *   team_id: string,
+     *   status: string,
+     *   source: string,
+     *   source_details?: string|null,
+     *   cover_letter?: string|null,
+     *   tracking_code?: string|null,
+     *   rejected_at?: string|null,
+     *   rejected_by?: string|null,
+     *   rejection_reason_category?: RejectionReasonCategoryEnum|string|null,
+     *   rejection_reason_details?: string|null,
+     *   offer_extended_at?: string|null,
+     *   offer_extended_by?: string|null,
+     *   offer_amount?: mixed,
+     *   offer_response_deadline?: string|null
+     * } $data
      */
     public static function make(array $data): self
     {
@@ -43,8 +61,8 @@ final readonly class ApplicationDTO
             requisitionId: $data['requisition_id'],
             candidateId: $data['candidate_id'],
             teamId: $data['team_id'],
-            status: ApplicationStatusEnum::from($data['status']) ?? ApplicationStatusEnum::New,
-            source: CandidateSourceEnum::from($data['source']) ?? CandidateSourceEnum::CareerPage,
+            status: ApplicationStatusEnum::from($data['status']),
+            source: CandidateSourceEnum::from($data['source']),
             source_details: $data['source_details'] ?? null,
             cover_letter: $data['cover_letter'] ?? null,
             tracking_code: $data['tracking_code'] ?? null,
@@ -55,7 +73,7 @@ final readonly class ApplicationDTO
 
             rejected_by: $data['rejected_by'] ?? null,
 
-            rejection_reason_category: $data['rejection_reason_category'] ?? null,
+            rejection_reason_category: isset($data['rejection_reason_category']) ? RejectionReasonCategoryEnum::from($data['rejection_reason_category']) : null,
             rejection_reason_details: $data['rejection_reason_details'] ?? null,
 
             offer_extended_at: isset($data['offer_extended_at'])

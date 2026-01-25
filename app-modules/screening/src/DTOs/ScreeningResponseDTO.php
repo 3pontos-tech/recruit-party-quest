@@ -6,6 +6,9 @@ namespace He4rt\Screening\DTOs;
 
 final readonly class ScreeningResponseDTO
 {
+    /**
+     * @param  array<string, mixed>  $response_value
+     */
     public function __construct(
         public string $teamId,
         public string $applicationId,
