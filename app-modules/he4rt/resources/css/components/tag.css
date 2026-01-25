@@ -44,7 +44,7 @@
 }
 
 .hp-tag-size-sm {
-    @apply gap-0.5 text-sm;
+    @apply text-sm;
     @apply px-2 py-1;
 
     & .hp-icon {

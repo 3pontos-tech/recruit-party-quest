@@ -6,7 +6,7 @@
     <div class="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
         <div class="flex flex-col gap-4 sm:items-start">
             <x-he4rt::heading size="2xl">Confira todas as nossas vagas</x-he4rt::heading>
-            <x-he4rt::text>{{ $jobs->total() }} vagas disponíveis</x-he4rt::text>
+            <x-he4rt::text>{{ $this->jobs->total() }} vagas disponíveis</x-he4rt::text>
         </div>
 
         <div class="flex items-center gap-8">
@@ -27,61 +27,27 @@
     </div>
 
     <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3" wire:transition>
-        @foreach ($jobs as $job)
-            <x-he4rt::card class="group" wire:key="job-{{ $job->id }}">
-                <x-slot:header class="gap-4">
-                    <x-he4rt::avatar
-                        :src="asset('images/3pontos/logo-chain-white.png')"
-                        :alt="$job->team->name"
-                        size="lg"
-                        :circular="false"
-                        class="border-outline-light dark:border-outline-dark h-14 w-14 border"
-                    />
-
-                    <div class="flex flex-1 flex-col gap-0.5">
-                        <x-he4rt::heading size="2xl" :level="2">
-                            {{ $job->post?->title ?? 'Sem título' }}
-                        </x-he4rt::heading>
-                        <x-he4rt::text class="group-hover:text-text-high transition duration-500">
-                            {{ $job->team->name }}
-                        </x-he4rt::text>
-                    </div>
-                </x-slot>
-
-                <x-slot:tags>
-                    <x-he4rt::tag
-                        :icon="$job->work_arrangement->getIcon()"
-                        variant="ghost"
-                        class="group-hover:text-text-high transition duration-500"
-                    >
-                        {{ $job->work_arrangement->getLabel() }}
-                    </x-he4rt::tag>
-                </x-slot>
-
-                <x-slot:footer>
-                    <div class="flex items-center justify-between">
-                        <x-he4rt::tag
-                            icon="heroicon-o-user"
-                            variant="ghost"
-                            class="group-hover:text-text-high gap-2 transition duration-500"
-                        >
-                            {{ $job->applications_count }} aplicações
-                        </x-he4rt::tag>
-                        <x-he4rt::tag
-                            icon="heroicon-o-clock"
-                            variant="ghost"
-                            class="group-hover:text-text-high gap-2 transition duration-500"
-                        >
-                            {{ $job->created_at->format('d/m/Y') }}
-                        </x-he4rt::tag>
-                    </div>
-                </x-slot>
+        @forelse ($this->jobs as $job)
+            <x-panel-app::jobs.job-card :job="$job" wire:key="job-{{ $job->id }}" />
+        @empty
+            <x-he4rt::card
+                :interactive="false"
+                class="col-span-3 flex flex-col items-center justify-center border-dashed p-12 text-center"
+            >
+                <x-he4rt::badge icon="heroicon-o-magnifying-glass" class="bg-elevation-05dp rounded-full border-0" />
+                <x-he4rt::heading size="sm">No jobs found</x-he4rt::heading>
+                <x-he4rt::text size="sm" class="text-muted-foreground mt-1">
+                    Try adjusting your search or filters to find what you're looking for.
+                </x-he4rt::text>
+                <x-he4rt::button wire:click="$set('search', '')" variant="outline" size="sm" class="mt-4">
+                    Clear all filters
+                </x-he4rt::button>
             </x-he4rt::card>
-        @endforeach
+        @endforelse
     </div>
 
     {{-- Pagination Links --}}
     <div class="mt-8">
-        {{ $jobs->links() }}
+        {{ $this->jobs->links() }}
     </div>
 </div>

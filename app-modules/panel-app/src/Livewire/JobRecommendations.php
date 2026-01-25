@@ -9,6 +9,7 @@ use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -32,7 +33,8 @@ class JobRecommendations extends Component
     /**
      * @return LengthAwarePaginator<int, JobRequisition>
      */
-    public function jobsAvailable(): LengthAwarePaginator
+    #[Computed]
+    public function jobs(): LengthAwarePaginator
     {
         return JobRequisition::query()
             ->with('post')
@@ -46,8 +48,6 @@ class JobRecommendations extends Component
 
     public function render(): View
     {
-        return view('panel-app::livewire.job-recommendations', [
-            'jobs' => $this->jobsAvailable(),
-        ]);
+        return view('panel-app::livewire.job-recommendations');
     }
 }

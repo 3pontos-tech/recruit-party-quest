@@ -61,6 +61,7 @@ class SearchJobs extends Component
     public function jobs(): LengthAwarePaginator
     {
         return JobRequisition::query()
+            ->withCount('applications')
             ->when($this->search, function ($query): void {
                 $query->whereHas('post', function (Builder $q): void {
                     $q->where('title', 'like', sprintf('%%%s%%', $this->search))

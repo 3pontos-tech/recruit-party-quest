@@ -10,24 +10,25 @@
     class="group"
     href="{{ He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource::getUrl('view', ['record' => $job]) }}"
 >
-    <x-slot:title class="flex items-start justify-between gap-2">
-        <div class="flex gap-4">
-            <x-he4rt::avatar
-                :src="asset('images/3pontos/logo-chain-white.png')"
-                :alt="$job->team->name"
-                size="lg"
-                :circular="false"
-                class="border-outline-light dark:border-outline-dark h-12 w-12 border"
-            />
+    <x-slot:header class="gap-4">
+        <x-he4rt::avatar
+            :src="asset('images/3pontos/logo-chain-white.png')"
+            :alt="$job->team->name"
+            size="lg"
+            :circular="false"
+            class="border-outline-light dark:border-outline-dark h-14 w-14 border"
+        />
 
-            <div class="min-w-0">
-                <span class="text-foreground hover:text-primary line-clamp-1 text-lg font-semibold transition-colors">
-                    {{ $job->post?->title ?? 'No Title' }}
-                </span>
-                <x-he4rt::text size="sm" class="text-muted-foreground">{{ $job->team->name }}</x-he4rt::text>
-            </div>
+        <div class="flex flex-1 flex-col gap-0.5">
+            <x-he4rt::heading size="2xl" :level="2">
+                {{ $job->post?->title ?? 'Sem título' }}
+            </x-he4rt::heading>
+            <x-he4rt::text class="group-hover:text-text-high transition duration-500">
+                {{ $job->team->name }}
+            </x-he4rt::text>
         </div>
-        <div class="flex shrink-0 items-center gap-1">
+
+        <div class="flex shrink-0">
             <x-he4rt::button
                 variant="outline"
                 size="sm"
@@ -41,13 +42,13 @@
         {{ $job->post?->summary }}
     </x-slot>
 
-    <div class="text-muted-foreground mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+    <x-slot:tags class="gap-x-8 gap-y-4">
         <x-he4rt::tag
-            :icon="\Filament\Support\Icons\Heroicon::MapPin"
+            :icon="$job->work_arrangement->getIcon()"
             variant="ghost"
             class="group-hover:text-text-high transition duration-500"
         >
-            {{ $job->team->address->first()?->city ?? 'Remote' }}
+            {{ $job->work_arrangement->getLabel() }}
         </x-he4rt::tag>
         <x-he4rt::tag
             :icon="\Filament\Support\Icons\Heroicon::BuildingOffice2"
@@ -78,5 +79,24 @@
         >
             {{ 1 }} positions
         </x-he4rt::tag>
-    </div>
+    </x-slot>
+
+    <x-slot:footer>
+        <div class="flex items-center justify-between">
+            <x-he4rt::tag
+                icon="heroicon-o-user"
+                variant="ghost"
+                class="group-hover:text-text-high gap-2 transition duration-500"
+            >
+                {{ $job->applications_count }} aplicações
+            </x-he4rt::tag>
+            <x-he4rt::tag
+                icon="heroicon-o-clock"
+                variant="ghost"
+                class="group-hover:text-text-high gap-2 transition duration-500"
+            >
+                {{ $job->created_at->format('d/m/Y') }}
+            </x-he4rt::tag>
+        </div>
+    </x-slot>
 </x-he4rt::card>
