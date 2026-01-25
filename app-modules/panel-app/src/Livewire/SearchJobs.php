@@ -121,6 +121,6 @@ class SearchJobs extends Component
 
     public function render(): Factory|View
     {
-        return view('panel-app::livewire.searchJobs');
+        return view('panel-app::livewire.search-jobs');
     }
 }
