@@ -12,7 +12,7 @@
         <div class="py-6">
             <div class="flex gap-6">
                 <aside class="hidden w-64 shrink-0 lg:block">
-                    <div class="sticky top-6">
+                    <div class="sticky top-24">
                         <x-panel-app::jobs.filters>
                             <x-panel-app::jobs.filter
                                 :title="__('recruitment::filament.requisition.filters.work_arrangement')"
