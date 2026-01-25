@@ -84,7 +84,7 @@ class ApplicationsTable
             ])
             ->defaultSort('requisition.post.title')
             ->groups([
-                Group::make('requisition')
+                Group::make('requisition_id')
                     ->label('Vaga')
                     ->collapsible()
                     ->getTitleFromRecordUsing(fn (Application $record): string => $record->requisition->post->title ?? 'Vaga sem título')
@@ -97,7 +97,7 @@ class ApplicationsTable
                     }),
             ])
             ->selectable(false)
-            ->defaultGroup('requisition')
+            ->defaultGroup('requisition_id')
             ->collapsedGroupsByDefault(false)
             ->filters([
                 SelectFilter::make('status')
