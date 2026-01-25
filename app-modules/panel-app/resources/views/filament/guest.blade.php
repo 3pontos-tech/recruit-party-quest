@@ -1,5 +1,5 @@
 <x-filament-panels::page class="relative" full-height="true">
-    <x-panel-app::sections.job-recommendations />
+    <livewire:job-recommendations />
 
     {{-- <div class="absolute bottom-[5%] z-0 translate-x-[90%] lg:-translate-x-[60%] lg:translate-y-1/3"> --}}
     {{-- <img --}}
