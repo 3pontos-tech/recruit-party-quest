@@ -24,4 +24,10 @@ return [
     'new' => [
         'label' => 'New Application',
     ],
+    'declined' => [
+        'label' => 'Declined',
+    ],
+    'hidden' => [
+        'label' => 'Hidden',
+    ],
 ];

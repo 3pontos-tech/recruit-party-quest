@@ -1,2 +1,3 @@
 @import '../../../../app-modules/he4rt/resources/css/themes/3pontos/theme.css';
 @source '../../../../vendor/relaticle/flowforge/resources/views/**/*.blade.php';
+@source '../../../../resources/views/**/*.blade.php';

@@ -29,6 +29,7 @@ use Illuminate\Support\Collection;
  * @property int $display_order
  * @property string $description
  * @property int $expected_duration_days
+ * @property bool $hidden
  * @property bool $active
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -87,6 +88,7 @@ class Stage extends BaseModel
     {
         return [
             'active' => 'boolean',
+            'hidden' => 'boolean',
             'stage_type' => StageTypeEnum::class,
         ];
     }
