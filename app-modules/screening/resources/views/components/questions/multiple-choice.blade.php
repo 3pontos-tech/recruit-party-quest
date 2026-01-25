@@ -17,24 +17,51 @@
 <div
     {{ $wrapperAttributes->class('screening-question') }}
     x-data="{
-        selected: [],
+        selected: @entangle('responses.' . $question->id).live,
         max: @js($maxSelections),
         isDisabled: @js($disabled),
-        toggle(value) {
-            const index = this.selected.indexOf(value)
-            if (index === -1) {
-                this.selected.push(value)
-            } else {
-                this.selected.splice(index, 1)
+        allOptions: @js(collect($choices)->pluck('value')),
+
+        init() {
+            if (! this.selected) {
+                this.selected = this.allOptions.map(() => null)
             }
         },
-        isChecked(value) {
-            return this.selected.includes(value)
+
+        toggle(value) {
+            let active = Array.isArray(this.selected)
+                ? this.selected.filter((i) => i !== null && i !== false)
+                : []
+
+            const index = active.indexOf(value)
+
+            if (index === -1) {
+                if (this.max === null || active.length < this.max) {
+                    active.push(value)
+                }
+            } else {
+                active.splice(index, 1)
+            }
+
+            this.selected = this.allOptions.map((option) => {
+                return active.includes(option) ? option : null
+            })
         },
+
+        isChecked(value) {
+            return (
+                Array.isArray(this.selected) &&
+                this.selected.some((i) => i === value)
+            )
+        },
+
         shouldDisable(value) {
             if (this.isDisabled) return true
             if (this.max === null) return false
-            return this.selected.length >= this.max && ! this.isChecked(value)
+            let activeCount = Array.isArray(this.selected)
+                ? this.selected.filter((i) => i !== null && i !== false).length
+                : 0
+            return activeCount >= this.max && ! this.isChecked(value)
         },
     }"
 >
@@ -59,20 +86,21 @@
     <div class="hp-checkbox-group">
         @foreach ($choices as $choice)
             @php
-                $escapedValue = json_encode($choice['value']);
+                $escapedValue = $choice['value'];
             @endphp
 
             <label
                 class="hp-checkbox-label"
-                :class="{ 'hp-checkbox-label--disabled': shouldDisable({{ $escapedValue }}) }"
+                :class="{ 'hp-checkbox-label--disabled': shouldDisable(@js($escapedValue)) }"
             >
                 <input
                     type="checkbox"
-                    value="{{ $choice['value'] }}"
                     class="hp-checkbox"
-                    x-model="selected"
-                    :disabled="shouldDisable({{ $escapedValue }})"
-                    {{ $inputAttributes }}
+                    :checked="isChecked(@js($escapedValue))"
+                    @click="toggle(@js($escapedValue))"
+                    :disabled="shouldDisable(@js($escapedValue))"
+                    value="{{ $escapedValue }}"
+                    {{ $inputAttributes->except(['x-model', 'wire:model']) }}
                 />
                 <x-he4rt::text>{{ $choice['label'] }}</x-he4rt::text>
             </label>

@@ -51,15 +51,18 @@ it('should answer screening questions that are file upload', function (): void {
     $questionId = $this->question->getKey();
     $filePayload = ['questionId' => $questionId, 'files' => $this->file->getFilename()];
 
-    livewire(JobApplicationForm::class, ['requisition' => $this->jobRequisition])
+    $livewire = livewire(JobApplicationForm::class, ['requisition' => $this->jobRequisition])
         ->assertOk()
         ->call('handleFileUploaded', $filePayload)
         ->assertSet(sprintf('responses.%s.files', $questionId), $this->file->getfilename())
         ->call('submit')
         ->assertSessionHasNoErrors()
-        ->assertDontSeeText('This question is required.');
+        ->assertDontSeeText('This question is required.')
+        ->assertNotified('Your application has been submitted');
 
     $application = Application::query()->first();
+    $livewire->assertRedirect(route('filament.app.resources.applications.view', ['record' => $application->getKey()]));
+
     assertDatabaseCount(Application::class, 1);
     assertDatabaseHas(Application::class, [
         'requisition_id' => $this->jobRequisition->getKey(),
@@ -74,4 +77,70 @@ it('should answer screening questions that are file upload', function (): void {
         'question_id' => $this->question->getKey(),
         'response_value' => json_encode(['files' => $this->file->getFilename()]),
     ]);
+});
+
+// TODO: Separate for each type of question
+test('required validation', function (): void {
+    $questionId = $this->question->getKey();
+    $livewire = livewire(JobApplicationForm::class, ['requisition' => $this->jobRequisition])
+        ->assertOk()
+        ->call('submit');
+    $livewire->assertHasErrors(['responses.'.$questionId => 'This question is required.']);
+});
+
+describe('multiple questions', function (): void {
+    test('min', function (): void {
+        $min = 1;
+        $question = ScreeningQuestion::factory()
+            ->for($this->jobRequisition, 'screenable')
+            ->state([
+                'question_text' => 'wich options fuedase?',
+            ])
+            ->multipleChoice($min)
+            ->required()
+            ->create();
+
+        $livewire = livewire(JobApplicationForm::class, ['requisition' => $this->jobRequisition])
+            ->assertOk()
+            ->call('submit');
+        $livewire->assertHasErrors(['responses.'.$question->getKey() => sprintf('Selecione pelo menos %d opção(ões).', $min)]);
+
+    });
+    test('max', function (): void {
+        $min = 1;
+        $max = 1;
+        $question = ScreeningQuestion::factory()
+            ->for($this->jobRequisition, 'screenable')
+            ->state([
+                'question_text' => 'wich options fuedase?',
+            ])
+            ->multipleChoice($min, $max)
+            ->required()
+            ->create();
+
+        $livewire = livewire(JobApplicationForm::class, ['requisition' => $this->jobRequisition])
+            ->assertOk()
+            ->set('responses.'.$question->getKey(), [0 => 'oi', 1 => 'iai'])
+            ->call('submit');
+        $livewire->assertHasErrors(['responses.'.$question->getKey() => sprintf('Selecione no máximo %d opção(ões).', $max)]);
+
+    });
+    test('null should be considere empty', function (): void {
+        $min = 1;
+        $question = ScreeningQuestion::factory()
+            ->for($this->jobRequisition, 'screenable')
+            ->state([
+                'question_text' => 'wich options fuedase?',
+            ])
+            ->multipleChoice($min)
+            ->required()
+            ->create();
+
+        $livewire = livewire(JobApplicationForm::class, ['requisition' => $this->jobRequisition])
+            ->assertOk()
+            ->set('responses.'.$question->getKey(), [0 => null, 1 => null])
+            ->call('submit');
+        $livewire->assertHasErrors(['responses.'.$question->getKey() => sprintf('Selecione pelo menos %d opção(ões).', $min)]);
+
+    });
 });
