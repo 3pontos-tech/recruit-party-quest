@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace He4rt\App\Livewire;
 
+use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
-use LaravelIdea\Helper\He4rt\Recruitment\Requisitions\Models\_IH_JobRequisition_C;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -23,10 +23,16 @@ class JobRecommendations extends Component
     #[Url]
     public string $workModel = '';
 
+    /**
+     * @var array<int, EmploymentTypeEnum>
+     */
     #[Url]
     public array $jobTypes = [];
 
-    public function jobsAvailable(): array|_IH_JobRequisition_C|LengthAwarePaginator
+    /**
+     * @return LengthAwarePaginator<int, JobRequisition>
+     */
+    public function jobsAvailable(): LengthAwarePaginator
     {
         return JobRequisition::query()
             ->with('post')
