@@ -149,6 +149,9 @@ class Application extends BaseModel
         return $availableStages->first();
     }
 
+    /**
+     * @return Collection<int, Stage>
+     */
     public function getPipelineStages(): Collection
     {
         return $this->requisition
