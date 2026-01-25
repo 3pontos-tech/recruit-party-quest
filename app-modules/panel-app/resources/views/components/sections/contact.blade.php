@@ -1,6 +1,11 @@
 @php
     $contacts = [
         [
+            'label' => 'Telefone',
+            'value' => '+55 90000-0000',
+            'icon' => 'heroicon-o-phone',
+        ],
+        [
             'label' => 'Email',
             'value' => 'contato@3pontos.com',
             'icon' => 'heroicon-o-envelope',
@@ -37,7 +42,7 @@
 @endphp
 
 <section class="hp-section relative z-10" id="contact">
-    <div class="hp-container grid grid-cols-1 items-start gap-x-12 lg:grid-cols-[1fr_5fr]">
+    <div class="hp-container grid grid-cols-1 items-start gap-x-12 lg:grid-cols-[1fr_7fr]">
         <div
             x-data="{ visible: false }"
             x-intersect.once="visible = true"
@@ -48,7 +53,7 @@
             </x-he4rt::animate-block>
         </div>
 
-        <div class="grid grid-cols-1 gap-8 lg:grid-cols-[1.5fr_1fr] lg:gap-20">
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-20">
             <div class="order-first lg:col-span-2">
                 <x-he4rt::headline class="mx-0">
                     <x-slot:title>Fale conosco</x-slot>
@@ -78,18 +83,22 @@
             <div
                 x-data="{ visible: false }"
                 x-intersect.threshold.80="visible = true"
-                class="order-1 grid h-full grid-cols-1 content-between gap-12 py-2 sm:grid-cols-2 lg:order-2 lg:grid-cols-1 lg:py-4"
+                class="order-1 grid h-full grid-cols-1 content-between gap-12 sm:grid-cols-2 lg:order-2 lg:grid-cols-1"
             >
                 @foreach ($contacts as $index => $item)
                     <x-he4rt::animate-block type="fade-right" :delay="$index * 100">
                         <x-he4rt::card :interactive="false" class="h-fit border-none bg-transparent p-0">
                             <x-slot:icon class="flex-col items-start gap-3 sm:flex-row sm:items-center">
-                                <x-he4rt::icon :icon="$item['icon']" class="bg-elevation-02dp" />
-                                <div class="flex flex-1 flex-col gap-0.5">
+                                <div
+                                    class="bg-elevation-01dp border-outline-dark flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md border"
+                                >
+                                    <x-he4rt::icon size="lg" :icon="$item['icon']" class="bg-elevation-02dp" />
+                                </div>
+                                <div class="flex flex-1 flex-col gap-1.5">
                                     <x-he4rt::text class="font-medium">
                                         {{ $item['label'] }}
                                     </x-he4rt::text>
-                                    <x-he4rt::text class="text-text-high font-bold">
+                                    <x-he4rt::text size="2xl" class="text-text-high font-bold">
                                         {{ $item['value'] }}
                                     </x-he4rt::text>
                                 </div>
@@ -101,17 +110,26 @@
                 <x-he4rt::animate-block type="fade-right" :delay="count($contacts) * 100">
                     <x-he4rt::card :interactive="false" class="h-fit border-none bg-transparent p-0">
                         <x-slot:icon class="flex-col items-start gap-3 sm:flex-row sm:items-center">
-                            <x-he4rt::icon icon="heroicon-o-arrow-path" class="bg-elevation-02dp" />
-                            <div class="flex flex-1 flex-col gap-1">
+                            <div
+                                class="bg-elevation-01dp border-outline-dark flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md border"
+                            >
+                                <x-he4rt::icon size="lg" icon="heroicon-o-arrow-path" class="bg-elevation-02dp" />
+                            </div>
+                            <div class="mb-1.5 flex flex-1 flex-col gap-2">
                                 <x-he4rt::text class="font-medium">Siga nas redes sociais</x-he4rt::text>
                                 <div class="flex gap-6">
                                     @foreach ($socials as $social)
-                                        <x-he4rt::icon
+                                        <a
+                                            class="cursor-pointer"
+                                            href="{{ $social['link'] }}"
                                             target="_blank"
-                                            :href="$social['link']"
-                                            :icon="$social['icon']"
-                                            class="border-none bg-transparent p-0"
-                                        />
+                                            rel="noopener noreferrer"
+                                        >
+                                            <x-he4rt::icon
+                                                :icon="$social['icon']"
+                                                class="border-none bg-transparent p-0"
+                                            />
+                                        </a>
                                     @endforeach
                                 </div>
                             </div>

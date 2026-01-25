@@ -1,5 +1,5 @@
 .hp-heading {
-    @apply font-semibold tracking-tight;
+    @apply font-bold tracking-tight;
     @apply break-words;
 }
 
@@ -20,11 +20,11 @@
 }
 
 .hp-heading-size-md {
-    @apply text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-3xl;
+    @apply text-xl md:text-2xl lg:text-3xl xl:text-3xl;
 }
 
 .hp-heading-size-lg {
-    @apply text-xl sm:text-2xl md:text-2xl lg:text-3xl xl:text-4xl;
+    @apply text-2xl md:text-2xl lg:text-3xl xl:text-4xl;
 }
 
 .hp-heading-size-xl {
@@ -32,7 +32,7 @@
 }
 
 .hp-heading-size-2xl {
-    @apply text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-4xl;
+    @apply text-2xl;
 }
 
 .hp-heading-size-3xl {

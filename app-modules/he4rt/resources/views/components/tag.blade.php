@@ -1,6 +1,6 @@
 @props([
     'variant' => 'outline',
-    'size' => 'md',
+    'size' => 'sm',
     'rounded' => 'md',
     'icon' => null,
     'iconTrailing' => null,

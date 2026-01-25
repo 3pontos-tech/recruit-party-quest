@@ -15,11 +15,11 @@
 }
 
 .hp-headline-content {
-    @apply flex flex-col gap-2;
+    @apply flex flex-col gap-4;
 }
 
 .hp-headline-title {
-    @apply font-bold drop-shadow-lg;
+    @apply leading-[120%] font-bold drop-shadow-lg;
 }
 
 .hp-headline-subtitle {

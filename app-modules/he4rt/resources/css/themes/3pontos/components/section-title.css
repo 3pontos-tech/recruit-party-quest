@@ -1,5 +1,5 @@
 .hp-section-title {
-    @apply text-text-medium relative mt-3 flex w-fit bg-transparent font-semibold;
+    @apply text-text-medium relative mt-5.5 flex w-fit bg-transparent font-semibold;
 }
 
 .hp-section-title.hp-section-title-size-lg {

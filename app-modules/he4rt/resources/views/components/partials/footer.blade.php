@@ -30,7 +30,7 @@
 <footer class="bg-elevation-surface/32 border-outline-dark relative z-10 border-t backdrop-blur-md">
     <div class="hp-section mb-0! min-h-0! p-0!">
         <div
-            class="hp-container grid grid-cols-1 content-start items-start gap-8 sm:gap-10 sm:py-12 md:pt-12 lg:grid-cols-2 lg:gap-12 lg:pt-16 xl:grid-cols-7 xl:pt-16"
+            class="grid grid-cols-1 content-start items-start gap-8 p-8 sm:gap-10 sm:p-12 lg:grid-cols-2 lg:gap-12 lg:p-16 lg:py-12 xl:grid-cols-7 xl:p-24 xl:py-16"
         >
             <div class="col-span-1 flex flex-col items-start gap-8 lg:col-span-2 lg:gap-12 xl:col-span-2">
                 <div class="flex flex-col">
@@ -117,14 +117,21 @@
             <div class="col-span-1 flex flex-col gap-y-3 sm:gap-y-4">
                 <x-he4rt::heading :level="3" size="2xs">Contato</x-he4rt::heading>
                 <x-he4rt::text class="font-semibold" size="sm">contato@3pontos.com</x-he4rt::text>
-                @foreach ($socials as $social)
-                    <x-he4rt::icon
-                        target="_blank"
-                        :href="$social['link']"
-                        :icon="$social['icon']"
-                        class="text-text-medium w-fit border-none bg-transparent p-0"
-                    />
-                @endforeach
+                <div class="flex gap-4">
+                    @foreach ($socials as $social)
+                        <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href="{{ $social['link'] }}"
+                            class="group cursor-pointer"
+                        >
+                            <x-he4rt::icon
+                                :icon="$social['icon']"
+                                class="text-text-medium group-hover:text-text-high transition"
+                            />
+                        </a>
+                    @endforeach
+                </div>
             </div>
 
             <div class="col-span-1 flex flex-col gap-y-3 sm:gap-y-4 xl:col-span-2">
