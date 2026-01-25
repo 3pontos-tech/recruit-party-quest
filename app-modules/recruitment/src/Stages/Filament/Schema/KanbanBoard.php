@@ -24,7 +24,9 @@ class KanbanBoard extends Board
 
             // Get formatted records
             $records = $this->getBoardRecords($columnId);
-            $formattedRecords = $records->map(fn (Model $record) => $this->formatBoardRecord($record))->all();
+            $formattedRecords = $records
+                ->map(fn (Model $record) => $this->formatBoardRecord($record))
+                ->all();
 
             $columns[$columnId] = [
                 'id' => $columnId,
@@ -33,6 +35,7 @@ class KanbanBoard extends Board
                 'icon' => $column->getIcon(),
                 'description' => $column->getDescription(),
                 'recruiters' => $column->getRecruiters(),
+                'hidden' => $column->isHidden(),
                 'items' => $formattedRecords,
                 'total' => $allCounts[$columnId] ?? 0,
             ];

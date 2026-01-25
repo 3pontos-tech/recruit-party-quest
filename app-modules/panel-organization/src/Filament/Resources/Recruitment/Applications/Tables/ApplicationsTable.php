@@ -41,7 +41,7 @@ class ApplicationsTable
                     ->searchable()
                     ->sortable(),
                 ViewColumn::make('pipeline_progress')
-                    ->label('Progresso no Pipeline')
+                    ->label(__('applications::filament.fields.pipeline_progress'))
                     ->view('panel-organization::filament.tables.columns.pipeline-progress')
                     ->sortable(false)
                     ->searchable(false),
@@ -84,7 +84,7 @@ class ApplicationsTable
             ])
             ->defaultSort('requisition.post.title')
             ->groups([
-                Group::make('requisition')
+                Group::make('requisition_id')
                     ->label('Vaga')
                     ->collapsible()
                     ->getTitleFromRecordUsing(fn (Application $record): string => $record->requisition->post->title ?? 'Vaga sem título')
@@ -93,12 +93,12 @@ class ApplicationsTable
                         $department = $record->requisition->department->name ?? 'N/A';
                         $team = $record->requisition->team->name ?? 'N/A';
 
-                        return sprintf('Empresa: %s • Departamento: %s • Status: %s', $team, $department, $status);
+                        return sprintf('Empresa: %s • Departamento: %s', $team, $department);
                     }),
             ])
             ->selectable(false)
-            ->defaultGroup('requisition')
-            ->collapsedGroupsByDefault(false)
+            ->groupingDirectionSettingHidden()
+            ->defaultGroup('requisition_id')
             ->filters([
                 SelectFilter::make('status')
                     ->label(__('applications::filament.filters.status'))

@@ -4,7 +4,13 @@ declare(strict_types=1);
 
 namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Schemas;
 
+use App\Filament\Schemas\Components\He4rtInput;
+use App\Filament\Schemas\Components\He4rtSelect;
+use App\Filament\Schemas\Components\He4rtToggle;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -13,7 +19,9 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
@@ -35,78 +43,185 @@ class JobRequisitionForm
                             ->icon('heroicon-o-information-circle')
                             ->schema([
                                 Section::make(__('recruitment::filament.requisition.sections.basic_information'))
-                                    ->columns(2)
+                                    ->description('The title and summary are the first things candidates see')
+                                    ->icon(Heroicon::Briefcase)
+
+                                    ->relationship('post')
                                     ->schema([
-                                        TextInput::make('slug')
-                                            ->label(__('recruitment::filament.requisition.fields.slug'))
+                                        TextInput::make('title')
+                                            ->label(__('recruitment::filament.requisition.job_posting.fields.title'))
                                             ->required()
-                                            ->unique(ignoreRecord: true)
-                                            ->default(fn () => (string) Str::uuid())
-                                            ->dehydrated()
+                                            ->live(debounce: 700)
+                                            ->afterStateUpdated(function (Set $set, string $state): void {
+                                                $slug = sprintf('%s-%s', $state, Str::random(4));
+                                                $set('slug', str($slug)->slug());
+                                            })
                                             ->columnSpanFull(),
-                                        Select::make('team_id')
-                                            ->label(__('recruitment::filament.requisition.fields.team'))
-                                            ->relationship('team', 'name')
-                                            ->required()
-                                            ->preload()
-                                            ->searchable()
-                                            ->live(),
-                                        Select::make('department_id')
+                                        TextInput::make('slug')
+                                            ->readOnly()
+                                            ->prefix('/vagas/')
+                                            ->label(__('recruitment::filament.requisition.job_posting.fields.slug'))
+                                            ->unique(ignoreRecord: true),
+                                        Textarea::make('summary')
+                                            ->label(__('recruitment::filament.requisition.job_posting.fields.summary'))
+                                            ->rows(3)
+                                            ->columnSpanFull(),
+                                    ]),
+                                Section::make(__('recruitment::filament.requisition.sections.position_details'))
+                                    ->description('Define where this role sits in the organization and how work will be conducted')
+                                    ->icon(Heroicon::Briefcase)
+                                    ->schema([
+                                        He4rtSelect::make('department_id')
                                             ->label(__('recruitment::filament.requisition.fields.department'))
                                             ->relationship(
                                                 name: 'department',
                                                 titleAttribute: 'name',
                                                 modifyQueryUsing: fn ($query, Get $get) => $query->when($get('team_id'), fn ($q) => $q->forTeam($get('team_id'))),
                                             )
+                                            ->description('The team or division this role belongs to')
+                                            ->icon(Heroicon::BuildingOffice)
                                             ->required()
+                                            ->iconColor('purple')
                                             ->preload()
                                             ->searchable(),
-                                        Select::make('recruiter_id')
-                                            ->label(__('recruitment::filament.requisition.fields.recruiter'))
+                                        He4rtSelect::make('work_arrangement')
+                                            ->label(__('recruitment::filament.requisition.fields.work_arrangement'))
+                                            ->options(WorkArrangementEnum::class)
+                                            ->icon(Heroicon::Home)
+                                            ->iconColor('red')
+                                            ->description('Where and how the employee will work')
+                                            ->native(false)
+                                            ->required(),
+                                        He4rtSelect::make('employment_type')
+                                            ->label(__('recruitment::filament.requisition.fields.employment_type'))
+                                            ->options(EmploymentTypeEnum::class)
+                                            ->description('The nature of the employment contract')
+                                            ->icon(Heroicon::Clock)
+                                            ->native(false)
+                                            ->iconColor('green')
+                                            ->required(),
+                                        He4rtSelect::make('experience_level')
+                                            ->label(__('recruitment::filament.requisition.fields.experience_level'))
+                                            ->options(ExperienceLevelEnum::class)
+                                            ->iconColor('yellow')
+                                            ->description('Required seniority for this position')
+                                            ->icon(Heroicon::CheckBadge)
+                                            ->native(false)
+                                            ->required(),
+
+                                    ]),
+                                Section::make(__('recruitment::filament.requisition.sections.team_ownership'))
+                                    ->icon(Heroicon::Cog)
+                                    ->schema([
+                                        He4rtInput::make('positions_available')
+                                            ->label(__('recruitment::filament.requisition.fields.positions_available'))
+                                            ->numeric()
+                                            ->icon(Heroicon::Users)
+                                            ->iconColor('blue')
+                                            ->description('How many positions should be available')
+                                            ->default(1)
+                                            ->minValue(1)
+                                            ->required(),
+                                        He4rtSelect::make('recruiter_id')
+                                            ->label(__('recruitment::filament.requisition.fields.hiring_manager'))
                                             ->relationship(
                                                 name: 'recruiter',
+                                                modifyQueryUsing: fn ($query, Get $get) => $query->when($get('team_id'), fn ($q) => $q->forTeam($get('team_id'))),
                                             )
                                             ->getOptionLabelFromRecordUsing(fn ($record) => $record->user->name)
+                                            ->icon(Heroicon::Users)
+                                            ->iconColor('red')
+                                            ->description('The official recruiter that owns this job requisition.')
                                             ->required()
                                             ->preload()
                                             ->searchable(),
-                                        Select::make('status')
+                                        He4rtSelect::make('status')
                                             ->label(__('recruitment::filament.requisition.fields.status'))
+                                            ->icon(Heroicon::Squares2x2)
+                                            ->iconColor('gray')
+                                            ->description('Draft? Reviewing? Published?')
                                             ->options(RequisitionStatusEnum::class)
                                             ->default(RequisitionStatusEnum::Draft)
                                             ->required(),
-                                        Select::make('priority')
+                                        He4rtSelect::make('priority')
                                             ->label(__('recruitment::filament.requisition.fields.priority'))
+                                            ->description('How fast we must close this position?')
+                                            ->icon(Heroicon::Cube)
+                                            ->iconColor('yellow')
                                             ->options(RequisitionPriorityEnum::class)
                                             ->default(RequisitionPriorityEnum::Medium)
                                             ->required(),
                                     ]),
                             ]),
 
-                        Tab::make(__('recruitment::filament.requisition.tabs.position_details'))
-                            ->icon('heroicon-o-briefcase')
+                        Tab::make(__('recruitment::filament.requisition.tabs.job_description'))
+                            ->icon('heroicon-o-document-text')
                             ->schema([
-                                Section::make(__('recruitment::filament.requisition.sections.position_details'))
+                                Section::make(__('recruitment::filament.requisition.tabs.job_description'))
+                                    ->relationship('post')
                                     ->columns(2)
                                     ->schema([
-                                        Select::make('work_arrangement')
-                                            ->label(__('recruitment::filament.requisition.fields.work_arrangement'))
-                                            ->options(WorkArrangementEnum::class)
-                                            ->required(),
-                                        Select::make('employment_type')
-                                            ->label(__('recruitment::filament.requisition.fields.employment_type'))
-                                            ->options(EmploymentTypeEnum::class)
-                                            ->required(),
-                                        Select::make('experience_level')
-                                            ->label(__('recruitment::filament.requisition.fields.experience_level'))
-                                            ->options(ExperienceLevelEnum::class)
-                                            ->required(),
-                                        TextInput::make('positions_available')
-                                            ->label(__('recruitment::filament.requisition.fields.positions_available'))
-                                            ->numeric()
-                                            ->default(1)
-                                            ->minValue(1)
-                                            ->required(),
+                                        Hidden::make('team_id')
+                                            ->default(filament()->getTenant()->getKey()),
+                                        MarkdownEditor::make('description')
+                                            ->label(__('recruitment::filament.requisition.job_posting.fields.description'))
+                                            ->columnSpanFull(),
+                                    ]),
+                            ]),
+                        Tab::make(__('recruitment::filament.requisition.tabs.requirements'))
+                            ->icon('heroicon-o-document-text')
+                            ->schema([
+                                Section::make(__('recruitment::filament.requisition.tabs.requirements'))
+                                    ->relationship('post')
+                                    ->schema([
+                                        Hidden::make('team_id')
+                                            ->default(filament()->getTenant()->getKey()),
+                                        Repeater::make('required_qualifications')
+                                            ->label(__('recruitment::filament.requisition.job_posting.fields.required_qualifications'))
+                                            ->helperText(__('recruitment::filament.requisition.job_posting.helpers.one_per_line'))
+                                            ->columns(3)
+                                            ->schema([
+                                                TextInput::make('label')
+                                                    ->label(__('recruitment::filament.requisition.job_posting.fields.required_qualifications'))
+                                                    ->required()
+                                                    ->columnSpan(2),
+                                                Select::make('type')
+                                                    ->options([
+                                                        'experience' => 'Experience',
+                                                        'graduation' => 'Graduation',
+                                                        'technical-skill' => 'Technical Skill',
+                                                        'certification' => 'Certification',
+                                                        'other' => 'Other',
+                                                    ]),
+                                            ]),
+
+                                        Repeater::make('preferred_qualifications')
+                                            ->label(__('recruitment::filament.requisition.job_posting.fields.preferred_qualifications'))
+                                            ->helperText(__('recruitment::filament.requisition.job_posting.helpers.one_per_line'))
+                                            ->columns(3)
+                                            ->schema([
+                                                TextInput::make('label')
+                                                    ->label(__('recruitment::filament.requisition.job_posting.fields.preferred_qualifications'))
+                                                    ->columnSpan(2),
+                                                Select::make('type')
+                                                    ->required()
+                                                    ->options([
+                                                        'experience' => 'Experience',
+                                                        'graduation' => 'Graduation',
+                                                        'technical-skill' => 'Technical Skill',
+                                                        'certification' => 'Certification',
+                                                        'other' => 'Other',
+                                                    ]),
+                                            ]),
+                                        Repeater::make('responsibilities')
+                                            ->label(__('recruitment::filament.requisition.job_posting.fields.responsibilities'))
+                                            ->helperText(__('recruitment::filament.requisition.job_posting.helpers.one_per_line'))
+                                            ->columns(3)
+                                            ->schema([
+                                                TextInput::make('label')
+                                                    ->label(__('recruitment::filament.requisition.job_posting.fields.responsibilities'))
+                                                    ->columnSpan(2),
+                                            ]),
                                     ]),
                             ]),
 
@@ -124,10 +239,15 @@ class JobRequisitionForm
                                             ->label(__('recruitment::filament.requisition.fields.salary_range_max'))
                                             ->numeric()
                                             ->prefix('$'),
-                                        TextInput::make('salary_currency')
+                                        Select::make('salary_currency')
                                             ->label(__('recruitment::filament.requisition.fields.salary_currency'))
-                                            ->default('USD')
-                                            ->maxLength(3),
+                                            ->default('BRL')
+                                            ->options([
+                                                'USD' => 'USD',
+                                                'EUR' => 'EUR',
+                                                'GBP' => 'GBP',
+                                                'BRL' => 'BRL',
+                                            ]),
                                     ]),
                             ]),
 
@@ -149,69 +269,41 @@ class JobRequisitionForm
                                     ]),
                             ]),
 
-                        Tab::make(__('recruitment::filament.requisition.tabs.job_posting'))
+                        Tab::make(__('recruitment::filament.requisition.tabs.misc'))
                             ->icon('heroicon-o-document-text')
                             ->schema([
-                                Section::make(__('recruitment::filament.requisition.sections.job_posting_details'))
+                                Section::make(__('recruitment::filament.requisition.tabs.misc'))
                                     ->relationship('post')
                                     ->columns(2)
                                     ->schema([
-                                        TextInput::make('title')
-                                            ->label(__('recruitment::filament.job_posting.fields.title'))
-                                            ->required()
-                                            ->columnSpanFull(),
-                                        TextInput::make('slug')
-                                            ->label(__('recruitment::filament.job_posting.fields.slug'))
-                                            ->unique(ignoreRecord: true),
-                                        Textarea::make('summary')
-                                            ->label(__('recruitment::filament.job_posting.fields.summary'))
-                                            ->rows(3)
-                                            ->columnSpanFull(),
-                                        Textarea::make('description')
-                                            ->label(__('recruitment::filament.job_posting.fields.description'))
-                                            ->rows(6)
-                                            ->columnSpanFull(),
-                                        Textarea::make('responsibilities')
-                                            ->label(__('recruitment::filament.job_posting.fields.responsibilities'))
-                                            ->helperText(__('recruitment::filament.job_posting.helpers.one_per_line'))
-                                            ->rows(5)
-                                            ->columnSpanFull(),
-                                        Textarea::make('required_qualifications')
-                                            ->label(__('recruitment::filament.job_posting.fields.required_qualifications'))
-                                            ->helperText(__('recruitment::filament.job_posting.helpers.one_per_line'))
-                                            ->rows(5)
-                                            ->columnSpanFull(),
-                                        Textarea::make('preferred_qualifications')
-                                            ->label(__('recruitment::filament.job_posting.fields.preferred_qualifications'))
-                                            ->helperText(__('recruitment::filament.job_posting.helpers.one_per_line'))
-                                            ->rows(5)
-                                            ->columnSpanFull(),
+                                        Hidden::make('team_id')
+                                            ->default(filament()->getTenant()->getKey()),
                                         Textarea::make('benefits')
-                                            ->label(__('recruitment::filament.job_posting.fields.benefits'))
-                                            ->helperText(__('recruitment::filament.job_posting.helpers.one_per_line'))
+                                            ->label(__('recruitment::filament.requisition.job_posting.fields.benefits'))
+                                            ->helperText(__('recruitment::filament.requisition.job_posting.helpers.one_per_line'))
                                             ->rows(5)
                                             ->columnSpanFull(),
                                         Textarea::make('about_company')
-                                            ->label(__('recruitment::filament.job_posting.fields.about_company'))
+                                            ->label(__('recruitment::filament.requisition.job_posting.fields.about_company'))
                                             ->rows(4)
                                             ->columnSpanFull(),
                                         Textarea::make('about_team')
-                                            ->label(__('recruitment::filament.job_posting.fields.about_team'))
+                                            ->label(__('recruitment::filament.requisition.job_posting.fields.about_team'))
                                             ->rows(4)
                                             ->columnSpanFull(),
                                         Textarea::make('work_schedule')
-                                            ->label(__('recruitment::filament.job_posting.fields.work_schedule'))
+                                            ->label(__('recruitment::filament.requisition.job_posting.fields.work_schedule'))
                                             ->rows(3)
                                             ->columnSpanFull(),
                                         Textarea::make('accessibility_accommodations')
-                                            ->label(__('recruitment::filament.job_posting.fields.accessibility_accommodations'))
+                                            ->label(__('recruitment::filament.requisition.job_posting.fields.accessibility_accommodations'))
                                             ->rows(3)
                                             ->columnSpanFull(),
-                                        Toggle::make('is_disability_confident')
-                                            ->label(__('recruitment::filament.job_posting.fields.is_disability_confident'))
+                                        He4rtToggle::make('is_disability_confident')
+                                            ->label(__('recruitment::filament.requisition.job_posting.fields.is_disability_confident'))
                                             ->default(false),
                                         TextInput::make('external_post_url')
-                                            ->label(__('recruitment::filament.job_posting.fields.external_post_url'))
+                                            ->label(__('recruitment::filament.requisition.job_posting.fields.external_post_url'))
                                             ->url()
                                             ->columnSpanFull(),
                                     ]),

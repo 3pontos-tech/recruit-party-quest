@@ -66,6 +66,7 @@ return [
             'expected_duration_days' => 'Expected Duration (Days)',
             'active_participants' => 'Active Participants',
             'active' => 'Active',
+            'hidden' => 'Hidden?',
         ],
     ],
     'requisition' => [
@@ -75,13 +76,17 @@ return [
         'tabs' => [
             'basic_information' => 'Basic Information',
             'position_details' => 'Position Details',
+            'job_description' => 'Job Description',
+            'requirements' => 'Requirements',
             'compensation' => 'Compensation',
             'settings' => 'Settings',
             'job_posting' => 'Job Posting',
+            'misc' => 'Miscellaneous',
         ],
         'sections' => [
             'basic_information' => 'Basic Information',
             'position_details' => 'Position Details',
+            'team_ownership' => 'Team & Ownership',
             'compensation' => 'Compensation',
             'settings' => 'Settings',
             'job_posting' => 'Job Posting',
