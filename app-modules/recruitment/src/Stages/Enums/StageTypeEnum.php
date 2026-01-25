@@ -24,17 +24,23 @@ enum StageTypeEnum: string implements HasColor, HasIcon, HasLabel
     case Rejected = 'rejected';
     case Declined = 'declined';
 
+    public static function getColorClassFromString(string $stageType): string
+    {
+        $enum = self::tryFrom($stageType);
+
+        return $enum?->getTailwindColorClass() ?? 'bg-slate-500';
+    }
+
     public function getColor(): array
     {
         return match ($this) {
             self::New => Color::Gray,
-            self::HiddenStage, self::Rejected => Color::Red,
+            self::HiddenStage, self::Rejected, self::Declined => Color::Red,
             self::Screening => Color::Yellow,
             self::Assessment => Color::Blue,
             self::Interview => Color::Emerald,
             self::Offer => Color::Purple,
             self::Hired => Color::Green,
-            self::Declined => Color::Red,
         };
     }
 
@@ -54,5 +60,19 @@ enum StageTypeEnum: string implements HasColor, HasIcon, HasLabel
     public function getLabel(): string
     {
         return __('recruitment::stage_type.'.$this->value.'.label');
+    }
+
+    public function getTailwindColorClass(): string
+    {
+        return match ($this) {
+            self::New => 'bg-gray-600',
+            self::Screening => 'bg-yellow-500',
+            self::Assessment => 'bg-blue-500',
+            self::Interview => 'bg-emerald-500',
+            self::Offer => 'bg-purple-500',
+            self::Hired => 'bg-green-500',
+            self::Rejected, self::Declined => 'bg-red-500',
+            self::HiddenStage => 'bg-slate-500',
+        };
     }
 }

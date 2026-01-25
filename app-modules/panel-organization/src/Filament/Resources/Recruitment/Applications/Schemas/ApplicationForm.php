@@ -69,7 +69,9 @@ class ApplicationForm
                             ->relationship(
                                 name: 'currentStage',
                                 titleAttribute: 'name',
-                                modifyQueryUsing: fn ($query, $get) => $query->where('job_requisition_id', $get('requisition_id'))
+                                modifyQueryUsing: fn ($query, $get) => $query
+                                    ->where('job_requisition_id', $get('requisition_id'))
+                                    ->orderBy('display_order')
                             )
                             ->preload()
                             ->searchable(),

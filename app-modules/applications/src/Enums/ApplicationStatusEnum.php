@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace He4rt\Applications\Enums;
 
 use App\Enums\Concerns\StringifyEnum;
+use Filament\Support\Colors\Color;
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
+use Filament\Support\Icons\Heroicon;
 use He4rt\Applications\Models\Application;
 use He4rt\Applications\Services\Transitions\AbstractApplicationTransition;
 use He4rt\Applications\Services\Transitions\HiredTransition;
@@ -18,7 +22,7 @@ use He4rt\Applications\Services\Transitions\OfferExtendedTransition;
 use He4rt\Applications\Services\Transitions\RejectApplicationTransition;
 use He4rt\Applications\Services\Transitions\WithdrawnTransition;
 
-enum ApplicationStatusEnum: string implements HasLabel
+enum ApplicationStatusEnum: string implements HasColor, HasIcon, HasLabel
 {
     use StringifyEnum;
 
@@ -35,6 +39,36 @@ enum ApplicationStatusEnum: string implements HasLabel
     public function getLabel(): string
     {
         return __('applications::enums.application_status.'.$this->value.'.label');
+    }
+
+    public function getColor(): array
+    {
+        return match ($this) {
+            self::New => Color::Gray,
+            self::InReview => Color::Yellow,
+            self::InProgress => Color::Blue,
+            self::OfferExtended => Color::Indigo,
+            self::OfferAccepted => Color::Green,
+            self::OfferDeclined => Color::Red,
+            self::Hired => Color::Emerald,
+            self::Rejected => Color::Slate,
+            self::Withdrawn => Color::Orange,
+        };
+    }
+
+    public function getIcon(): Heroicon
+    {
+        return match ($this) {
+            self::New => Heroicon::Plus,
+            self::InReview => Heroicon::Eye,
+            self::InProgress => Heroicon::Clock,
+            self::OfferExtended => Heroicon::Envelope,
+            self::OfferAccepted => Heroicon::Check,
+            self::OfferDeclined => Heroicon::XMark,
+            self::Hired => Heroicon::User,
+            self::Rejected => Heroicon::XCircle,
+            self::Withdrawn => Heroicon::ArrowLeft,
+        };
     }
 
     public function getAction(Application $application): AbstractApplicationTransition
