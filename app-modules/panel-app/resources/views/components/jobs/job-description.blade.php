@@ -87,11 +87,15 @@
                             Apply for job
                         </x-he4rt::button>
                     @else
+                        @php
+                            $hasScreeningQuestions = $jobRequisition->screeningQuestions->isNotEmpty();
+                        @endphp
+
                         <x-he4rt::button
                             variant="solid"
                             class="w-full sm:w-auto"
                             :disabled="$hasApplied"
-                            @click="if (!hasApplied) showApplicationModal = true"
+                            @click="if (!hasApplied) {{ $hasScreeningQuestions ? 'showApplicationModal = true' : '$wire.applyDirectly()' }}"
                         >
                             <span x-show="!hasApplied">Apply for job</span>
                             <span x-show="hasApplied" x-cloak>Applied</span>

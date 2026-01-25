@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Screening\Livewire;
 
-use He4rt\Applications\Enums\ApplicationStatusEnum;
-use He4rt\Applications\Enums\CandidateSourceEnum;
+use He4rt\Applications\Actions\ApplyToJobRequisitionAction;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
@@ -32,25 +31,13 @@ class JobApplicationForm extends Component
         }
     }
 
-    public function submit(): void
+    public function submit(ApplyToJobRequisitionAction $applyAction): void
     {
         if (! $this->application instanceof Application) {
-            $user = auth()->user();
-
             /** @var Candidate $candidate */
-            $candidate = $user->candidate;
+            $candidate = auth()->user()->candidate;
 
-            $this->application = Application::query()->create([
-                'requisition_id' => $this->requisition->id,
-                'candidate_id' => $candidate->id,
-                'team_id' => $this->requisition->team_id,
-                'status' => ApplicationStatusEnum::New,
-                'source' => CandidateSourceEnum::CareerPage,
-            ]);
-
-            $this->application->update([
-                'current_stage_id' => $this->application->first_stage->getKey(),
-            ]);
+            $this->application = $applyAction->execute($this->requisition, $candidate);
         }
 
         foreach ($this->responses as $questionId => $value) {
