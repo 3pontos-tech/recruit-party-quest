@@ -5,7 +5,7 @@
     use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 @endphp
 
-<section class="hp-section">
+<div class="hp-section mb-24 min-h-0!">
     <div class="hp-container">
         <x-panel-app::jobs.header :jobsCount="$this->jobs->total()" />
 
@@ -79,4 +79,4 @@
             </div>
         </div>
     </div>
-</section>
+</div>

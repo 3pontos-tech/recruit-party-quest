@@ -32,12 +32,6 @@
                 variant="outline"
                 size="sm"
                 class="size-8"
-                :icon="\Filament\Support\Icons\Heroicon::Heart"
-            />
-            <x-he4rt::button
-                variant="outline"
-                size="sm"
-                class="size-8"
                 :icon="\Filament\Support\Icons\Heroicon::Share"
             />
         </div>

@@ -30,14 +30,20 @@
         @foreach ($jobs as $job)
             <x-he4rt::card class="group" wire:key="job-{{ $job->id }}">
                 <x-slot:header class="gap-4">
-                    <x-he4rt::badge icon="heroicon-o-briefcase" />
+                    <x-he4rt::avatar
+                        :src="asset('images/3pontos/logo-chain-white.png')"
+                        :alt="$job->team->name"
+                        size="lg"
+                        :circular="false"
+                        class="border-outline-light dark:border-outline-dark h-14 w-14 border"
+                    />
 
                     <div class="flex flex-1 flex-col gap-0.5">
                         <x-he4rt::heading size="2xl" :level="2">
                             {{ $job->post?->title ?? 'Sem título' }}
                         </x-he4rt::heading>
                         <x-he4rt::text class="group-hover:text-text-high transition duration-500">
-                            {{ $job->work_arrangement->getLabel() }}
+                            {{ $job->team->name }}
                         </x-he4rt::text>
                     </div>
                 </x-slot>
