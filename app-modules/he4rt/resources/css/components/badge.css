@@ -17,3 +17,11 @@
 .hp-badge-size-lg {
     @apply h-14 w-14;
 }
+
+.hp-badge-size-xl {
+    @apply h-16 w-16;
+
+    & .hp-icon {
+        @apply h-8 w-8;
+    }
+}
