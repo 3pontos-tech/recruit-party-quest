@@ -53,14 +53,12 @@ class JobApplicationForm extends Component
     {
         $this->validate();
         if (! $this->application instanceof Application) {
-            $user = auth()->user();
-
             /** @var Candidate $candidate */
-            $candidate = $user->candidate;
+            $candidate = auth()->user()->candidate;
 
             $this->application = Application::query()->create([
                 'requisition_id' => $this->requisition->id,
-                'candidate_id' => $candidate->id,
+                'candidate_id' => $candidate->getKey(),
                 'team_id' => $this->requisition->team_id,
                 'status' => ApplicationStatusEnum::New,
                 'source' => CandidateSourceEnum::CareerPage,
@@ -69,8 +67,11 @@ class JobApplicationForm extends Component
             $this->application->update([
                 'current_stage_id' => $this->application->first_stage->getKey(),
             ]);
+            // TODO: refactor dispatch an event because this belongs to Application module,
+            // we could use some dto and then extract to an action
         }
 
+        // TODO: extract this to an exclusive action, maybe create a custom collection
         foreach ($this->responses as $questionId => $value) {
             if ($value === null) {
                 continue;
