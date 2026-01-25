@@ -10,6 +10,10 @@
     @apply h-10 w-10;
 }
 
+.hp-badge-size-md {
+    @apply h-12 w-12;
+}
+
 .hp-badge-size-lg {
     @apply h-14 w-14;
 }

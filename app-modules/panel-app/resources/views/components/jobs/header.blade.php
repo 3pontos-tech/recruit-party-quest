@@ -1,7 +1,7 @@
 @props(['jobsCount' => 0])
 
 <div class="border-border bg-card/50 border-outline-light dark:border-outline-dark border-b">
-    <div class="hp-container py-8">
+    <div class="py-8">
         <div class="mb-6 flex items-center gap-3">
             <x-he4rt::badge icon="heroicon-o-briefcase" />
             <div class="flex flex-col gap-0.5">
@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="w-full">
-            <div class="flex flex-col gap-3 md:flex-row">
+            <div class="flex flex-col items-center gap-3 md:flex-row">
                 <div class="relative flex-1">
                     <x-he4rt::input
                         wire:model.live.debounce.300ms="search"
@@ -22,10 +22,7 @@
                     />
                 </div>
 
-                <x-he4rt::button
-                    wire:click="$refresh"
-                    :iconLeading="\Filament\Support\Icons\Heroicon::MagnifyingGlass"
-                >
+                <x-he4rt::button wire:click="$refresh" :icon="\Filament\Support\Icons\Heroicon::MagnifyingGlass">
                     Search Jobs
                 </x-he4rt::button>
             </div>
