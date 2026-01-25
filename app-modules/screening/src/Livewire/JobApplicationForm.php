@@ -65,6 +65,8 @@ class JobApplicationForm extends Component
                 'response_value' => is_array($value) ? $value : ['value' => $value],
             ]);
         }
+
+        $this->dispatch('application-submitted');
     }
 
     public function render(): View|Factory|\Illuminate\View\View

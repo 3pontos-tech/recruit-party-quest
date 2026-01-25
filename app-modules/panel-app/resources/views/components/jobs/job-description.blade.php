@@ -6,6 +6,14 @@
 @php
     $posting = $jobRequisition->post;
     $team = $jobRequisition->team;
+
+    $hasApplied = false;
+    if (auth()->check() && auth()->user()->candidate) {
+        $hasApplied = $jobRequisition
+            ->applications()
+            ->where('candidate_id', auth()->user()->candidate->id)
+            ->exists();
+    }
 @endphp
 
 @if (! $posting)
@@ -14,7 +22,8 @@
     </div>
 @else
     <div
-        x-data="{ showApplicationModal: false }"
+        x-data="{ showApplicationModal: false, hasApplied: @js($hasApplied) }"
+        x-on:application-submitted.window="hasApplied = true; showApplicationModal = false"
         {{ $attributes->merge(['mx-auto w-full max-w-7xl space-y-8 py-8 lg:py-12']) }}
     >
         {{-- Job Header --}}
@@ -73,13 +82,21 @@
 
             <div class="flex w-full flex-col items-center gap-3 sm:flex-row md:w-auto">
                 @if ($hasAction)
-                    <x-he4rt::button
-                        variant="solid"
-                        class="w-full sm:w-auto"
-                        @click="{{ $jobRequisition->screeningQuestions->isNotEmpty() ? 'showApplicationModal = true' : '' }}"
-                    >
-                        Apply for job
-                    </x-he4rt::button>
+                    @guest
+                        <x-he4rt::button variant="solid" class="w-full sm:w-auto" href="/login">
+                            Apply for job
+                        </x-he4rt::button>
+                    @else
+                        <x-he4rt::button
+                            variant="solid"
+                            class="w-full sm:w-auto"
+                            :disabled="$hasApplied"
+                            @click="if (!hasApplied) showApplicationModal = true"
+                        >
+                            <span x-show="!hasApplied">Apply for job</span>
+                            <span x-show="hasApplied" x-cloak>Applied</span>
+                        </x-he4rt::button>
+                    @endguest
                     <div class="flex w-full justify-center gap-3 sm:w-auto">
                         <x-he4rt::button variant="outline" icon="heroicon-o-bookmark" class="flex-1" />
                         <x-he4rt::button variant="outline" icon="heroicon-o-share" class="flex-1" />
