@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Screening\Livewire;
 
+use He4rt\App\Filament\Resources\Applications\ApplicationResource;
 use He4rt\Applications\Actions\ApplyToJobRequisitionAction;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
@@ -53,7 +54,7 @@ class JobApplicationForm extends Component
             ]);
         }
 
-        $this->dispatch('application-submitted');
+        $this->redirect(ApplicationResource::getUrl('view', ['record' => $this->application]));
     }
 
     public function render(): View|Factory|\Illuminate\View\View

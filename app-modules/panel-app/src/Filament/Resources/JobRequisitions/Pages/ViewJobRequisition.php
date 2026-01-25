@@ -56,9 +56,9 @@ class ViewJobRequisition extends ViewRecord
             return;
         }
 
-        $action->execute($this->record, $user->candidate);
+        $application = $action->execute($this->record, $user->candidate);
 
-        $this->dispatch('application-submitted');
+        $this->redirect(ApplicationResource::getUrl('view', ['record' => $application]));
     }
 
     public function getBreadcrumbs(): array
