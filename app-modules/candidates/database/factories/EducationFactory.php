@@ -16,13 +16,57 @@ class EducationFactory extends Factory
 
     public function definition(): array
     {
+        $institutions = [
+            'Universidade de São Paulo (USP)',
+            'Universidade Estadual de Campinas (UNICAMP)',
+            'Pontifícia Universidade Católica de São Paulo (PUC-SP)',
+            'Universidade Federal do Rio de Janeiro (UFRJ)',
+            'Universidade Presbiteriana Mackenzie',
+            'Fundação Getulio Vargas (FGV)',
+        ];
+
+        $degrees = [
+            'Bacharelado',
+            'Tecnólogo',
+            'Pós-graduação',
+            'MBA',
+            'Mestrado',
+        ];
+
+        $fieldsOfStudy = [
+            'Ciência da Computação',
+            'Engenharia de Software',
+            'Sistemas de Informação',
+            'Design Digital',
+            'Administração',
+            'Marketing Digital',
+            'Engenharia da Computação',
+            'Análise e Desenvolvimento de Sistemas',
+        ];
+
+        // Lógica temporal: educação entre 2-6 anos atrás
+        $yearsAgo = fake()->numberBetween(2, 6);
+        $startDate = Date::now()->subYears($yearsAgo);
+
+        $degree = fake()->randomElement($degrees);
+        $courseDuration = match ($degree) {
+            'Bacharelado' => fake()->numberBetween(4, 5),
+            'Tecnólogo' => fake()->numberBetween(2, 3),
+            'Pós-graduação', 'MBA' => fake()->numberBetween(1, 2),
+            'Mestrado' => fake()->numberBetween(2, 3),
+            default => 4,
+        };
+
+        $endDate = $startDate->copy()->addYears($courseDuration);
+        $isEnrolled = $endDate->isFuture() && fake()->boolean(30); // 30% chance se ainda não terminou
+
         return [
-            'institution' => fake()->word(),
-            'degree' => fake()->word(),
-            'field_of_study' => fake()->word(),
-            'start_date' => Date::now(),
-            'end_date' => Date::now(),
-            'is_enrolled' => fake()->boolean(),
+            'institution' => fake()->randomElement($institutions),
+            'degree' => $degree,
+            'field_of_study' => fake()->randomElement($fieldsOfStudy),
+            'start_date' => $startDate,
+            'end_date' => $isEnrolled ? null : $endDate,
+            'is_enrolled' => $isEnrolled,
             'created_at' => Date::now(),
             'updated_at' => Date::now(),
 
