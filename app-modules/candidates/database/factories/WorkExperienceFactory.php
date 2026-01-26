@@ -98,10 +98,14 @@ class WorkExperienceFactory extends Factory
         $techString = implode(', ', $technologies);
 
         $descriptions = [
-            sprintf('Desenvolvimento de aplicações web utilizando %s. Responsável por implementar novas funcionalidades e manter a qualidade do código através de code reviews e testes automatizados.', $techString),
-            sprintf('Atuação como %s em projetos de alta performance. Trabalho em equipe ágil utilizando metodologias Scrum, com foco em %s e boas práticas de desenvolvimento.', $position, $techString),
-            sprintf('Desenvolvimento e manutenção de sistemas utilizando %s. Participação ativa no ciclo completo de desenvolvimento, desde a concepção até o deploy em produção.', $techString),
-            sprintf('Responsável pelo desenvolvimento de interfaces e APIs utilizando %s. Colaboração próxima com equipes de produto e design para entregar soluções de alta qualidade.', $techString),
+            sprintf('Desenvolvimento de aplicações web utilizando %s. Responsável por implementar novas funcionalidades e manter a qualidade do código através de code reviews e testes automatizados.',
+                $techString),
+            sprintf('Atuação como %s em projetos de alta performance. Trabalho em equipe ágil utilizando metodologias Scrum, com foco em %s e boas práticas de desenvolvimento.',
+                $position, $techString),
+            sprintf('Desenvolvimento e manutenção de sistemas utilizando %s. Participação ativa no ciclo completo de desenvolvimento, desde a concepção até o deploy em produção.',
+                $techString),
+            sprintf('Responsável pelo desenvolvimento de interfaces e APIs utilizando %s. Colaboração próxima com equipes de produto e design para entregar soluções de alta qualidade.',
+                $techString),
         ];
 
         return fake()->randomElement($descriptions);
