@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Organization\Filament\Resources\Recruitment\Applications\Tables;
 
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -84,7 +85,7 @@ class ApplicationsTable
             ])
             ->defaultSort('requisition.post.title')
             ->groups([
-                Group::make('requisition')
+                Group::make('requisition_id')
                     ->label('Vaga')
                     ->collapsible()
                     ->getTitleFromRecordUsing(fn (Application $record): string => $record->requisition->post->title ?? 'Vaga sem título')
@@ -97,7 +98,7 @@ class ApplicationsTable
                     }),
             ])
             ->selectable(false)
-            ->defaultGroup('requisition')
+            ->defaultGroup('requisition_id')
             ->collapsedGroupsByDefault(false)
             ->filters([
                 SelectFilter::make('status')
@@ -113,6 +114,7 @@ class ApplicationsTable
                     ->preload(),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ]);
     }

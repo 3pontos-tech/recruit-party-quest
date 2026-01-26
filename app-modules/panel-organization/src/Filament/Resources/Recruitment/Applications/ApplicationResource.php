@@ -13,6 +13,7 @@ use He4rt\Applications\Models\Application;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\CreateApplication;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\EditApplication;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ListApplications;
+use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ViewApplication;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\RelationManagers\EvaluationsRelationManager;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Schemas\ApplicationForm;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Tables\ApplicationsTable;
@@ -48,6 +49,7 @@ class ApplicationResource extends Resource
             'index' => ListApplications::route('/'),
             'create' => CreateApplication::route('/create'),
             'edit' => EditApplication::route('/{record}/edit'),
+            'view' => ViewApplication::route('/{record}/view'),
         ];
     }
 
