@@ -7,7 +7,7 @@
 @php
 @endphp
 
-<div class="border-border border-b pb-4">
+<div class="border-border border-outline-light dark:border-outline-dark border-b pb-4">
     <x-he4rt::heading size="2xs" class="py-2">{{ $title }}</x-he4rt::heading>
     <div class="space-y-2 pt-2">
         @foreach ($items as $item)

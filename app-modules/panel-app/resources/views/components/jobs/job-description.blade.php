@@ -6,6 +6,14 @@
 @php
     $posting = $jobRequisition->post;
     $team = $jobRequisition->team;
+
+    $hasApplied = false;
+    if (auth()->check() && auth()->user()->candidate) {
+        $hasApplied = $jobRequisition
+            ->applications()
+            ->where('candidate_id', auth()->user()->candidate->id)
+            ->exists();
+    }
 @endphp
 
 @if (! $posting)
@@ -14,18 +22,15 @@
     </div>
 @else
     <div
-        x-data="{ showApplicationModal: false }"
+        x-data="{ showApplicationModal: false, hasApplied: @js($hasApplied) }"
+        x-on:application-submitted.window="hasApplied = true; showApplicationModal = false"
         {{ $attributes->merge(['mx-auto w-full max-w-7xl space-y-8 py-8 lg:py-12']) }}
     >
         {{-- Job Header --}}
         <header class="border-outline-low grid grid-cols-1 items-start gap-8 border-b pb-8 md:grid-cols-[1fr_auto]">
             <div class="flex flex-col items-start gap-6 sm:flex-row">
                 {{-- Company Logo Placeholder --}}
-                <div
-                    class="bg-elevation-01dp border-outline-low flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border"
-                >
-                    <x-he4rt::icon icon="heroicon-o-briefcase" class="text-icon-medium h-8 w-8" />
-                </div>
+                <x-he4rt::badge size="xl" icon="heroicon-o-briefcase" />
 
                 <div class="space-y-3">
                     <div class="space-y-1">
@@ -39,61 +44,37 @@
 
                     <div class="flex flex-wrap gap-x-6 gap-y-3 pt-1">
                         {{-- Location - Fallback to Remote if not available --}}
-                        <div class="text-text-medium flex items-center gap-2 text-sm">
-                            <x-he4rt::icon icon="heroicon-o-map-pin" size="sm" class="text-icon-medium" />
-                            <span>Remote</span>
-                        </div>
+                        <x-he4rt::tag icon="heroicon-o-map-pin" variant="ghost">Remote</x-he4rt::tag>
 
                         {{-- Work Model --}}
-                        <div class="text-text-medium flex items-center gap-2 text-sm">
-                            <x-he4rt::icon
-                                :icon="$jobRequisition->work_arrangement->getIcon()"
-                                size="sm"
-                                class="text-icon-medium"
-                            />
-                            <span>{{ $jobRequisition->work_arrangement->getLabel() }}</span>
-                        </div>
+                        <x-he4rt::tag :icon="$jobRequisition->work_arrangement->getIcon()" variant="ghost">
+                            {{ $jobRequisition->work_arrangement->getLabel() }}
+                        </x-he4rt::tag>
 
                         {{-- Contract Type --}}
-                        <div class="text-text-medium flex items-center gap-2 text-sm">
-                            <x-he4rt::icon
-                                :icon="$jobRequisition->employment_type->getIcon()"
-                                size="sm"
-                                class="text-icon-medium"
-                            />
-                            <span>{{ $jobRequisition->employment_type->getLabel() }}</span>
-                        </div>
+                        <x-he4rt::tag :icon="$jobRequisition->employment_type->getIcon()" variant="ghost">
+                            {{ $jobRequisition->employment_type->getLabel() }}
+                        </x-he4rt::tag>
 
                         {{-- Salary --}}
                         @if ($jobRequisition->salary_range_min)
-                            <div class="text-text-medium flex items-center gap-2 text-sm">
-                                <x-he4rt::icon icon="heroicon-o-currency-dollar" size="sm" class="text-icon-medium" />
-                                <span>
-                                    {{ $jobRequisition->salary_currency }}
-                                    {{ number_format($jobRequisition->salary_range_min, 0, ',', '.') }}
-                                    @if ($jobRequisition->salary_range_max)
-                                            - {{ number_format($jobRequisition->salary_range_max, 0, ',', '.') }}
-                                    @endif
-                                </span>
-                            </div>
+                            <x-he4rt::tag icon="heroicon-o-currency-dollar" variant="ghost">
+                                {{ $jobRequisition->salary_currency }}
+                                {{ number_format($jobRequisition->salary_range_min, 0, ',', '.') }}
+                                @if ($jobRequisition->salary_range_max)
+                                        - {{ number_format($jobRequisition->salary_range_max, 0, ',', '.') }}
+                                @endif
+                            </x-he4rt::tag>
                         @endif
 
                         {{-- Seniority --}}
-                        <div class="text-text-medium flex items-center gap-2 text-sm">
-                            <x-he4rt::icon
-                                :icon="$jobRequisition->experience_level->getIcon()"
-                                size="sm"
-                                class="text-icon-medium"
-                            />
-                            <span>{{ $jobRequisition->experience_level->getLabel() }}</span>
-                        </div>
+                        <x-he4rt::tag :icon="$jobRequisition->experience_level->getIcon()" variant="ghost">
+                            {{ $jobRequisition->experience_level->getLabel() }}
+                        </x-he4rt::tag>
 
                         {{-- Diversity Tag --}}
                         @if ($posting->is_disability_confident)
-                            <div class="text-text-medium flex items-center gap-2 text-sm">
-                                <x-he4rt::icon icon="heroicon-o-heart" size="sm" class="text-icon-medium" />
-                                <span>Diversity</span>
-                            </div>
+                            <x-he4rt::tag icon="heroicon-o-heart" variant="ghost">Diversity</x-he4rt::tag>
                         @endif
                     </div>
                 </div>
@@ -101,13 +82,25 @@
 
             <div class="flex w-full flex-col items-center gap-3 sm:flex-row md:w-auto">
                 @if ($hasAction)
-                    <x-he4rt::button
-                        variant="solid"
-                        class="w-full sm:w-auto"
-                        @click="{{ $jobRequisition->screeningQuestions->isNotEmpty() ? 'showApplicationModal = true' : '' }}"
-                    >
-                        Apply for job
-                    </x-he4rt::button>
+                    @guest
+                        <x-he4rt::button variant="solid" class="w-full sm:w-auto" href="/login">
+                            Apply for job
+                        </x-he4rt::button>
+                    @else
+                        @php
+                            $hasScreeningQuestions = $jobRequisition->screeningQuestions->isNotEmpty();
+                        @endphp
+
+                        <x-he4rt::button
+                            variant="solid"
+                            class="w-full sm:w-auto"
+                            :disabled="$hasApplied"
+                            @click="if (!hasApplied) {{ $hasScreeningQuestions ? 'showApplicationModal = true' : '$wire.applyDirectly()' }}"
+                        >
+                            <span x-show="!hasApplied">Apply for job</span>
+                            <span x-show="hasApplied" x-cloak>Applied</span>
+                        </x-he4rt::button>
+                    @endguest
                     <div class="flex w-full justify-center gap-3 sm:w-auto">
                         <x-he4rt::button variant="outline" icon="heroicon-o-bookmark" class="flex-1" />
                         <x-he4rt::button variant="outline" icon="heroicon-o-share" class="flex-1" />

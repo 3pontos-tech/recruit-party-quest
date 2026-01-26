@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Organization\Filament\Resources\Recruitment\Applications\Tables;
 
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -99,6 +100,7 @@ class ApplicationsTable
             ->selectable(false)
             ->groupingDirectionSettingHidden()
             ->defaultGroup('requisition_id')
+            ->collapsedGroupsByDefault(false)
             ->filters([
                 SelectFilter::make('status')
                     ->label(__('applications::filament.filters.status'))
@@ -113,6 +115,7 @@ class ApplicationsTable
                     ->preload(),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ]);
     }

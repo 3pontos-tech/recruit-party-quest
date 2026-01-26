@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace He4rt\Screening\QuestionTypes\Settings;
 
+use He4rt\Screening\Contracts\HasValidations;
 use He4rt\Screening\Enums\FileExtensionEnum;
 
 /**
  * Settings for File Upload question type.
  */
-readonly class FileUploadSettings
+readonly class FileUploadSettings implements HasValidations
 {
     /**
      * @param  array<int, FileExtensionEnum>  $allowedExtensions
@@ -58,5 +59,40 @@ readonly class FileUploadSettings
     public function getAllowedMimeTypes(): array
     {
         return FileExtensionEnum::getMimeTypes($this->allowedExtensions);
+    }
+
+    public function rules(string $attribute, bool $required): array
+    {
+        $rules = [];
+
+        if ($required) {
+            $rules[] = 'required';
+        }
+
+        return $rules;
+    }
+
+    public function initialValue(): mixed
+    {
+        return null;
+    }
+
+    public function messages(string $attribute): array
+    {
+        $messages = [];
+
+        if ($this->allowedExtensions !== []) {
+            $messages[$attribute.'.files.*.mimes'] = 'Each file must be of type: '.implode(', ', array_map(fn ($ext) => $ext->value, $this->allowedExtensions));
+        }
+
+        if ($this->maxSizeKb !== null) {
+            $messages[$attribute.'.files.*.max'] = 'Each file may not be greater than '.$this->maxSizeKb.' KB.';
+        }
+
+        if ($this->maxFiles > 1) {
+            $messages[$attribute.'.max'] = 'You may not upload more than '.$this->maxFiles.' files.';
+        }
+
+        return $messages;
     }
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('degree');
             $table->string('field_of_study');
             $table->timestamp('start_date');
-            $table->timestamp('end_date');
+            $table->timestamp('end_date')->nullable();
             $table->boolean('is_enrolled');
             $table->timestamps();
             $table->softDeletes();

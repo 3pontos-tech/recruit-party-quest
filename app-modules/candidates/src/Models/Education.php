@@ -48,8 +48,8 @@ class Education extends BaseModel
     protected function casts(): array
     {
         return [
-            'start_date' => 'timestamp',
-            'end_date' => 'timestamp',
+            'start_date' => 'datetime',
+            'end_date' => 'datetime',
             'is_enrolled' => 'boolean',
         ];
     }
