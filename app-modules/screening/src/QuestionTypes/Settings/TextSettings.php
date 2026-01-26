@@ -63,7 +63,8 @@ readonly class TextSettings implements HasValidations
     public function messages(string $attribute): array
     {
         return [
-
+            $attribute.'.max' => __('screening::question_validations.max', ['max' => $this->maxLength]),
+            $attribute.'.required' => __('screening::question_validations.required'),
         ];
     }
 }

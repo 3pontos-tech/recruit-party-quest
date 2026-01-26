@@ -85,7 +85,7 @@ test('required validation', function (): void {
     $livewire = livewire(JobApplicationForm::class, ['requisition' => $this->jobRequisition])
         ->assertOk()
         ->call('submit');
-    $livewire->assertHasErrors(['responses.'.$questionId => 'This question is required.']);
+    $livewire->assertHasErrors(['responses.'.$questionId => __('screening::question_validations.required')]);
 });
 
 describe('multiple questions', function (): void {
@@ -103,7 +103,7 @@ describe('multiple questions', function (): void {
         $livewire = livewire(JobApplicationForm::class, ['requisition' => $this->jobRequisition])
             ->assertOk()
             ->call('submit');
-        $livewire->assertHasErrors(['responses.'.$question->getKey() => sprintf('Selecione pelo menos %d opção(ões).', $min)]);
+        $livewire->assertHasErrors(['responses.'.$question->getKey() => __('screening::question_validations.min-options', ['min' => $min])]);
 
     });
     test('max', function (): void {
@@ -122,7 +122,7 @@ describe('multiple questions', function (): void {
             ->assertOk()
             ->set('responses.'.$question->getKey(), [0 => 'oi', 1 => 'iai'])
             ->call('submit');
-        $livewire->assertHasErrors(['responses.'.$question->getKey() => sprintf('Selecione no máximo %d opção(ões).', $max)]);
+        $livewire->assertHasErrors(['responses.'.$question->getKey() => __('screening::question_validations.max-options', ['max' => $max])]);
 
     });
     test('null should be considere empty', function (): void {
@@ -140,7 +140,7 @@ describe('multiple questions', function (): void {
             ->assertOk()
             ->set('responses.'.$question->getKey(), [0 => null, 1 => null])
             ->call('submit');
-        $livewire->assertHasErrors(['responses.'.$question->getKey() => sprintf('Selecione pelo menos %d opção(ões).', $min)]);
+        $livewire->assertHasErrors(['responses.'.$question->getKey() => __('screening::question_validations.min-options', ['min' => $min])]);
 
     });
 });

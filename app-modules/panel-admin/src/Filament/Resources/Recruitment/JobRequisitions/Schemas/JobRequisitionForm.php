@@ -58,6 +58,13 @@ class JobRequisitionForm
                         ->required()
                         ->preload()
                         ->searchable()
+                        ->afterStateUpdated(function ($state, $set, $get): void {
+                            $questions = $get('screeningQuestions') ?? [];
+
+                            foreach ($questions as $key => $question) {
+                                $set(sprintf('screeningQuestions.%s.team_id', $key), $state);
+                            }
+                        })
                         ->live(),
                     Select::make('department_id')
                         ->label(__('recruitment::filament.requisition.fields.department'))
@@ -69,19 +76,20 @@ class JobRequisitionForm
                         ->required()
                         ->preload()
                         ->searchable(),
-                    Select::make('hiring_manager_id')
+                    Select::make('recruiter_id')
                         ->label(__('recruitment::filament.requisition.fields.hiring_manager'))
                         ->relationship(
-                            name: 'hiringManager',
-                            titleAttribute: 'name',
+                            name: 'recruiter',
+                            titleAttribute: 'id',
                             modifyQueryUsing: fn ($query, $get) => $query->when(
                                 $get('team_id'),
                                 fn ($q) => $q->whereHas(
-                                    'teams',
+                                    'team',
                                     fn ($sq) => $sq->whereKey($get('team_id'))
                                 )
                             ),
                         )
+                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->user?->name)
                         ->required()
                         ->preload()
                         ->searchable(),

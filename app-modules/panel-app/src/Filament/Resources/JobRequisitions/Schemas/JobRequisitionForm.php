@@ -44,8 +44,8 @@ class JobRequisitionForm
                     ->numeric(),
                 TextInput::make('salary_currency')
                     ->required(),
-                Select::make('hiring_manager_id')
-                    ->relationship('hiringManager', 'name')
+                Select::make('recruiter_id')
+                    ->relationship('recruiter', 'name')
                     ->required(),
                 Select::make('created_by_id')
                     ->relationship('createdBy', 'name')

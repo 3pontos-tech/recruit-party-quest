@@ -53,6 +53,10 @@ readonly class NumberSettings implements HasValidations
 
         $rules[] = $required ? 'required' : 'nullable';
 
+        if (is_null($this->min)) {
+            $rules[] = 'min:0';
+        }
+
         if ($this->min !== null) {
             $rules[] = 'min:'.$this->min;
         }
@@ -72,7 +76,10 @@ readonly class NumberSettings implements HasValidations
     public function messages(string $attribute): array
     {
         return [
-
+            $attribute.'.min' => __('screening::question_validations.numeric-min', ['min' => $this->min ?? 0]),
+            $attribute.'.required' => __('screening::question_validations.required'),
+            $attribute.'.numeric' => __('screening::question_validations.numeric'),
+            $attribute.'.max' => __('screening::question_validations.numeric-max', ['max' => $this->max ?? 0]),
         ];
     }
 }

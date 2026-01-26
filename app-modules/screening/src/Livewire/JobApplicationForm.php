@@ -15,7 +15,6 @@ use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Screening\Actions\ScreeningResponse\StoreScreeningResponse;
 use He4rt\Screening\Collections\ScreeningResponseCollection;
 use He4rt\Screening\DTOs\ScreeningResponseDTO;
-use He4rt\Screening\Enums\QuestionTypeEnum;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -135,10 +134,12 @@ class JobApplicationForm extends Component
         $messages = [];
 
         foreach ($this->requisition->screeningQuestions as $question) {
-            if ($question->is_required && $question->question_type !== QuestionTypeEnum::MultipleChoice) {
-                $messages[sprintf('responses.%s.required', $question->id)]
-                    = 'This question is required.';
-            }
+            $fieldKey = 'responses.'.$question->id;
+            $questionMessages = $question->question_type
+                ->settings($question->settings ?? [])
+                ->messages($fieldKey);
+
+            $messages = array_merge($messages, $questionMessages);
         }
 
         return $messages;
