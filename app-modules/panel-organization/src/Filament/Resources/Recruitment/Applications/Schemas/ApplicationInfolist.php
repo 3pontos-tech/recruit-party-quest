@@ -17,22 +17,67 @@ class ApplicationInfolist
         return $schema
             ->columns(4)
             ->components([
-                // Candidate Header - Full width
                 ViewEntry::make('header')
                     ->view('panel-organization::components.applications.candidate-header')
                     ->columnSpanFull(),
+
                 Tabs::make('application_tabs')
                     ->columnSpan(3)
                     ->schema([
                         Tab::make('Overview')
                             ->schema([
-                                ViewEntry::make('basic_info')
-                                    ->view('panel-organization::components.applications.candidate-contact-info'),
+                                ViewEntry::make('cover_letter')
+                                    ->view('panel-organization::components.applications.tabs.cover-letter'),
+
+                                ViewEntry::make('skills_proficiency')
+                                    ->view('panel-organization::components.applications.tabs.skills-proficiency'),
+
+                                ViewEntry::make('professional_summary')
+                                    ->view('panel-organization::components.applications.tabs.professional-summary'),
+
+                                ViewEntry::make('education')
+                                    ->view('panel-organization::components.applications.tabs.education'),
+                            ]),
+
+                        Tab::make('Experience')
+                            ->schema([
+                                // Placeholder for future work experience components
+                                ViewEntry::make('work_experience_placeholder')
+                                    ->view('panel-organization::components.applications.candidate-contact-info')
+                                    ->label('Work Experience (Coming Soon)'),
+                            ]),
+
+                        Tab::make('Screening')
+                            ->schema([
+                                // Placeholder for future screening components
+                                ViewEntry::make('screening_placeholder')
+                                    ->view('panel-organization::components.applications.candidate-contact-info')
+                                    ->label('Screening Responses (Coming Soon)'),
+                            ]),
+
+                        Tab::make('Evaluations')
+                            ->schema([
+                                // Placeholder for future evaluations components
+                                ViewEntry::make('evaluations_placeholder')
+                                    ->view('panel-organization::components.applications.candidate-contact-info')
+                                    ->label('Interview Evaluations (Coming Soon)'),
+                            ]),
+
+                        Tab::make('Activities')
+                            ->schema([
+                                // Placeholder for future activities components
+                                ViewEntry::make('activities_placeholder')
+                                    ->view('panel-organization::components.applications.candidate-contact-info')
+                                    ->label('Application Activities (Coming Soon)'),
                             ]),
                     ]),
                 Grid::make(1)
                     ->columnSpan(1)
                     ->schema([
+                        // Pipeline Progress
+                        ViewEntry::make('pipeline_progress')
+                            ->view('panel-organization::components.applications.sidebar.pipeline-progress'),
+
                         // AI Match Score
                         ViewEntry::make('ai_match_score')
                             ->view('panel-organization::components.applications.sidebar.ai-match-score'),
@@ -40,10 +85,6 @@ class ApplicationInfolist
                         // Quick Actions
                         ViewEntry::make('quick_actions')
                             ->view('panel-organization::components.applications.sidebar.quick-actions'),
-
-                        // Pipeline Progress
-                        ViewEntry::make('pipeline_progress')
-                            ->view('panel-organization::components.applications.sidebar.pipeline-progress'),
 
                         // Candidate Snapshot
                         ViewEntry::make('candidate_snapshot')
