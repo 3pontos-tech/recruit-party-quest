@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace He4rt\Screening\QuestionTypes\Settings;
 
+use He4rt\Screening\Contracts\HasValidations;
+
 /**
  * Settings for Single Choice question type.
  *
  * @phpstan-type Choice array{value: string, label: string}
  */
-readonly class SingleChoiceSettings
+readonly class SingleChoiceSettings implements HasValidations
 {
     /**
      * @param  array<int, Choice>  $choices
@@ -38,6 +40,29 @@ readonly class SingleChoiceSettings
         return [
             'layout' => $this->layout,
             'choices' => $this->choices,
+        ];
+    }
+
+    public function rules(string $attribute, bool $required): array
+    {
+        $rules = [];
+
+        if ($required) {
+            $rules['required'] = 'required';
+        }
+
+        return $rules;
+    }
+
+    public function initialValue(): ?string
+    {
+        return null;
+    }
+
+    public function messages(string $attribute): array
+    {
+        return [
+            'required' => 'This field is required',
         ];
     }
 }

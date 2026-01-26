@@ -16,7 +16,6 @@ use He4rt\Screening\Actions\ScreeningResponse\StoreScreeningResponse;
 use He4rt\Screening\Collections\ScreeningResponseCollection;
 use He4rt\Screening\DTOs\ScreeningResponseDTO;
 use He4rt\Screening\Enums\QuestionTypeEnum;
-use He4rt\Screening\Rules\MultipleChoiceRule;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
@@ -114,26 +113,14 @@ class JobApplicationForm extends Component
         $rules = [];
 
         foreach ($this->requisition->screeningQuestions as $question) {
-
             $key = 'responses.'.$question->id;
 
-            if ($question->question_type === QuestionTypeEnum::MultipleChoice) {
+            $settings = $question->question_type->settings($question->settings ?? []);
 
-                $min = $question->settings['min_selections'] ?? 0;
-
-                $max = $question->settings['max_selections'] ?? null;
-
-                $rules[$key] = [
-                    'array',
-                    new MultipleChoiceRule($min, $max),
-                ];
-
-                continue;
-            }
-
-            $rules[$key] = $question->is_required
-                ? ['required']
-                : ['nullable'];
+            $rules[$key] = $settings->rules(
+                $key,
+                required: $question->is_required,
+            );
         }
 
         return $rules;
@@ -160,15 +147,9 @@ class JobApplicationForm extends Component
     {
         foreach ($requisition->screeningQuestions as $question) {
 
-            $this->responses[$question->id] = null;
-
-            if ($question->question_type === QuestionTypeEnum::MultipleChoice) {
-                $this->responses[$question->id] = [];
-
-                foreach ($question->settings['choices'] ?? [] as $choice) {
-                    $this->responses[$question->id][$choice['value']] = null;
-                }
-            }
+            $this->responses[$question->getKey()] = $question->question_type
+                ->settings($question->settings ?? [])
+                ->initialValue();
         }
     }
 }

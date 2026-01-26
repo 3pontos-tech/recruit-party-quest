@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace He4rt\Screening\QuestionTypes\Settings;
 
+use He4rt\Screening\Contracts\HasValidations;
+use He4rt\Screening\Rules\MultipleChoiceRule;
+
 /**
  * Settings for Multiple Choice question type.
  *
  * @phpstan-type Choice array{value: string, label: string}
  */
-readonly class MultipleChoiceSettings
+readonly class MultipleChoiceSettings implements HasValidations
 {
     /**
      * @param  array<int, Choice>  $choices
@@ -42,5 +45,37 @@ readonly class MultipleChoiceSettings
             'max_selections' => $this->maxSelections,
             'choices' => $this->choices,
         ];
+    }
+
+    public function rules(string $attribute, bool $required): array
+    {
+        $rules = [
+            'array',
+            new MultipleChoiceRule(min: $this->minSelections, max: $this->maxSelections),
+        ];
+
+        if ($required) {
+            array_unshift($rules, 'required');
+        }
+
+        return $rules;
+    }
+
+    public function messages(string $attribute): array
+    {
+        return [
+
+        ];
+    }
+
+    public function initialValue(): array
+    {
+        $response = [];
+
+        foreach ($this->choices as $choice) {
+            $response[$choice['value']] = null;
+        }
+
+        return $response;
     }
 }
