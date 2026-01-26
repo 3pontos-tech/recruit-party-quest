@@ -19,26 +19,19 @@
     $currentStageIndex = $currentStage ? $stages->search(fn ($stage) => $stage->name === $currentStage->name) : 0;
 
     if ($currentStageIndex === false) {
-        $currentStageIndex = 0; // Default to first stage if not found
+        $currentStageIndex = 0;
     }
 @endphp
 
-<x-filament::section>
+<x-filament::section heading="Pipeline Progress" icon="heroicon-o-chart-bar">
+    <x-slot name="afterHeader">
+        @if ($currentStage)
+            <x-filament::badge size="sm" class="px-2">
+                {{ $currentStageIndex + 1 }} / {{ $stages->count() }}
+            </x-filament::badge>
+        @endif
+    </x-slot>
     <div class="space-y-4 rounded-lg">
-        {{-- Header --}}
-        <div class="flex items-center justify-between">
-            <h3 class="text-text-high text-sm font-semibold">Pipeline Progress</h3>
-            <div class="flex items-center gap-2">
-                @if ($currentStage)
-                    <x-filament::badge size="sm" class="px-2">
-                        {{ $currentStageIndex + 1 }} / {{ $stages->count() }}
-                    </x-filament::badge>
-                @endif
-
-                <x-he4rt::icon icon="heroicon-o-chart-bar" size="sm" class="text-icon-medium" />
-            </div>
-        </div>
-
         {{-- Progress Bar Overview --}}
         <div class="space-y-2">
             <div class="flex justify-between text-xs">
