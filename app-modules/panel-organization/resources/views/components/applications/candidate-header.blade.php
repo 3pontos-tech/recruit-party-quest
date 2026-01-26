@@ -10,11 +10,18 @@
         ->take(2)
         ->map(fn ($name) => mb_strtoupper(mb_substr($name, 0, 1)))
         ->implode('');
+
+    //TODO: Replace with real data
+    $skills = ['Laravel', 'Vue.js', 'PHP', 'JavaScript', 'MySQL', 'Docker'];
+    $experience = '5+ years';
+    $availability = 'Available immediately';
+    $location = 'San Francisco, CA';
+    $education = 'Computer Science, University Name';
 @endphp
 
 <x-filament::section>
     {{-- Candidate Header --}}
-    <header class="flex flex-col gap-8 md:grid-cols-[1fr_auto]">
+    <header class="flex flex-col gap-2 md:grid-cols-[1fr_auto]">
         {{-- Tracking Code --}}
         <div class="flex items-end justify-end gap-2">
             <span class="text-text-medium font-mono text-sm">{{ $record->tracking_code }}</span>
@@ -93,27 +100,90 @@
             </div>
         </div>
         {{-- Application Info --}}
-        <div class="border-border border-outline-low mt-6 flex w-full border-t pt-6">
-            <div class="flex w-full justify-between gap-4 space-y-2">
-                <div class="flex-1">
-                    <span class="text-muted-foreground mb-1 text-xs tracking-wider text-gray-500 uppercase">
-                        Position
-                    </span>
-                    <p class="text-foreground text-sm font-medium">{{ $jobRequisition->post->title }}</p>
+        <div class="border-border border-outline-low w-full">
+            <div class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+                <div>
+            <span class="flex items-center gap-1 mb-1 text-xs tracking-wider text-gray-500 uppercase">
+                <x-he4rt::icon icon="heroicon-o-briefcase" size="sm" class="text-icon-medium" />
+                Position
+            </span>
+                    <p class="text-foreground text-sm font-medium">
+                        {{ $jobRequisition->post->title }}
+                    </p>
                 </div>
-                <div class="flex-1">
-                    <span class="text-muted-foreground mb-1 text-xs tracking-wider text-gray-500 uppercase">
-                        Department
-                    </span>
-                    <p class="text-foreground text-sm font-medium">{{ $jobRequisition->team->name }}</p>
+
+                <div>
+            <span class="flex items-center gap-1 mb-1 text-xs tracking-wider text-gray-500 uppercase">
+                <x-he4rt::icon icon="heroicon-o-building-office-2" size="sm" class="text-icon-medium" />
+                Department
+            </span>
+                    <p class="text-foreground text-sm font-medium">
+                        {{ $jobRequisition->team->name }}
+                    </p>
                 </div>
-                <div class="flex-1">
-                    <span class="text-muted-foreground mb-1 text-xs tracking-wider text-gray-500 uppercase">
-                        Applied
-                    </span>
-                    <p class="text-foreground text-sm font-medium">{{ $record->created_at->format('M j, Y') }}</p>
+
+                <div>
+            <span class="flex items-center gap-1 mb-1 text-xs tracking-wider text-gray-500 uppercase">
+                <x-he4rt::icon icon="heroicon-o-calendar" size="sm" class="text-icon-medium" />
+                Applied
+            </span>
+                    <p class="text-foreground text-sm font-medium">
+                        {{ $record->created_at->format('M j, Y') }}
+                    </p>
                 </div>
+
+                <div>
+            <span class="flex gap-1 mb-1 text-xs tracking-wider text-gray-500 uppercase">
+                <x-he4rt::icon icon="heroicon-o-briefcase" size="sm" class="text-icon-medium" />
+                Experience
+            </span>
+                    <p class="text-text-high text-sm font-semibold">{{ $experience }}</p>
+                </div>
+
+                <div>
+            <span class="flex gap-1 mb-1 text-xs tracking-wider text-gray-500 uppercase">
+                <x-he4rt::icon icon="heroicon-o-clock" size="sm" class="text-icon-medium" />
+                Availability
+            </span>
+                    <p class="text-text-high text-sm font-semibold">{{ $availability }}</p>
+                </div>
+
+                <div>
+            <span class="flex gap-1 mb-1 text-xs tracking-wider text-gray-500 uppercase">
+                <x-he4rt::icon icon="heroicon-o-map-pin" size="sm" class="text-icon-medium" />
+                Location
+            </span>
+                    <p class="text-text-high text-sm font-semibold">{{ $location }}</p>
+                </div>
+
+                <div>
+            <span class="flex gap-1 mb-1 text-xs tracking-wider text-gray-500 uppercase">
+                <x-he4rt::icon icon="heroicon-o-academic-cap" size="sm" class="text-icon-medium" />
+                Education
+            </span>
+                    <p class="text-text-high text-sm font-semibold">{{ $education }}</p>
+                </div>
+
+                <div class="sm:col-span-2 lg:col-span-4 space-y-3">
+                    <div class="flex items-center gap-2">
+                        <x-he4rt::icon icon="heroicon-o-code-bracket" size="sm" class="text-icon-medium" />
+                        <span class="text-text-medium text-xs font-semibold tracking-wider uppercase">
+                    Key Skills
+                </span>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                        @foreach ($skills as $skill)
+                            <x-filament::badge size="sm" color="gray">
+                                {{ $skill }}
+                            </x-filament::badge>
+                        @endforeach
+                    </div>
+                </div>
+
             </div>
         </div>
+
     </header>
 </x-filament::section>
