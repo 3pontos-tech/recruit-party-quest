@@ -70,20 +70,16 @@ class ApplicationInfolist
                             ->view('panel-organization::components.applications.sidebar.pipeline-progress'),
 
                         // AI Match Score
-                        ViewEntry::make('ai_match_score')
-                            ->view('panel-organization::components.applications.sidebar.ai-match-score'),
-
-                        // Candidate Snapshot
-                        ViewEntry::make('candidate_snapshot')
-                            ->view('panel-organization::components.applications.sidebar.candidate-snapshot'),
+                        //                        ViewEntry::make('ai_match_score')
+                        //                            ->view('panel-organization::components.applications.sidebar.ai-match-score'),
 
                         // Documents List
-                        ViewEntry::make('documents_list')
-                            ->view('panel-organization::components.applications.sidebar.documents-list'),
+                        //                        ViewEntry::make('documents_list')
+                        //                            ->view('panel-organization::components.applications.sidebar.documents-list'),
 
                         // Evaluation Summary
-                        ViewEntry::make('evaluation_summary')
-                            ->view('panel-organization::components.applications.sidebar.evaluation-summary'),
+                        //                        ViewEntry::make('evaluation_summary')
+                        //                            ->view('panel-organization::components.applications.sidebar.evaluation-summary'),
                     ]),
             ]);
     }
