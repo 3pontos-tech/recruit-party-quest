@@ -26,7 +26,7 @@
                 </div>
                 <x-filament::button
                     size="xs"
-                    outlined
+                    :outlined="true"
                     icon="heroicon-o-paper-airplane"
                     tag="a"
                     href="mailto:{{ $user->email }}"
