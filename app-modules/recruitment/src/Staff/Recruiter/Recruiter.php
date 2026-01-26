@@ -7,6 +7,7 @@ namespace He4rt\Recruitment\Staff\Recruiter;
 use App\Models\BaseModel;
 use He4rt\Recruitment\Database\Factories\RecruiterFactory;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use He4rt\Teams\Concerns\BelongsToTeam;
 use He4rt\Teams\Team;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
@@ -35,6 +36,7 @@ use Illuminate\Support\Collection;
 #[UseFactory(RecruiterFactory::class)]
 class Recruiter extends BaseModel
 {
+    use BelongsToTeam;
     use SoftDeletes;
 
     /**
@@ -43,14 +45,6 @@ class Recruiter extends BaseModel
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    /**
-     * @return BelongsTo<Team, $this>
-     */
-    public function team(): BelongsTo
-    {
-        return $this->belongsTo(Team::class);
     }
 
     /**

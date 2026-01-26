@@ -42,7 +42,7 @@ class ApplicationsTable
                     ->searchable()
                     ->sortable(),
                 ViewColumn::make('pipeline_progress')
-                    ->label('Progresso no Pipeline')
+                    ->label(__('applications::filament.fields.pipeline_progress'))
                     ->view('panel-organization::filament.tables.columns.pipeline-progress')
                     ->sortable(false)
                     ->searchable(false),
@@ -94,10 +94,11 @@ class ApplicationsTable
                         $department = $record->requisition->department->name ?? 'N/A';
                         $team = $record->requisition->team->name ?? 'N/A';
 
-                        return sprintf('Empresa: %s • Departamento: %s • Status: %s', $team, $department, $status);
+                        return sprintf('Empresa: %s • Departamento: %s', $team, $department);
                     }),
             ])
             ->selectable(false)
+            ->groupingDirectionSettingHidden()
             ->defaultGroup('requisition_id')
             ->collapsedGroupsByDefault(false)
             ->filters([

@@ -72,13 +72,14 @@ class KanbanStages extends BoardResourcePage
             ])
             ->findOrFail($this->requisitionId);
 
-        $columns = collect($jobRequisition->stages)
+        $columns = collect($jobRequisition->stages->sortBy('display_order'))
             ->map(fn (Stage $stage) => KanbanColumn::make($stage->id)
                 ->label($stage->name)
                 ->icon($stage->stage_type->getIcon())
                 ->color($stage->stage_type->getColor())
                 ->description($stage->stage_type)
                 ->recruiters($stage->interviewers)
+                ->hidden($stage->hidden)
             )->toArray();
 
         return $board

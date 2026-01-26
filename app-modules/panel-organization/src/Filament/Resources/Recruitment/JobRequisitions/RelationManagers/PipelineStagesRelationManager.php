@@ -15,8 +15,10 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
-use Filament\Tables\Columns\IconColumn;
+use Filament\Support\Colors\Color;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
@@ -59,6 +61,9 @@ class PipelineStagesRelationManager extends RelationManager
                 Toggle::make('active')
                     ->label(__('recruitment::filament.stage.fields.active'))
                     ->default(true),
+                Toggle::make('hidden')
+                    ->label(__('recruitment::filament.stage.fields.hidden'))
+                    ->default(true),
             ]);
     }
 
@@ -66,6 +71,12 @@ class PipelineStagesRelationManager extends RelationManager
     {
         return $table
             ->columns([
+                TextColumn::make('display_order')
+                    ->label(__('recruitment::filament.stage.fields.display_order'))
+                    ->badge()
+                    ->icon(Heroicon::ListBullet)
+                    ->numeric(0)
+                    ->sortable(),
                 TextColumn::make('name')
                     ->label(__('recruitment::filament.stage.fields.name'))
                     ->searchable()
@@ -74,18 +85,22 @@ class PipelineStagesRelationManager extends RelationManager
                     ->label(__('recruitment::filament.stage.fields.stage_type'))
                     ->badge()
                     ->sortable(),
-                TextColumn::make('display_order')
-                    ->label(__('recruitment::filament.stage.fields.display_order'))
-                    ->sortable(),
-                TextColumn::make('expected_duration_days')
-                    ->label(__('recruitment::filament.stage.fields.expected_duration_days'))
-                    ->sortable(),
                 TextColumn::make('participants_count')
                     ->label(__('recruitment::filament.stage.fields.active_participants'))
+                    ->badge()
+                    ->color(Color::Blue)
+                    ->icon(Heroicon::Users)
                     ->counts('participants'),
-                IconColumn::make('active')
-                    ->label(__('recruitment::filament.stage.fields.active'))
-                    ->boolean(),
+                TextColumn::make('expected_duration_days')
+                    ->label(__('recruitment::filament.stage.fields.expected_duration_days'))
+                    ->color(Color::Green)
+                    ->icon(Heroicon::CalendarDays)
+                    ->badge()
+                    ->sortable(),
+                ToggleColumn::make('active')
+                    ->label(__('recruitment::filament.stage.fields.active')),
+                ToggleColumn::make('hidden')
+                    ->label(__('recruitment::filament.stage.fields.hidden')),
             ])
             ->defaultSort('display_order')
             ->reorderable('display_order')
