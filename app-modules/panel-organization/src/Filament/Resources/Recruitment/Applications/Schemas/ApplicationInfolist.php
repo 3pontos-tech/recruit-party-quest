@@ -70,6 +70,9 @@ class ApplicationInfolist
                 Grid::make(1)
                     ->columnSpan(1)
                     ->schema([
+                        // Quick Actions
+                        ViewEntry::make('quick_actions')
+                            ->view('panel-organization::components.applications.sidebar.quick-actions'),
                         // Pipeline Progress
                         ViewEntry::make('pipeline_progress')
                             ->view('panel-organization::components.applications.sidebar.pipeline-progress'),
@@ -77,10 +80,6 @@ class ApplicationInfolist
                         // AI Match Score
                         ViewEntry::make('ai_match_score')
                             ->view('panel-organization::components.applications.sidebar.ai-match-score'),
-
-                        // Quick Actions
-                        ViewEntry::make('quick_actions')
-                            ->view('panel-organization::components.applications.sidebar.quick-actions'),
 
                         // Candidate Snapshot
                         ViewEntry::make('candidate_snapshot')
