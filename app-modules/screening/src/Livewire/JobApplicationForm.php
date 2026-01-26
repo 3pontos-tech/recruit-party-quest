@@ -18,6 +18,7 @@ use He4rt\Screening\DTOs\ScreeningResponseDTO;
 use He4rt\Screening\Enums\QuestionTypeEnum;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\Features\SupportRedirects\Redirector;
@@ -49,7 +50,7 @@ class JobApplicationForm extends Component
         $this->responses[$data['questionId']] = ['files' => $data['files']];
     }
 
-    public function submit(): Redirector
+    public function submit(): Redirector|RedirectResponse
     {
         $this->validate();
         $applicationId = Uuid::uuid4();

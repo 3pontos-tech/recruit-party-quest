@@ -49,7 +49,7 @@ readonly class TextSettings implements HasValidations
         }
 
         if ($this->maxLength !== null) {
-            $rules[] = 'max_digits: '.$this->maxLength;
+            $rules[] = 'max: '.$this->maxLength;
         }
 
         return $rules;

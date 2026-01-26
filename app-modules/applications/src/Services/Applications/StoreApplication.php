@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace He4rt\Applications\Services\Applications;
 
 use He4rt\Applications\DTOs\ApplicationDTO;
-use He4rt\Applications\Enums\ApplicationStatusEnum;
-use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Models\Application;
 
 final class StoreApplication
@@ -18,8 +16,8 @@ final class StoreApplication
             'requisition_id' => $dto->requisitionId,
             'candidate_id' => $dto->candidateId,
             'team_id' => $dto->teamId,
-            'status' => ApplicationStatusEnum::New,
-            'source' => CandidateSourceEnum::CareerPage,
+            'status' => $dto->status,
+            'source' => $dto->source,
         ]);
 
         $application->update([

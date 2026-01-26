@@ -68,6 +68,9 @@ readonly class MultipleChoiceSettings implements HasValidations
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function initialValue(): array
     {
         $response = [];
