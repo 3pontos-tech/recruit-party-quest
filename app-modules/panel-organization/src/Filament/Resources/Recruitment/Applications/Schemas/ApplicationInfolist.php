@@ -44,28 +44,6 @@ class ApplicationInfolist
                                 ViewEntry::make('work_experience')
                                     ->view('panel-organization::components.applications.tabs.work-experience'),
                             ]),
-
-                        Tab::make('Screening')
-                            ->schema([
-                                ViewEntry::make('screening_responses')
-                                    ->view('panel-organization::components.applications.tabs.screening-responses'),
-                            ]),
-
-                        Tab::make('Evaluations')
-                            ->schema([
-                                // Placeholder for future evaluations components
-                                ViewEntry::make('evaluations_placeholder')
-                                    ->view('panel-organization::components.applications.tabs.screening-responses')
-                                    ->label('Interview Evaluations (Coming Soon)'),
-                            ]),
-
-                        Tab::make('Activities')
-                            ->schema([
-                                // Placeholder for future activities components
-                                ViewEntry::make('activities_placeholder')
-                                    ->view('panel-organization::components.applications.tabs.screening-responses')
-                                    ->label('Application Activities (Coming Soon)'),
-                            ]),
                     ]),
                 Grid::make(1)
                     ->columnSpan(1)

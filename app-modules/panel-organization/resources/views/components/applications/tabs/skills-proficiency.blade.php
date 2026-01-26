@@ -16,11 +16,11 @@
     $skills_categories = $skillsByCategory->count();
 
     $proficiencyLevels = [
-        1 => ['label' => 'Beginner', 'color' => 'danger', 'width' => 20],
-        2 => ['label' => 'Basic', 'color' => 'warning', 'width' => 40],
-        3 => ['label' => 'Intermediate', 'color' => 'info', 'width' => 60],
-        4 => ['label' => 'Advanced', 'color' => 'success', 'width' => 80],
-        5 => ['label' => 'Expert', 'color' => 'primary', 'width' => 100],
+        1 => ['label' => 'Beginner', 'color' => 'bg-red-500', 'width' => 20],
+        2 => ['label' => 'Basic', 'color' => 'bg-yellow-500', 'width' => 40],
+        3 => ['label' => 'Intermediate', 'color' => 'bg-blue-500', 'width' => 60],
+        4 => ['label' => 'Advanced', 'color' => 'bg-green-500', 'width' => 80],
+        5 => ['label' => 'Expert', 'color' => 'bg-primary-500', 'width' => 100],
     ];
 @endphp
 
@@ -60,7 +60,8 @@
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                             @foreach ($categorySkills as $skill)
                                 @php
-                                    $proficiencyLevel = $skill->pivot->proficiency_level ?? 1;
+                                    $proficiencyLevel = (int) ($skill->pivot->proficiency_level ?? 1);
+                                    $proficiencyLevel = max(array_key_first($proficiencyLevels), min($proficiencyLevel, array_key_last($proficiencyLevels)));
                                     $yearsOfExperience = $skill->pivot->years_of_experience ?? 0;
                                     $proficiency = $proficiencyLevels[$proficiencyLevel];
                                 @endphp
