@@ -55,13 +55,13 @@ class ScreeningQuestionFactory extends Factory
         ]);
     }
 
-    public function multipleChoice(): static
+    public function multipleChoice(int $min = 0, ?int $max = null): static
     {
         return $this->state(fn (array $attributes) => [
             'question_type' => QuestionTypeEnum::MultipleChoice,
             'settings' => [
-                'min_selections' => 0,
-                'max_selections' => null,
+                'min_selections' => $min,
+                'max_selections' => $max,
                 'choices' => [
                     ['value' => 'option_a', 'label' => 'Option A'],
                     ['value' => 'option_b', 'label' => 'Option B'],

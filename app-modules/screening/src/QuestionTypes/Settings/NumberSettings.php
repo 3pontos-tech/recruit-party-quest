@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace He4rt\Screening\QuestionTypes\Settings;
 
+use He4rt\Screening\Contracts\HasValidations;
+
 /**
  * Settings for Number question type.
  */
-readonly class NumberSettings
+readonly class NumberSettings implements HasValidations
 {
     public function __construct(
         public ?float $min = null,
@@ -42,6 +44,35 @@ readonly class NumberSettings
             'step' => $this->step,
             'prefix' => $this->prefix,
             'suffix' => $this->suffix,
+        ];
+    }
+
+    public function rules(string $attribute, bool $required): array
+    {
+        $rules = ['numeric'];
+
+        $rules[] = $required ? 'required' : 'nullable';
+
+        if ($this->min !== null) {
+            $rules[] = 'min:'.$this->min;
+        }
+
+        if ($this->max !== null) {
+            $rules[] = 'max:'.$this->max;
+        }
+
+        return $rules;
+    }
+
+    public function initialValue(): null
+    {
+        return null;
+    }
+
+    public function messages(string $attribute): array
+    {
+        return [
+
         ];
     }
 }
