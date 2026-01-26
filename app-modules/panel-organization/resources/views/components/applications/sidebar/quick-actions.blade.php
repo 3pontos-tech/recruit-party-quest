@@ -92,7 +92,7 @@
         <div class="text-text-medium space-y-1 text-xs">
             <p>
                 <span class="font-semibold">Current Stage:</span>
-                {{ $record->current_stage?->name ?? 'Not set' }}
+                {{ $record->currentStage()?->name ?? 'Not set' }}
             </p>
             <p>
                 <span class="font-semibold">Last Updated:</span>
