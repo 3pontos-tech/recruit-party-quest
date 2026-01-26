@@ -74,7 +74,8 @@
                     @php
                         $degreeCategory = categorizeDegree($degree->degree);
                         $isCompleted = ! $degree->is_enrolled;
-                        $duration = $degree->start_date->diffInMonths($degree->end_date);
+                        $endDate = $degree->end_date ?? now();
+                        $duration = $degree->start_date->diffInMonths($endDate);
                         $durationYears = floor($duration / 12);
                         $durationMonths = $duration % 12;
 
