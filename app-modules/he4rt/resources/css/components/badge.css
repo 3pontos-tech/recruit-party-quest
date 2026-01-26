@@ -1,7 +1,27 @@
 .hp-badge {
-    @apply bg-primary/5 border-primary/32 flex w-fit items-center justify-center gap-2 rounded-full border px-4 py-2 text-xs font-medium sm:text-sm;
+    @apply bg-elevation-01dp border-outline-dark flex shrink-0 items-center justify-center overflow-hidden rounded-md border;
 }
 
-.hp-badge:hover {
-    @apply bg-primary/32;
+.hp-badge {
+    @apply group-hover:bg-elevation-05dp transition duration-500;
+}
+
+.hp-badge-size-sm {
+    @apply h-10 w-10;
+}
+
+.hp-badge-size-md {
+    @apply h-12 w-12;
+}
+
+.hp-badge-size-lg {
+    @apply h-14 w-14;
+}
+
+.hp-badge-size-xl {
+    @apply h-16 w-16;
+
+    & .hp-icon {
+        @apply h-8 w-8;
+    }
 }

@@ -1,3 +1,3 @@
 <x-filament-panels::page>
-    <livewire:search-jobs :query="$this->getFilteredSortedTableQuery()->toRawSql()" />
+    <livewire:search-jobs />
 </x-filament-panels::page>

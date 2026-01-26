@@ -1,5 +1,9 @@
 .fi-page-content {
-    @apply from-primary/12 to-elevation-surface gap-0 bg-gradient-to-br px-8;
+    @apply bg-elevation-surface gap-0;
+}
+
+.fi-page-header-main-ctn {
+    @apply p-0;
 }
 
 .fi-main {

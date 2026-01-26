@@ -35,6 +35,7 @@ class StageFactory extends Factory
             'display_order' => fake()->numberBetween(1, 10),
             'description' => $stageData[$name],
             'expected_duration_days' => fake()->numberBetween(1, 14),
+            'hidden' => fake()->boolean(60),
             'active' => true,
             'created_at' => Date::now(),
             'updated_at' => Date::now(),

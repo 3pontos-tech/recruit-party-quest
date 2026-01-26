@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Recruitment\Stages\Models\InterviewerPivot;
 use He4rt\Recruitment\Stages\Models\Stage;
-use He4rt\Users\User;
 
 it('can create an interviewer pivot', function (): void {
     $pivot = InterviewerPivot::factory()->create();
@@ -12,7 +12,7 @@ it('can create an interviewer pivot', function (): void {
     expect($pivot)->toBeInstanceOf(InterviewerPivot::class)
         ->and($pivot->id)->not->toBeNull()
         ->and($pivot->pipeline_stage_id)->not->toBeNull()
-        ->and($pivot->interviewer_user_id)->not->toBeNull();
+        ->and($pivot->recruiter_id)->not->toBeNull();
 });
 
 it('belongs to a stage', function (): void {
@@ -24,21 +24,21 @@ it('belongs to a stage', function (): void {
 });
 
 it('belongs to an interviewer user', function (): void {
-    $user = User::factory()->create();
-    $pivot = InterviewerPivot::factory()->create(['interviewer_user_id' => $user->id]);
+    $recruiter = Recruiter::factory()->create();
+    $pivot = InterviewerPivot::factory()->create(['recruiter_id' => $recruiter->id]);
 
-    expect($pivot->interviewer)->toBeInstanceOf(User::class)
-        ->and($pivot->interviewer->id)->toBe($user->id);
+    expect($pivot->interviewer)->toBeInstanceOf(Recruiter::class)
+        ->and($pivot->interviewer->id)->toBe($recruiter->id);
 });
 
 it('can assign multiple interviewers to a stage', function (): void {
     $stage = Stage::factory()->create();
-    $users = User::factory()->count(3)->create();
+    $recruiters = Recruiter::factory()->recycle($stage->team)->count(3)->create();
 
-    foreach ($users as $user) {
+    foreach ($recruiters as $recruiter) {
         InterviewerPivot::factory()->create([
-            'pipeline_stage_id' => $stage->id,
-            'interviewer_user_id' => $user->id,
+            'pipeline_stage_id' => $stage->getKey(),
+            'recruiter_id' => $recruiter->getKey(),
         ]);
     }
 

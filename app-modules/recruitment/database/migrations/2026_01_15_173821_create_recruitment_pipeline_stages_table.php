@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,11 +16,13 @@ return new class extends Migration
             $table->foreignUuid('team_id')->constrained('teams');
             $table->foreignUuid('job_requisition_id')->constrained('recruitment_job_requisitions');
             $table->string('name');
-            $table->string('stage_type');
+            $table->string('stage_type')
+                ->comment(StageTypeEnum::stringifyCases());
             $table->decimal('display_order', 20, 10)->nullable();
             $table->string('description');
             $table->integer('expected_duration_days');
             $table->boolean('active');
+            $table->boolean('hidden')->default(false)->comment('the user will not know this stage exists');
             $table->timestamps();
             $table->softDeletes();
         });

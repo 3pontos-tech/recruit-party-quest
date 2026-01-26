@@ -61,19 +61,12 @@ class JobRequisitionForm
                                             ->required()
                                             ->preload()
                                             ->searchable(),
-                                        Select::make('hiring_manager_id')
-                                            ->label(__('recruitment::filament.requisition.fields.hiring_manager'))
+                                        Select::make('recruiter_id')
+                                            ->label(__('recruitment::filament.requisition.fields.recruiter'))
                                             ->relationship(
-                                                name: 'hiringManager',
-                                                titleAttribute: 'name',
-                                                modifyQueryUsing: fn ($query, Get $get) => $query->when(
-                                                    $get('team_id'),
-                                                    fn ($q) => $q->whereHas(
-                                                        'teams',
-                                                        fn ($sq) => $sq->whereKey($get('team_id'))
-                                                    )
-                                                ),
+                                                name: 'recruiter',
                                             )
+                                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->user->name)
                                             ->required()
                                             ->preload()
                                             ->searchable(),

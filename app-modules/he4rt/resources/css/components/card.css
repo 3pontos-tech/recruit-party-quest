@@ -1,12 +1,12 @@
 .hp-card {
     @apply flex h-full flex-col rounded-md;
-    @apply gap-4;
-    @apply p-6;
-    @apply border-outline-low border;
+    @apply gap-6;
+    @apply p-4;
+    @apply border-outline-dark border;
 }
 
 .hp-card-density-compact {
-    @apply p-4;
+    @apply gap-4 p-4;
 }
 
 .hp-card-variant-solid {
@@ -14,7 +14,7 @@
 }
 
 .hp-card-interactive {
-    @apply hover:border-primary transition-all duration-500 hover:scale-[1.02];
+    @apply transition-all duration-500;
 }
 
 .hp-card-icon {
@@ -22,7 +22,7 @@
 }
 
 .hp-card-header {
-    @apply border-outline-low border-b pb-4;
+    @apply flex;
 }
 
 .hp-card-body {

@@ -15,6 +15,8 @@
 
 <label {{ $attributes->class(['hp-checkbox-label', 'hp-checkbox-label--disabled' => $isDisabled]) }}>
     <input
+        wire:key="{{ $inputId }}"
+        {{ $attributes->merge() }}
         type="checkbox"
         name="{{ $name }}"
         id="{{ $inputId }}"

@@ -80,11 +80,23 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
         };
     }
 
-    public function getFilamentAvatarUrl(): ?string
+    public function getFilamentAvatarUrl(): string
     {
-        $avatar = $this->getFirstMedia('profile-pictures');
+        // $avatar = $this->getFirstMedia('profile-pictures');
 
-        return $avatar?->getUrl();
+        $query = http_build_query([
+            'name' => str($this->name)
+                ->explode(' ')
+                ->map(fn (string $item) => $item[0])
+                ->implode(''),
+            'color' => 'FFFFFF',
+            'background' => 'oklch%280.13+0.028+261.692%29',
+        ]);
+
+        return sprintf(
+            'https://ui-avatars.com/api/%s',
+            $query
+        );
     }
 
     public function getActivitylogOptions(): LogOptions

@@ -95,11 +95,13 @@ final class DevelopmentSeeder extends Seeder
                 Stage::factory()
                     ->recycle($requisition)
                     ->recycle($requisition->team)
+                    ->hasInterviewers(2)
                     ->create([
                         'stage_type' => $stageData['type'],
                         'name' => $stageData['name'],
                         'display_order' => $index + 1,
                     ]);
+
             }
         });
 

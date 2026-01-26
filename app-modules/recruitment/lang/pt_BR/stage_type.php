@@ -21,7 +21,13 @@ return [
     'rejected' => [
         'label' => 'Reprovado',
     ],
+    'declined' => [
+        'label' => 'Recusado',
+    ],
     'new' => [
         'label' => 'Nova Aplicação',
+    ],
+    'hidden' => [
+        'label' => 'Oculto',
     ],
 ];

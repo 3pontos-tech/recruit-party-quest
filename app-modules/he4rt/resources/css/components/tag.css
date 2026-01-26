@@ -1,5 +1,5 @@
 .hp-tag {
-    @apply inline-flex h-fit items-center gap-2;
+    @apply inline-flex h-fit w-fit items-center gap-2;
     @apply rounded-md border;
     @apply font-medium;
     @apply transition-colors duration-200;
@@ -21,6 +21,19 @@
     @apply hover:bg-primary/32;
 }
 
+.hp-tag-ghost {
+    @apply border-none bg-transparent;
+    @apply text-text-medium;
+    @apply px-0 py-0;
+}
+
+.hp-tag-ghost.hp-tag-size-xs,
+.hp-tag-ghost.hp-tag-size-sm,
+.hp-tag-ghost.hp-tag-size-md,
+.hp-tag-ghost.hp-tag-size-lg {
+    @apply px-0 py-0;
+}
+
 .hp-tag-size-xs {
     @apply text-xs;
     @apply px-1.5 py-0.75;
@@ -33,6 +46,10 @@
 .hp-tag-size-sm {
     @apply text-sm;
     @apply px-2 py-1;
+
+    & .hp-icon {
+        @apply h-4 w-4;
+    }
 }
 
 .hp-tag-size-md {
