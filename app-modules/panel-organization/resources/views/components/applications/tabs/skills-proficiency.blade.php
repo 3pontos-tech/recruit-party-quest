@@ -12,7 +12,7 @@
     $skills_total = $skills->count();
     $skill_advanced_plus = $skills->filter(fn ($skill) => ($skill->pivot->proficiency_level ?? 0) >= 4)->count();
     $skills_avg_years = round($skills->avg(fn ($skill) => $skill->pivot->years_of_experience ?? 0), 1);
-    $skillsByCategory = $skills->groupBy(fn ($skill) => $skill->category->value);
+    $skillsByCategory = $skills->groupBy(fn ($skill) => $skill->category?->value ?? 'uncategorized');
     $skills_categories = $skillsByCategory->count();
 
     $proficiencyLevels = [
