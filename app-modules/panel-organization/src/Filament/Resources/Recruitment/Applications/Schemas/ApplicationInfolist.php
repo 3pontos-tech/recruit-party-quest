@@ -41,25 +41,21 @@ class ApplicationInfolist
 
                         Tab::make('Experience')
                             ->schema([
-                                // Placeholder for future work experience components
-                                ViewEntry::make('work_experience_placeholder')
-                                    ->view('panel-organization::components.applications.candidate-contact-info')
-                                    ->label('Work Experience (Coming Soon)'),
+                                ViewEntry::make('work_experience')
+                                    ->view('panel-organization::components.applications.tabs.work-experience'),
                             ]),
 
                         Tab::make('Screening')
                             ->schema([
-                                // Placeholder for future screening components
-                                ViewEntry::make('screening_placeholder')
-                                    ->view('panel-organization::components.applications.candidate-contact-info')
-                                    ->label('Screening Responses (Coming Soon)'),
+                                ViewEntry::make('screening_responses')
+                                    ->view('panel-organization::components.applications.tabs.screening-responses'),
                             ]),
 
                         Tab::make('Evaluations')
                             ->schema([
                                 // Placeholder for future evaluations components
                                 ViewEntry::make('evaluations_placeholder')
-                                    ->view('panel-organization::components.applications.candidate-contact-info')
+                                    ->view('panel-organization::components.applications.tabs.screening-responses')
                                     ->label('Interview Evaluations (Coming Soon)'),
                             ]),
 
@@ -67,7 +63,7 @@ class ApplicationInfolist
                             ->schema([
                                 // Placeholder for future activities components
                                 ViewEntry::make('activities_placeholder')
-                                    ->view('panel-organization::components.applications.candidate-contact-info')
+                                    ->view('panel-organization::components.applications.tabs.screening-responses')
                                     ->label('Application Activities (Coming Soon)'),
                             ]),
                     ]),
