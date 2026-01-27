@@ -6,7 +6,6 @@ namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Sche
 
 use App\Filament\Schemas\Components\He4rtInput;
 use App\Filament\Schemas\Components\He4rtSelect;
-use App\Filament\Schemas\Components\He4rtToggle;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
@@ -247,41 +246,11 @@ class JobRequisitionForm
                                             ->label(__('recruitment::filament.requisition.fields.target_start_at'))
                                             ->minDate(now()),
                                     ]),
-                            ]),
-
-                        Tab::make(__('recruitment::filament.requisition.tabs.misc'))
-                            ->icon('heroicon-o-document-text')
-                            ->schema([
-                                Section::make(__('recruitment::filament.requisition.sections.company_info'))
+                                Section::make(__('recruitment::filament.requisition.sections.external_posting'))
                                     ->relationship('post')
-                                    ->columns(2)
                                     ->schema([
                                         Hidden::make('team_id')
                                             ->default(filament()->getTenant()?->getKey()),
-                                        Textarea::make('about_company')
-                                            ->required()
-                                            ->label(__('recruitment::filament.requisition.job_posting.fields.about_company'))
-                                            ->rows(4)
-                                            ->columnSpanFull(),
-                                        Textarea::make('about_team')
-                                            ->required()
-                                            ->label(__('recruitment::filament.requisition.job_posting.fields.about_team'))
-                                            ->rows(4)
-                                            ->columnSpanFull(),
-                                        Textarea::make('work_schedule')
-                                            ->required()
-                                            ->label(__('recruitment::filament.requisition.job_posting.fields.work_schedule'))
-                                            ->rows(3)
-                                            ->columnSpanFull(),
-                                        Textarea::make('accessibility_accommodations')
-                                            ->required()
-                                            ->label(__('recruitment::filament.requisition.job_posting.fields.accessibility_accommodations'))
-                                            ->rows(3)
-                                            ->columnSpanFull(),
-                                        He4rtToggle::make('is_disability_confident')
-                                            ->required()
-                                            ->label(__('recruitment::filament.requisition.job_posting.fields.is_disability_confident'))
-                                            ->default(false),
                                         TextInput::make('external_post_url')
                                             ->required()
                                             ->label(__('recruitment::filament.requisition.job_posting.fields.external_post_url'))

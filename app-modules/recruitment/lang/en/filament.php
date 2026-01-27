@@ -90,6 +90,7 @@ return [
             'compensation' => 'Compensation',
             'settings' => 'Settings',
             'job_posting' => 'Job Posting',
+            'external_posting' => 'External Posting',
             'job_description' => 'Job Description',
             'required_qualifications' => 'Required Qualifications',
             'preferred_qualifications' => 'Preferred Qualifications',

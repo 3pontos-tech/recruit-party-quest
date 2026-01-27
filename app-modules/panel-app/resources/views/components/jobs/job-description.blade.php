@@ -77,7 +77,7 @@
                         </x-he4rt::tag>
 
                         {{-- Diversity Tag --}}
-                        @if ($posting->is_disability_confident)
+                        @if ($team->is_disability_confident)
                             <x-he4rt::tag icon="heroicon-o-heart" variant="ghost">Diversity</x-he4rt::tag>
                         @endif
                     </div>
@@ -198,13 +198,13 @@
             @endif
 
             {{-- Additional Information --}}
-            @if ($posting->about_team)
+            @if ($team->about)
                 <section class="space-y-4">
                     <x-he4rt::heading level="2" size="sm" class="text-text-high">
-                        Additional information
+                        About {{ $team->name }}
                     </x-he4rt::heading>
                     <x-he4rt::text size="md">
-                        {{ $posting->about_team }}
+                        {{ $team->about }}
                     </x-he4rt::text>
                 </section>
             @endif

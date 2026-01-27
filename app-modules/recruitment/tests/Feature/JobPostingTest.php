@@ -30,12 +30,6 @@ it('can be accessed from requisition', function (): void {
         ->and($requisition->post->id)->toBe($posting->id);
 });
 
-it('casts is_disability_confident to boolean', function (): void {
-    $posting = JobPosting::factory()->create(['is_disability_confident' => true]);
-
-    expect($posting->is_disability_confident)->toBeBool();
-});
-
 it('uses soft deletes', function (): void {
     $posting = JobPosting::factory()->create();
     $posting->delete();

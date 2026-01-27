@@ -77,4 +77,19 @@ return [
             'footer' => ':team_name Team',
         ],
     ],
+    'profile' => [
+        'label' => 'Company Profile',
+        'sections' => [
+            'about' => 'About Your Company',
+            'about_description' => 'Tell candidates about your company, culture, and what makes you unique.',
+            'work_environment' => 'Work Environment',
+            'work_environment_description' => 'Describe your work schedule and accessibility accommodations.',
+        ],
+        'fields' => [
+            'about' => 'About',
+            'work_schedule' => 'Work Schedule',
+            'accessibility_accommodations' => 'Accessibility Accommodations',
+            'is_disability_confident' => 'Disability Confident Employer',
+        ],
+    ],
 ];

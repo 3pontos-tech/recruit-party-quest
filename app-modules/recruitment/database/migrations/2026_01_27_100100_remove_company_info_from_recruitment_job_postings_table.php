@@ -12,24 +12,23 @@ return new class extends Migration
     {
         Schema::table('recruitment_job_postings', function (Blueprint $table): void {
             $table->dropColumn([
-                'description',
-                'responsibilities',
-                'required_qualifications',
-                'preferred_qualifications',
-                'benefits',
+                'about_company',
+                'about_team',
+                'work_schedule',
+                'accessibility_accommodations',
+                'is_disability_confident',
             ]);
-            $table->text('description')->after('title');
         });
     }
 
     public function down(): void
     {
         Schema::table('recruitment_job_postings', function (Blueprint $table): void {
-            $table->text('description')->change();
-            $table->jsonb('responsibilities');
-            $table->jsonb('required_qualifications');
-            $table->jsonb('preferred_qualifications');
-            $table->jsonb('benefits');
+            $table->text('about_company')->nullable();
+            $table->text('about_team')->nullable();
+            $table->text('work_schedule')->nullable();
+            $table->text('accessibility_accommodations')->nullable();
+            $table->boolean('is_disability_confident')->default(false);
         });
     }
 };

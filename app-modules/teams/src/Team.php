@@ -26,6 +26,10 @@ use Illuminate\Support\Carbon;
  * @property string $owner_id
  * @property TeamStatus $status
  * @property string $contact_email
+ * @property string|null $about
+ * @property string|null $work_schedule
+ * @property string|null $accessibility_accommodations
+ * @property bool $is_disability_confident
  * @property-read User $owner
  * @property-read Collection|User[] $members
  * @property-read Carbon $created_at
@@ -75,6 +79,7 @@ class Team extends BaseModel
     {
         return [
             'status' => TeamStatus::class,
+            'is_disability_confident' => 'boolean',
         ];
     }
 }
