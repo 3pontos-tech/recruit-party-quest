@@ -12,6 +12,7 @@ use He4rt\Location\Concerns\HasAddress;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -47,6 +48,8 @@ use Spatie\Tags\HasTags;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @property int $total_experience_months
+ * @property string $total_experience_formatted
  * @property-read User $user
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Application> $applications
  *
@@ -94,29 +97,6 @@ class Candidate extends BaseModel
     }
 
     /**
-     * @return array{years:int, months:int}
-     */
-    public function totalExperienceTime(): array
-    {
-        $totalMonths = (int) $this->workExperiences
-            ->sum(function (WorkExperience $exp) {
-                $end = $exp->is_currently_working_here
-                    ? now()
-                    : $exp->end_date;
-
-                return $exp->start_date->diffInMonths($end);
-            });
-
-        $years = intdiv($totalMonths, 12);
-        $months = $totalMonths % 12;
-
-        return [
-            'years' => $years,
-            'months' => $months,
-        ];
-    }
-
-    /**
      * @return BelongsToMany<Skill, $this, CandidateSkill>
      */
     public function skills(): BelongsToMany
@@ -129,6 +109,32 @@ class Candidate extends BaseModel
     public function hasCompletedOnboarding(): bool
     {
         return $this->is_onboarded;
+    }
+
+    public function getExperienceDuration(WorkExperience $experience): string
+    {
+        $end = $experience->is_currently_working_here
+            ? now()
+            : ($experience->end_date ?? now());
+
+        $months = (float) $experience->start_date->diffInMonths($end);
+
+        return $this->formatExperienceTime($months);
+    }
+
+    /** @return Attribute<int, void> */
+    protected function totalExperienceMonths(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->calculateTotalExperienceMonths()
+        );
+    }
+
+    protected function totalExperienceFormatted(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->formatExperienceTime($this->total_experience_months)
+        );
     }
 
     protected function casts(): array
@@ -144,5 +150,39 @@ class Candidate extends BaseModel
             'data_consent_given' => 'boolean',
             'onboarding_completed_at' => 'datetime',
         ];
+    }
+
+    private function calculateTotalExperienceMonths(): int
+    {
+        return (int) $this->workExperiences
+            ->sum(function (WorkExperience $exp) {
+                $end = $exp->is_currently_working_here
+                    ? now()
+                    : ($exp->end_date ?? now());
+
+                return $exp->start_date->diffInMonths($end);
+            });
+    }
+
+    private function formatExperienceTime(float $totalMonths): string
+    {
+        $totalMonths = (int) $totalMonths;
+        $years = intdiv($totalMonths, 12);
+        $months = $totalMonths % 12;
+
+        $yearsPart = $years > 0 ? trans_choice('panel-organization::view.time.year', $years, ['count' => $years]) : '';
+        $monthsPart = $months > 0 ? trans_choice('panel-organization::view.time.month', $months,
+            ['count' => $months]) : '';
+
+        if ($years > 0 && $months > 0) {
+            return $yearsPart.' '.__('panel-organization::view.time.and').' '.$monthsPart;
+        }
+
+        if ($years > 0) {
+            return $yearsPart;
+        }
+
+        return $monthsPart ?: '0 '.trans_choice('panel-organization::view.time.month', 0, ['count' => 0]);
+
     }
 }
