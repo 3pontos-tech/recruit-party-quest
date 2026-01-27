@@ -18,18 +18,7 @@
     $years = $experience['years'];
     $months = $experience['months'];
 
-    $yearsPart = $years > 0 ? trans_choice('panel-organization::view.time.year', $years, ['count' => $years]) : '';
-    $monthsPart = $months > 0 ? trans_choice('panel-organization::view.time.month', $months, ['count' => $months]) : '';
-
-    $totalExperienceTimeString = '';
-
-    if ($years > 0 && $months > 0) {
-        $totalExperienceTimeString = $yearsPart . ' ' . __('panel-organization::view.time.and') . ' ' . $monthsPart;
-    } elseif ($years > 0) {
-        $totalExperienceTimeString = $yearsPart;
-    } else {
-        $totalExperienceTimeString = $monthsPart;
-    }
+    $totalExperienceTimeString = $candidate->totalExperienceFormatted;
 
     // Helper function to extract job title from description
     function extractJobTitle($description, $metadata = null): string
@@ -134,19 +123,8 @@
 
                     $startDate = $experience->start_date;
                     $endDate = $isCurrent ? now() : $experience->end_date;
-                    $duration = $startDate->diffInMonths($endDate);
-                    $durationYears = floor($duration / 12);
-                    $durationMonths = $duration % 12;
 
-                    $durationText = '';
-                    if ($durationYears > 0) {
-                        $durationText = $durationYears . ' ' . trans_choice('panel-organization::view.time.year', $durationYears, ['count' => $durationYears]);
-                        if ($durationMonths > 0) {
-                            $durationText .= ' ' . $durationMonths . ' ' . trans_choice('panel-organization::view.time.month', $durationMonths, ['count' => $durationMonths]);
-                        }
-                    } else {
-                        $durationText = $durationMonths . ' ' . trans_choice('panel-organization::view.time.month', $durationMonths, ['count' => $durationMonths]);
-                    }
+                    $durationText = $candidate->getExperienceDuration($experience);
                 @endphp
 
                 {{-- Experience Card --}}
