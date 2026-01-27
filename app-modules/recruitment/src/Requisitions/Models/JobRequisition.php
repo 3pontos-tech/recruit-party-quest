@@ -61,6 +61,7 @@ use Illuminate\Support\Carbon;
  * @property-read User $createdBy
  * @property-read Collection<int, ScreeningQuestion> $screeningQuestions
  * @property-read Collection<int, Stage> $stages
+ * @property-read Collection<int, JobRequisitionItem> $items
  * @property-read JobPosting $post
  *
  * @extends BaseModel<JobRequisitionFactory>
@@ -88,6 +89,14 @@ class JobRequisition extends BaseModel
     public function post(): HasOne
     {
         return $this->hasOne(JobPosting::class, 'job_requisition_id');
+    }
+
+    /**
+     * @return HasMany<JobRequisitionItem, $this>
+     */
+    public function items(): HasMany
+    {
+        return $this->hasMany(JobRequisitionItem::class)->orderBy('order');
     }
 
     /**

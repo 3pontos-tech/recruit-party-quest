@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Tags\HasTags;
 
 /**
  * @property string $id
@@ -56,6 +57,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Candidate extends BaseModel
 {
     use HasAddress;
+    use HasTags;
     use InteractsWithMedia;
     use SoftDeletes;
 

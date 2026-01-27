@@ -51,10 +51,12 @@ class PipelineStagesRelationManager extends RelationManager
                     ->default(0)
                     ->required(),
                 Textarea::make('description')
+                    ->required()
                     ->label(__('recruitment::filament.stage.fields.description'))
                     ->rows(3)
                     ->maxLength(1000),
                 TextInput::make('expected_duration_days')
+                    ->required()
                     ->label(__('recruitment::filament.stage.fields.expected_duration_days'))
                     ->numeric()
                     ->minValue(1),
