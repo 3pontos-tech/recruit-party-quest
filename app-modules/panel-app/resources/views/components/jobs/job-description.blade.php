@@ -1,3 +1,7 @@
+@php
+    use He4rt\Recruitment\Requisitions\Enums\JobRequisitionItemTypeEnum;
+@endphp
+
 @props([
     'jobRequisition',
     'hasAction' => false,
@@ -109,6 +113,14 @@
             </div>
         </header>
 
+        @php
+            $descriptions = $jobRequisition->items->where('type', JobRequisitionItemTypeEnum::Description);
+            $responsibilities = $jobRequisition->items->where('type', JobRequisitionItemTypeEnum::Responsibility);
+            $requiredQualifications = $jobRequisition->items->where('type', JobRequisitionItemTypeEnum::RequiredQualification);
+            $preferredQualifications = $jobRequisition->items->where('type', JobRequisitionItemTypeEnum::PreferredQualification);
+            $benefits = $jobRequisition->items->where('type', JobRequisitionItemTypeEnum::Benefit);
+        @endphp
+
         {{-- Job Content --}}
         <div class="mt-5 max-w-3xl space-y-10">
             {{-- About this job --}}
@@ -118,25 +130,23 @@
                     <x-he4rt::text size="md">
                         {{ $posting->summary }}
                     </x-he4rt::text>
-                    @if (is_array($posting->description))
-                        @foreach ($posting->description as $paragraph)
-                            <x-he4rt::text size="md">
-                                {{ $paragraph }}
-                            </x-he4rt::text>
-                        @endforeach
-                    @endif
+                    @foreach ($descriptions as $item)
+                        <x-he4rt::text size="md">
+                            {{ $item->content }}
+                        </x-he4rt::text>
+                    @endforeach
                 </div>
             </section>
 
             {{-- Responsibilities --}}
-            @if (is_array($posting->responsibilities) && count($posting->responsibilities) > 0)
+            @if ($responsibilities->isNotEmpty())
                 <section class="space-y-4">
                     <x-he4rt::heading level="2" size="sm" class="text-text-high">Responsibilities</x-he4rt::heading>
                     <ul class="space-y-3">
-                        @foreach ($posting->responsibilities as $item)
+                        @foreach ($responsibilities as $item)
                             <li class="flex items-start gap-3">
                                 <x-he4rt::icon icon="heroicon-m-check-circle" class="text-primary mt-0.5" />
-                                <x-he4rt::text size="md">{{ $item }}</x-he4rt::text>
+                                <x-he4rt::text size="md">{{ $item->content }}</x-he4rt::text>
                             </li>
                         @endforeach
                     </ul>
@@ -144,14 +154,14 @@
             @endif
 
             {{-- Requirements --}}
-            @if (is_array($posting->required_qualifications) && count($posting->required_qualifications) > 0)
+            @if ($requiredQualifications->isNotEmpty())
                 <section class="space-y-4">
                     <x-he4rt::heading level="2" size="sm" class="text-text-high">Requirements</x-he4rt::heading>
                     <ul class="space-y-3">
-                        @foreach ($posting->required_qualifications as $item)
+                        @foreach ($requiredQualifications as $item)
                             <li class="flex items-start gap-3">
                                 <x-he4rt::icon icon="heroicon-m-check-circle" class="text-primary mt-0.5" />
-                                <x-he4rt::text size="md">{{ $item }}</x-he4rt::text>
+                                <x-he4rt::text size="md">{{ $item->content }}</x-he4rt::text>
                             </li>
                         @endforeach
                     </ul>
@@ -159,13 +169,13 @@
             @endif
 
             {{-- Desirable skills --}}
-            @if (is_array($posting->preferred_qualifications) && count($posting->preferred_qualifications) > 0)
+            @if ($preferredQualifications->isNotEmpty())
                 <section class="space-y-4">
                     <x-he4rt::heading level="2" size="sm" class="text-text-high">Desirable skills</x-he4rt::heading>
                     <ul class="list-inside list-disc space-y-2">
-                        @foreach ($posting->preferred_qualifications as $item)
+                        @foreach ($preferredQualifications as $item)
                             <li class="text-text-medium pl-1">
-                                <span class="text-text-medium">{{ $item }}</span>
+                                <span class="text-text-medium">{{ $item->content }}</span>
                             </li>
                         @endforeach
                     </ul>
@@ -173,14 +183,14 @@
             @endif
 
             {{-- Benefits --}}
-            @if (is_array($posting->benefits) && count($posting->benefits) > 0)
+            @if ($benefits->isNotEmpty())
                 <section class="space-y-4">
                     <x-he4rt::heading level="2" size="sm" class="text-text-high">Benefits</x-he4rt::heading>
                     <ul class="space-y-3">
-                        @foreach ($posting->benefits as $item)
+                        @foreach ($benefits as $item)
                             <li class="flex items-start gap-3">
                                 <x-he4rt::icon icon="heroicon-m-check-circle" class="text-primary mt-0.5" />
-                                <x-he4rt::text size="md">{{ $item }}</x-he4rt::text>
+                                <x-he4rt::text size="md">{{ $item->content }}</x-he4rt::text>
                             </li>
                         @endforeach
                     </ul>
