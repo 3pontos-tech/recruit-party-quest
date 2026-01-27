@@ -19,6 +19,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Rule;
 use Livewire\Component;
 use Livewire\Features\SupportRedirects\Redirector;
 use Ramsey\Uuid\Uuid;
@@ -28,6 +29,9 @@ class JobApplicationForm extends Component
     public JobRequisition $requisition;
 
     public ?Application $application = null;
+
+    #[Rule('required')]
+    public CandidateSourceEnum|string $source = '';
 
     /** @var array<string, mixed> */
     public array $responses = [];
@@ -63,7 +67,7 @@ class JobApplicationForm extends Component
                 'candidate_id' => $candidate->getKey(),
                 'team_id' => $this->requisition->team_id,
                 'status' => ApplicationStatusEnum::New->value,
-                'source' => CandidateSourceEnum::CareerPage->value,
+                'source' => $this->source->value,
             ])));
 
         }
