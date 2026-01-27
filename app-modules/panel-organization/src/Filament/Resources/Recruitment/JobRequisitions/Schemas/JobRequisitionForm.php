@@ -27,6 +27,8 @@ use He4rt\Recruitment\Requisitions\Enums\JobRequisitionItemTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Staff\Recruiter\Recruiter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class JobRequisitionForm
@@ -77,7 +79,8 @@ class JobRequisitionForm
                                             ->relationship(
                                                 name: 'department',
                                                 titleAttribute: 'name',
-                                                modifyQueryUsing: fn ($query, Get $get) => $query->when($get('team_id'), fn ($q) => $q->forTeam($get('team_id'))),
+                                                /** @phpstan-ignore-next-line  */
+                                                modifyQueryUsing: fn (Builder $query, Get $get) => $query->when($get('team_id'), fn (Builder $q) => $q->forTeam($get('team_id'))),
                                             )
                                             ->description('The team or division this role belongs to')
                                             ->icon(Heroicon::BuildingOffice)
@@ -127,9 +130,10 @@ class JobRequisitionForm
                                             ->label(__('recruitment::filament.requisition.fields.hiring_manager'))
                                             ->relationship(
                                                 name: 'recruiter',
-                                                modifyQueryUsing: fn ($query, Get $get) => $query->when($get('team_id'), fn ($q) => $q->forTeam($get('team_id'))),
+                                                /** @phpstan-ignore-next-line  */
+                                                modifyQueryUsing: fn (Builder $query, Get $get) => $query->when($get('team_id'), fn (Builder $q) => $q->forTeam($get('team_id'))),
                                             )
-                                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->user->name)
+                                            ->getOptionLabelFromRecordUsing(fn (Recruiter $record) => $record->user->name)
                                             ->icon(Heroicon::Users)
                                             ->iconColor('red')
                                             ->description('The official recruiter that owns this job requisition.')

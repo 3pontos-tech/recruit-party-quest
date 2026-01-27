@@ -15,11 +15,11 @@ use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Screening\Actions\ScreeningResponse\StoreScreeningResponse;
 use He4rt\Screening\Collections\ScreeningResponseCollection;
 use He4rt\Screening\DTOs\ScreeningResponseDTO;
-use He4rt\Screening\Enums\QuestionTypeEnum;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Rule;
 use Livewire\Component;
 use Livewire\Features\SupportRedirects\Redirector;
 use Ramsey\Uuid\Uuid;
@@ -29,6 +29,9 @@ class JobApplicationForm extends Component
     public JobRequisition $requisition;
 
     public ?Application $application = null;
+
+    #[Rule('required')]
+    public CandidateSourceEnum|string $source = '';
 
     /** @var array<string, mixed> */
     public array $responses = [];
@@ -64,7 +67,7 @@ class JobApplicationForm extends Component
                 'candidate_id' => $candidate->getKey(),
                 'team_id' => $this->requisition->team_id,
                 'status' => ApplicationStatusEnum::New->value,
-                'source' => CandidateSourceEnum::CareerPage->value,
+                'source' => $this->source->value,
             ])));
 
         }
@@ -135,10 +138,12 @@ class JobApplicationForm extends Component
         $messages = [];
 
         foreach ($this->requisition->screeningQuestions as $question) {
-            if ($question->is_required && $question->question_type !== QuestionTypeEnum::MultipleChoice) {
-                $messages[sprintf('responses.%s.required', $question->id)]
-                    = 'This question is required.';
-            }
+            $fieldKey = 'responses.'.$question->id;
+            $questionMessages = $question->question_type
+                ->settings($question->settings ?? [])
+                ->messages($fieldKey);
+
+            $messages = array_merge($messages, $questionMessages);
         }
 
         return $messages;

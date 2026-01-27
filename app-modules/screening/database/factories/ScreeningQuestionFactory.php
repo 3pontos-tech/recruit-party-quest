@@ -72,25 +72,25 @@ class ScreeningQuestionFactory extends Factory
         ]);
     }
 
-    public function text(): static
+    public function text($max = null): static
     {
         return $this->state(fn (array $attributes) => [
             'question_type' => QuestionTypeEnum::Text,
             'settings' => [
-                'max_length' => null,
+                'max_length' => $max,
                 'multiline' => false,
                 'placeholder' => null,
             ],
         ]);
     }
 
-    public function number(): static
+    public function number($min = null, $max = null): static
     {
         return $this->state(fn (array $attributes) => [
             'question_type' => QuestionTypeEnum::Number,
             'settings' => [
-                'min' => null,
-                'max' => null,
+                'min' => $min,
+                'max' => $max,
                 'step' => null,
                 'prefix' => null,
                 'suffix' => null,

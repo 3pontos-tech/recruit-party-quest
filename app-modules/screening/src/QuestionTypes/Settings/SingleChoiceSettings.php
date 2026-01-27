@@ -62,7 +62,7 @@ readonly class SingleChoiceSettings implements HasValidations
     public function messages(string $attribute): array
     {
         return [
-            'required' => 'This field is required',
+            $attribute.'.required' => __('screening::question_validations.required'),
         ];
     }
 }

@@ -257,7 +257,7 @@ erDiagram
         uuid id PK
         uuid team_id FK
         uuid department_id FK
-        uuid hiring_manager_id FK
+        uuid recruiter_id FK
         enum status
         enum priority
         enum work_arrangement

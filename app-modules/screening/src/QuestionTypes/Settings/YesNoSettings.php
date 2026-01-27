@@ -47,7 +47,7 @@ readonly class YesNoSettings implements HasValidations
     public function messages(string $attribute): array
     {
         return [
-            'required' => 'Thi question is required.',
+            $attribute.'.required' => __('screening::question_validations.required'),
         ];
     }
 }

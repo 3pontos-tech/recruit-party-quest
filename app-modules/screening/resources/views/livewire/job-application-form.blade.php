@@ -30,6 +30,13 @@
         />
     @endforeach
 
+    @error('source')
+        <p class="mt-1 text-sm text-red-500">
+            {{ __('screening::question_validations.required') }}
+        </p>
+    @enderror
+
+    <livewire:screening.source-question wire:model="source" />
     <div class="flex justify-end pt-4">
         <div class="relative" x-data="{ showTooltip: false }">
             <div @mouseenter="if (!isValid) showTooltip = true" @mouseleave="showTooltip = false">

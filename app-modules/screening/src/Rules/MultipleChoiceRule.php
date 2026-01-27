@@ -27,13 +27,13 @@ class MultipleChoiceRule implements ValidationRule
             ->count();
 
         if ($answered < $this->min) {
-            $fail(sprintf('Selecione pelo menos %d opção(ões).', $this->min));
+            $fail(__('screening::question_validations.min-options', ['min' => $this->min]));
 
             return;
         }
 
         if ($this->max !== null && $answered > $this->max) {
-            $fail(sprintf('Selecione no máximo %d opção(ões).', $this->max));
+            $fail(__('screening::question_validations.max-options', ['max' => $this->max]));
         }
     }
 }

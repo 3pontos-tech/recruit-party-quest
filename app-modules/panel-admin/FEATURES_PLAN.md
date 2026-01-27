@@ -88,7 +88,7 @@ Complete administrative control over all recruitment workflows with dashboards, 
 Section: Basic Information
 ├── Select: team_id (relationship)
 ├── Select: department_id (relationship, dependent on team)
-├── Select: hiring_manager_id (relationship)
+├── Select: recruiter_id (relationship)
 ├── Select: status (RequisitionStatusEnum)
 └── Select: priority (RequisitionPriorityEnum)
 

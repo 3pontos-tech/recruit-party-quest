@@ -6,6 +6,7 @@ namespace He4rt\Screening;
 
 use He4rt\Screening\Livewire\FileUploadQuestion;
 use He4rt\Screening\Livewire\JobApplicationForm;
+use He4rt\Screening\Livewire\SourceQuestion;
 use He4rt\Screening\Models\ScreeningQuestion;
 use He4rt\Screening\Models\ScreeningResponse;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -28,5 +29,6 @@ class ScreeningServiceProvider extends ServiceProvider
 
         Livewire::component('screening-file-upload-question', FileUploadQuestion::class);
         Livewire::component('screening.job-application-form', JobApplicationForm::class);
+        Livewire::component('screening.source-question', SourceQuestion::class);
     }
 }

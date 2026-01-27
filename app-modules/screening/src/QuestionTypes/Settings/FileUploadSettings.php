@@ -79,20 +79,8 @@ readonly class FileUploadSettings implements HasValidations
 
     public function messages(string $attribute): array
     {
-        $messages = [];
-
-        if ($this->allowedExtensions !== []) {
-            $messages[$attribute.'.files.*.mimes'] = 'Each file must be of type: '.implode(', ', array_map(fn ($ext) => $ext->value, $this->allowedExtensions));
-        }
-
-        if ($this->maxSizeKb !== null) {
-            $messages[$attribute.'.files.*.max'] = 'Each file may not be greater than '.$this->maxSizeKb.' KB.';
-        }
-
-        if ($this->maxFiles > 1) {
-            $messages[$attribute.'.max'] = 'You may not upload more than '.$this->maxFiles.' files.';
-        }
-
-        return $messages;
+        return [
+            $attribute.'.required' => __('screening::question_validations.required'),
+        ];
     }
 }

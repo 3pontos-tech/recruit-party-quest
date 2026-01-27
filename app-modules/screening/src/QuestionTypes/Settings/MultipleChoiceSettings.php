@@ -63,8 +63,9 @@ readonly class MultipleChoiceSettings implements HasValidations
 
     public function messages(string $attribute): array
     {
+        // The others the rule already send the message
         return [
-
+            $attribute.'.required' => __('screening::question_validations.required'),
         ];
     }
 
