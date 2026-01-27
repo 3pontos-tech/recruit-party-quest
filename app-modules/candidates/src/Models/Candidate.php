@@ -91,6 +91,9 @@ class Candidate extends BaseModel
         return $this->hasMany(WorkExperience::class);
     }
 
+    /**
+     * @return array{years:int, months:int}
+     */
     public function totalExperienceTime(): array
     {
         $totalMonths = (int) $this->workExperiences
