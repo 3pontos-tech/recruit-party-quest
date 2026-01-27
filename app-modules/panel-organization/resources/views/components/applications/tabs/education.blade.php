@@ -51,21 +51,23 @@
                 </div>
                 <div>
                     <h3 class="text-text-high text-lg font-semibold">
-                        {{ __('panel-organization::tabs.education.title') }}
+                        {{ __('panel-organization::view.tabs.education.title') }}
                     </h3>
-                    <p class="text-text-medium text-sm">{{ __('panel-organization::tabs.education.subtitle') }}</p>
+                    <p class="text-text-medium text-sm">
+                        {{ __('panel-organization::view.tabs.education.subtitle') }}
+                    </p>
                 </div>
             </div>
             @if ($hasEducation)
                 <div class="flex items-center gap-2">
                     @if ($currentEnrolled > 0)
                         <x-he4rt::tag variant="solid">
-                            {{ $currentEnrolled }} {{ __('panel-organization::tabs.education.in_progress') }}
+                            {{ $currentEnrolled }} {{ __('panel-organization::view.tabs.education.in_progress') }}
                         </x-he4rt::tag>
                     @endif
 
                     <x-he4rt::tag variant="outline">
-                        {{ $totalDegrees }} {{ Str::plural('Degree', $totalDegrees) }}
+                        {{ trans_choice('panel-organization::view.tabs.education.degree_count', $totalDegrees, ['count' => $totalDegrees]) }}
                     </x-he4rt::tag>
                 </div>
             @endif
@@ -109,7 +111,7 @@
                                             :icon="\Filament\Support\Icons\Heroicon::OutlinedClock"
                                         >
                                             {{-- <x-heroicon-o-clock class="w-3 h-3 mr-1" /> --}}
-                                            {{ __('panel-organization::tabs.education.in_progress') }}
+                                            {{ __('panel-organization::view.tabs.education.in_progress') }}
                                         </x-he4rt::tag>
                                     @else
                                         <x-he4rt::tag
@@ -117,7 +119,7 @@
                                             :icon="\Filament\Support\Icons\Heroicon::CheckCircle"
                                         >
                                             {{-- <x-heroicon-o-check-circle class="w-3 h-3 mr-1" /> --}}
-                                            {{ __('panel-organization::tabs.education.completed') }}
+                                            {{ __('panel-organization::view.tabs.education.completed') }}
                                         </x-he4rt::tag>
                                     @endif
                                 </div>
@@ -129,19 +131,19 @@
                             <div class="text-right">
                                 <p class="text-text-high text-sm font-semibold">
                                     {{ $degree->start_date->format('Y') }} -
-                                    {{ $degree->is_enrolled ? __('panel-organization::tabs.work_experience.present') : $degree->end_date->format('Y') }}
+                                    {{ $degree->is_enrolled ? __('panel-organization::view.tabs.work_experience.present') : $degree->end_date->format('Y') }}
                                 </p>
                                 <p class="text-text-medium text-xs">
                                     @if ($durationYears > 0)
                                         {{ $durationYears }}
-                                        {{ trans_choice('panel-organization::time.year', $durationYears, ['count' => $durationYears]) }}
+                                        {{ trans_choice('panel-organization::view.time.year', $durationYears, ['count' => $durationYears]) }}
                                         @if ($durationMonths > 0)
-                                                {{ $durationMonths }}
-                                                {{ trans_choice('panel-organization::time.month', $durationMonths, ['count' => $durationMonths]) }}
+                                            {{ $durationMonths }}
+                                            {{ trans_choice('panel-organization::view.time.month', $durationMonths, ['count' => $durationMonths]) }}
                                         @endif
                                     @else
                                         {{ $durationMonths }}
-                                        {{ trans_choice('panel-organization::time.month', $durationMonths, ['count' => $durationMonths]) }}
+                                        {{ trans_choice('panel-organization::view.time.month', $durationMonths, ['count' => $durationMonths]) }}
                                     @endif
                                 </p>
                             </div>
@@ -167,7 +169,7 @@
                                             size="xs"
                                         />
                                         {{ $degree->start_date->format('M Y') }} -
-                                        {{ $degree->is_enrolled ? __('panel-organization::tabs.work_experience.present') : $degree->end_date->format('M Y') }}
+                                        {{ $degree->is_enrolled ? __('panel-organization::view.tabs.work_experience.present') : $degree->end_date->format('M Y') }}
                                     </span>
                                     @if (! $degree->is_enrolled)
                                         <span class="flex items-center gap-1">
@@ -175,7 +177,7 @@
                                                 :icon="\Filament\Support\Icons\Heroicon::CheckBadge"
                                                 size="xs"
                                             />
-                                            {{ __('panel-organization::tabs.education.graduated') }}
+                                            {{ __('panel-organization::view.tabs.education.graduated') }}
                                         </span>
                                     @endif
                                 </div>
@@ -188,7 +190,8 @@
             {{-- Education Summary --}}
             <div class="bg-elevation-02dp border-outline-low rounded-lg border p-4">
                 <h4 class="text-text-high mb-3 text-sm font-semibold">
-                    {{ __('panel-organization::tabs.education.title') }} Summary
+                    {{ __('panel-organization::view.tabs.education.title') }}
+                    {{ __('panel-organization::view.tabs.education.summary') }}
                 </h4>
 
                 @php
@@ -203,7 +206,7 @@
                     {{-- Degree Types --}}
                     <div>
                         <p class="text-text-medium mb-2 text-xs font-medium">
-                            {{ __('panel-organization::tabs.education.degree_types') }}
+                            {{ __('panel-organization::view.tabs.education.degree_types') }}
                         </p>
                         <div class="flex flex-wrap gap-2">
                             @foreach ($degreesByCategory as $category => $categoryDegrees)
@@ -217,7 +220,7 @@
                     {{-- Fields of Study --}}
                     <div>
                         <p class="text-text-medium mb-2 text-xs font-medium">
-                            {{ __('panel-organization::tabs.education.fields_of_study') }}
+                            {{ __('panel-organization::view.tabs.education.fields_of_study') }}
                         </p>
                         <div class="flex flex-wrap gap-2">
                             @foreach ($fieldsByCategory as $field => $fieldDegrees)
@@ -241,10 +244,10 @@
                     class="text-text-low mx-auto"
                 />
                 <h4 class="text-text-high mt-4 text-lg font-medium">
-                    {{ __('panel-organization::tabs.education.no_info') }}
+                    {{ __('panel-organization::view.tabs.education.no_info') }}
                 </h4>
                 <p class="text-text-medium mt-2 text-sm">
-                    {{ __('panel-organization::tabs.education.no_info_text') }}
+                    {{ __('panel-organization::view.tabs.education.no_info_text') }}
                 </p>
                 <div class="mt-6">
                     <x-he4rt::button
@@ -253,7 +256,7 @@
                         :icon="\Filament\Support\Icons\Heroicon::Plus"
                         disabled
                     >
-                        {{ __('panel-organization::tabs.education.add') }}
+                        {{ __('panel-organization::view.tabs.education.add') }}
                     </x-he4rt::button>
                 </div>
             </div>

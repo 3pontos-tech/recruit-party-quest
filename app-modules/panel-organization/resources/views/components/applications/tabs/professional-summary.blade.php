@@ -20,17 +20,17 @@
                 </div>
                 <div>
                     <h3 class="text-text-high text-lg font-semibold">
-                        {{ __('panel-organization::tabs.professional_summary.title') }}
+                        {{ __('panel-organization::view.tabs.professional_summary.title') }}
                     </h3>
                     <p class="text-text-medium text-sm">
-                        {{ __('panel-organization::tabs.professional_summary.subtitle') }}
+                        {{ __('panel-organization::view.tabs.professional_summary.subtitle') }}
                     </p>
                 </div>
             </div>
             @if ($hasContent)
                 <div class="flex items-center gap-2">
                     <x-he4rt::tag size="sm" variant="solid">
-                        {{ __('panel-organization::tabs.professional_summary.complete') }}
+                        {{ __('panel-organization::view.tabs.professional_summary.complete') }}
                     </x-he4rt::tag>
                 </div>
             @endif
@@ -54,10 +54,10 @@
                     class="text-text-low mx-auto"
                 />
                 <h4 class="text-text-high mt-4 text-lg font-medium">
-                    {{ __('panel-organization::tabs.professional_summary.no_summary') }}
+                    {{ __('panel-organization::view.tabs.professional_summary.no_summary') }}
                 </h4>
                 <p class="text-text-medium mt-2 text-sm">
-                    {{ __('panel-organization::tabs.professional_summary.no_summary_text') }}
+                    {{ __('panel-organization::view.tabs.professional_summary.no_summary_text') }}
                 </p>
             </div>
         @endif

@@ -86,6 +86,7 @@ return [
             'career_summary' => 'Career Summary',
             'career_timeline' => 'Career Timeline',
             'companies' => 'Companies',
+            'more' => '{1} +:count more|[2,*] +:count more',
         ],
         'education' => [
             'title' => 'Education',
@@ -98,6 +99,8 @@ return [
             'add' => 'Add Education',
             'degree_types' => 'Degree Types',
             'fields_of_study' => 'Fields of Study',
+            'degree_count' => '{1} :count Degree|[2,*] :count Degrees',
+            'summary' => 'Summary',
         ],
         'professional_summary' => [
             'title' => 'Professional Summary',

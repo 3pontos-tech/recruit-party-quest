@@ -18,13 +18,13 @@
     $years = $experience['years'];
     $months = $experience['months'];
 
-    $yearsPart = $years > 0 ? trans_choice('panel-organization::time.year', $years, ['count' => $years]) : '';
-    $monthsPart = $months > 0 ? trans_choice('panel-organization::time.month', $months, ['count' => $months]) : '';
+    $yearsPart = $years > 0 ? trans_choice('panel-organization::view.time.year', $years, ['count' => $years]) : '';
+    $monthsPart = $months > 0 ? trans_choice('panel-organization::view.time.month', $months, ['count' => $months]) : '';
 
     $totalExperienceTimeString = '';
 
     if ($years > 0 && $months > 0) {
-        $totalExperienceTimeString = $yearsPart . ' ' . __('panel-organization::time.and') . ' ' . $monthsPart;
+        $totalExperienceTimeString = $yearsPart . ' ' . __('panel-organization::view.time.and') . ' ' . $monthsPart;
     } elseif ($years > 0) {
         $totalExperienceTimeString = $yearsPart;
     } else {
@@ -104,16 +104,18 @@
             </div>
             <div>
                 <h3 class="text-text-high text-lg font-semibold">
-                    {{ __('panel-organization::tabs.work_experience.title') }}
+                    {{ __('panel-organization::view.tabs.work_experience.title') }}
                 </h3>
-                <p class="text-text-medium text-sm">{{ __('panel-organization::tabs.work_experience.subtitle') }}</p>
+                <p class="text-text-medium text-sm">
+                    {{ __('panel-organization::view.tabs.work_experience.subtitle') }}
+                </p>
             </div>
         </div>
         @if ($hasExperience)
             <div class="flex items-center gap-2">
                 @if ($currentJob)
                     <x-he4rt::tag size="sm" variant="solid">
-                        {{ __('panel-organization::tabs.work_experience.currently_employed') }}
+                        {{ __('panel-organization::view.tabs.work_experience.currently_employed') }}
                     </x-he4rt::tag>
                 @endif
             </div>
@@ -138,12 +140,12 @@
 
                     $durationText = '';
                     if ($durationYears > 0) {
-                        $durationText = $durationYears . ' ' . trans_choice('panel-organization::time.year', $durationYears, ['count' => $durationYears]);
+                        $durationText = $durationYears . ' ' . trans_choice('panel-organization::view.time.year', $durationYears, ['count' => $durationYears]);
                         if ($durationMonths > 0) {
-                            $durationText .= ' ' . $durationMonths . ' ' . trans_choice('panel-organization::time.month', $durationMonths, ['count' => $durationMonths]);
+                            $durationText .= ' ' . $durationMonths . ' ' . trans_choice('panel-organization::view.time.month', $durationMonths, ['count' => $durationMonths]);
                         }
                     } else {
-                        $durationText = $durationMonths . ' ' . trans_choice('panel-organization::time.month', $durationMonths, ['count' => $durationMonths]);
+                        $durationText = $durationMonths . ' ' . trans_choice('panel-organization::view.time.month', $durationMonths, ['count' => $durationMonths]);
                     }
                 @endphp
 
@@ -179,7 +181,7 @@
                                                 size="xs"
                                                 class="mr-1"
                                             />
-                                            {{ __('panel-organization::tabs.work_experience.currently_employed') }}
+                                            {{ __('panel-organization::view.tabs.work_experience.currently_employed') }}
                                         </x-he4rt::tag>
                                     @endif
                                 </div>
@@ -189,7 +191,7 @@
                                     <span class="flex items-center gap-1">
                                         <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::Calendar" size="xs" />
                                         {{ $startDate->format('M Y') }} -
-                                        {{ $isCurrent ? __('panel-organization::tabs.work_experience.present') : $endDate->format('M Y') }}
+                                        {{ $isCurrent ? __('panel-organization::view.tabs.work_experience.present') : $endDate->format('M Y') }}
                                     </span>
                                     <span>{{ $durationText }}</span>
                                 </div>
@@ -212,7 +214,7 @@
 
                                         @if (count($skills) > 8)
                                             <x-he4rt::tag variant="outline" size="sm" class="text-[10px]">
-                                                +{{ count($skills) - 8 }} more
+                                                {{ trans_choice('panel-organization::view.tabs.work_experience.more', count($skills) - 8, ['count' => count($skills) - 8]) }}
                                             </x-he4rt::tag>
                                         @endif
                                     </div>
@@ -227,14 +229,14 @@
         {{-- Experience Summary --}}
         <div class="bg-elevation-02dp border-outline-low rounded-lg border p-4">
             <h4 class="text-text-high mb-3 text-sm font-semibold">
-                {{ __('panel-organization::tabs.work_experience.career_summary') }}
+                {{ __('panel-organization::view.tabs.work_experience.career_summary') }}
             </h4>
 
             <div class="space-y-3">
                 {{-- Career Timeline --}}
                 <div>
                     <p class="text-text-medium mb-2 text-xs font-medium">
-                        {{ __('panel-organization::tabs.work_experience.career_timeline') }}
+                        {{ __('panel-organization::view.tabs.work_experience.career_timeline') }}
                     </p>
                     <div class="flex items-center gap-2 text-sm">
                         <span class="text-text-high font-semibold">
@@ -242,7 +244,7 @@
                         </span>
                         <span class="text-text-medium">→</span>
                         <span class="text-text-high font-semibold">
-                            {{ $currentJob ? __('panel-organization::tabs.work_experience.present') : $workExperiences->max('end_date')?->format('Y') ?? 'N/A' }}
+                            {{ $currentJob ? __('panel-organization::view.tabs.work_experience.present') : $workExperiences->max('end_date')?->format('Y') ?? 'N/A' }}
                         </span>
                         <span class="text-text-medium ml-2">({{ $totalExperienceTimeString }})</span>
                     </div>
@@ -251,7 +253,7 @@
                 {{-- Companies Worked For --}}
                 <div>
                     <p class="text-text-medium mb-2 text-xs font-medium">
-                        {{ __('panel-organization::tabs.work_experience.companies') }}
+                        {{ __('panel-organization::view.tabs.work_experience.companies') }}
                     </p>
                     <div class="flex flex-wrap gap-2">
                         @foreach ($workExperiences->pluck('company_name')->unique() as $company)
@@ -272,10 +274,10 @@
                 class="text-text-low mx-auto"
             />
             <h4 class="text-text-high mt-4 text-lg font-medium">
-                {{ __('panel-organization::tabs.work_experience.no_experience') }}
+                {{ __('panel-organization::view.tabs.work_experience.no_experience') }}
             </h4>
             <p class="text-text-medium mt-2 text-sm">
-                {{ __('panel-organization::tabs.work_experience.no_experience_text') }}
+                {{ __('panel-organization::view.tabs.work_experience.no_experience_text') }}
             </p>
         </div>
     @endif

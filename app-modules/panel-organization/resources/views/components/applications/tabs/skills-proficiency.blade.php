@@ -36,14 +36,14 @@
                 </div>
                 <div>
                     <h3 class="text-text-high text-lg font-semibold">
-                        {{ __('panel-organization::tabs.skills_title') }}
+                        {{ __('panel-organization::view.tabs.skills_title') }}
                     </h3>
-                    <p class="text-text-medium text-sm">{{ __('panel-organization::tabs.skills_subtitle') }}</p>
+                    <p class="text-text-medium text-sm">{{ __('panel-organization::view.tabs.skills_subtitle') }}</p>
                 </div>
             </div>
             @if ($hasSkills)
                 <x-he4rt::tag size="sm" variant="solid">
-                    {{ trans_choice('panel-organization::tabs.skills_count', $skills_total, ['count' => $skills_total]) }}
+                    {{ trans_choice('panel-organization::view.tabs.skills_count', $skills_total, ['count' => $skills_total]) }}
                 </x-he4rt::tag>
             @endif
         </div>
@@ -98,16 +98,16 @@
                                                 @endphp
 
                                                 @if ($skillYears > 0 && $skillMonths > 0)
-                                                    {{ trans_choice('panel-organization::time.year', $skillYears, ['count' => $skillYears]) }}
-                                                    {{ __('panel-organization::time.and') }}
-                                                    {{ trans_choice('panel-organization::time.month', $skillMonths, ['count' => $skillMonths]) }}
+                                                    {{ trans_choice('panel-organization::view.time.year', $skillYears, ['count' => $skillYears]) }}
+                                                    {{ __('panel-organization::view.time.and') }}
+                                                    {{ trans_choice('panel-organization::view.time.month', $skillMonths, ['count' => $skillMonths]) }}
                                                 @elseif ($skillYears > 0)
-                                                    {{ trans_choice('panel-organization::time.year', $skillYears, ['count' => $skillYears]) }}
+                                                    {{ trans_choice('panel-organization::view.time.year', $skillYears, ['count' => $skillYears]) }}
                                                 @else
-                                                    {{ trans_choice('panel-organization::time.month', $skillMonths, ['count' => $skillMonths]) }}
+                                                    {{ trans_choice('panel-organization::view.time.month', $skillMonths, ['count' => $skillMonths]) }}
                                                 @endif
 
-                                                {{ __('panel-organization::tabs.experience_label') }}
+                                                {{ __('panel-organization::view.tabs.experience_label') }}
                                             </span>
                                         </div>
                                     </div>
@@ -123,10 +123,10 @@
                             class="text-text-low mx-auto"
                         />
                         <h4 class="text-text-high mt-2 text-sm font-medium">
-                            {{ __('panel-organization::tabs.no_skills_by_category') }}
+                            {{ __('panel-organization::view.tabs.no_skills_by_category') }}
                         </h4>
                         <p class="text-text-medium mt-1 text-sm">
-                            {{ __('panel-organization::tabs.no_skills_listed') }}
+                            {{ __('panel-organization::view.tabs.no_skills_listed') }}
                         </p>
                     </div>
                 @endforelse
@@ -140,10 +140,10 @@
                     class="text-text-low mx-auto"
                 />
                 <h4 class="text-text-high mt-4 text-lg font-medium">
-                    {{ __('panel-organization::tabs.no_skills_listed') }}
+                    {{ __('panel-organization::view.tabs.no_skills_listed') }}
                 </h4>
                 <p class="text-text-medium mt-2 text-sm">
-                    {{ __('panel-organization::tabs.no_skills_listed') }}
+                    {{ __('panel-organization::view.tabs.no_skills_listed') }}
                 </p>
                 <div class="mt-4">
                     <x-he4rt::button
@@ -152,7 +152,7 @@
                         :icon="\Filament\Support\Icons\Heroicon::Plus"
                         disabled
                     >
-                        {{ __('panel-organization::tabs.add_skills') }}
+                        {{ __('panel-organization::view.tabs.add_skills') }}
                     </x-he4rt::button>
                 </div>
             </div>

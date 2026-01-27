@@ -48,7 +48,7 @@ return [
     'evaluations' => [
         'title' => 'Avaliações',
         'average_score' => 'Pontuação média',
-        'based_on' => 'Com base em :count avaliação(ões) concluída(s)',
+        'based_on' => '{0} Com base em nenhuma avaliação concluída|{1} Com base em :count avaliação concluída|[2,*] Com base em :count avaliações concluídas',
         'history' => 'Histórico de entrevistas',
         'completed' => 'Concluído',
         'remaining' => 'Restante',
@@ -85,6 +85,7 @@ return [
             'career_summary' => 'Resumo da carreira',
             'career_timeline' => 'Linha do tempo da carreira',
             'companies' => 'Empresas',
+            'more' => '{1} +:count mais|[2,*] +:count mais',
         ],
         'education' => [
             'title' => 'Formação',
@@ -97,6 +98,8 @@ return [
             'add' => 'Adicionar formação',
             'degree_types' => 'Tipos de grau',
             'fields_of_study' => 'Áreas de estudo',
+            'degree_count' => '{1} :count Grau|[2,*] :count Graus',
+            'summary' => 'Resumo',
         ],
         'professional_summary' => [
             'title' => 'Resumo profissional',

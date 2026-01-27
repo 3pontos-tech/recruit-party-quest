@@ -7,7 +7,7 @@
         $eventDate = $lastMovement->created_at;
     } else {
         // Fallback to application creation if no movement history
-        $eventName = __('panel-organization::last_movement.applied');
+        $eventName = __('panel-organization::view.last_movement.applied');
         $eventDate = $record->created_at;
     }
 

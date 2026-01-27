@@ -18,7 +18,7 @@
 <div class="bg-surface-01dp border-outline-low space-y-4 rounded-lg border p-4">
     {{-- Header --}}
     <div class="flex items-center justify-between">
-        <h3 class="text-text-high text-sm font-semibold">{{ __('panel-organization::ai.title') }}</h3>
+        <h3 class="text-text-high text-sm font-semibold">{{ __('panel-organization::view.ai.title') }}</h3>
         <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::Sparkles" size="sm" class="text-icon-medium" />
     </div>
 
@@ -60,11 +60,11 @@
 
         <x-he4rt::tag variant="solid" size="lg">
             @if ($matchScore >= 80)
-                {{ __('panel-organization::ai.excellent') }}
+                {{ __('panel-organization::view.ai.excellent') }}
             @elseif ($matchScore >= 60)
-                {{ __('panel-organization::ai.good') }}
+                {{ __('panel-organization::view.ai.good') }}
             @else
-                {{ __('panel-organization::ai.fair') }}
+                {{ __('panel-organization::view.ai.fair') }}
             @endif
         </x-he4rt::tag>
     </div>
