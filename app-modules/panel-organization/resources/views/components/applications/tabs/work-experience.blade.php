@@ -1,6 +1,4 @@
-@props([
-    'record',
-])
+@props(['record' => []])
 
 @php
     /** @var \He4rt\Applications\Models\Application $record */
@@ -15,14 +13,20 @@
 
     $currentJob = $workExperiences->where('is_currently_working_here', true)->first();
 
-    // Calculate total years of experience
-    $totalMonths = 0;
-    foreach ($workExperiences as $exp) {
-        $endDate = $exp->is_currently_working_here ? now() : $exp->end_date;
-        $months = $exp->start_date->diffInMonths($endDate);
-        $totalMonths += $months;
+    $experience = $candidate->totalExperienceTime();
+
+    $years = $experience['years'];
+    $months = $experience['months'];
+
+    $totalExperienceTimeString = '';
+
+    if ($years > 0 && $months > 0) {
+        $totalExperienceTimeString = "{$years} " . Str::plural('year', $years) . " and {$months} " . Str::plural('month', $months);
+    } elseif ($years > 0) {
+        $totalExperienceTimeString = "{$years} " . Str::plural('year', $years);
+    } else {
+        $totalExperienceTimeString = "{$months} " . Str::plural('month', $months);
     }
-    $totalYears = round($totalMonths / 12, 1);
 
     // Helper function to extract job title from description
     function extractJobTitle($description, $metadata = null): string
@@ -93,7 +97,7 @@
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
             <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                <x-heroicon-o-briefcase class="h-5 w-5" />
+                <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::Briefcase" size="sm" />
             </div>
             <div>
                 <h3 class="text-text-high text-lg font-semibold">Work Experience</h3>
@@ -103,7 +107,7 @@
         @if ($hasExperience)
             <div class="flex items-center gap-2">
                 @if ($currentJob)
-                    <x-filament::badge size="sm" color="success">Currently Employed</x-filament::badge>
+                    <x-he4rt::tag size="sm" variant="solid">Currently Employed</x-he4rt::tag>
                 @endif
             </div>
         @endif
@@ -146,7 +150,9 @@
                             <div
                                 class="{{ $isCurrent ? 'bg-primary/20' : 'bg-muted' }} flex h-12 w-12 shrink-0 items-center justify-center rounded-lg"
                             >
-                                <x-heroicon-o-building-office-2
+                                <x-he4rt::icon
+                                    :icon="\Filament\Support\Icons\Heroicon::BuildingOffice2"
+                                    size="sm"
                                     class="h-6 w-6 {{ $isCurrent ? 'text-primary' : 'text-muted-foreground' }}"
                                 />
                             </div>
@@ -160,17 +166,21 @@
                                     </div>
 
                                     @if ($isCurrent)
-                                        <x-filament::badge color="success" size="sm">
-                                            <x-heroicon-o-clock class="mr-1 h-3 w-3" />
+                                        <x-he4rt::tag variant="solid" size="sm">
+                                            <x-he4rt::icon
+                                                :icon="\Filament\Support\Icons\Heroicon::Clock"
+                                                size="xs"
+                                                class="mr-1"
+                                            />
                                             Current
-                                        </x-filament::badge>
+                                        </x-he4rt::tag>
                                     @endif
                                 </div>
 
                                 {{-- Timeline and Duration --}}
                                 <div class="text-text-medium mt-2 flex items-center gap-4 text-xs">
                                     <span class="flex items-center gap-1">
-                                        <x-heroicon-o-calendar class="h-3 w-3" />
+                                        <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::Calendar" size="xs" />
                                         {{ $startDate->format('M Y') }} -
                                         {{ $isCurrent ? 'Present' : $endDate->format('M Y') }}
                                     </span>
@@ -188,15 +198,15 @@
                                 @if (! empty($skills))
                                     <div class="mt-4 flex flex-wrap gap-1.5">
                                         @foreach (array_slice($skills, 0, 8) as $skill)
-                                            <x-filament::badge color="gray" size="sm" class="text-[10px]">
+                                            <x-he4rt::tag variant="outline" size="sm" class="text-[10px]">
                                                 {{ $skill }}
-                                            </x-filament::badge>
+                                            </x-he4rt::tag>
                                         @endforeach
 
                                         @if (count($skills) > 8)
-                                            <x-filament::badge color="gray" size="sm" class="text-[10px]">
+                                            <x-he4rt::tag variant="outline" size="sm" class="text-[10px]">
                                                 +{{ count($skills) - 8 }} more
-                                            </x-filament::badge>
+                                            </x-he4rt::tag>
                                         @endif
                                     </div>
                                 @endif
@@ -223,7 +233,7 @@
                         <span class="text-text-high font-semibold">
                             {{ $currentJob ? 'Present' : $workExperiences->max('end_date')?->format('Y') ?? 'N/A' }}
                         </span>
-                        <span class="text-text-medium ml-2">({{ $totalYears }} years total)</span>
+                        <span class="text-text-medium ml-2">({{ $totalExperienceTimeString }})</span>
                     </div>
                 </div>
 
@@ -232,9 +242,9 @@
                     <p class="text-text-medium mb-2 text-xs font-medium">Companies</p>
                     <div class="flex flex-wrap gap-2">
                         @foreach ($workExperiences->pluck('company_name')->unique() as $company)
-                            <x-filament::badge size="sm" color="gray">
+                            <x-he4rt::tag size="sm" variant="outline">
                                 {{ $company }}
-                            </x-filament::badge>
+                            </x-he4rt::tag>
                         @endforeach
                     </div>
                 </div>
@@ -243,7 +253,11 @@
     @else
         {{-- No Experience State --}}
         <div class="bg-surface-01dp border-outline-low rounded-lg border p-8 text-center">
-            <x-heroicon-o-briefcase class="text-text-low mx-auto h-16 w-16" />
+            <x-he4rt::icon
+                :icon="\Filament\Support\Icons\Heroicon::Briefcase"
+                size="xl"
+                class="text-text-low mx-auto"
+            />
             <h4 class="text-text-high mt-4 text-lg font-medium">No Work Experience Listed</h4>
             <p class="text-text-medium mt-2 text-sm">
                 This candidate hasn't added any work experience to their profile yet.
