@@ -18,13 +18,14 @@ return new class extends Migration
                 'preferred_qualifications',
                 'benefits',
             ]);
+            $table->text('description')->after('title');
         });
     }
 
     public function down(): void
     {
         Schema::table('recruitment_job_postings', function (Blueprint $table): void {
-            $table->jsonb('description');
+            $table->text('description')->change();
             $table->jsonb('responsibilities');
             $table->jsonb('required_qualifications');
             $table->jsonb('preferred_qualifications');

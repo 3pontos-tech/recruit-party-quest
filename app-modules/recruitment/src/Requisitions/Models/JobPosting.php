@@ -20,7 +20,7 @@ use Illuminate\Support\Carbon;
  * @property string $title
  * @property string $slug
  * @property string $summary
- * @property Collection<int,string> $description
+ * @property string $description
  * @property string $about_company
  * @property string $about_team
  * @property string $work_schedule
