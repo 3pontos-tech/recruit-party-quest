@@ -9,14 +9,14 @@
 @endphp
 
 @if ($hasContent)
-    <x-filament::section>
+    <div class="bg-surface-01dp border-outline-low space-y-4 rounded-lg border p-4">
         <div class="space-y-4">
             {{-- Header --}}
             <div class="flex items-center gap-3">
                 <div
                     class="bg-success-100 text-success-600 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
                 >
-                    <x-filament::icon :icon="\Filament\Support\Icons\Heroicon::DocumentText" />
+                    <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::DocumentText" size="sm" />
                 </div>
                 <div>
                     <h3 class="text-text-high text-lg font-semibold">Cover Letter</h3>
@@ -33,5 +33,5 @@
                 </div>
             </div>
         </div>
-    </x-filament::section>
+    </div>
 @endif

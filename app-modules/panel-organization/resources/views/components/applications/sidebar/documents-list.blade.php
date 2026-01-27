@@ -13,7 +13,7 @@
             'type' => 'resume',
             'size' => '2.1 MB',
             'uploaded_at' => now()->subDays(5),
-            'icon' => 'heroicon-o-document-text',
+            'icon' => \Filament\Support\Icons\Heroicon::DocumentText,
             'color' => 'primary',
         ],
         [
@@ -22,7 +22,7 @@
             'type' => 'portfolio',
             'size' => '15.7 MB',
             'uploaded_at' => now()->subDays(5),
-            'icon' => 'heroicon-o-folder',
+            'icon' => \Filament\Support\Icons\Heroicon::Folder,
             'color' => 'success',
         ],
         [
@@ -31,7 +31,7 @@
             'type' => 'cover_letter',
             'size' => '245 KB',
             'uploaded_at' => now()->subDays(5),
-            'icon' => 'heroicon-o-envelope',
+            'icon' => \Filament\Support\Icons\Heroicon::Envelope,
             'color' => 'info',
         ],
         [
@@ -40,7 +40,7 @@
             'type' => 'references',
             'size' => '1.3 MB',
             'uploaded_at' => now()->subDays(3),
-            'icon' => 'heroicon-o-users',
+            'icon' => \Filament\Support\Icons\Heroicon::Users,
             'color' => 'warning',
         ],
     ];
@@ -51,11 +51,15 @@
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
             <h3 class="text-text-high text-sm font-semibold">Documents</h3>
-            <x-filament::badge size="sm" color="gray">
+            <x-he4rt::tag size="sm" variant="outline">
                 {{ count($documents) }}
-            </x-filament::badge>
+            </x-he4rt::tag>
         </div>
-        <x-he4rt::icon icon="heroicon-o-document-duplicate" size="sm" class="text-icon-medium" />
+        <x-he4rt::icon
+            :icon="\Filament\Support\Icons\Heroicon::DocumentDuplicate"
+            size="sm"
+            class="text-icon-medium"
+        />
     </div>
 
     {{-- Documents List --}}
@@ -69,7 +73,7 @@
                     <div
                         class="bg-{{ $document['color'] }}-100 text-{{ $document['color'] }}-600 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
                     >
-                        <x-he4rt::icon icon="{{ $document['icon'] }}" size="sm" />
+                        <x-he4rt::icon :icon="{{ $document['icon'] }}" size="sm" />
                     </div>
 
                     {{-- Document Info --}}
@@ -84,19 +88,17 @@
 
                     {{-- Actions --}}
                     <div class="flex items-center gap-1">
-                        <x-filament::button
+                        <x-he4rt::button
                             size="xs"
-                            color="gray"
-                            outlined
-                            icon="heroicon-o-eye"
+                            variant="outline"
+                            :icon="\Filament\Support\Icons\Heroicon::Eye"
                             disabled
                             title="View document"
                         />
-                        <x-filament::button
+                        <x-he4rt::button
                             size="xs"
-                            color="gray"
-                            outlined
-                            icon="heroicon-o-arrow-down-tray"
+                            variant="outline"
+                            :icon="\Filament\Support\Icons\Heroicon::ArrowDownTray"
                             disabled
                             title="Download document"
                         />
@@ -108,9 +110,15 @@
 
     {{-- Upload New Document --}}
     <div class="border-outline-low border-t pt-3">
-        <x-filament::button size="sm" color="primary" outlined class="w-full" icon="heroicon-o-plus" disabled>
+        <x-he4rt::button
+            size="sm"
+            variant="outline"
+            class="w-full"
+            :icon="\Filament\Support\Icons\Heroicon::Plus"
+            disabled
+        >
             Upload Additional Document
-        </x-filament::button>
+        </x-he4rt::button>
     </div>
 
     {{-- Document Stats --}}

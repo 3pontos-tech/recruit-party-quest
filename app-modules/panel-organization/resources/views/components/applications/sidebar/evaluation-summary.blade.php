@@ -50,11 +50,13 @@
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
             <h3 class="text-text-high text-sm font-semibold">Evaluations</h3>
-            <x-filament::badge size="sm" color="gray">
-                {{ $totalCompleted }}/{{ $totalEvaluations }}
-            </x-filament::badge>
+            <x-he4rt::tag size="sm" variant="outline">{{ $totalCompleted }}/{{ $totalEvaluations }}</x-he4rt::tag>
         </div>
-        <x-he4rt::icon icon="heroicon-o-clipboard-document-check" size="sm" class="text-icon-medium" />
+        <x-he4rt::icon
+            :icon="\Filament\Support\Icons\Heroicon::ClipboardDocumentCheck"
+            size="sm"
+            class="text-icon-medium"
+        />
     </div>
 
     {{-- Overall Score --}}
@@ -103,16 +105,20 @@
                                         </span>
                                         <span class="text-text-medium text-xs">/{{ $evaluation['max_score'] }}</span>
                                     </div>
-                                    <x-filament::badge color="success" size="xs">Completed</x-filament::badge>
+                                    <x-he4rt::tag variant="solid" size="xs">Completed</x-he4rt::tag>
                                 @elseif ($evaluation['status'] === 'scheduled')
-                                    <x-filament::badge color="warning" size="xs">Scheduled</x-filament::badge>
+                                    <x-he4rt::tag variant="outline" size="xs">Scheduled</x-he4rt::tag>
                                 @endif
                             </div>
                         </div>
 
                         {{-- Date --}}
                         <div class="text-text-medium flex items-center gap-2 text-xs">
-                            <x-he4rt::icon icon="heroicon-o-calendar-days" size="sm" class="text-icon-medium" />
+                            <x-he4rt::icon
+                                :icon="\Filament\Support\Icons\Heroicon::CalendarDays"
+                                size="sm"
+                                class="text-icon-medium"
+                            />
                             <span>
                                 @if ($evaluation['status'] === 'completed')
                                     {{ $evaluation['date']->format('M j, Y') }}
@@ -178,7 +184,7 @@
     @if ($nextEvaluation)
         <div class="bg-primary-50 border-primary-200 rounded-md border p-3">
             <div class="mb-2 flex items-center gap-2">
-                <x-he4rt::icon icon="heroicon-o-clock" size="sm" class="text-primary" />
+                <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::Clock" size="sm" class="text-primary" />
                 <span class="text-primary text-xs font-semibold">Next Evaluation</span>
             </div>
             <p class="text-text-high text-sm font-medium">{{ $nextEvaluation['type'] }}</p>
@@ -188,7 +194,13 @@
     @endif
 
     {{-- Action Button --}}
-    <x-filament::button size="sm" color="primary" outlined class="w-full" icon="heroicon-o-plus" disabled>
+    <x-he4rt::button
+        size="sm"
+        variant="outline"
+        class="w-full"
+        :icon="\Filament\Support\Icons\Heroicon::Plus"
+        disabled
+    >
         Schedule New Evaluation
-    </x-filament::button>
+    </x-he4rt::button>
 </div>

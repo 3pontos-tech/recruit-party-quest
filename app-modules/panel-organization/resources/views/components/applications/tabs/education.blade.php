@@ -39,7 +39,7 @@
     }
 @endphp
 
-<x-filament::section>
+<div class="bg-surface-01dp border-outline-low space-y-4 rounded-lg border p-4">
     <div class="space-y-6">
         {{-- Header --}}
         <div class="flex items-center justify-between">
@@ -47,7 +47,7 @@
                 <div
                     class="bg-warning-100 text-warning-600 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
                 >
-                    <x-heroicon-o-academic-cap class="h-5 w-5" />
+                    <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::AcademicCap" size="sm" />
                 </div>
                 <div>
                     <h3 class="text-text-high text-lg font-semibold">Education</h3>
@@ -57,12 +57,12 @@
             @if ($hasEducation)
                 <div class="flex items-center gap-2">
                     @if ($currentEnrolled > 0)
-                        <x-filament::badge color="info">{{ $currentEnrolled }} Current</x-filament::badge>
+                        <x-he4rt::tag variant="solid">{{ $currentEnrolled }} Current</x-he4rt::tag>
                     @endif
 
-                    <x-filament::badge color="warning">
-                        {{ $totalDegrees }} {{ Str::plural('degree', $totalDegrees) }}
-                    </x-filament::badge>
+                    <x-he4rt::tag variant="outline">
+                        {{ $totalDegrees }} {{ Str::plural('Degree', $totalDegrees) }}
+                    </x-he4rt::tag>
                 </div>
             @endif
         </div>
@@ -96,25 +96,25 @@
                         <div class="flex items-start justify-between">
                             <div class="flex-1 space-y-2">
                                 <div class="flex items-center gap-3">
-                                    <x-filament::badge color="{{ $color }}">
+                                    <x-he4rt::tag variant="solid">
                                         {{ $degreeCategory }}
-                                    </x-filament::badge>
+                                    </x-he4rt::tag>
                                     @if ($degree->is_enrolled)
-                                        <x-filament::badge
+                                        <x-he4rt::tag
                                             color="info"
                                             :icon="\Filament\Support\Icons\Heroicon::OutlinedClock"
                                         >
                                             {{-- <x-heroicon-o-clock class="w-3 h-3 mr-1" /> --}}
                                             In Progress
-                                        </x-filament::badge>
+                                        </x-he4rt::tag>
                                     @else
-                                        <x-filament::badge
-                                            color="success"
+                                        <x-he4rt::tag
+                                            variant="solid"
                                             :icon="\Filament\Support\Icons\Heroicon::CheckCircle"
                                         >
                                             {{-- <x-heroicon-o-check-circle class="w-3 h-3 mr-1" /> --}}
                                             Completed
-                                        </x-filament::badge>
+                                        </x-he4rt::tag>
                                     @endif
                                 </div>
 
@@ -145,19 +145,29 @@
                             <div
                                 class="bg-elevation-01dp border-outline-low flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border"
                             >
-                                <x-heroicon-o-building-library class="text-text-medium h-6 w-6" />
+                                <x-he4rt::icon
+                                    :icon="\Filament\Support\Icons\Heroicon::BuildingLibrary"
+                                    size="sm"
+                                    class="text-text-medium"
+                                />
                             </div>
                             <div class="flex-1">
                                 <p class="text-text-high text-base font-semibold">{{ $degree->institution }}</p>
                                 <div class="text-text-medium mt-1 flex items-center gap-4 text-sm">
                                     <span class="flex items-center gap-1">
-                                        <x-heroicon-o-calendar-days class="h-4 w-4" />
+                                        <x-he4rt::icon
+                                            :icon="\Filament\Support\Icons\Heroicon::CalendarDays"
+                                            size="xs"
+                                        />
                                         {{ $degree->start_date->format('M Y') }} -
                                         {{ $degree->is_enrolled ? 'Present' : $degree->end_date->format('M Y') }}
                                     </span>
                                     @if (! $degree->is_enrolled)
                                         <span class="flex items-center gap-1">
-                                            <x-heroicon-o-check-badge class="h-4 w-4" />
+                                            <x-he4rt::icon
+                                                :icon="\Filament\Support\Icons\Heroicon::CheckBadge"
+                                                size="xs"
+                                            />
                                             Graduated
                                         </span>
                                     @endif
@@ -186,9 +196,9 @@
                         <p class="text-text-medium mb-2 text-xs font-medium">Degree Types</p>
                         <div class="flex flex-wrap gap-2">
                             @foreach ($degreesByCategory as $category => $categoryDegrees)
-                                <x-filament::badge color="{{ $categoryColors[$category] ?? 'gray' }}">
+                                <x-he4rt::tag variant="solid">
                                     {{ $category }} ({{ $categoryDegrees->count() }})
-                                </x-filament::badge>
+                                </x-he4rt::tag>
                             @endforeach
                         </div>
                     </div>
@@ -198,12 +208,12 @@
                         <p class="text-text-medium mb-2 text-xs font-medium">Fields of Study</p>
                         <div class="flex flex-wrap gap-2">
                             @foreach ($fieldsByCategory as $field => $fieldDegrees)
-                                <x-filament::badge color="gray">
+                                <x-he4rt::tag variant="outline">
                                     {{ $field }}
                                     @if ($fieldDegrees->count() > 1)
                                         ({{ $fieldDegrees->count() }})
                                     @endif
-                                </x-filament::badge>
+                                </x-he4rt::tag>
                             @endforeach
                         </div>
                     </div>
@@ -212,17 +222,26 @@
         @else
             {{-- No Education State --}}
             <div class="bg-surface-01dp border-outline-low rounded-lg border p-8 text-center">
-                <x-heroicon-o-academic-cap class="text-text-low mx-auto h-16 w-16" />
+                <x-he4rt::icon
+                    :icon="\Filament\Support\Icons\Heroicon::AcademicCap"
+                    size="xl"
+                    class="text-text-low mx-auto"
+                />
                 <h4 class="text-text-high mt-4 text-lg font-medium">No Education Information</h4>
                 <p class="text-text-medium mt-2 text-sm">
                     This candidate hasn't added any education information to their profile yet.
                 </p>
                 <div class="mt-6">
-                    <x-filament::button size="sm" color="gray" outlined icon="heroicon-o-plus" disabled>
+                    <x-he4rt::button
+                        size="sm"
+                        variant="outline"
+                        :icon="\Filament\Support\Icons\Heroicon::Plus"
+                        disabled
+                    >
                         Add Education
-                    </x-filament::button>
+                    </x-he4rt::button>
                 </div>
             </div>
         @endif
     </div>
-</x-filament::section>
+</div>

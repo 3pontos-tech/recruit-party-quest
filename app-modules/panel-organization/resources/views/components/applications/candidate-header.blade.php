@@ -1,9 +1,14 @@
 @props(['record' => []])
 
 @php
+    /** @var \He4rt\Candidates\Models\Skill $skills */
+    /** @var \He4rt\Candidates\Models\Candidate $candidate */
+    /** @var He4rt\Users\ $user */
+    /** @var \He4rt\Recruitment\Requisitions\Models\JobRequisition $jobRequisition  */
     $candidate = $record->candidate;
     $user = $candidate->user;
     $jobRequisition = $record->requisition;
+    $skills = $candidate->skills()->get();
 
     $initials = collect(explode(' ', trim($user->name)))
         ->filter()
@@ -12,14 +17,32 @@
         ->implode('');
 
     //TODO: Replace with real data
-    $skills = ['Laravel', 'Vue.js', 'PHP', 'JavaScript', 'MySQL', 'Docker'];
-    $experience = '5+ years';
-    $availability = 'Available immediately';
+    $totalExperienceTime = $candidate->totalExperienceTime();
+
+    $years = $totalExperienceTime['years'];
+    $months = $totalExperienceTime['months'];
+
+    $experienceTimeString = '';
+
+    if ($years > 0 && $months > 0) {
+        $experienceTimeString = "{$years} " . Str::plural('year', $years) . " and {$months} " . Str::plural('month', $months);
+    } elseif ($years > 0) {
+        $experienceTimeString = "{$years} " . Str::plural('year', $years);
+    } else {
+        $experienceTimeString = "{$months} " . Str::plural('month', $months);
+    }
+    $availabilityDate = $candidate->availability_date;
+
+    if ($availabilityDate === null) {
+        $availability = 'Immediate';
+    } else {
+        $availability = $availabilityDate->isPast() ? 'Immediate' : 'Available from ' . $availabilityDate->format('d M Y');
+    }
     $location = 'San Francisco, CA';
     $education = 'Computer Science, University Name';
 @endphp
 
-<x-filament::section>
+<div class="bg-surface-01dp border-outline-low space-y-4 rounded-lg border p-4">
     {{-- Candidate Header --}}
     <header class="flex flex-col gap-2 md:grid-cols-[1fr_auto]">
         {{-- Tracking Code --}}
@@ -53,12 +76,12 @@
                         @endif
                     </div>
                     <div>
-                        <x-filament::badge>
+                        <x-he4rt::tag variant="outline">
                             {{ $record->status->getLabel() }}
-                        </x-filament::badge>
-                        <x-filament::badge>
+                        </x-he4rt::tag>
+                        <x-he4rt::tag variant="outline">
                             {{ $record->source->getLabel() }}
-                        </x-filament::badge>
+                        </x-he4rt::tag>
                     </div>
                 </div>
             </div>
@@ -66,14 +89,22 @@
             <div class="flex flex-col items-end gap-x-6 gap-y-3 pt-1">
                 {{-- Email --}}
                 <div class="flex items-center gap-2">
-                    <x-he4rt::icon icon="heroicon-o-envelope" size="sm" class="text-icon-medium" />
+                    <x-he4rt::icon
+                        :icon="\Filament\Support\Icons\Heroicon::Envelope"
+                        size="sm"
+                        class="text-icon-medium"
+                    />
                     <span>{{ $user->email }}</span>
                 </div>
 
                 {{-- Phone --}}
                 @if ($candidate->phone_number)
                     <div class="flex items-center gap-2">
-                        <x-he4rt::icon icon="heroicon-o-phone" size="sm" class="text-icon-medium" />
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::Phone"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
                         <span>{{ $candidate->phone_number }}</span>
                     </div>
                 @endif
@@ -81,20 +112,28 @@
                 <div class="flex gap-2">
                     {{-- LinkedIn --}}
                     @if ($candidate->linkedin_url)
-                        <x-filament::badge icon="heroicon-o-link" class="bg-black p-2">
+                        <x-he4rt::tag
+                            :icon="\Filament\Support\Icons\Heroicon::Link"
+                            variant="solid"
+                            class="bg-black p-2"
+                        >
                             <a href="{{ $candidate->linkedin_url }}" target="_blank" class="hover:text-blue-400">
                                 LinkedIn
                             </a>
-                        </x-filament::badge>
+                        </x-he4rt::tag>
                     @endif
 
                     {{-- Portfolio --}}
                     @if ($candidate->portfolio_url)
-                        <x-filament::badge icon="heroicon-o-globe-alt" class="bg-black p-2">
+                        <x-he4rt::tag
+                            :icon="\Filament\Support\Icons\Heroicon::GlobeAlt"
+                            variant="solid"
+                            class="bg-black p-2"
+                        >
                             <a href="{{ $candidate->portfolio_url }}" target="_blank" class="hover:text-blue-400">
                                 Portfolio
                             </a>
-                        </x-filament::badge>
+                        </x-he4rt::tag>
                     @endif
                 </div>
             </div>
@@ -102,88 +141,115 @@
         {{-- Application Info --}}
         <div class="border-border border-outline-low w-full">
             <div class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-
                 <div>
-            <span class="flex items-center gap-1 mb-1 text-xs tracking-wider text-gray-500 uppercase">
-                <x-he4rt::icon icon="heroicon-o-briefcase" size="sm" class="text-icon-medium" />
-                Position
-            </span>
-                    <p class="text-foreground text-sm font-medium">
+                    <span class="mb-1 flex items-center gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::Briefcase"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
+                        Position
+                    </span>
+                    <p class="text-foreground ml-5 text-sm font-medium">
                         {{ $jobRequisition->post->title }}
                     </p>
                 </div>
 
                 <div>
-            <span class="flex items-center gap-1 mb-1 text-xs tracking-wider text-gray-500 uppercase">
-                <x-he4rt::icon icon="heroicon-o-building-office-2" size="sm" class="text-icon-medium" />
-                Department
-            </span>
-                    <p class="text-foreground text-sm font-medium">
+                    <span class="mb-1 flex items-center gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::BuildingOffice2"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
+                        Department
+                    </span>
+                    <p class="text-foreground ml-5 text-sm font-medium">
                         {{ $jobRequisition->team->name }}
                     </p>
                 </div>
 
                 <div>
-            <span class="flex items-center gap-1 mb-1 text-xs tracking-wider text-gray-500 uppercase">
-                <x-he4rt::icon icon="heroicon-o-calendar" size="sm" class="text-icon-medium" />
-                Applied
-            </span>
-                    <p class="text-foreground text-sm font-medium">
+                    <span class="mb-1 flex items-center gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::Calendar"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
+                        Applied
+                    </span>
+                    <p class="text-foreground ml-5 text-sm font-medium">
                         {{ $record->created_at->format('M j, Y') }}
                     </p>
                 </div>
 
                 <div>
-            <span class="flex gap-1 mb-1 text-xs tracking-wider text-gray-500 uppercase">
-                <x-he4rt::icon icon="heroicon-o-briefcase" size="sm" class="text-icon-medium" />
-                Experience
-            </span>
-                    <p class="text-text-high text-sm font-semibold">{{ $experience }}</p>
+                    <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::Briefcase"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
+                        Experience
+                    </span>
+                    <p class="text-text-high ml-5 text-sm font-semibold">{{ $experienceTimeString }}</p>
                 </div>
 
                 <div>
-            <span class="flex gap-1 mb-1 text-xs tracking-wider text-gray-500 uppercase">
-                <x-he4rt::icon icon="heroicon-o-clock" size="sm" class="text-icon-medium" />
-                Availability
-            </span>
-                    <p class="text-text-high text-sm font-semibold">{{ $availability }}</p>
+                    <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::Clock"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
+                        Availability
+                    </span>
+                    <p class="text-text-high ml-5 text-sm font-semibold">{{ $availability }}</p>
                 </div>
 
                 <div>
-            <span class="flex gap-1 mb-1 text-xs tracking-wider text-gray-500 uppercase">
-                <x-he4rt::icon icon="heroicon-o-map-pin" size="sm" class="text-icon-medium" />
-                Location
-            </span>
-                    <p class="text-text-high text-sm font-semibold">{{ $location }}</p>
+                    <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::MapPin"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
+                        Location
+                    </span>
+                    <p class="text-text-high ml-5 text-sm font-semibold">{{ $location }}</p>
                 </div>
 
                 <div>
-            <span class="flex gap-1 mb-1 text-xs tracking-wider text-gray-500 uppercase">
-                <x-he4rt::icon icon="heroicon-o-academic-cap" size="sm" class="text-icon-medium" />
-                Education
-            </span>
-                    <p class="text-text-high text-sm font-semibold">{{ $education }}</p>
+                    <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::AcademicCap"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
+                        Education
+                    </span>
+                    <p class="text-text-high ml-5 text-sm font-semibold">{{ $education }}</p>
                 </div>
 
-                <div class="sm:col-span-2 lg:col-span-4 space-y-3">
+                <div class="space-y-3 sm:col-span-2 lg:col-span-4">
                     <div class="flex items-center gap-2">
-                        <x-he4rt::icon icon="heroicon-o-code-bracket" size="sm" class="text-icon-medium" />
-                        <span class="text-text-medium text-xs font-semibold tracking-wider uppercase">
-                    Key Skills
-                </span>
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::CodeBracket"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
+                        <span class="text-text-medium text-xs font-semibold tracking-wider uppercase">Key Skills</span>
                     </div>
 
                     <div class="flex flex-wrap gap-2">
                         @foreach ($skills as $skill)
-                            <x-filament::badge size="sm" color="gray">
-                                {{ $skill }}
-                            </x-filament::badge>
+                            <x-he4rt::tag size="sm" variant="outline">
+                                {{ $skill->name }}
+                            </x-he4rt::tag>
                         @endforeach
                     </div>
                 </div>
-
             </div>
         </div>
-
     </header>
-</x-filament::section>
+</div>

@@ -23,14 +23,18 @@
     }
 @endphp
 
-<x-filament::section heading="Pipeline Progress" icon="heroicon-o-chart-bar">
-    <x-slot name="afterHeader">
+<div class="bg-surface-01dp border-outline-low space-y-4 rounded-lg border p-4">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::ChartBar" size="sm" class="text-icon-medium" />
+            <h3 class="text-text-high text-sm font-semibold">Pipeline Progress</h3>
+        </div>
         @if ($currentStage)
-            <x-filament::badge size="sm" class="px-2">
+            <x-he4rt::tag size="sm" variant="outline" class="px-2">
                 {{ $currentStageIndex + 1 }} / {{ $stages->count() }}
-            </x-filament::badge>
+            </x-he4rt::tag>
         @endif
-    </x-slot>
+    </div>
     <div class="space-y-4 rounded-lg">
         {{-- Progress Bar Overview --}}
         <div class="space-y-2">
@@ -71,7 +75,11 @@
                         class="{{ $isCompleted || $isCurrent ? 'bg-primary border-primary' : 'bg-elevation-surface border-outline-low' }} relative z-20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 transition-colors duration-300"
                     >
                         @if ($isCompleted)
-                            <x-he4rt::icon icon="heroicon-m-check" size="sm" class="text-white" />
+                            <x-he4rt::icon
+                                :icon="\Filament\Support\Icons\Heroicon::Check"
+                                size="sm"
+                                class="text-white"
+                            />
                         @elseif ($isCurrent)
                             <div class="h-2.5 w-2.5 animate-pulse rounded-full bg-white"></div>
                         @else
@@ -90,9 +98,9 @@
 
                             {{-- Stage Status Badge --}}
                             @if ($isCurrent)
-                                <x-filament::badge color="primary" size="xs" class="p-1">Current</x-filament::badge>
+                                <x-he4rt::tag variant="solid" size="xs" class="p-1">Current</x-he4rt::tag>
                             @elseif ($isCompleted)
-                                <x-filament::badge color="success" size="xs" class="p-1">Done</x-filament::badge>
+                                <x-he4rt::tag variant="solid" size="xs" class="p-1">Done</x-he4rt::tag>
                             @endif
                         </div>
 
@@ -108,7 +116,11 @@
                         @if ($isCurrent)
                             <div class="mt-2 space-y-1">
                                 <div class="text-text-medium flex items-center gap-2 text-xs">
-                                    <x-he4rt::icon icon="heroicon-o-clock" size="sm" class="text-primary" />
+                                    <x-he4rt::icon
+                                        :icon="\Filament\Support\Icons\Heroicon::Clock"
+                                        size="sm"
+                                        class="text-primary"
+                                    />
                                     <span>Active since {{ $record->updated_at->format('M j, Y') }}</span>
                                 </div>
                             </div>
@@ -130,4 +142,4 @@
             </div>
         </div>
     </div>
-</x-filament::section>
+</div>

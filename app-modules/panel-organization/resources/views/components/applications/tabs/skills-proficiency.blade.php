@@ -24,7 +24,7 @@
     ];
 @endphp
 
-<x-filament::section>
+<div class="bg-surface-01dp border-outline-low space-y-4 rounded-lg border p-4">
     <div class="space-y-6">
         {{-- Header --}}
         <div class="flex items-center justify-between">
@@ -32,7 +32,7 @@
                 <div
                     class="bg-success-100 text-success-600 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
                 >
-                    <x-heroicon-o-code-bracket class="h-5 w-5" />
+                    <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::CodeBracket" size="sm" />
                 </div>
                 <div>
                     <h3 class="text-text-high text-lg font-semibold">Skills & Proficiency</h3>
@@ -40,7 +40,7 @@
                 </div>
             </div>
             @if ($hasSkills)
-                <x-filament::badge size="sm" color="success">{{ $skills_total }} skills</x-filament::badge>
+                <x-he4rt::tag size="sm" variant="solid">{{ $skills_total }} skills</x-he4rt::tag>
             @endif
         </div>
 
@@ -70,9 +70,9 @@
                                     {{-- Skill Name and Level --}}
                                     <div class="mb-2 flex items-center justify-between">
                                         <h5 class="text-text-high font-medium">{{ $skill->name }}</h5>
-                                        <x-filament::badge size="xs" color="{{ $proficiency['color'] }}" class="p-1">
+                                        <x-he4rt::tag size="xs" variant="solid" class="p-1">
                                             {{ $proficiency['label'] }}
-                                        </x-filament::badge>
+                                        </x-he4rt::tag>
                                     </div>
 
                                     {{-- Proficiency Bar --}}
@@ -99,7 +99,11 @@
                     </div>
                 @empty
                     <div class="bg-elevation-02dp border-outline-low rounded-lg border p-6 text-center">
-                        <x-heroicon-o-code-bracket class="text-text-low mx-auto h-12 w-12" />
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::CodeBracket"
+                            size="lg"
+                            class="text-text-low mx-auto"
+                        />
                         <h4 class="text-text-high mt-2 text-sm font-medium">No skills by category</h4>
                         <p class="text-text-medium mt-1 text-sm">Skills data might not be categorized yet.</p>
                     </div>
@@ -108,17 +112,26 @@
         @else
             {{-- No Skills State --}}
             <div class="bg-surface-01dp border-outline-low rounded-lg border p-8 text-center">
-                <x-heroicon-o-code-bracket class="text-text-low mx-auto h-16 w-16" />
+                <x-he4rt::icon
+                    :icon="\Filament\Support\Icons\Heroicon::CodeBracket"
+                    size="xl"
+                    class="text-text-low mx-auto"
+                />
                 <h4 class="text-text-high mt-4 text-lg font-medium">No Skills Listed</h4>
                 <p class="text-text-medium mt-2 text-sm">
                     This candidate hasn't added any skills to their profile yet.
                 </p>
                 <div class="mt-4">
-                    <x-filament::button size="sm" color="gray" outlined icon="heroicon-o-plus" disabled>
+                    <x-he4rt::button
+                        size="sm"
+                        variant="outline"
+                        :icon="\Filament\Support\Icons\Heroicon::Plus"
+                        disabled
+                    >
                         Add Skills
-                    </x-filament::button>
+                    </x-he4rt::button>
                 </div>
             </div>
         @endif
     </div>
-</x-filament::section>
+</div>
