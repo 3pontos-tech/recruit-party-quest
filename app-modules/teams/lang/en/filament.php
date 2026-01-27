@@ -78,7 +78,7 @@ return [
         ],
     ],
     'profile' => [
-        'label' => 'Company Profile',
+        'label' => 'Team Profile',
         'sections' => [
             'about' => 'About Your Company',
             'about_description' => 'Tell candidates about your company, culture, and what makes you unique.',

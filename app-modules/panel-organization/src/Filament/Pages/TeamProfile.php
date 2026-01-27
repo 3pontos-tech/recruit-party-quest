@@ -19,7 +19,7 @@ use Illuminate\Contracts\Support\Htmlable;
 /**
  * @property-read Schema $form
  */
-class CompanyProfile extends Page
+class TeamProfile extends Page
 {
     use InteractsWithSchemas;
 
@@ -30,9 +30,9 @@ class CompanyProfile extends Page
 
     protected static ?int $navigationSort = 100;
 
-    protected static ?string $slug = 'company-profile';
+    protected static ?string $slug = 'team-profile';
 
-    protected string $view = 'panel-organization::pages.company-profile';
+    protected string $view = 'panel-organization::pages.team-profile';
 
     public static function getNavigationIcon(): string|Heroicon|null
     {
@@ -73,7 +73,7 @@ class CompanyProfile extends Page
                     ->schema([
                         Textarea::make('about')
                             ->label(__('teams::filament.profile.fields.about'))
-                            ->rows(6)
+                            ->maxLength(255)
                             ->columnSpanFull(),
                     ]),
 
