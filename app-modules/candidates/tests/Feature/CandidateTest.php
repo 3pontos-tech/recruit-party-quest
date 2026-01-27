@@ -72,3 +72,35 @@ it('casts has_disability to boolean', function (): void {
 
     expect($candidate->has_disability)->toBeBool();
 });
+
+it('formats experience time as localized string', function (): void {
+    $candidate = Candidate::factory()->create();
+
+    WorkExperience::factory()->create([
+        'candidate_id' => $candidate->id,
+        'start_date' => now()->subMonths(18),
+        'end_date' => now(),
+        'is_currently_working_here' => false,
+    ]);
+
+    $formatted = $candidate->total_experience_formatted;
+
+    expect($formatted)->toBeString()
+        ->and($formatted)->not->toBeEmpty();
+});
+
+it('calculates individual experience duration correctly', function (): void {
+    $candidate = Candidate::factory()->create();
+
+    $experience = WorkExperience::factory()->create([
+        'candidate_id' => $candidate->id,
+        'start_date' => now()->subMonths(6),
+        'end_date' => now(),
+        'is_currently_working_here' => false,
+    ]);
+
+    $duration = $candidate->getExperienceDuration($experience);
+
+    expect($duration)->toBeString()
+        ->and($duration)->not->toBeEmpty();
+});
