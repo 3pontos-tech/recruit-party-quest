@@ -22,17 +22,7 @@
     $years = $totalExperienceTime['years'];
     $months = $totalExperienceTime['months'];
 
-    $experienceTimeString = '';
-    $yearsPart = $years > 0 ? trans_choice('panel-organization::view.time.year', $years, ['count' => $years]) : '';
-    $monthsPart = $months > 0 ? trans_choice('panel-organization::view.time.month', $months, ['count' => $months]) : '';
-
-    if ($years > 0 && $months > 0) {
-        $experienceTimeString = $yearsPart . ' ' . __('panel-organization::view.time.and') . ' ' . $monthsPart;
-    } elseif ($years > 0) {
-        $experienceTimeString = $yearsPart;
-    } else {
-        $experienceTimeString = $monthsPart;
-    }
+    $experienceTimeString = $candidate->totalExperienceFormatted;
     $availabilityDate = $candidate->availability_date;
 
     if ($availabilityDate === null) {
