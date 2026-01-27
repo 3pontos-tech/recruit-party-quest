@@ -1,3 +1,7 @@
+@props([
+    'team' => null,
+])
+
 <x-he4rt::card
     variant="solid"
     density="normal"
@@ -7,10 +11,11 @@
     <div class="flex flex-col gap-4">
         {{-- Header Section --}}
         <div class="flex flex-col gap-2">
-            <x-he4rt::heading level="3" size="md" class="text-text-high">Get to know 3 Pontos</x-he4rt::heading>
+            <x-he4rt::heading level="3" size="md" class="text-text-high">
+                Get to know {{ $team->name }}
+            </x-he4rt::heading>
             <x-he4rt::text size="sm" class="text-text-medium leading-relaxed">
-                We are the ecosystem that unites solution and knowledge in a single place. We accelerate your company
-                while strengthening your career.
+                {{ $team->about }}
             </x-he4rt::text>
         </div>
 
