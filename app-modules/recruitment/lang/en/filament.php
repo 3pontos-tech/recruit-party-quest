@@ -90,6 +90,7 @@ return [
             'compensation' => 'Compensation',
             'settings' => 'Settings',
             'job_posting' => 'Job Posting',
+            'external_posting' => 'External Posting',
         ],
         'fields' => [
             'id' => 'ID',

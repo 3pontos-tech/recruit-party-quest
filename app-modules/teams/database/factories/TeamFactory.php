@@ -17,11 +17,15 @@ class TeamFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'description' => fake()->text(),
-            'slug' => fake()->slug(),
+            'name' => fake()->company(),
+            'description' => fake()->sentence(10),
+            'slug' => fake()->unique()->slug(),
             'status' => TeamStatus::Active->value,
-            'contact_email' => fake()->unique()->safeEmail(),
+            'contact_email' => fake()->unique()->companyEmail(),
+            'about' => fake()->paragraphs(3, true),
+            'work_schedule' => 'Monday to Friday, 9am - 6pm. Flexible hours available.',
+            'accessibility_accommodations' => fake()->sentence(),
+            'is_disability_confident' => fake()->boolean(),
 
             'owner_id' => User::factory(),
         ];

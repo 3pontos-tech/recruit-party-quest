@@ -63,10 +63,10 @@ it('casts benefits to array', function (): void {
     expect($posting->benefits)->toBeArray();
 });
 
-it('casts is_disability_confident to boolean', function (): void {
-    $posting = JobPosting::factory()->create(['is_disability_confident' => true]);
+it('can access team disability_confident flag via team relationship', function (): void {
+    $posting = JobPosting::factory()->create();
 
-    expect($posting->is_disability_confident)->toBeBool();
+    expect($posting->team->is_disability_confident)->toBeBool();
 });
 
 it('uses soft deletes', function (): void {
