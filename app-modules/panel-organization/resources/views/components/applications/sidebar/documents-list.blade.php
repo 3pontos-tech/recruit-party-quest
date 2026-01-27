@@ -50,9 +50,9 @@
     {{-- Header --}}
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-            <h3 class="text-text-high text-sm font-semibold">Documents</h3>
+            <h3 class="text-text-high text-sm font-semibold">{{ __('panel-organization::documents.title') }}</h3>
             <x-he4rt::tag size="sm" variant="outline">
-                {{ count($documents) }}
+                {{ trans_choice('panel-organization::documents.count', count($documents), ['count' => count($documents)]) }}
             </x-he4rt::tag>
         </div>
         <x-he4rt::icon
@@ -93,14 +93,14 @@
                             variant="outline"
                             :icon="\Filament\Support\Icons\Heroicon::Eye"
                             disabled
-                            title="View document"
+                            title="{{ __('panel-organization::documents.view_title') }}"
                         />
                         <x-he4rt::button
                             size="xs"
                             variant="outline"
                             :icon="\Filament\Support\Icons\Heroicon::ArrowDownTray"
                             disabled
-                            title="Download document"
+                            title="{{ __('panel-organization::documents.download_title') }}"
                         />
                     </div>
                 </div>
@@ -117,7 +117,7 @@
             :icon="\Filament\Support\Icons\Heroicon::Plus"
             disabled
         >
-            Upload Additional Document
+            {{ __('panel-organization::documents.upload_button') }}
         </x-he4rt::button>
     </div>
 
@@ -126,35 +126,37 @@
         <div class="grid grid-cols-2 gap-4 text-center">
             <div>
                 <p class="text-text-high text-sm font-bold">{{ count($documents) }}</p>
-                <p class="text-text-medium text-xs">Total Files</p>
+                <p class="text-text-medium text-xs">{{ __('panel-organization::documents.total_files') }}</p>
             </div>
             <div>
                 <p class="text-text-high text-sm font-bold">19.3 MB</p>
-                <p class="text-text-medium text-xs">Total Size</p>
+                <p class="text-text-medium text-xs">{{ __('panel-organization::documents.total_size') }}</p>
             </div>
         </div>
     </div>
 
     {{-- Document Types Guide --}}
     <div class="space-y-2">
-        <h4 class="text-text-medium text-xs font-semibold tracking-wider uppercase">Document Types</h4>
+        <h4 class="text-text-medium text-xs font-semibold tracking-wider uppercase">
+            {{ __('panel-organization::documents.types_title') }}
+        </h4>
 
         <div class="grid grid-cols-2 gap-2 text-xs">
             <div class="flex items-center gap-2">
                 <div class="bg-primary-500 h-2 w-2 rounded-full"></div>
-                <span class="text-text-medium">Resume/CV</span>
+                <span class="text-text-medium">{{ __('panel-organization::documents.type.resume') }}</span>
             </div>
             <div class="flex items-center gap-2">
                 <div class="bg-success-500 h-2 w-2 rounded-full"></div>
-                <span class="text-text-medium">Portfolio</span>
+                <span class="text-text-medium">{{ __('panel-organization::documents.type.portfolio') }}</span>
             </div>
             <div class="flex items-center gap-2">
                 <div class="bg-info-500 h-2 w-2 rounded-full"></div>
-                <span class="text-text-medium">Cover Letter</span>
+                <span class="text-text-medium">{{ __('panel-organization::documents.type.cover_letter') }}</span>
             </div>
             <div class="flex items-center gap-2">
                 <div class="bg-warning-500 h-2 w-2 rounded-full"></div>
-                <span class="text-text-medium">References</span>
+                <span class="text-text-medium">{{ __('panel-organization::documents.type.references') }}</span>
             </div>
         </div>
     </div>

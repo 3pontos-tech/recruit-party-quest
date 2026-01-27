@@ -49,7 +49,7 @@
     {{-- Header --}}
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-            <h3 class="text-text-high text-sm font-semibold">Evaluations</h3>
+            <h3 class="text-text-high text-sm font-semibold">{{ __('panel-organization::evaluations.title') }}</h3>
             <x-he4rt::tag size="sm" variant="outline">{{ $totalCompleted }}/{{ $totalEvaluations }}</x-he4rt::tag>
         </div>
         <x-he4rt::icon
@@ -62,7 +62,9 @@
     {{-- Overall Score --}}
     <div class="bg-elevation-02dp border-outline-low rounded-md border p-3 text-center">
         <div class="space-y-1">
-            <p class="text-text-medium text-xs font-semibold tracking-wider uppercase">Average Score</p>
+            <p class="text-text-medium text-xs font-semibold tracking-wider uppercase">
+                {{ __('panel-organization::evaluations.average_score') }}
+            </p>
             <div class="flex items-center justify-center gap-2">
                 <span class="text-text-high text-2xl font-bold">{{ number_format($averageScore, 1) }}</span>
                 <span class="text-text-medium text-sm">/10</span>
@@ -77,14 +79,16 @@
             </div>
 
             <p class="text-text-medium text-xs">
-                Based on {{ $totalCompleted }} completed {{ Str::plural('evaluation', $totalCompleted) }}
+                {{ trans_choice('panel-organization::evaluations.based_on', $totalCompleted, ['count' => $totalCompleted]) }}
             </p>
         </div>
     </div>
 
     {{-- Evaluations List --}}
     <div class="space-y-3">
-        <h4 class="text-text-medium text-xs font-semibold tracking-wider uppercase">Interview History</h4>
+        <h4 class="text-text-medium text-xs font-semibold tracking-wider uppercase">
+            {{ __('panel-organization::evaluations.history') }}
+        </h4>
 
         <div class="space-y-2">
             @foreach ($evaluations as $evaluation)
@@ -105,9 +109,13 @@
                                         </span>
                                         <span class="text-text-medium text-xs">/{{ $evaluation['max_score'] }}</span>
                                     </div>
-                                    <x-he4rt::tag variant="solid" size="xs">Completed</x-he4rt::tag>
+                                    <x-he4rt::tag variant="solid" size="xs">
+                                        {{ __('panel-organization::evaluations.completed') }}
+                                    </x-he4rt::tag>
                                 @elseif ($evaluation['status'] === 'scheduled')
-                                    <x-he4rt::tag variant="outline" size="xs">Scheduled</x-he4rt::tag>
+                                    <x-he4rt::tag variant="outline" size="xs">
+                                        {{ __('panel-organization::evaluations.scheduled') }}
+                                    </x-he4rt::tag>
                                 @endif
                             </div>
                         </div>
@@ -159,17 +167,17 @@
         <div class="grid grid-cols-3 gap-4 text-center">
             <div>
                 <p class="text-text-high text-sm font-bold">{{ $totalCompleted }}</p>
-                <p class="text-text-medium text-xs">Completed</p>
+                <p class="text-text-medium text-xs">{{ __('panel-organization::evaluations.completed') }}</p>
             </div>
             <div>
                 <p class="text-text-high text-sm font-bold">{{ $totalEvaluations - $totalCompleted }}</p>
-                <p class="text-text-medium text-xs">Remaining</p>
+                <p class="text-text-medium text-xs">{{ __('panel-organization::evaluations.remaining') }}</p>
             </div>
             <div>
                 <p class="text-text-high text-sm font-bold">
                     {{ round(($totalCompleted / $totalEvaluations) * 100) }}%
                 </p>
-                <p class="text-text-medium text-xs">Progress</p>
+                <p class="text-text-medium text-xs">{{ __('panel-organization::evaluations.progress') }}</p>
             </div>
         </div>
     </div>
@@ -185,11 +193,15 @@
         <div class="bg-primary-50 border-primary-200 rounded-md border p-3">
             <div class="mb-2 flex items-center gap-2">
                 <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::Clock" size="sm" class="text-primary" />
-                <span class="text-primary text-xs font-semibold">Next Evaluation</span>
+                <span class="text-primary text-xs font-semibold">
+                    {{ __('panel-organization::evaluations.next') }}
+                </span>
             </div>
             <p class="text-text-high text-sm font-medium">{{ $nextEvaluation['type'] }}</p>
             <p class="text-text-medium text-xs">{{ $nextEvaluation['date']->format('M j, Y \a\t g:i A') }}</p>
-            <p class="text-text-medium text-xs">Interviewer: {{ $nextEvaluation['interviewer'] }}</p>
+            <p class="text-text-medium text-xs">
+                {{ __('panel-organization::evaluations.interviewer') }}: {{ $nextEvaluation['interviewer'] }}
+            </p>
         </div>
     @endif
 
@@ -201,6 +213,6 @@
         :icon="\Filament\Support\Icons\Heroicon::Plus"
         disabled
     >
-        Schedule New Evaluation
+        {{ __('panel-organization::evaluations.schedule_button') }}
     </x-he4rt::button>
 </div>

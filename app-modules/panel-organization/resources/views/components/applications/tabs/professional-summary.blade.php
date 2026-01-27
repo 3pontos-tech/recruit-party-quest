@@ -19,13 +19,19 @@
                     <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::User" size="sm" />
                 </div>
                 <div>
-                    <h3 class="text-text-high text-lg font-semibold">Professional Summary</h3>
-                    <p class="text-text-medium text-sm">Candidate's professional background and experience</p>
+                    <h3 class="text-text-high text-lg font-semibold">
+                        {{ __('panel-organization::tabs.professional_summary.title') }}
+                    </h3>
+                    <p class="text-text-medium text-sm">
+                        {{ __('panel-organization::tabs.professional_summary.subtitle') }}
+                    </p>
                 </div>
             </div>
             @if ($hasContent)
                 <div class="flex items-center gap-2">
-                    <x-he4rt::tag size="sm" variant="solid">Complete</x-he4rt::tag>
+                    <x-he4rt::tag size="sm" variant="solid">
+                        {{ __('panel-organization::tabs.professional_summary.complete') }}
+                    </x-he4rt::tag>
                 </div>
             @endif
         </div>
@@ -47,8 +53,12 @@
                     size="xl"
                     class="text-text-low mx-auto"
                 />
-                <h4 class="text-text-high mt-4 text-lg font-medium">No Professional Summary</h4>
-                <p class="text-text-medium mt-2 text-sm">This candidate hasn't provided a professional summary yet.</p>
+                <h4 class="text-text-high mt-4 text-lg font-medium">
+                    {{ __('panel-organization::tabs.professional_summary.no_summary') }}
+                </h4>
+                <p class="text-text-medium mt-2 text-sm">
+                    {{ __('panel-organization::tabs.professional_summary.no_summary_text') }}
+                </p>
             </div>
         @endif
     </div>

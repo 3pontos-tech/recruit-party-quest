@@ -35,12 +35,16 @@
                     <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::CodeBracket" size="sm" />
                 </div>
                 <div>
-                    <h3 class="text-text-high text-lg font-semibold">Skills & Proficiency</h3>
-                    <p class="text-text-medium text-sm">Technical and professional competencies</p>
+                    <h3 class="text-text-high text-lg font-semibold">
+                        {{ __('panel-organization::tabs.skills_title') }}
+                    </h3>
+                    <p class="text-text-medium text-sm">{{ __('panel-organization::tabs.skills_subtitle') }}</p>
                 </div>
             </div>
             @if ($hasSkills)
-                <x-he4rt::tag size="sm" variant="solid">{{ $skills_total }} skills</x-he4rt::tag>
+                <x-he4rt::tag size="sm" variant="solid">
+                    {{ trans_choice('panel-organization::tabs.skills_count', $skills_total, ['count' => $skills_total]) }}
+                </x-he4rt::tag>
             @endif
         </div>
 
@@ -79,7 +83,7 @@
                                     <div class="space-y-2">
                                         <div class="bg-elevation-01dp h-2 w-full overflow-hidden rounded-full">
                                             <div
-                                                class="bg-{{ $proficiency['color'] }}-500 h-full transition-all duration-500"
+                                                class="bg-{{ $proficiency['color'] }} h-full transition-all duration-500"
                                                 style="width: {{ $proficiency['width'] }}%"
                                             ></div>
                                         </div>
@@ -88,8 +92,22 @@
                                         <div class="text-text-medium flex items-center justify-between text-xs">
                                             <span>{{ $proficiency['label'] }}</span>
                                             <span>
-                                                {{ $yearsOfExperience }}
-                                                {{ $yearsOfExperience == 1 ? 'year' : 'years' }} experience
+                                                @php
+                                                    $skillYears = (int) ($yearsOfExperience ?? 0);
+                                                    $skillMonths = 0; // months not tracked separately in pivot; keep months=0
+                                                @endphp
+
+                                                @if ($skillYears > 0 && $skillMonths > 0)
+                                                    {{ trans_choice('panel-organization::time.year', $skillYears, ['count' => $skillYears]) }}
+                                                    {{ __('panel-organization::time.and') }}
+                                                    {{ trans_choice('panel-organization::time.month', $skillMonths, ['count' => $skillMonths]) }}
+                                                @elseif ($skillYears > 0)
+                                                    {{ trans_choice('panel-organization::time.year', $skillYears, ['count' => $skillYears]) }}
+                                                @else
+                                                    {{ trans_choice('panel-organization::time.month', $skillMonths, ['count' => $skillMonths]) }}
+                                                @endif
+
+                                                {{ __('panel-organization::tabs.experience_label') }}
                                             </span>
                                         </div>
                                     </div>
@@ -104,8 +122,12 @@
                             size="lg"
                             class="text-text-low mx-auto"
                         />
-                        <h4 class="text-text-high mt-2 text-sm font-medium">No skills by category</h4>
-                        <p class="text-text-medium mt-1 text-sm">Skills data might not be categorized yet.</p>
+                        <h4 class="text-text-high mt-2 text-sm font-medium">
+                            {{ __('panel-organization::tabs.no_skills_by_category') }}
+                        </h4>
+                        <p class="text-text-medium mt-1 text-sm">
+                            {{ __('panel-organization::tabs.no_skills_listed') }}
+                        </p>
                     </div>
                 @endforelse
             </div>
@@ -117,9 +139,11 @@
                     size="xl"
                     class="text-text-low mx-auto"
                 />
-                <h4 class="text-text-high mt-4 text-lg font-medium">No Skills Listed</h4>
+                <h4 class="text-text-high mt-4 text-lg font-medium">
+                    {{ __('panel-organization::tabs.no_skills_listed') }}
+                </h4>
                 <p class="text-text-medium mt-2 text-sm">
-                    This candidate hasn't added any skills to their profile yet.
+                    {{ __('panel-organization::tabs.no_skills_listed') }}
                 </p>
                 <div class="mt-4">
                     <x-he4rt::button
@@ -128,7 +152,7 @@
                         :icon="\Filament\Support\Icons\Heroicon::Plus"
                         disabled
                     >
-                        Add Skills
+                        {{ __('panel-organization::tabs.add_skills') }}
                     </x-he4rt::button>
                 </div>
             </div>

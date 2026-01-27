@@ -27,7 +27,7 @@
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
             <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::ChartBar" size="sm" class="text-icon-medium" />
-            <h3 class="text-text-high text-sm font-semibold">Pipeline Progress</h3>
+            <h3 class="text-text-high text-sm font-semibold">{{ __('panel-organization::pipeline.title') }}</h3>
         </div>
         @if ($currentStage)
             <x-he4rt::tag size="sm" variant="outline" class="px-2">
@@ -39,7 +39,7 @@
         {{-- Progress Bar Overview --}}
         <div class="space-y-2">
             <div class="flex justify-between text-xs">
-                <span class="text-text-medium">Overall Progress</span>
+                <span class="text-text-medium">{{ __('panel-organization::pipeline.overall_progress') }}</span>
                 <span class="text-text-high font-semibold">
                     {{ round((($currentStageIndex + 1) / $stages->count()) * 100) }}%
                 </span>
@@ -98,9 +98,13 @@
 
                             {{-- Stage Status Badge --}}
                             @if ($isCurrent)
-                                <x-he4rt::tag variant="solid" size="xs" class="p-1">Current</x-he4rt::tag>
+                                <x-he4rt::tag variant="solid" size="xs" class="p-1">
+                                    {{ __('panel-organization::pipeline.current') }}
+                                </x-he4rt::tag>
                             @elseif ($isCompleted)
-                                <x-he4rt::tag variant="solid" size="xs" class="p-1">Done</x-he4rt::tag>
+                                <x-he4rt::tag variant="solid" size="xs" class="p-1">
+                                    {{ __('panel-organization::pipeline.done') }}
+                                </x-he4rt::tag>
                             @endif
                         </div>
 
@@ -121,7 +125,9 @@
                                         size="sm"
                                         class="text-primary"
                                     />
-                                    <span>Active since {{ $record->updated_at->format('M j, Y') }}</span>
+                                    <span>
+                                        {{ __('panel-organization::pipeline.active_since', ['date' => $record->updated_at->format('M j, Y')]) }}
+                                    </span>
                                 </div>
                             </div>
                         @endif
@@ -133,11 +139,11 @@
         {{-- Stage History Summary --}}
         <div class="border-outline-low border-t pt-3">
             <div class="flex items-center justify-between text-xs">
-                <span class="text-text-medium">Application submitted</span>
+                <span class="text-text-medium">{{ __('panel-organization::pipeline.application_submitted') }}</span>
                 <span class="text-text-high font-medium">{{ $record->created_at->format('M j, Y') }}</span>
             </div>
             <div class="mt-1 flex items-center justify-between text-xs">
-                <span class="text-text-medium">Last updated</span>
+                <span class="text-text-medium">{{ __('panel-organization::pipeline.last_updated') }}</span>
                 <span class="text-text-high font-medium">{{ $record->updated_at->diffForHumans() }}</span>
             </div>
         </div>

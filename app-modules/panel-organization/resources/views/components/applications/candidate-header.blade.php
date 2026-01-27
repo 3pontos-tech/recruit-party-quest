@@ -24,19 +24,24 @@
 
     $experienceTimeString = '';
 
+    $yearsPart = $years > 0 ? trans_choice('panel-organization::time.year', $years, ['count' => $years]) : '';
+    $monthsPart = $months > 0 ? trans_choice('panel-organization::time.month', $months, ['count' => $months]) : '';
+
     if ($years > 0 && $months > 0) {
-        $experienceTimeString = "{$years} " . Str::plural('year', $years) . " and {$months} " . Str::plural('month', $months);
+        $experienceTimeString = $yearsPart . ' ' . __('panel-organization::time.and') . ' ' . $monthsPart;
     } elseif ($years > 0) {
-        $experienceTimeString = "{$years} " . Str::plural('year', $years);
+        $experienceTimeString = $yearsPart;
     } else {
-        $experienceTimeString = "{$months} " . Str::plural('month', $months);
+        $experienceTimeString = $monthsPart;
     }
     $availabilityDate = $candidate->availability_date;
 
     if ($availabilityDate === null) {
-        $availability = 'Immediate';
+        $availability = __('panel-organization::status.immediate');
     } else {
-        $availability = $availabilityDate->isPast() ? 'Immediate' : 'Available from ' . $availabilityDate->format('d M Y');
+        $availability = $availabilityDate->isPast()
+            ? __('panel-organization::status.immediate')
+            : __('panel-organization::status.available_from', ['date' => $availabilityDate->format('d M Y')]);
     }
     $location = 'San Francisco, CA';
     $education = 'Computer Science, University Name';
@@ -56,7 +61,7 @@
                 <div class="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border">
                     <img
                         src="https://placehold.co/80x80/16a34a/ffffff?text={{ $initials }}"
-                        alt="user profile image"
+                        alt="{{ __('panel-organization::candidate_header.profile_image_alt') }}"
                         class="h-20 w-20"
                     />
                 </div>
@@ -118,7 +123,7 @@
                             class="bg-black p-2"
                         >
                             <a href="{{ $candidate->linkedin_url }}" target="_blank" class="hover:text-blue-400">
-                                LinkedIn
+                                {{ __('panel-organization::candidate_header.linkedin') }}
                             </a>
                         </x-he4rt::tag>
                     @endif
@@ -131,7 +136,7 @@
                             class="bg-black p-2"
                         >
                             <a href="{{ $candidate->portfolio_url }}" target="_blank" class="hover:text-blue-400">
-                                Portfolio
+                                {{ __('panel-organization::candidate_header.portfolio') }}
                             </a>
                         </x-he4rt::tag>
                     @endif
@@ -148,7 +153,7 @@
                             size="sm"
                             class="text-icon-medium"
                         />
-                        Position
+                        {{ __('panel-organization::candidate_header.position') }}
                     </span>
                     <p class="text-foreground ml-5 text-sm font-medium">
                         {{ $jobRequisition->post->title }}
@@ -162,7 +167,7 @@
                             size="sm"
                             class="text-icon-medium"
                         />
-                        Department
+                        {{ __('panel-organization::candidate_header.department') }}
                     </span>
                     <p class="text-foreground ml-5 text-sm font-medium">
                         {{ $jobRequisition->team->name }}
@@ -176,7 +181,7 @@
                             size="sm"
                             class="text-icon-medium"
                         />
-                        Applied
+                        {{ __('panel-organization::candidate_header.applied') }}
                     </span>
                     <p class="text-foreground ml-5 text-sm font-medium">
                         {{ $record->created_at->format('M j, Y') }}
@@ -190,7 +195,7 @@
                             size="sm"
                             class="text-icon-medium"
                         />
-                        Experience
+                        {{ __('panel-organization::candidate_header.experience') }}
                     </span>
                     <p class="text-text-high ml-5 text-sm font-semibold">{{ $experienceTimeString }}</p>
                 </div>
@@ -202,7 +207,7 @@
                             size="sm"
                             class="text-icon-medium"
                         />
-                        Availability
+                        {{ __('panel-organization::candidate_header.availability') }}
                     </span>
                     <p class="text-text-high ml-5 text-sm font-semibold">{{ $availability }}</p>
                 </div>
@@ -214,7 +219,7 @@
                             size="sm"
                             class="text-icon-medium"
                         />
-                        Location
+                        {{ __('panel-organization::candidate_header.location') }}
                     </span>
                     <p class="text-text-high ml-5 text-sm font-semibold">{{ $location }}</p>
                 </div>
@@ -226,7 +231,7 @@
                             size="sm"
                             class="text-icon-medium"
                         />
-                        Education
+                        {{ __('panel-organization::candidate_header.education') }}
                     </span>
                     <p class="text-text-high ml-5 text-sm font-semibold">{{ $education }}</p>
                 </div>
@@ -238,7 +243,9 @@
                             size="sm"
                             class="text-icon-medium"
                         />
-                        <span class="text-text-medium text-xs font-semibold tracking-wider uppercase">Key Skills</span>
+                        <span class="text-text-medium text-xs font-semibold tracking-wider uppercase">
+                            {{ __('panel-organization::candidate_header.key_skills') }}
+                        </span>
                     </div>
 
                     <div class="flex flex-wrap gap-2">

@@ -50,14 +50,18 @@
                     <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::AcademicCap" size="sm" />
                 </div>
                 <div>
-                    <h3 class="text-text-high text-lg font-semibold">Education</h3>
-                    <p class="text-text-medium text-sm">Academic background and qualifications</p>
+                    <h3 class="text-text-high text-lg font-semibold">
+                        {{ __('panel-organization::tabs.education.title') }}
+                    </h3>
+                    <p class="text-text-medium text-sm">{{ __('panel-organization::tabs.education.subtitle') }}</p>
                 </div>
             </div>
             @if ($hasEducation)
                 <div class="flex items-center gap-2">
                     @if ($currentEnrolled > 0)
-                        <x-he4rt::tag variant="solid">{{ $currentEnrolled }} Current</x-he4rt::tag>
+                        <x-he4rt::tag variant="solid">
+                            {{ $currentEnrolled }} {{ __('panel-organization::tabs.education.in_progress') }}
+                        </x-he4rt::tag>
                     @endif
 
                     <x-he4rt::tag variant="outline">
@@ -105,7 +109,7 @@
                                             :icon="\Filament\Support\Icons\Heroicon::OutlinedClock"
                                         >
                                             {{-- <x-heroicon-o-clock class="w-3 h-3 mr-1" /> --}}
-                                            In Progress
+                                            {{ __('panel-organization::tabs.education.in_progress') }}
                                         </x-he4rt::tag>
                                     @else
                                         <x-he4rt::tag
@@ -113,7 +117,7 @@
                                             :icon="\Filament\Support\Icons\Heroicon::CheckCircle"
                                         >
                                             {{-- <x-heroicon-o-check-circle class="w-3 h-3 mr-1" /> --}}
-                                            Completed
+                                            {{ __('panel-organization::tabs.education.completed') }}
                                         </x-he4rt::tag>
                                     @endif
                                 </div>
@@ -125,16 +129,19 @@
                             <div class="text-right">
                                 <p class="text-text-high text-sm font-semibold">
                                     {{ $degree->start_date->format('Y') }} -
-                                    {{ $degree->is_enrolled ? 'Present' : $degree->end_date->format('Y') }}
+                                    {{ $degree->is_enrolled ? __('panel-organization::tabs.work_experience.present') : $degree->end_date->format('Y') }}
                                 </p>
                                 <p class="text-text-medium text-xs">
                                     @if ($durationYears > 0)
-                                        {{ $durationYears }} {{ Str::plural('year', $durationYears) }}
+                                        {{ $durationYears }}
+                                        {{ trans_choice('panel-organization::time.year', $durationYears, ['count' => $durationYears]) }}
                                         @if ($durationMonths > 0)
-                                                {{ $durationMonths }} {{ Str::plural('month', $durationMonths) }}
+                                                {{ $durationMonths }}
+                                                {{ trans_choice('panel-organization::time.month', $durationMonths, ['count' => $durationMonths]) }}
                                         @endif
                                     @else
-                                        {{ $durationMonths }} {{ Str::plural('month', $durationMonths) }}
+                                        {{ $durationMonths }}
+                                        {{ trans_choice('panel-organization::time.month', $durationMonths, ['count' => $durationMonths]) }}
                                     @endif
                                 </p>
                             </div>
@@ -160,7 +167,7 @@
                                             size="xs"
                                         />
                                         {{ $degree->start_date->format('M Y') }} -
-                                        {{ $degree->is_enrolled ? 'Present' : $degree->end_date->format('M Y') }}
+                                        {{ $degree->is_enrolled ? __('panel-organization::tabs.work_experience.present') : $degree->end_date->format('M Y') }}
                                     </span>
                                     @if (! $degree->is_enrolled)
                                         <span class="flex items-center gap-1">
@@ -168,7 +175,7 @@
                                                 :icon="\Filament\Support\Icons\Heroicon::CheckBadge"
                                                 size="xs"
                                             />
-                                            Graduated
+                                            {{ __('panel-organization::tabs.education.graduated') }}
                                         </span>
                                     @endif
                                 </div>
@@ -180,7 +187,9 @@
 
             {{-- Education Summary --}}
             <div class="bg-elevation-02dp border-outline-low rounded-lg border p-4">
-                <h4 class="text-text-high mb-3 text-sm font-semibold">Education Summary</h4>
+                <h4 class="text-text-high mb-3 text-sm font-semibold">
+                    {{ __('panel-organization::tabs.education.title') }} Summary
+                </h4>
 
                 @php
                     $degreesByCategory = $degrees->groupBy(function ($degree) {
@@ -193,7 +202,9 @@
                 <div class="space-y-3">
                     {{-- Degree Types --}}
                     <div>
-                        <p class="text-text-medium mb-2 text-xs font-medium">Degree Types</p>
+                        <p class="text-text-medium mb-2 text-xs font-medium">
+                            {{ __('panel-organization::tabs.education.degree_types') }}
+                        </p>
                         <div class="flex flex-wrap gap-2">
                             @foreach ($degreesByCategory as $category => $categoryDegrees)
                                 <x-he4rt::tag variant="solid">
@@ -205,7 +216,9 @@
 
                     {{-- Fields of Study --}}
                     <div>
-                        <p class="text-text-medium mb-2 text-xs font-medium">Fields of Study</p>
+                        <p class="text-text-medium mb-2 text-xs font-medium">
+                            {{ __('panel-organization::tabs.education.fields_of_study') }}
+                        </p>
                         <div class="flex flex-wrap gap-2">
                             @foreach ($fieldsByCategory as $field => $fieldDegrees)
                                 <x-he4rt::tag variant="outline">
@@ -227,9 +240,11 @@
                     size="xl"
                     class="text-text-low mx-auto"
                 />
-                <h4 class="text-text-high mt-4 text-lg font-medium">No Education Information</h4>
+                <h4 class="text-text-high mt-4 text-lg font-medium">
+                    {{ __('panel-organization::tabs.education.no_info') }}
+                </h4>
                 <p class="text-text-medium mt-2 text-sm">
-                    This candidate hasn't added any education information to their profile yet.
+                    {{ __('panel-organization::tabs.education.no_info_text') }}
                 </p>
                 <div class="mt-6">
                     <x-he4rt::button
@@ -238,7 +253,7 @@
                         :icon="\Filament\Support\Icons\Heroicon::Plus"
                         disabled
                     >
-                        Add Education
+                        {{ __('panel-organization::tabs.education.add') }}
                     </x-he4rt::button>
                 </div>
             </div>
