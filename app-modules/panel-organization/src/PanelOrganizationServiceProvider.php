@@ -12,6 +12,7 @@ class PanelOrganizationServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'panel-organization');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'panel-organization');
     }
 }
