@@ -95,9 +95,9 @@ class KanbanStages extends BoardResourcePage
             )
             ->columnActions([
                 Action::make('123')
-                    ->label('fodase'),
+                    ->label(__('panel-organization::filament.actions.placeholder1')),
                 Action::make('1234')
-                    ->label('fodase1'),
+                    ->label(__('panel-organization::filament.actions.placeholder2')),
             ])
             ->cardActions([
                 ViewCandidateAction::make()->model(Application::class),

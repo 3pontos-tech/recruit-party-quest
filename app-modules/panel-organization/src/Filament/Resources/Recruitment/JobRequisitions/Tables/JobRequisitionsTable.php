@@ -34,7 +34,7 @@ class JobRequisitionsTable
         return $table
             ->columns([
                 TextColumn::make('post.title')
-                    ->label('Position')
+                    ->label(__('panel-organization::filament.tables.position'))
                     ->weight(FontWeight::SemiBold)
                     ->searchable()
                     ->sortable()
@@ -72,7 +72,7 @@ class JobRequisitionsTable
                 TextColumn::make('published_at')
                     ->label(__('recruitment::filament.requisition.fields.published_at'))
                     ->date()
-                    ->label('Published'),
+                    ->label(__('panel-organization::filament.tables.published')),
             ])
             ->filters([
                 SelectFilter::make('status')
@@ -108,7 +108,7 @@ class JobRequisitionsTable
                 ActionGroup::make([
                     EditAction::make(),
                     Action::make('kanban')
-                        ->label('Kanban')
+                        ->label(__('panel-organization::filament.tables.kanban'))
                         ->icon(Heroicon::ViewColumns)
                         ->url(fn (JobRequisition $record): string => JobRequisitionResource::getUrl('kanban', ['record' => $record->id])),
                 ]),

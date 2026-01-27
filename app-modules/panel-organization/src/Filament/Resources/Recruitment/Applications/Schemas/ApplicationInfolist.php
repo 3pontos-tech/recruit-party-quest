@@ -87,22 +87,22 @@ class ApplicationInfolist
     protected static function getAdvanceStageAction(): Action
     {
         return Action::make('advance_stage')
-            ->label('Advance Stage')
+            ->label(__('panel-organization::filament.actions.advance_stage.label'))
             ->icon('heroicon-o-arrow-right-circle')
             ->color('primary')
             ->extraAttributes(fn () => ['class' => 'w-full'])
-            ->modalHeading('Advance to Next Stage')
-            ->modalDescription('Are you sure you want to advance this candidate to the next recruitment stage?')
+            ->modalHeading(__('panel-organization::filament.actions.advance_stage.modal_heading'))
+            ->modalDescription(__('panel-organization::filament.actions.advance_stage.modal_description'))
             ->schema([
                 Textarea::make('test')
-                    ->label('test')
-                    ->placeholder('testandooooooooo')
+                    ->label(__('panel-organization::filament.fields.test_label'))
+                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
                     ->rows(3),
             ])
             ->action(function (array $data): void {
                 Notification::make()
-                    ->title('é isso ai')
-                    ->body('testandoooooooooooo')
+                    ->title(__('panel-organization::filament.notifications.ok_title'))
+                    ->body(__('panel-organization::filament.notifications.ok_body'))
                     ->success()
                     ->send();
             });
@@ -111,22 +111,22 @@ class ApplicationInfolist
     protected static function getScheduleInterviewAction(): Action
     {
         return Action::make('schedule_interview')
-            ->label('Schedule Interview')
+            ->label(__('panel-organization::filament.actions.schedule_interview.label'))
             ->icon('heroicon-o-calendar-days')
             ->color('success')
             ->extraAttributes(fn () => ['class' => 'w-full'])
-            ->modalHeading('Schedule Interview')
-            ->modalDescription('Schedule an interview appointment with the candidate.')
+            ->modalHeading(__('panel-organization::filament.actions.schedule_interview.modal_heading'))
+            ->modalDescription(__('panel-organization::filament.actions.schedule_interview.modal_description'))
             ->schema([
                 Textarea::make('test')
-                    ->label('test')
-                    ->placeholder('testandooooooooo')
+                    ->label(__('panel-organization::filament.fields.test_label'))
+                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
                     ->rows(3),
             ])
             ->action(function (array $data): void {
                 Notification::make()
-                    ->title('é isso ai')
-                    ->body('testandoooooooooooo')
+                    ->title(__('panel-organization::filament.notifications.ok_title'))
+                    ->body(__('panel-organization::filament.notifications.ok_body'))
                     ->success()
                     ->send();
             });
@@ -135,23 +135,23 @@ class ApplicationInfolist
     protected static function getSendEmailAction(): Action
     {
         return Action::make('send_email')
-            ->label('Send Email')
+            ->label(__('panel-organization::filament.actions.send_email.label'))
             ->icon('heroicon-o-envelope')
             ->color('info')
             ->extraAttributes(fn () => ['class' => 'w-full'])
             ->outlined()
-            ->modalHeading('Send Email to Candidate')
-            ->modalDescription('Send a personalized email to the candidate.')
+            ->modalHeading(__('panel-organization::filament.actions.send_email.modal_heading'))
+            ->modalDescription(__('panel-organization::filament.actions.send_email.modal_description'))
             ->schema([
                 Textarea::make('test')
-                    ->label('test')
-                    ->placeholder('testandooooooooo')
+                    ->label(__('panel-organization::filament.fields.test_label'))
+                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
                     ->rows(3),
             ])
             ->action(function (array $data): void {
                 Notification::make()
-                    ->title('é isso ai')
-                    ->body('testandoooooooooooo')
+                    ->title(__('panel-organization::filament.notifications.ok_title'))
+                    ->body(__('panel-organization::filament.notifications.ok_body'))
                     ->success()
                     ->send();
             });
@@ -160,23 +160,23 @@ class ApplicationInfolist
     protected static function getAddCommentAction(): Action
     {
         return Action::make('add_comment')
-            ->label('Add Internal Comment')
+            ->label(__('panel-organization::filament.actions.add_comment.label'))
             ->icon('heroicon-o-chat-bubble-left-ellipsis')
             ->color('gray')
             ->extraAttributes(fn () => ['class' => 'w-full'])
             ->outlined()
-            ->modalHeading('Add Internal Comment')
-            ->modalDescription('Add a note that will only be visible to recruiters and administrators.')
+            ->modalHeading(__('panel-organization::filament.actions.add_comment.modal_heading'))
+            ->modalDescription(__('panel-organization::filament.actions.add_comment.modal_description'))
             ->schema([
                 Textarea::make('test')
-                    ->label('test')
-                    ->placeholder('testandooooooooo')
+                    ->label(__('panel-organization::filament.fields.test_label'))
+                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
                     ->rows(3),
             ])
             ->action(function (array $data): void {
                 Notification::make()
-                    ->title('é isso ai')
-                    ->body('testandoooooooooooo')
+                    ->title(__('panel-organization::filament.notifications.ok_title'))
+                    ->body(__('panel-organization::filament.notifications.ok_body'))
                     ->success()
                     ->send();
             });
@@ -185,24 +185,24 @@ class ApplicationInfolist
     protected static function getRejectApplicationAction(): Action
     {
         return Action::make('reject_application')
-            ->label('Reject Application')
+            ->label(__('panel-organization::filament.actions.reject_application.label'))
             ->icon('heroicon-o-x-circle')
             ->color('danger')
             ->extraAttributes(fn () => ['class' => 'w-full'])
             ->outlined()
             ->requiresConfirmation()
-            ->modalHeading('Reject Application')
-            ->modalDescription('This action cannot be undone. The candidate will be notified of the rejection.')
+            ->modalHeading(__('panel-organization::filament.actions.reject_application.modal_heading'))
+            ->modalDescription(__('panel-organization::filament.actions.reject_application.modal_description'))
             ->schema([
                 Textarea::make('test')
-                    ->label('test')
-                    ->placeholder('testandooooooooo')
+                    ->label(__('panel-organization::filament.fields.test_label'))
+                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
                     ->rows(3),
             ])
             ->action(function (array $data): void {
                 Notification::make()
-                    ->title('é isso ai')
-                    ->body('testandoooooooooooo')
+                    ->title(__('panel-organization::filament.notifications.ok_title'))
+                    ->body(__('panel-organization::filament.notifications.ok_body'))
                     ->success()
                     ->send();
             });

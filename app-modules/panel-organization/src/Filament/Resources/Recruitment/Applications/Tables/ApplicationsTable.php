@@ -63,7 +63,7 @@ class ApplicationsTable
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 ViewColumn::make('last_movement')
-                    ->label('Última Movimentação')
+                    ->label(__('panel-organization::filament.tables.last_movement'))
                     ->view('panel-organization::filament.tables.columns.last-movement')
                     ->sortable(false)
                     ->searchable(false),
@@ -86,15 +86,15 @@ class ApplicationsTable
             ->defaultSort('requisition.post.title')
             ->groups([
                 Group::make('requisition_id')
-                    ->label('Vaga')
+                    ->label(__('panel-organization::filament.group.job'))
                     ->collapsible()
-                    ->getTitleFromRecordUsing(fn (Application $record): string => $record->requisition->post->title ?? 'Vaga sem título')
+                    ->getTitleFromRecordUsing(fn (Application $record): string => $record->requisition->post->title ?? __('panel-organization::filament.group.job_no_title'))
                     ->getDescriptionFromRecordUsing(function (Application $record): string {
                         $status = $record->requisition->status->getLabel();
                         $department = $record->requisition->department->name ?? 'N/A';
                         $team = $record->requisition->team->name ?? 'N/A';
 
-                        return sprintf('Empresa: %s • Departamento: %s', $team, $department);
+                        return __('panel-organization::filament.group.job_description', ['team' => $team, 'department' => $department]);
                     }),
             ])
             ->selectable(false)
