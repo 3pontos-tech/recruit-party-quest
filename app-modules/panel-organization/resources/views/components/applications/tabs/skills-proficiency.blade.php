@@ -16,11 +16,11 @@
     $skills_categories = $skillsByCategory->count();
 
     $proficiencyLevels = [
-        1 => ['label' => 'Beginner', 'color' => 'bg-red-500', 'width' => 20],
-        2 => ['label' => 'Basic', 'color' => 'bg-yellow-500', 'width' => 40],
-        3 => ['label' => 'Intermediate', 'color' => 'bg-blue-500', 'width' => 60],
-        4 => ['label' => 'Advanced', 'color' => 'bg-green-500', 'width' => 80],
-        5 => ['label' => 'Expert', 'color' => 'bg-primary-500', 'width' => 100],
+        1 => ['color' => 'bg-red-500', 'width' => 20],
+        2 => ['color' => 'bg-yellow-500', 'width' => 40],
+        3 => ['color' => 'bg-blue-500', 'width' => 60],
+        4 => ['color' => 'bg-green-500', 'width' => 80],
+        5 => ['color' => 'bg-primary-500', 'width' => 100],
     ];
 @endphp
 
@@ -75,7 +75,7 @@
                                     <div class="mb-2 flex items-center justify-between">
                                         <h5 class="text-text-high font-medium">{{ $skill->name }}</h5>
                                         <x-he4rt::tag size="xs" variant="solid" class="p-1">
-                                            {{ $proficiency['label'] }}
+                                            {{ __('panel-organization::filament.proficiency.' . $proficiencyLevel) }}
                                         </x-he4rt::tag>
                                     </div>
 
@@ -90,7 +90,9 @@
 
                                         {{-- Experience Info --}}
                                         <div class="text-text-medium flex items-center justify-between text-xs">
-                                            <span>{{ $proficiency['label'] }}</span>
+                                            <span>
+                                                {{ __('panel-organization::filament.proficiency.' . $proficiencyLevel) }}
+                                            </span>
                                             <span>
                                                 @php
                                                     $skillYears = (int) ($yearsOfExperience ?? 0);

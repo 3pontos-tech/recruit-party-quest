@@ -71,7 +71,9 @@
 
     {{-- Score Breakdown --}}
     <div class="space-y-3">
-        <h4 class="text-text-medium text-xs font-semibold tracking-wider uppercase">Breakdown</h4>
+        <h4 class="text-text-medium text-xs font-semibold tracking-wider uppercase">
+            {{ __('panel-organization::view.ai.breakdown') }}
+        </h4>
 
         <div class="space-y-3">
             @foreach ($matchBreakdown as $category => $data)
@@ -95,7 +97,9 @@
 
     {{-- Key Insights --}}
     <div class="border-outline-low border-t pt-3">
-        <h4 class="text-text-medium mb-2 text-xs font-semibold tracking-wider uppercase">Key Insights</h4>
+        <h4 class="text-text-medium mb-2 text-xs font-semibold tracking-wider uppercase">
+            {{ __('panel-organization::view.ai.key_insights') }}
+        </h4>
 
         <div class="space-y-2">
             <div class="flex items-start gap-2">
@@ -104,7 +108,7 @@
                     size="sm"
                     class="mt-0.5 shrink-0 text-green-500"
                 />
-                <span class="text-text-high text-xs">Strong technical skills alignment</span>
+                <span class="text-text-high text-xs">{{ __('panel-organization::view.ai.strong_skills') }}</span>
             </div>
 
             <div class="flex items-start gap-2">
@@ -113,7 +117,7 @@
                     size="sm"
                     class="mt-0.5 shrink-0 text-green-500"
                 />
-                <span class="text-text-high text-xs">Relevant industry experience</span>
+                <span class="text-text-high text-xs">{{ __('panel-organization::view.ai.relevant_experience') }}</span>
             </div>
 
             <div class="flex items-start gap-2">
@@ -122,7 +126,7 @@
                     size="sm"
                     class="mt-0.5 shrink-0 text-yellow-500"
                 />
-                <span class="text-text-high text-xs">Location may require relocation</span>
+                <span class="text-text-high text-xs">{{ __('panel-organization::view.ai.location_flag') }}</span>
             </div>
         </div>
     </div>
@@ -136,9 +140,8 @@
                 class="text-primary mt-0.5 shrink-0"
             />
             <p class="text-text-medium text-xs">
-                <span class="text-primary font-semibold">AI Analysis:</span>
-                This candidate shows strong potential based on their background and the job requirements. Consider
-                prioritizing for interview.
+                <span class="text-primary font-semibold">{{ __('panel-organization::view.ai.analysis_label') }}</span>
+                {{ __('panel-organization::view.ai.analysis_text') }}
             </p>
         </div>
     </div>
