@@ -25,16 +25,12 @@
         {{-- Links List --}}
         <div class="flex flex-col gap-1">
             @php
-                $links = [
-                    ['name' => 'LinkedIn', 'icon' => 'heroicon-o-link', 'url' => 'https://linkedin.com/company/3pontos'],
-                    ['name' => 'Instagram', 'icon' => 'heroicon-o-camera', 'url' => 'https://instagram.com/3pontos'],
-                    ['name' => 'Website', 'icon' => 'heroicon-o-globe-alt', 'url' => 'https://3pontos.co'],
-                ];
+                $links = $team->links;
             @endphp
 
             @foreach ($links as $link)
                 <a
-                    href="{{ $link['url'] }}"
+                    href="{{ $link['url']['en'] }}"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="group hover:bg-elevation-02dp flex items-center justify-between rounded-lg p-3 transition-colors duration-200"
@@ -44,7 +40,7 @@
                             <x-he4rt::icon :icon="$link['icon']" />
                         </div>
                         <x-he4rt::text size="sm" class="text-text-high font-medium transition-colors">
-                            {{ $link['name'] }}
+                            {{ $link['name']['en'] }}
                         </x-he4rt::text>
                     </div>
 

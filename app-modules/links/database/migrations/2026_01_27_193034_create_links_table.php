@@ -13,9 +13,9 @@ return new class extends Migration
         Schema::create('links', static function (Blueprint $table): void {
             $table->id();
 
-            $table->json('name');
-            $table->json('slug');
-            $table->json('url');
+            $table->string('name');
+            $table->string('slug');
+            $table->string('url');
 
             $table->string('icon')->nullable();
             $table->string('type')->nullable();

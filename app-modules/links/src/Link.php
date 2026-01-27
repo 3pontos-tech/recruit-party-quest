@@ -43,15 +43,13 @@ class Link extends Model
                 return;
             }
 
-            $name = $link->name['en'] ?? null;
+            $name = $link->name ?? null;
 
             if (! $name) {
                 return;
             }
 
-            $link->slug = [
-                'en' => Str::slug($name),
-            ];
+            $link->slug = Str::slug($name);
         });
     }
 

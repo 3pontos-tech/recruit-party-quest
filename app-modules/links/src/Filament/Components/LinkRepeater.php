@@ -31,14 +31,14 @@ class LinkRepeater
     protected static function schema(): array
     {
         return [
-            TextInput::make('url.en')
+            TextInput::make('url')
                 ->label('URL')
                 ->required()
                 ->url()
                 ->maxLength(2048),
 
             Group::make()->schema([
-                TextInput::make('name.en')
+                TextInput::make('name')
                     ->label('Label')
                     ->required()
                     ->maxLength(255),
