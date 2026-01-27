@@ -165,7 +165,6 @@ class JobRequisitionForm
                                         self::makeItemsRepeater(
                                             'descriptions',
                                             JobRequisitionItemTypeEnum::Description,
-                                            __('recruitment::filament.requisition.job_posting.fields.description'),
                                         ),
                                     ]),
                             ]),
@@ -178,7 +177,6 @@ class JobRequisitionForm
                                         self::makeItemsRepeater(
                                             'requiredQualifications',
                                             JobRequisitionItemTypeEnum::RequiredQualification,
-                                            __('recruitment::filament.requisition.job_posting.fields.required_qualifications'),
                                         ),
                                     ]),
                                 Section::make(__('recruitment::filament.requisition.sections.preferred_qualifications'))
@@ -187,7 +185,6 @@ class JobRequisitionForm
                                         self::makeItemsRepeater(
                                             'preferredQualifications',
                                             JobRequisitionItemTypeEnum::PreferredQualification,
-                                            __('recruitment::filament.requisition.job_posting.fields.preferred_qualifications'),
                                         ),
                                     ]),
                                 Section::make(__('recruitment::filament.requisition.sections.responsibilities'))
@@ -196,7 +193,6 @@ class JobRequisitionForm
                                         self::makeItemsRepeater(
                                             'responsibilities',
                                             JobRequisitionItemTypeEnum::Responsibility,
-                                            __('recruitment::filament.requisition.job_posting.fields.responsibilities'),
                                         ),
                                     ]),
                                 Section::make(__('recruitment::filament.requisition.sections.benefits'))
@@ -205,7 +201,6 @@ class JobRequisitionForm
                                         self::makeItemsRepeater(
                                             'benefits',
                                             JobRequisitionItemTypeEnum::Benefit,
-                                            __('recruitment::filament.requisition.job_posting.fields.benefits'),
                                         ),
                                     ]),
                             ]),
@@ -301,10 +296,9 @@ class JobRequisitionForm
     private static function makeItemsRepeater(
         string $relationshipName,
         JobRequisitionItemTypeEnum $type,
-        string $label,
     ): Repeater {
         return Repeater::make($relationshipName)
-            ->label($label)
+            ->hiddenLabel()
             ->relationship(
                 name: 'items',
                 modifyQueryUsing: fn ($query) => $query->where('type', $type),
