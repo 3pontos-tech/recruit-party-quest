@@ -98,6 +98,7 @@ class Candidate extends BaseModel
                 $end = $exp->is_currently_working_here
                     ? now()
                     : $exp->end_date;
+
                 return $exp->start_date->diffInMonths($end);
             });
 
