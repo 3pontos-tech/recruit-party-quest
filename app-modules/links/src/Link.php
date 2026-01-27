@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Link extends Model
 {
@@ -33,6 +34,25 @@ class Link extends Model
             related: Model::class,
             name: 'linkable',
         );
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(static function (Link $link): void {
+            if (filled($link->slug)) {
+                return;
+            }
+
+            $name = $link->name['en'] ?? null;
+
+            if (! $name) {
+                return;
+            }
+
+            $link->slug = [
+                'en' => Str::slug($name),
+            ];
+        });
     }
 
     protected function casts(): array
