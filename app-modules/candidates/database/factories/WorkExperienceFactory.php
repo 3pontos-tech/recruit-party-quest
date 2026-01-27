@@ -51,17 +51,18 @@ class WorkExperienceFactory extends Factory
             ['Flutter', 'Dart', 'GraphQL'],
         ];
 
-        // Lógica temporal: experiências mais recentes (0-4 anos atrás)
         $yearsAgo = fake()->numberBetween(0, 4);
         $monthsAgo = fake()->numberBetween(0, 11);
         $startDate = Date::now()->subYears($yearsAgo)->subMonths($monthsAgo);
 
-        // Duração da experiência entre 6 meses e 3 anos
         $experienceDurationMonths = fake()->numberBetween(6, 36);
         $endDate = $startDate->copy()->addMonths($experienceDurationMonths);
 
-        // 30% chance de estar trabalhando atualmente (se o fim for no futuro)
-        $isCurrentlyWorking = $endDate->isFuture() && fake()->boolean(30);
+        $isCurrentlyWorking = $endDate->isFuture() || fake()->boolean(30);
+
+        if (! $isCurrentlyWorking && $endDate->isFuture()) {
+            $endDate = Date::now()->subMonths(fake()->numberBetween(1, 24));
+        }
 
         $position = fake()->randomElement($positions);
         $techStack = fake()->randomElement($technologies);

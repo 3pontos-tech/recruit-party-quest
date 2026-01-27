@@ -49,18 +49,24 @@
     {{-- Header --}}
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-            <h3 class="text-text-high text-sm font-semibold">Evaluations</h3>
-            <x-filament::badge size="sm" color="gray">
-                {{ $totalCompleted }}/{{ $totalEvaluations }}
-            </x-filament::badge>
+            <h3 class="text-text-high text-sm font-semibold">
+                {{ __('panel-organization::view.evaluations.title') }}
+            </h3>
+            <x-he4rt::tag size="sm" variant="outline">{{ $totalCompleted }}/{{ $totalEvaluations }}</x-he4rt::tag>
         </div>
-        <x-he4rt::icon icon="heroicon-o-clipboard-document-check" size="sm" class="text-icon-medium" />
+        <x-he4rt::icon
+            :icon="\Filament\Support\Icons\Heroicon::ClipboardDocumentCheck"
+            size="sm"
+            class="text-icon-medium"
+        />
     </div>
 
     {{-- Overall Score --}}
     <div class="bg-elevation-02dp border-outline-low rounded-md border p-3 text-center">
         <div class="space-y-1">
-            <p class="text-text-medium text-xs font-semibold tracking-wider uppercase">Average Score</p>
+            <p class="text-text-medium text-xs font-semibold tracking-wider uppercase">
+                {{ __('panel-organization::view.evaluations.average_score') }}
+            </p>
             <div class="flex items-center justify-center gap-2">
                 <span class="text-text-high text-2xl font-bold">{{ number_format($averageScore, 1) }}</span>
                 <span class="text-text-medium text-sm">/10</span>
@@ -75,14 +81,16 @@
             </div>
 
             <p class="text-text-medium text-xs">
-                Based on {{ $totalCompleted }} completed {{ Str::plural('evaluation', $totalCompleted) }}
+                {{ trans_choice('panel-organization::view.evaluations.based_on', $totalCompleted, ['count' => $totalCompleted]) }}
             </p>
         </div>
     </div>
 
     {{-- Evaluations List --}}
     <div class="space-y-3">
-        <h4 class="text-text-medium text-xs font-semibold tracking-wider uppercase">Interview History</h4>
+        <h4 class="text-text-medium text-xs font-semibold tracking-wider uppercase">
+            {{ __('panel-organization::view.evaluations.history') }}
+        </h4>
 
         <div class="space-y-2">
             @foreach ($evaluations as $evaluation)
@@ -103,16 +111,24 @@
                                         </span>
                                         <span class="text-text-medium text-xs">/{{ $evaluation['max_score'] }}</span>
                                     </div>
-                                    <x-filament::badge color="success" size="xs">Completed</x-filament::badge>
+                                    <x-he4rt::tag variant="solid" size="xs">
+                                        {{ __('panel-organization::view.evaluations.completed') }}
+                                    </x-he4rt::tag>
                                 @elseif ($evaluation['status'] === 'scheduled')
-                                    <x-filament::badge color="warning" size="xs">Scheduled</x-filament::badge>
+                                    <x-he4rt::tag variant="outline" size="xs">
+                                        {{ __('panel-organization::view.evaluations.scheduled') }}
+                                    </x-he4rt::tag>
                                 @endif
                             </div>
                         </div>
 
                         {{-- Date --}}
                         <div class="text-text-medium flex items-center gap-2 text-xs">
-                            <x-he4rt::icon icon="heroicon-o-calendar-days" size="sm" class="text-icon-medium" />
+                            <x-he4rt::icon
+                                :icon="\Filament\Support\Icons\Heroicon::CalendarDays"
+                                size="sm"
+                                class="text-icon-medium"
+                            />
                             <span>
                                 @if ($evaluation['status'] === 'completed')
                                     {{ $evaluation['date']->format('M j, Y') }}
@@ -153,17 +169,17 @@
         <div class="grid grid-cols-3 gap-4 text-center">
             <div>
                 <p class="text-text-high text-sm font-bold">{{ $totalCompleted }}</p>
-                <p class="text-text-medium text-xs">Completed</p>
+                <p class="text-text-medium text-xs">{{ __('panel-organization::view.evaluations.completed') }}</p>
             </div>
             <div>
                 <p class="text-text-high text-sm font-bold">{{ $totalEvaluations - $totalCompleted }}</p>
-                <p class="text-text-medium text-xs">Remaining</p>
+                <p class="text-text-medium text-xs">{{ __('panel-organization::view.evaluations.remaining') }}</p>
             </div>
             <div>
                 <p class="text-text-high text-sm font-bold">
                     {{ round(($totalCompleted / $totalEvaluations) * 100) }}%
                 </p>
-                <p class="text-text-medium text-xs">Progress</p>
+                <p class="text-text-medium text-xs">{{ __('panel-organization::view.evaluations.progress') }}</p>
             </div>
         </div>
     </div>
@@ -178,17 +194,27 @@
     @if ($nextEvaluation)
         <div class="bg-primary-50 border-primary-200 rounded-md border p-3">
             <div class="mb-2 flex items-center gap-2">
-                <x-he4rt::icon icon="heroicon-o-clock" size="sm" class="text-primary" />
-                <span class="text-primary text-xs font-semibold">Next Evaluation</span>
+                <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::Clock" size="sm" class="text-primary" />
+                <span class="text-primary text-xs font-semibold">
+                    {{ __('panel-organization::view.evaluations.next') }}
+                </span>
             </div>
             <p class="text-text-high text-sm font-medium">{{ $nextEvaluation['type'] }}</p>
             <p class="text-text-medium text-xs">{{ $nextEvaluation['date']->format('M j, Y \a\t g:i A') }}</p>
-            <p class="text-text-medium text-xs">Interviewer: {{ $nextEvaluation['interviewer'] }}</p>
+            <p class="text-text-medium text-xs">
+                {{ __('panel-organization::view.evaluations.interviewer') }}: {{ $nextEvaluation['interviewer'] }}
+            </p>
         </div>
     @endif
 
     {{-- Action Button --}}
-    <x-filament::button size="sm" color="primary" outlined class="w-full" icon="heroicon-o-plus" disabled>
-        Schedule New Evaluation
-    </x-filament::button>
+    <x-he4rt::button
+        size="sm"
+        variant="outline"
+        class="w-full"
+        :icon="\Filament\Support\Icons\Heroicon::Plus"
+        disabled
+    >
+        {{ __('panel-organization::view.evaluations.schedule_button') }}
+    </x-he4rt::button>
 </div>

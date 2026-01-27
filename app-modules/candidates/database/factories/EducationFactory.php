@@ -44,21 +44,19 @@ class EducationFactory extends Factory
             'Análise e Desenvolvimento de Sistemas',
         ];
 
-        // Lógica temporal: educação entre 2-6 anos atrás
         $yearsAgo = fake()->numberBetween(2, 6);
         $startDate = Date::now()->subYears($yearsAgo);
 
         $degree = fake()->randomElement($degrees);
         $courseDuration = match ($degree) {
             'Bacharelado' => fake()->numberBetween(4, 5),
-            'Tecnólogo' => fake()->numberBetween(2, 3),
+            'Tecnólogo', 'Mestrado' => fake()->numberBetween(2, 3),
             'Pós-graduação', 'MBA' => fake()->numberBetween(1, 2),
-            'Mestrado' => fake()->numberBetween(2, 3),
             default => 4,
         };
 
         $endDate = $startDate->copy()->addYears($courseDuration);
-        $isEnrolled = $endDate->isFuture() && fake()->boolean(30); // 30% chance se ainda não terminou
+        $isEnrolled = $endDate->isFuture() || fake()->boolean();
 
         return [
             'institution' => fake()->randomElement($institutions),

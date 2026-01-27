@@ -13,7 +13,7 @@
             'type' => 'resume',
             'size' => '2.1 MB',
             'uploaded_at' => now()->subDays(5),
-            'icon' => 'heroicon-o-document-text',
+            'icon' => \Filament\Support\Icons\Heroicon::DocumentText,
             'color' => 'primary',
         ],
         [
@@ -22,7 +22,7 @@
             'type' => 'portfolio',
             'size' => '15.7 MB',
             'uploaded_at' => now()->subDays(5),
-            'icon' => 'heroicon-o-folder',
+            'icon' => \Filament\Support\Icons\Heroicon::Folder,
             'color' => 'success',
         ],
         [
@@ -31,7 +31,7 @@
             'type' => 'cover_letter',
             'size' => '245 KB',
             'uploaded_at' => now()->subDays(5),
-            'icon' => 'heroicon-o-envelope',
+            'icon' => \Filament\Support\Icons\Heroicon::Envelope,
             'color' => 'info',
         ],
         [
@@ -40,7 +40,7 @@
             'type' => 'references',
             'size' => '1.3 MB',
             'uploaded_at' => now()->subDays(3),
-            'icon' => 'heroicon-o-users',
+            'icon' => \Filament\Support\Icons\Heroicon::Users,
             'color' => 'warning',
         ],
     ];
@@ -50,12 +50,16 @@
     {{-- Header --}}
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-            <h3 class="text-text-high text-sm font-semibold">Documents</h3>
-            <x-filament::badge size="sm" color="gray">
-                {{ count($documents) }}
-            </x-filament::badge>
+            <h3 class="text-text-high text-sm font-semibold">{{ __('panel-organization::view.documents.title') }}</h3>
+            <x-he4rt::tag size="sm" variant="outline">
+                {{ trans_choice('panel-organization::view.documents.count', count($documents), ['count' => count($documents)]) }}
+            </x-he4rt::tag>
         </div>
-        <x-he4rt::icon icon="heroicon-o-document-duplicate" size="sm" class="text-icon-medium" />
+        <x-he4rt::icon
+            :icon="\Filament\Support\Icons\Heroicon::DocumentDuplicate"
+            size="sm"
+            class="text-icon-medium"
+        />
     </div>
 
     {{-- Documents List --}}
@@ -69,7 +73,7 @@
                     <div
                         class="bg-{{ $document['color'] }}-100 text-{{ $document['color'] }}-600 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
                     >
-                        <x-he4rt::icon icon="{{ $document['icon'] }}" size="sm" />
+                        <x-he4rt::icon :icon="{{ $document['icon'] }}" size="sm" />
                     </div>
 
                     {{-- Document Info --}}
@@ -84,21 +88,19 @@
 
                     {{-- Actions --}}
                     <div class="flex items-center gap-1">
-                        <x-filament::button
+                        <x-he4rt::button
                             size="xs"
-                            color="gray"
-                            outlined
-                            icon="heroicon-o-eye"
+                            variant="outline"
+                            :icon="\Filament\Support\Icons\Heroicon::Eye"
                             disabled
-                            title="View document"
+                            title="{{ __('panel-organization::view.documents.view_title') }}"
                         />
-                        <x-filament::button
+                        <x-he4rt::button
                             size="xs"
-                            color="gray"
-                            outlined
-                            icon="heroicon-o-arrow-down-tray"
+                            variant="outline"
+                            :icon="\Filament\Support\Icons\Heroicon::ArrowDownTray"
                             disabled
-                            title="Download document"
+                            title="{{ __('panel-organization::view.documents.download_title') }}"
                         />
                     </div>
                 </div>
@@ -108,9 +110,15 @@
 
     {{-- Upload New Document --}}
     <div class="border-outline-low border-t pt-3">
-        <x-filament::button size="sm" color="primary" outlined class="w-full" icon="heroicon-o-plus" disabled>
-            Upload Additional Document
-        </x-filament::button>
+        <x-he4rt::button
+            size="sm"
+            variant="outline"
+            class="w-full"
+            :icon="\Filament\Support\Icons\Heroicon::Plus"
+            disabled
+        >
+            {{ __('panel-organization::view.documents.upload_button') }}
+        </x-he4rt::button>
     </div>
 
     {{-- Document Stats --}}
@@ -118,35 +126,37 @@
         <div class="grid grid-cols-2 gap-4 text-center">
             <div>
                 <p class="text-text-high text-sm font-bold">{{ count($documents) }}</p>
-                <p class="text-text-medium text-xs">Total Files</p>
+                <p class="text-text-medium text-xs">{{ __('panel-organization::view.documents.total_files') }}</p>
             </div>
             <div>
                 <p class="text-text-high text-sm font-bold">19.3 MB</p>
-                <p class="text-text-medium text-xs">Total Size</p>
+                <p class="text-text-medium text-xs">{{ __('panel-organization::view.documents.total_size') }}</p>
             </div>
         </div>
     </div>
 
     {{-- Document Types Guide --}}
     <div class="space-y-2">
-        <h4 class="text-text-medium text-xs font-semibold tracking-wider uppercase">Document Types</h4>
+        <h4 class="text-text-medium text-xs font-semibold tracking-wider uppercase">
+            {{ __('panel-organization::view.documents.types_title') }}
+        </h4>
 
         <div class="grid grid-cols-2 gap-2 text-xs">
             <div class="flex items-center gap-2">
                 <div class="bg-primary-500 h-2 w-2 rounded-full"></div>
-                <span class="text-text-medium">Resume/CV</span>
+                <span class="text-text-medium">{{ __('panel-organization::view.documents.type.resume') }}</span>
             </div>
             <div class="flex items-center gap-2">
                 <div class="bg-success-500 h-2 w-2 rounded-full"></div>
-                <span class="text-text-medium">Portfolio</span>
+                <span class="text-text-medium">{{ __('panel-organization::view.documents.type.portfolio') }}</span>
             </div>
             <div class="flex items-center gap-2">
                 <div class="bg-info-500 h-2 w-2 rounded-full"></div>
-                <span class="text-text-medium">Cover Letter</span>
+                <span class="text-text-medium">{{ __('panel-organization::view.documents.type.cover_letter') }}</span>
             </div>
             <div class="flex items-center gap-2">
                 <div class="bg-warning-500 h-2 w-2 rounded-full"></div>
-                <span class="text-text-medium">References</span>
+                <span class="text-text-medium">{{ __('panel-organization::view.documents.type.references') }}</span>
             </div>
         </div>
     </div>

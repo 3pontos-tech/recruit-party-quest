@@ -30,10 +30,10 @@ class ViewCandidateAction extends Action
                         TextEntry::make('status')
                             ->badge(),
                     ]),
-                Section::make('Skills')
+                Section::make(__('panel-organization::filament.kanban.sections.skills'))
                     ->schema([
                         TextEntry::make('candidate.skills.name')
-                            ->label('Skill Name')
+                            ->label(__('panel-organization::filament.kanban.skill_name'))
                             ->badge(),
                     ]),
                 Section::make(__('recruitment::filament.requisition.kanban.sections.application_comments'))

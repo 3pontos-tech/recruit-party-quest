@@ -14,7 +14,6 @@ use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\CreateA
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\EditApplication;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ListApplications;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ViewApplication;
-use He4rt\Organization\Filament\Resources\Recruitment\Applications\RelationManagers\EvaluationsRelationManager;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Schemas\ApplicationForm;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Tables\ApplicationsTable;
 use UnitEnum;
@@ -56,7 +55,7 @@ class ApplicationResource extends Resource
     public static function getRelations(): array
     {
         return [
-            EvaluationsRelationManager::class,
+            //            EvaluationsRelationManager::class,
         ];
     }
 

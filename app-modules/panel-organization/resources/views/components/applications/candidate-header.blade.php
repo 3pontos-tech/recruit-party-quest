@@ -1,20 +1,54 @@
 @props(['record' => []])
 
 @php
+    /** @var \He4rt\Candidates\Models\Skill $skills */
+    /** @var \He4rt\Candidates\Models\Candidate $candidate */
+    /** @var He4rt\Users\ $user */
+    /** @var \He4rt\Recruitment\Requisitions\Models\JobRequisition $jobRequisition  */
     $candidate = $record->candidate;
     $user = $candidate->user;
     $jobRequisition = $record->requisition;
+    $skills = $candidate->skills()->get();
 
     $initials = collect(explode(' ', trim($user->name)))
         ->filter()
         ->take(2)
         ->map(fn ($name) => mb_strtoupper(mb_substr($name, 0, 1)))
         ->implode('');
+
+    //TODO: Replace with real data
+    $totalExperienceTime = $candidate->totalExperienceTime();
+
+    $years = $totalExperienceTime['years'];
+    $months = $totalExperienceTime['months'];
+
+    $experienceTimeString = '';
+    $yearsPart = $years > 0 ? trans_choice('panel-organization::view.time.year', $years, ['count' => $years]) : '';
+    $monthsPart = $months > 0 ? trans_choice('panel-organization::view.time.month', $months, ['count' => $months]) : '';
+
+    if ($years > 0 && $months > 0) {
+        $experienceTimeString = $yearsPart . ' ' . __('panel-organization::view.time.and') . ' ' . $monthsPart;
+    } elseif ($years > 0) {
+        $experienceTimeString = $yearsPart;
+    } else {
+        $experienceTimeString = $monthsPart;
+    }
+    $availabilityDate = $candidate->availability_date;
+
+    if ($availabilityDate === null) {
+        $availability = __('panel-organization::view.status.immediate');
+    } else {
+        $availability = $availabilityDate->isPast()
+            ? __('panel-organization::view.status.immediate')
+            : __('panel-organization::view.status.available_from', ['date' => $availabilityDate->format('d M Y')]);
+    }
+    $location = 'San Francisco, CA';
+    $education = 'Computer Science, University Name';
 @endphp
 
-<x-filament::section>
+<div class="bg-surface-01dp border-outline-low space-y-4 rounded-lg border p-4">
     {{-- Candidate Header --}}
-    <header class="flex flex-col gap-8 md:grid-cols-[1fr_auto]">
+    <header class="flex flex-col gap-2 md:grid-cols-[1fr_auto]">
         {{-- Tracking Code --}}
         <div class="flex items-end justify-end gap-2">
             <span class="text-text-medium font-mono text-sm">{{ $record->tracking_code }}</span>
@@ -26,7 +60,7 @@
                 <div class="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border">
                     <img
                         src="https://placehold.co/80x80/16a34a/ffffff?text={{ $initials }}"
-                        alt="user profile image"
+                        alt="{{ __('panel-organization::view.candidate_header.profile_image_alt') }}"
                         class="h-20 w-20"
                     />
                 </div>
@@ -46,12 +80,12 @@
                         @endif
                     </div>
                     <div>
-                        <x-filament::badge>
+                        <x-he4rt::tag variant="outline">
                             {{ $record->status->getLabel() }}
-                        </x-filament::badge>
-                        <x-filament::badge>
+                        </x-he4rt::tag>
+                        <x-he4rt::tag variant="outline">
                             {{ $record->source->getLabel() }}
-                        </x-filament::badge>
+                        </x-he4rt::tag>
                     </div>
                 </div>
             </div>
@@ -59,14 +93,22 @@
             <div class="flex flex-col items-end gap-x-6 gap-y-3 pt-1">
                 {{-- Email --}}
                 <div class="flex items-center gap-2">
-                    <x-he4rt::icon icon="heroicon-o-envelope" size="sm" class="text-icon-medium" />
+                    <x-he4rt::icon
+                        :icon="\Filament\Support\Icons\Heroicon::Envelope"
+                        size="sm"
+                        class="text-icon-medium"
+                    />
                     <span>{{ $user->email }}</span>
                 </div>
 
                 {{-- Phone --}}
                 @if ($candidate->phone_number)
                     <div class="flex items-center gap-2">
-                        <x-he4rt::icon icon="heroicon-o-phone" size="sm" class="text-icon-medium" />
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::Phone"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
                         <span>{{ $candidate->phone_number }}</span>
                     </div>
                 @endif
@@ -74,46 +116,146 @@
                 <div class="flex gap-2">
                     {{-- LinkedIn --}}
                     @if ($candidate->linkedin_url)
-                        <x-filament::badge icon="heroicon-o-link" class="bg-black p-2">
+                        <x-he4rt::tag
+                            :icon="\Filament\Support\Icons\Heroicon::Link"
+                            variant="solid"
+                            class="bg-black p-2"
+                        >
                             <a href="{{ $candidate->linkedin_url }}" target="_blank" class="hover:text-blue-400">
-                                LinkedIn
+                                {{ __('panel-organization::view.candidate_header.linkedin') }}
                             </a>
-                        </x-filament::badge>
+                        </x-he4rt::tag>
                     @endif
 
                     {{-- Portfolio --}}
                     @if ($candidate->portfolio_url)
-                        <x-filament::badge icon="heroicon-o-globe-alt" class="bg-black p-2">
+                        <x-he4rt::tag
+                            :icon="\Filament\Support\Icons\Heroicon::GlobeAlt"
+                            variant="solid"
+                            class="bg-black p-2"
+                        >
                             <a href="{{ $candidate->portfolio_url }}" target="_blank" class="hover:text-blue-400">
-                                Portfolio
+                                {{ __('panel-organization::view.candidate_header.portfolio') }}
                             </a>
-                        </x-filament::badge>
+                        </x-he4rt::tag>
                     @endif
                 </div>
             </div>
         </div>
         {{-- Application Info --}}
-        <div class="border-border border-outline-low mt-6 flex w-full border-t pt-6">
-            <div class="flex w-full justify-between gap-4 space-y-2">
-                <div class="flex-1">
-                    <span class="text-muted-foreground mb-1 text-xs tracking-wider text-gray-500 uppercase">
-                        Position
+        <div class="border-border border-outline-low w-full">
+            <div class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div>
+                    <span class="mb-1 flex items-center gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::Briefcase"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
+                        {{ __('panel-organization::view.candidate_header.position') }}
                     </span>
-                    <p class="text-foreground text-sm font-medium">{{ $jobRequisition->post->title }}</p>
+                    <p class="text-foreground ml-5 text-sm font-medium">
+                        {{ $jobRequisition->post->title }}
+                    </p>
                 </div>
-                <div class="flex-1">
-                    <span class="text-muted-foreground mb-1 text-xs tracking-wider text-gray-500 uppercase">
-                        Department
+
+                <div>
+                    <span class="mb-1 flex items-center gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::BuildingOffice2"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
+                        {{ __('panel-organization::view.candidate_header.department') }}
                     </span>
-                    <p class="text-foreground text-sm font-medium">{{ $jobRequisition->team->name }}</p>
+                    <p class="text-foreground ml-5 text-sm font-medium">
+                        {{ $jobRequisition->team->name }}
+                    </p>
                 </div>
-                <div class="flex-1">
-                    <span class="text-muted-foreground mb-1 text-xs tracking-wider text-gray-500 uppercase">
-                        Applied
+
+                <div>
+                    <span class="mb-1 flex items-center gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::Calendar"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
+                        {{ __('panel-organization::view.candidate_header.applied') }}
                     </span>
-                    <p class="text-foreground text-sm font-medium">{{ $record->created_at->format('M j, Y') }}</p>
+                    <p class="text-foreground ml-5 text-sm font-medium">
+                        {{ $record->created_at->format('M j, Y') }}
+                    </p>
+                </div>
+
+                <div>
+                    <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::Briefcase"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
+                        {{ __('panel-organization::view.candidate_header.experience') }}
+                    </span>
+                    <p class="text-text-high ml-5 text-sm font-semibold">{{ $experienceTimeString }}</p>
+                </div>
+
+                <div>
+                    <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::Clock"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
+                        {{ __('panel-organization::view.candidate_header.availability') }}
+                    </span>
+                    <p class="text-text-high ml-5 text-sm font-semibold">{{ $availability }}</p>
+                </div>
+
+                <div>
+                    <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::MapPin"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
+                        {{ __('panel-organization::view.candidate_header.location') }}
+                    </span>
+                    <p class="text-text-high ml-5 text-sm font-semibold">{{ $location }}</p>
+                </div>
+
+                <div>
+                    <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::AcademicCap"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
+                        {{ __('panel-organization::view.candidate_header.education') }}
+                    </span>
+                    <p class="text-text-high ml-5 text-sm font-semibold">{{ $education }}</p>
+                </div>
+
+                <div class="space-y-3 sm:col-span-2 lg:col-span-4">
+                    <div class="flex items-center gap-2">
+                        <x-he4rt::icon
+                            :icon="\Filament\Support\Icons\Heroicon::CodeBracket"
+                            size="sm"
+                            class="text-icon-medium"
+                        />
+                        <span class="text-text-medium text-xs font-semibold tracking-wider uppercase">
+                            {{ __('panel-organization::view.candidate_header.key_skills') }}
+                        </span>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                        @foreach ($skills as $skill)
+                            <x-he4rt::tag size="sm" variant="outline">
+                                {{ $skill->name }}
+                            </x-he4rt::tag>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>
     </header>
-</x-filament::section>
+</div>

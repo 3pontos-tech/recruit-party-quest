@@ -94,6 +94,29 @@ class Candidate extends BaseModel
     }
 
     /**
+     * @return array{years:int, months:int}
+     */
+    public function totalExperienceTime(): array
+    {
+        $totalMonths = (int) $this->workExperiences
+            ->sum(function (WorkExperience $exp) {
+                $end = $exp->is_currently_working_here
+                    ? now()
+                    : $exp->end_date;
+
+                return $exp->start_date->diffInMonths($end);
+            });
+
+        $years = intdiv($totalMonths, 12);
+        $months = $totalMonths % 12;
+
+        return [
+            'years' => $years,
+            'months' => $months,
+        ];
+    }
+
+    /**
      * @return BelongsToMany<Skill, $this, CandidateSkill>
      */
     public function skills(): BelongsToMany
