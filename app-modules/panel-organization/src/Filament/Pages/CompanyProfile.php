@@ -5,22 +5,22 @@ declare(strict_types=1);
 namespace He4rt\Organization\Filament\Pages;
 
 use App\Filament\Schemas\Components\He4rtToggle;
-use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use Filament\Schemas\Components\Actions;
-use Filament\Schemas\Components\EmbeddedSchema;
-use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
 class CompanyProfile extends Page
 {
+    use InteractsWithSchemas;
+
     public ?array $data = [];
+
     protected static ?int $navigationSort = 100;
 
     protected static ?string $slug = 'company-profile';
@@ -47,10 +47,10 @@ class CompanyProfile extends Page
         $tenant = Filament::getTenant();
 
         $this->form->fill([
-            'about' => $tenant->about,
-            'work_schedule' => $tenant->work_schedule,
-            'accessibility_accommodations' => $tenant->accessibility_accommodations,
-            'is_disability_confident' => $tenant->is_disability_confident,
+            'about' => $tenant?->about,
+            'work_schedule' => $tenant?->work_schedule,
+            'accessibility_accommodations' => $tenant?->accessibility_accommodations,
+            'is_disability_confident' => $tenant?->is_disability_confident,
         ]);
     }
 
@@ -93,34 +93,11 @@ class CompanyProfile extends Page
         $data = $this->form->getState();
 
         $tenant = Filament::getTenant();
-        $tenant->update($data);
+        $tenant?->update($data);
 
         Notification::make()
             ->success()
             ->title(__('filament-panels::resources/pages/edit-record.notifications.saved.title'))
             ->send();
-    }
-
-    public function content(Schema $schema): Schema
-    {
-        return $schema
-            ->components([
-                Form::make([EmbeddedSchema::make('form')])
-                    ->id('form')
-                    ->livewireSubmitHandler('save')
-                    ->footer([
-                        Actions::make($this->getFormActions())
-                            ->alignment('start'),
-                    ]),
-            ]);
-    }
-
-    protected function getFormActions(): array
-    {
-        return [
-            Action::make('save')
-                ->label(__('filament-panels::resources/pages/edit-record.form.actions.save.label'))
-                ->submit('save'),
-        ];
     }
 }
