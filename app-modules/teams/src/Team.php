@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Teams;
 
 use App\Models\BaseModel;
-use He4rt\Links\Traits\HasLinks;
+use He4rt\Links\HasLinks;
 use He4rt\Location\Concerns\HasAddresses;
 use He4rt\Teams\Database\Factories\TeamFactory;
 use He4rt\Teams\Policies\TeamPolicy;

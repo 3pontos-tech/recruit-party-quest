@@ -14,6 +14,7 @@ class Link extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
     protected $fillable = [
         'name',
         'slug',
@@ -40,6 +41,7 @@ class Link extends Model
             'name' => 'array',
             'slug' => 'array',
             'url' => 'array',
+            'type' => LinkTypeEnum::class,
         ];
     }
 }

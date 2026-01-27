@@ -84,6 +84,8 @@ return [
             'about_description' => 'Tell candidates about your company, culture, and what makes you unique.',
             'work_environment' => 'Work Environment',
             'work_environment_description' => 'Describe your work schedule and accessibility accommodations.',
+            'team_links' => 'Team Links',
+            'team_links_description' => "Add links to your company's social media profiles.",
         ],
         'fields' => [
             'about' => 'About',

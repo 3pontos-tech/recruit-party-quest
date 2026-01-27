@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Links\Traits;
+namespace He4rt\Links;
 
-use He4rt\Links\Link;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -20,7 +19,6 @@ trait HasLinks
             name: 'linkable',
             table: 'linkables',
         )
-            ->withTimestamps()
             ->orderBy('order_column');
     }
 
