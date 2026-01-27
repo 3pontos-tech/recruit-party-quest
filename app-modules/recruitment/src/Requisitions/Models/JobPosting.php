@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 
 /**
  * @property string $id
@@ -22,10 +21,11 @@ use Illuminate\Support\Collection;
  * @property string $slug
  * @property string $summary
  * @property Collection<int,string> $description
- * @property Collection<int,string> $responsibilities
- * @property Collection<int,string> $required_qualifications
- * @property Collection<int,string> $preferred_qualifications
- * @property Collection<int,string> $benefits
+ * @property string $about_company
+ * @property string $about_team
+ * @property string $work_schedule
+ * @property string $accessibility_accommodations
+ * @property bool $is_disability_confident
  * @property string $external_post_url
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -53,11 +53,7 @@ class JobPosting extends BaseModel
     protected function casts(): array
     {
         return [
-            'description' => 'array',
-            'responsibilities' => 'array',
-            'required_qualifications' => 'array',
-            'preferred_qualifications' => 'array',
-            'benefits' => 'array',
+            'is_disability_confident' => 'boolean',
         ];
     }
 }

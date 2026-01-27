@@ -11,8 +11,7 @@ it('can create a job posting', function (): void {
     expect($posting)->toBeInstanceOf(JobPosting::class)
         ->and($posting->id)->not->toBeNull()
         ->and($posting->title)->not->toBeNull()
-        ->and($posting->slug)->not->toBeNull()
-        ->and($posting->description)->not->toBeNull();
+        ->and($posting->slug)->not->toBeNull();
 });
 
 it('belongs to a job requisition', function (): void {
@@ -31,42 +30,10 @@ it('can be accessed from requisition', function (): void {
         ->and($requisition->post->id)->toBe($posting->id);
 });
 
-it('casts responsibilities to array', function (): void {
-    $posting = JobPosting::factory()->create([
-        'responsibilities' => ['Lead team', 'Write code'],
-    ]);
+it('casts is_disability_confident to boolean', function (): void {
+    $posting = JobPosting::factory()->create(['is_disability_confident' => true]);
 
-    expect($posting->responsibilities)->toBeArray();
-});
-
-it('casts required_qualifications to array', function (): void {
-    $posting = JobPosting::factory()->create([
-        'required_qualifications' => ['PHP', 'Laravel'],
-    ]);
-
-    expect($posting->required_qualifications)->toBeArray();
-});
-
-it('casts preferred_qualifications to array', function (): void {
-    $posting = JobPosting::factory()->create([
-        'preferred_qualifications' => ['Vue.js', 'React'],
-    ]);
-
-    expect($posting->preferred_qualifications)->toBeArray();
-});
-
-it('casts benefits to array', function (): void {
-    $posting = JobPosting::factory()->create([
-        'benefits' => ['Health insurance', '401k'],
-    ]);
-
-    expect($posting->benefits)->toBeArray();
-});
-
-it('can access team disability_confident flag via team relationship', function (): void {
-    $posting = JobPosting::factory()->create();
-
-    expect($posting->team->is_disability_confident)->toBeBool();
+    expect($posting->is_disability_confident)->toBeBool();
 });
 
 it('uses soft deletes', function (): void {
