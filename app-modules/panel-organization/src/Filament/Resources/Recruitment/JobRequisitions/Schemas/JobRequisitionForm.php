@@ -64,6 +64,7 @@ class JobRequisitionForm
                                             ->label(__('recruitment::filament.requisition.job_posting.fields.slug'))
                                             ->unique(ignoreRecord: true),
                                         Textarea::make('summary')
+                                            ->required()
                                             ->label(__('recruitment::filament.requisition.job_posting.fields.summary'))
                                             ->rows(3)
                                             ->columnSpanFull(),
