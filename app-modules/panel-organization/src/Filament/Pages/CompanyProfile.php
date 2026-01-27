@@ -13,12 +13,19 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use He4rt\Teams\Team;
 use Illuminate\Contracts\Support\Htmlable;
 
+/**
+ * @property-read Schema $form
+ */
 class CompanyProfile extends Page
 {
     use InteractsWithSchemas;
 
+    /**
+     * @var array<string, mixed>|null
+     */
     public ?array $data = [];
 
     protected static ?int $navigationSort = 100;
@@ -44,6 +51,7 @@ class CompanyProfile extends Page
 
     public function mount(): void
     {
+        /** @var Team|null $tenant */
         $tenant = Filament::getTenant();
 
         $this->form->fill([
@@ -92,6 +100,7 @@ class CompanyProfile extends Page
     {
         $data = $this->form->getState();
 
+        /** @var Team|null $tenant */
         $tenant = Filament::getTenant();
         $tenant?->update($data);
 
