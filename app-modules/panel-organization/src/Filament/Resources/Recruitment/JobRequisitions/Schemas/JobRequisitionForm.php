@@ -262,7 +262,7 @@ class JobRequisitionForm
                                     ->columns(2)
                                     ->schema([
                                         Hidden::make('team_id')
-                                            ->default(filament()->getTenant()->getKey()),
+                                            ->default(filament()->getTenant()?->getKey()),
                                         Textarea::make('about_company')
                                             ->required()
                                             ->label(__('recruitment::filament.requisition.job_posting.fields.about_company'))
