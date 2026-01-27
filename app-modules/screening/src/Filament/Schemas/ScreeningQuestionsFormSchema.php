@@ -12,6 +12,8 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Group;
+use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\Pages\CreateJobRequisition;
+use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\Pages\EditJobRequisition;
 use He4rt\Screening\Enums\QuestionTypeEnum;
 use He4rt\Screening\QuestionTypes\QuestionTypeRegistry;
 
@@ -85,7 +87,7 @@ final class ScreeningQuestionsFormSchema
                     ->visible(fn ($get): bool => $get('is_knockout') === true)
                     ->columnSpanFull(),
                 Hidden::make('team_id')
-                    ->default(fn ($livewire) => $livewire->data['team_id']),
+                    ->default(fn (EditJobRequisition|CreateJobRequisition $livewire) => $livewire->data['team_id']),
             ])
             ->defaultItems(0)
             ->columnSpanFull();
