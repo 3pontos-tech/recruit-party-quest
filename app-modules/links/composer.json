@@ -1,0 +1,27 @@
+{
+    "name": "he4rt/links",
+    "description": "",
+    "type": "library",
+    "version": "1.0.0",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "He4rt\\Links\\": "src/",
+            "He4rt\\Links\\Database\\Factories\\": "database/factories/",
+            "He4rt\\Links\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "He4rt\\Links\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "He4rt\\Links\\Providers\\LinksServiceProvider"
+            ]
+        }
+    }
+}

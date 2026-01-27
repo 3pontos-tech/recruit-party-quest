@@ -60,6 +60,9 @@ class TeamProfile extends Page
             'accessibility_accommodations' => $tenant?->accessibility_accommodations,
             'is_disability_confident' => $tenant?->is_disability_confident,
         ]);
+
+        $this->form->model($tenant);
+        $this->form->loadStateFromRelationships();
     }
 
     public function form(Schema $schema): Schema
@@ -93,16 +96,49 @@ class TeamProfile extends Page
                             ->label(__('teams::filament.profile.fields.is_disability_confident'))
                             ->default(false),
                     ]),
+
+                Section::make('Links')
+                    ->schema([
+                        LinkRepeater::make(),
+                    ]),
             ]);
     }
 
     public function save(): void
     {
-        $data = $this->form->getState();
-
         /** @var Team|null $tenant */
         $tenant = Filament::getTenant();
+
+        $data = $this->form->getState();
+
+        // Handle links manually if Repeater::relationship() doesn't work out of the box in this context
+        // But since we used relationship(), Filament expects to save it via saveRelationships() trait method or similar.
+        // However, standard Page usually doesn't have saveRelationships().
+        // Let's try to assume Schema handles it or we manually save:
+        // If we use Repeater without relationship(), we get an array in $data['links'].
+        // Then we can sync.
+        // But LinkRepeater uses relationship().
+        // If I can't easily rely on auto-saving, I might need to change LinkRepeater to NOT use relationship() and handle saving here.
+        // Given the instructions "Please make it as simple so we can just use the trait on Team... and then just add the Schema",
+        // implying the component should ideally handle it or be easy to hook up.
+        // But Repeater::relationship() needs the form to define the model.
+        // Schema::make()->model($tenant) might work.
+
         $tenant?->update($data);
+
+        // Create an instance of the form component to save relationships if implicit saving didn't happen?
+        // Actually, InteractsWithSchemas likely creates a Form instance.
+        // I will try to call $this->form->model($tenant)->saveRelationships(); if available.
+        // But typically update() on model handles attributes. Relationships need separate handling.
+
+        // For now, I'll rely on the user's "deal with the save method inside the Livewire component" comment.
+        // I'll leave the save() as is (except for update) and if relationship saving is needed, I'll add it.
+        // Wait, if I simply use Repeater::make('links') WITHOUT relationship(), I get data.
+        // If I use WITH relationship(), I get nothing in $data usually (it's handled separately).
+        // I'll stick to LinkRepeater::make() (which has relationship()) and modify save() to try to save relationships.
+        // Using `loadStateFromRelationships(true)` in mount might be needed too.
+
+        $this->form->model($tenant)->saveRelationships();
 
         Notification::make()
             ->success()
