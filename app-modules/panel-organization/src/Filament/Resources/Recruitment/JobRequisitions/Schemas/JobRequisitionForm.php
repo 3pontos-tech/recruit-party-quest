@@ -199,6 +199,15 @@ class JobRequisitionForm
                                             __('recruitment::filament.requisition.job_posting.fields.responsibilities'),
                                         ),
                                     ]),
+                                Section::make(__('recruitment::filament.requisition.sections.benefits'))
+                                    ->description('Perks, benefits, and what you offer to candidates')
+                                    ->schema([
+                                        self::makeItemsRepeater(
+                                            'benefits',
+                                            JobRequisitionItemTypeEnum::Benefit,
+                                            __('recruitment::filament.requisition.job_posting.fields.benefits'),
+                                        ),
+                                    ]),
                             ]),
 
                         Tab::make(__('recruitment::filament.requisition.tabs.compensation'))
@@ -248,15 +257,6 @@ class JobRequisitionForm
                         Tab::make(__('recruitment::filament.requisition.tabs.misc'))
                             ->icon('heroicon-o-document-text')
                             ->schema([
-                                Section::make(__('recruitment::filament.requisition.sections.benefits'))
-                                    ->description('Perks, benefits, and what you offer to candidates')
-                                    ->schema([
-                                        self::makeItemsRepeater(
-                                            'benefits',
-                                            JobRequisitionItemTypeEnum::Benefit,
-                                            __('recruitment::filament.requisition.job_posting.fields.benefits'),
-                                        ),
-                                    ]),
                                 Section::make(__('recruitment::filament.requisition.sections.company_info'))
                                     ->relationship('post')
                                     ->columns(2)
