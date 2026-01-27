@@ -12,6 +12,8 @@ use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
@@ -19,6 +21,7 @@ use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 use He4rt\Screening\Filament\Schemas\ScreeningQuestionsFormSchema;
+use Illuminate\Database\Eloquent\Builder;
 
 class JobRequisitionForm
 {
@@ -58,7 +61,7 @@ class JobRequisitionForm
                         ->required()
                         ->preload()
                         ->searchable()
-                        ->afterStateUpdated(function ($state, $set, $get): void {
+                        ->afterStateUpdated(function (string $state, Set $set, Get $get): void {
                             $questions = $get('screeningQuestions') ?? [];
 
                             foreach ($questions as $key => $question) {
@@ -83,9 +86,9 @@ class JobRequisitionForm
                             titleAttribute: 'id',
                             modifyQueryUsing: fn ($query, $get) => $query->when(
                                 $get('team_id'),
-                                fn ($q) => $q->whereHas(
+                                fn (Builder $q) => $q->whereHas(
                                     'team',
-                                    fn ($sq) => $sq->whereKey($get('team_id'))
+                                    fn (\Illuminate\Contracts\Database\Query\Builder $sq) => $sq->whereKey($get('team_id'))
                                 )
                             ),
                         )
