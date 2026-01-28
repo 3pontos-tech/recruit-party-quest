@@ -3,7 +3,7 @@
 }
 
 .hp-card-variant-solid {
-    @apply bg-elevation-surface/32 backdrop-blur-lg;
+    @apply bg-elevation-surface/32 backdrop-blur-md dark:backdrop-blur-lg;
 }
 
 .hp-card-title {

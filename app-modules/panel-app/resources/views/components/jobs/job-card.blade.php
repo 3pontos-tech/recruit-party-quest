@@ -16,7 +16,7 @@
             :alt="$job->team->name"
             size="lg"
             :circular="false"
-            class="border-outline-light dark:border-outline-dark h-14 w-14 border"
+            class="group-hover:border-outline-high/32 border-outline-light dark:border-outline-dark h-14 w-14 border transition duration-500"
         />
 
         <div class="flex flex-1 flex-col gap-0.5">

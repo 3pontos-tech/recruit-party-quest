@@ -1,9 +1,6 @@
 .hp-badge {
-    @apply bg-elevation-01dp border-outline-dark flex shrink-0 items-center justify-center overflow-hidden rounded-md border;
-}
-
-.hp-badge {
-    @apply group-hover:bg-elevation-05dp transition duration-500;
+    @apply bg-elevation-01dp border-outline-light dark:border-outline-dark flex shrink-0 items-center justify-center overflow-hidden rounded-md border;
+    @apply group-hover:bg-elevation-05dp group-hover:border-outline-high/32 transition duration-500;
 }
 
 .hp-badge-size-sm {
