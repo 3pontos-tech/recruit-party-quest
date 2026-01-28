@@ -9,10 +9,9 @@ use He4rt\Applications\Models\Application;
 
 final class StoreApplication
 {
-    public function execute(ApplicationDTO $dto): void
+    public function execute(ApplicationDTO $dto): Application
     {
         $application = Application::query()->create([
-            'id' => $dto->applicationId,
             'requisition_id' => $dto->requisitionId,
             'candidate_id' => $dto->candidateId,
             'team_id' => $dto->teamId,
@@ -23,5 +22,7 @@ final class StoreApplication
         $application->update([
             'current_stage_id' => $application->first_stage->getKey(),
         ]);
+
+        return $application;
     }
 }
