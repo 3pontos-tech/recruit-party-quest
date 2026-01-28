@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace He4rt\Links;
 
+use Illuminate\Database\Eloquent\Relations\MorphPivot;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 
 trait HasLinks
 {
     /**
-     * @return MorphToMany<Link, $this, Pivot>
+     * @return MorphToMany<Link, $this, MorphPivot>
      */
     public function links(): MorphToMany
     {
@@ -32,6 +32,9 @@ trait HasLinks
         $this->links()->detach($link);
     }
 
+    /**
+     * @param  array<int, int|array<string, mixed>>  $links
+     */
     public function syncLinks(array $links): void
     {
         $this->links()->sync($links);

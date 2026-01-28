@@ -8,6 +8,7 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Group;
 use Guava\IconPicker\Forms\Components\IconPicker;
 use He4rt\Links\LinkTypeEnum;
@@ -28,6 +29,9 @@ class LinkRepeater
             ->schema(static::schema());
     }
 
+    /**
+     * @return array<int, Component>
+     */
     protected static function schema(): array
     {
         return [
