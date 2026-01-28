@@ -1,5 +1,5 @@
 @php
-    use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+    use He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource;
 @endphp
 
 <div class="flex flex-col gap-16">
@@ -9,24 +9,22 @@
             <x-he4rt::text>{{ $this->jobs->total() }} vagas disponíveis</x-he4rt::text>
         </div>
 
-        <div class="flex items-center gap-8">
+        <div class="flex flex-col items-center gap-8 lg:flex-row">
             <x-he4rt::input
                 id="search-input"
                 wire:model.live.debounce.300ms="search"
                 class="border-border focus:border-primary w-64"
-                placeholder="Job title, keywords, or company"
-                aria-label="Search jobs by title, keywords, or company"
+                placeholder="Job title..."
+                aria-label="Search jobs by title"
             />
 
-            <select
-                wire:model.live="workModel"
-                class="border-outline-dark bg-icon-high/95 hover:bg-icon-high text-text-light dark:text-text-dark rounded-md p-2 text-sm"
+            <x-he4rt::button
+                class="w-full lg:w-auto"
+                :href="JobRequisitionResource::getUrl()"
+                icon:trailing="heroicon-o-chevron-right"
             >
-                <option value="">Modelo de trabalho</option>
-                @foreach (WorkArrangementEnum::cases() as $case)
-                    <option value="{{ $case->value }}">{{ $case->getLabel() }}</option>
-                @endforeach
-            </select>
+                Pesquisar vagas
+            </x-he4rt::button>
         </div>
     </div>
 
