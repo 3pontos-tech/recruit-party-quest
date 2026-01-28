@@ -7,9 +7,6 @@ namespace He4rt\Links;
 use App\Models\BaseModel;
 use He4rt\Links\Database\Factories\LinkFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphPivot;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
@@ -34,17 +31,6 @@ class Link extends BaseModel
         'type',
         'order_column',
     ];
-
-    /**
-     * @return MorphToMany<Model, $this, MorphPivot>
-     */
-    public function linkables(): MorphToMany
-    {
-        return $this->morphedByMany(
-            related: Model::class,
-            name: 'linkable',
-        );
-    }
 
     protected static function booted(): void
     {
