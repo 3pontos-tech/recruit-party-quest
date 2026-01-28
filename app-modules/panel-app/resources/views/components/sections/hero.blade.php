@@ -1,4 +1,11 @@
 <section class="hp-section relative" id="hero">
+    <div class="absolute top-0 left-0">
+        <img
+            src="{{ asset('images/3pontos/hourglass.svg') }}"
+            alt=""
+            class="h-auto w-full -translate-x-1/3 -translate-y-1/3"
+        />
+    </div>
     <div class="hp-container z-10">
         <div class="grid grid-cols-1">
             <div class="my-32 flex flex-col gap-4">
