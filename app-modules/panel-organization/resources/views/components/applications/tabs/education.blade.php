@@ -1,4 +1,6 @@
-@props(['record' => []])
+@props([
+    'record',
+])
 
 @php
     /** @var \He4rt\Applications\Models\Application $record */

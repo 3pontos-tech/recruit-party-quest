@@ -4,7 +4,9 @@
     use Illuminate\Support\Collection;
 @endphp
 
-@props(['record' => []])
+@props([
+    'record',
+])
 
 @php
     /** @var Application $record */

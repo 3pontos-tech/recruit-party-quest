@@ -2,7 +2,9 @@
     use Filament\Support\Icons\Heroicon;
 @endphp
 
-@props(['record' => []])
+@props([
+    'record',
+])
 
 @php
     /** @var \Illuminate\Support\Collection<int,\He4rt\Candidates\Models\Skill> $skills */
