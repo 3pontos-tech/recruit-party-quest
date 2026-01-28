@@ -17,15 +17,9 @@ class LinkFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => [
-                'en' => fake()->sentence(3),
-            ],
-            'slug' => [
-                'en' => fake()->slug(),
-            ],
-            'url' => [
-                'en' => fake()->url(),
-            ],
+            'name' => fake()->sentence(3),
+            'slug' => fake()->slug(),
+            'url' => fake()->url(),
             'icon' => null,
             'type' => fake()->randomElement(['primary', 'secondary', null]),
             'order_column' => fake()->numberBetween(1, 100),
