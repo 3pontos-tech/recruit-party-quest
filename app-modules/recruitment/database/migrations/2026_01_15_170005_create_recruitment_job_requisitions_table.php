@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('positions_available');
             $table->integer('salary_range_min')->nullable();
             $table->integer('salary_range_max')->nullable();
+            $table->boolean('show_salary_to_candidates');
             $table->string('salary_currency');
             $table->foreignUuid('hiring_manager_id')->constrained('users');
             $table->foreignUuid('created_by_id')->constrained('users');

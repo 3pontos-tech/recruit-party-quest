@@ -34,6 +34,7 @@ class JobRequisitionFactory extends Factory
             'salary_range_min' => fake()->numberBetween(3000, 5000),
             'salary_range_max' => fake()->numberBetween(6000, 10000),
             'salary_currency' => 'USD',
+            'show_salary_to_candidates' => fake()->boolean(30),
             'status' => fake()->randomElement(RequisitionStatusEnum::cases()),
             'priority' => fake()->randomElement(RequisitionPriorityEnum::cases()),
             'target_start_at' => Date::now()->addMonths(1),

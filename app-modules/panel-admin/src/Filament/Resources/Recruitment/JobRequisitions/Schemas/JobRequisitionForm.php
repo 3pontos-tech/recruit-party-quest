@@ -74,7 +74,8 @@ class JobRequisitionForm
                         ->relationship(
                             name: 'department',
                             titleAttribute: 'name',
-                            modifyQueryUsing: fn ($query, $get) => $query->when($get('team_id'), fn ($q) => $q->forTeam($get('team_id'))),
+                            modifyQueryUsing: fn ($query, $get) => $query->when($get('team_id'),
+                                fn ($q) => $q->forTeam($get('team_id'))),
                         )
                         ->required()
                         ->preload()
@@ -88,7 +89,8 @@ class JobRequisitionForm
                                 $get('team_id'),
                                 fn (Builder $q) => $q->whereHas(
                                     'team',
-                                    fn (\Illuminate\Contracts\Database\Query\Builder $sq) => $sq->whereKey($get('team_id'))
+                                    fn (\Illuminate\Contracts\Database\Query\Builder $sq
+                                    ) => $sq->whereKey($get('team_id'))
                                 )
                             ),
                         )
@@ -146,6 +148,9 @@ class JobRequisitionForm
                         ->label(__('recruitment::filament.requisition.fields.salary_currency'))
                         ->default('USD')
                         ->maxLength(3),
+                    Toggle::make('show_salary_to_candidates')
+                        ->label(__('recruitment::filament.requisition.fields.show_salary_to_candidates'))
+                        ->default(false),
                 ]),
 
             Section::make(__('recruitment::filament.requisition.sections.settings'))
