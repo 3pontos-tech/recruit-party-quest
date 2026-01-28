@@ -35,7 +35,7 @@
             <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
                 <x-he4rt::card class="group hover:bg-elevation-05dp flex flex-col gap-8 border-0 hover:scale-102">
                     <div class="relative flex h-9 w-9 items-center justify-center">
-                        <div class="border-conic-full absolute inset-0 rounded-full"></div>
+                        <div class="border-conic absolute inset-0 rounded-full"></div>
                         <span class="text-xl font-bold">1</span>
                     </div>
                     <div class="flex flex-col gap-4">
@@ -48,7 +48,7 @@
 
                 <x-he4rt::card class="group hover:bg-elevation-05dp flex flex-col gap-8 border-0 hover:scale-102">
                     <div class="relative flex h-9 w-9 items-center justify-center">
-                        <div class="border-conic-3-4 absolute inset-0 rounded-full"></div>
+                        <div class="border-conic absolute inset-0 rounded-full"></div>
                         <span class="text-xl font-bold">2</span>
                     </div>
                     <div class="flex flex-col gap-4">
@@ -61,7 +61,7 @@
 
                 <x-he4rt::card class="group hover:bg-elevation-05dp flex flex-col gap-8 border-0 hover:scale-102">
                     <div class="relative flex h-9 w-9 items-center justify-center">
-                        <div class="border-conic-3-4 absolute inset-0 rounded-full"></div>
+                        <div class="border-conic absolute inset-0 rounded-full"></div>
                         <span class="text-xl font-bold">3</span>
                     </div>
                     <div class="flex flex-col gap-4">
@@ -74,7 +74,7 @@
 
                 <x-he4rt::card class="group hover:bg-elevation-05dp flex flex-col gap-8 border-0 hover:scale-102">
                     <div class="relative flex h-9 w-9 items-center justify-center">
-                        <div class="border-conic-3-4 absolute inset-0 rounded-full"></div>
+                        <div class="border-conic absolute inset-0 rounded-full"></div>
                         <span class="text-xl font-bold">4</span>
                     </div>
                     <div class="flex flex-col gap-4">

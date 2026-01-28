@@ -46,16 +46,24 @@
     animation: spin-slow 40s linear infinite;
 }
 
-.border-conic-full {
-    background: conic-gradient(var(--color-outline-light));
-    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+.border-conic {
+    --progress: 270deg;
+
+    background: conic-gradient(from 180deg, var(--color-outline-light) var(--progress), transparent var(--progress));
+
     mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+
+    transition: --progress 400ms ease;
 }
 
-.border-conic-3-4 {
-    background: conic-gradient(from 180deg, var(--color-outline-light) 270deg, transparent 270deg);
-    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
-    mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+.group:hover .border-conic {
+    --progress: 360deg;
+}
+
+@property --progress {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 270deg;
 }
 
 @keyframes infinite-scroll {
