@@ -73,10 +73,6 @@ class ApplicationInfolist
                         //                        ViewEntry::make('ai_match_score')
                         //                            ->view('panel-organization::components.applications.sidebar.ai-match-score'),
 
-                        // Documents List
-                        //                        ViewEntry::make('documents_list')
-                        //                            ->view('panel-organization::components.applications.sidebar.documents-list'),
-
                         // Evaluation Summary
                         //                        ViewEntry::make('evaluation_summary')
                         //                            ->view('panel-organization::components.applications.sidebar.evaluation-summary'),
