@@ -11,7 +11,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('links', static function (Blueprint $table): void {
-            $table->id();
+            $table->uuid('id')->primary();
 
             $table->string('name');
             $table->string('slug');
@@ -27,7 +27,7 @@ return new class extends Migration
         });
 
         Schema::create('linkables', static function (Blueprint $table): void {
-            $table->foreignId('link_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('link_id')->constrained()->cascadeOnDelete();
 
             $table->morphs('linkable');
 
