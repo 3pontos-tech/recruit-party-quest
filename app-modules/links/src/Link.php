@@ -59,9 +59,6 @@ class Link extends Model
     protected function casts(): array
     {
         return [
-            'name' => 'array',
-            'slug' => 'array',
-            'url' => 'array',
             'type' => LinkTypeEnum::class,
         ];
     }
