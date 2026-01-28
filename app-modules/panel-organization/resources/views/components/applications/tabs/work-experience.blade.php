@@ -92,7 +92,7 @@
         @if ($hasExperience)
             <div class="flex items-center gap-2">
                 @if ($currentJob)
-                    <x-he4rt::tag size="sm" variant="solid">
+                    <x-he4rt::tag size="sm">
                         {{ __('panel-organization::view.tabs.work_experience.currently_employed') }}
                     </x-he4rt::tag>
                 @endif
@@ -142,7 +142,7 @@
                                     </div>
 
                                     @if ($isCurrent)
-                                        <x-he4rt::tag variant="solid" size="sm">
+                                        <x-he4rt::tag size="sm">
                                             <x-he4rt::icon
                                                 :icon="\Filament\Support\Icons\Heroicon::Clock"
                                                 size="xs"

@@ -46,14 +46,14 @@
             <span class="text-text-medium font-mono text-sm">{{ $record->tracking_code }}</span>
         </div>
 
-        <div class="flex justify-between">
+        <div class="border-text-low/20 mb-4 flex justify-between border-b pb-4">
             <div class="flex flex-col items-center gap-6 sm:flex-row">
                 {{-- Profile Photo Placeholder --}}
-                <div class="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full">
-                    <img
-                        src="https://placehold.co/80x80/16a34a/ffffff?text={{ $initials }}"
-                        alt="{{ __('panel-organization::view.candidate_header.profile_image_alt') }}"
-                        class="h-20 w-20"
+                <div class="flex h-40 w-40 shrink-0 items-center justify-center overflow-hidden rounded-full">
+                    <x-he4rt::avatar
+                        src="https://placehold.co/100/16a34a/ffffff?text={{ $initials }}"
+                        class="h-40 w-40"
+                        alt="{{$user->name}}"
                     />
                 </div>
 
@@ -72,10 +72,10 @@
                         @endif
                     </div>
                     <div>
-                        <x-he4rt::tag variant="outline">
+                        <x-he4rt::tag>
                             {{ $record->status->getLabel() }}
                         </x-he4rt::tag>
-                        <x-he4rt::tag variant="outline">
+                        <x-he4rt::tag>
                             {{ $record->source->getLabel() }}
                         </x-he4rt::tag>
                     </div>
@@ -100,19 +100,25 @@
                 <div class="flex gap-2">
                     {{-- LinkedIn --}}
                     @if ($candidate->linkedin_url)
-                        <x-he4rt::tag :icon="Heroicon::Link" variant="solid" class="bg-black p-2">
-                            <a href="{{ $candidate->linkedin_url }}" target="_blank" class="hover:text-blue-400">
-                                {{ __('panel-organization::view.candidate_header.linkedin') }}
-                            </a>
+                        <x-he4rt::tag
+                            :icon="Heroicon::Link"
+                            href="{{ $candidate->linkedin_url }}"
+                            target="_blank"
+                            class="hover:text-blue-400"
+                        >
+                            {{ __('panel-organization::view.candidate_header.linkedin') }}
                         </x-he4rt::tag>
                     @endif
 
                     {{-- Portfolio --}}
                     @if ($candidate->portfolio_url)
-                        <x-he4rt::tag :icon="Heroicon::GlobeAlt" variant="solid" class="bg-black p-2">
-                            <a href="{{ $candidate->portfolio_url }}" target="_blank" class="hover:text-blue-400">
-                                {{ __('panel-organization::view.candidate_header.portfolio') }}
-                            </a>
+                        <x-he4rt::tag
+                            :icon="Heroicon::GlobeAlt"
+                            href="{{ $candidate->portfolio_url }}"
+                            target="_blank"
+                            class="hover:text-blue-400"
+                        >
+                            {{ __('panel-organization::view.candidate_header.portfolio') }}
                         </x-he4rt::tag>
                     @endif
                 </div>
@@ -193,9 +199,9 @@
                         </span>
                     </div>
 
-                    <div class="flex flex-wrap gap-2">
+                    <div class="ml-5 flex flex-wrap gap-2">
                         @foreach ($skills as $skill)
-                            <x-he4rt::tag size="sm" variant="outline">
+                            <x-he4rt::tag size="sm">
                                 {{ $skill->name }}
                             </x-he4rt::tag>
                         @endforeach
