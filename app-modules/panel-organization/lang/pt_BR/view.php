@@ -16,22 +16,6 @@ return [
         'portfolio' => 'Portfólio',
         'profile_image_alt' => 'Foto do perfil do usuário',
     ],
-    'documents' => [
-        'title' => 'Documentos',
-        'count' => '{0} nenhum arquivo|{1} :count arquivo|[2,*] :count arquivos',
-        'upload_button' => 'Enviar documento adicional',
-        'total_files' => 'Total de arquivos',
-        'total_size' => 'Tamanho total',
-        'types_title' => 'Tipos de documento',
-        'type' => [
-            'resume' => 'Currículo/CV',
-            'portfolio' => 'Portfólio',
-            'cover_letter' => 'Carta de apresentação',
-            'references' => 'Referências',
-        ],
-        'view_title' => 'Visualizar documento',
-        'download_title' => 'Baixar documento',
-    ],
     'ai' => [
         'title' => 'Pontuação AI',
         'excellent' => 'Combinação excelente',
@@ -85,7 +69,7 @@ return [
             'career_summary' => 'Resumo da carreira',
             'career_timeline' => 'Linha do tempo da carreira',
             'companies' => 'Empresas',
-            'more' => '{1} +:count mais|[2,*] +:count mais',
+            'more' => '{0}|{1} +:count mais|[2,*] +:count mais',
         ],
         'education' => [
             'title' => 'Formação',
