@@ -91,8 +91,8 @@ class ApplicationInfolist
             ->modalDescription(__('panel-organization::filament.actions.advance_stage.modal_description'))
             ->schema([
                 Textarea::make('test')
-                    ->label(__('panel-organization::filament.fields.test_label'))
-                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
+                    ->label('example')
+                    ->placeholder('example')
                     ->rows(3),
             ])
             ->action(function (array $data): void {
@@ -115,8 +115,8 @@ class ApplicationInfolist
             ->modalDescription(__('panel-organization::filament.actions.schedule_interview.modal_description'))
             ->schema([
                 Textarea::make('test')
-                    ->label(__('panel-organization::filament.fields.test_label'))
-                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
+                    ->label('example')
+                    ->placeholder('example')
                     ->rows(3),
             ])
             ->action(function (array $data): void {
@@ -140,8 +140,8 @@ class ApplicationInfolist
             ->modalDescription(__('panel-organization::filament.actions.send_email.modal_description'))
             ->schema([
                 Textarea::make('test')
-                    ->label(__('panel-organization::filament.fields.test_label'))
-                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
+                    ->label('example')
+                    ->placeholder('example')
                     ->rows(3),
             ])
             ->action(function (array $data): void {
@@ -165,8 +165,8 @@ class ApplicationInfolist
             ->modalDescription(__('panel-organization::filament.actions.add_comment.modal_description'))
             ->schema([
                 Textarea::make('test')
-                    ->label(__('panel-organization::filament.fields.test_label'))
-                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
+                    ->label('example')
+                    ->placeholder('example')
                     ->rows(3),
             ])
             ->action(function (array $data): void {
@@ -191,8 +191,8 @@ class ApplicationInfolist
             ->modalDescription(__('panel-organization::filament.actions.reject_application.modal_description'))
             ->schema([
                 Textarea::make('test')
-                    ->label(__('panel-organization::filament.fields.test_label'))
-                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
+                    ->label('example')
+                    ->placeholder('example')
                     ->rows(3),
             ])
             ->action(function (array $data): void {
