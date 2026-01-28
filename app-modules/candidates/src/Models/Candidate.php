@@ -130,6 +130,9 @@ class Candidate extends BaseModel
         );
     }
 
+    /**
+     * @return Attribute<string, string>
+     */
     protected function totalExperienceFormatted(): Attribute
     {
         return Attribute::make(

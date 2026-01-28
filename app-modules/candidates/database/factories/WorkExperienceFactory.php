@@ -96,8 +96,7 @@ class WorkExperienceFactory extends Factory
         ];
     }
 
-    private
-    function generateJobDescription(
+    private function generateJobDescription(
         string $position,
         array $technologies
     ): string {
