@@ -1,4 +1,6 @@
-@props(['record' => []])
+@props([
+    'record',
+])
 
 @php
     // Visual placeholder data - as requested, this will be replaced with actual logic later

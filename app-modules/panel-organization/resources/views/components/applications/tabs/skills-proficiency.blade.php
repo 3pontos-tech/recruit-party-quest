@@ -42,7 +42,7 @@
                 </div>
             </div>
             @if ($hasSkills)
-                <x-he4rt::tag size="sm" variant="solid">
+                <x-he4rt::tag size="sm">
                     {{ trans_choice('panel-organization::view.tabs.skills_count', $skills_total, ['count' => $skills_total]) }}
                 </x-he4rt::tag>
             @endif
@@ -74,7 +74,7 @@
                                     {{-- Skill Name and Level --}}
                                     <div class="mb-2 flex items-center justify-between">
                                         <h5 class="text-text-high font-medium">{{ $skill->name }}</h5>
-                                        <x-he4rt::tag size="xs" variant="solid" class="p-1">
+                                        <x-he4rt::tag size="xs">
                                             {{ __('panel-organization::filament.proficiency.' . $proficiencyLevel) }}
                                         </x-he4rt::tag>
                                     </div>
@@ -83,7 +83,7 @@
                                     <div class="space-y-2">
                                         <div class="bg-elevation-01dp h-2 w-full overflow-hidden rounded-full">
                                             <div
-                                                class="bg-{{ $proficiency['color'] }} h-full transition-all duration-500"
+                                                class="{{ $proficiency['color'] }} h-full transition-all duration-500"
                                                 style="width: {{ $proficiency['width'] }}%"
                                             ></div>
                                         </div>
@@ -94,21 +94,7 @@
                                                 {{ __('panel-organization::filament.proficiency.' . $proficiencyLevel) }}
                                             </span>
                                             <span>
-                                                @php
-                                                    $skillYears = (int) ($yearsOfExperience ?? 0);
-                                                    $skillMonths = 0; // months not tracked separately in pivot; keep months=0
-                                                @endphp
-
-                                                @if ($skillYears > 0 && $skillMonths > 0)
-                                                    {{ trans_choice('panel-organization::view.time.year', $skillYears, ['count' => $skillYears]) }}
-                                                    {{ __('panel-organization::view.time.and') }}
-                                                    {{ trans_choice('panel-organization::view.time.month', $skillMonths, ['count' => $skillMonths]) }}
-                                                @elseif ($skillYears > 0)
-                                                    {{ trans_choice('panel-organization::view.time.year', $skillYears, ['count' => $skillYears]) }}
-                                                @else
-                                                    {{ trans_choice('panel-organization::view.time.month', $skillMonths, ['count' => $skillMonths]) }}
-                                                @endif
-
+                                                {{ trans_choice('panel-organization::view.time.year', $yearsOfExperience ?? 0, ['count' => $yearsOfExperience ?? 0]) }}
                                                 {{ __('panel-organization::view.tabs.experience_label') }}
                                             </span>
                                         </div>
@@ -138,25 +124,12 @@
             <div class="bg-surface-01dp border-outline-low rounded-lg border p-8 text-center">
                 <x-he4rt::icon
                     :icon="\Filament\Support\Icons\Heroicon::CodeBracket"
-                    size="xl"
+                    size="lg"
                     class="text-text-low mx-auto"
                 />
                 <h4 class="text-text-high mt-4 text-lg font-medium">
                     {{ __('panel-organization::view.tabs.no_skills_listed') }}
                 </h4>
-                <p class="text-text-medium mt-2 text-sm">
-                    {{ __('panel-organization::view.tabs.no_skills_listed') }}
-                </p>
-                <div class="mt-4">
-                    <x-he4rt::button
-                        size="sm"
-                        variant="outline"
-                        :icon="\Filament\Support\Icons\Heroicon::Plus"
-                        disabled
-                    >
-                        {{ __('panel-organization::view.tabs.add_skills') }}
-                    </x-he4rt::button>
-                </div>
             </div>
         @endif
     </div>

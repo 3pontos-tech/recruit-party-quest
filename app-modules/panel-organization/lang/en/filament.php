@@ -38,13 +38,6 @@ return [
             'modal_heading' => 'Reject Application',
             'modal_description' => 'This action cannot be undone. The candidate will be notified of the rejection.',
         ],
-        'placeholder1' => 'Action 1',
-        'placeholder2' => 'Action 2',
-    ],
-
-    'fields' => [
-        'test_label' => 'Test',
-        'test_placeholder' => 'Testing placeholder',
     ],
 
     'notifications' => [
@@ -55,7 +48,6 @@ return [
     'tables' => [
         'last_movement' => 'Last Movement',
         'position' => 'Position',
-        'published' => 'Published',
         'kanban' => 'Kanban',
     ],
 

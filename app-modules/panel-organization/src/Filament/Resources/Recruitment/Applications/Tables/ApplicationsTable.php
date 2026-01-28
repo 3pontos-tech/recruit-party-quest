@@ -90,7 +90,6 @@ class ApplicationsTable
                     ->collapsible()
                     ->getTitleFromRecordUsing(fn (Application $record): string => $record->requisition->post->title ?? __('panel-organization::filament.group.job_no_title'))
                     ->getDescriptionFromRecordUsing(function (Application $record): string {
-                        $status = $record->requisition->status->getLabel();
                         $department = $record->requisition->department->name ?? 'N/A';
                         $team = $record->requisition->team->name ?? 'N/A';
 

@@ -4,7 +4,9 @@
     use Illuminate\Support\Collection;
 @endphp
 
-@props(['record' => []])
+@props([
+    'record',
+])
 
 @php
     /** @var Application $record */
@@ -30,9 +32,7 @@
             <h3 class="text-text-high text-sm font-semibold">{{ __('panel-organization::view.pipeline.title') }}</h3>
         </div>
         @if ($currentStage)
-            <x-he4rt::tag size="sm" variant="outline" class="px-2">
-                {{ $currentStageIndex + 1 }} / {{ $stages->count() }}
-            </x-he4rt::tag>
+            <x-he4rt::tag size="sm">{{ $currentStageIndex + 1 }} / {{ $stages->count() }}</x-he4rt::tag>
         @endif
     </div>
     <div class="space-y-4 rounded-lg">
@@ -98,11 +98,11 @@
 
                             {{-- Stage Status Badge --}}
                             @if ($isCurrent)
-                                <x-he4rt::tag variant="solid" size="xs" class="p-1">
+                                <x-he4rt::tag size="xs" class="p-1">
                                     {{ __('panel-organization::view.pipeline.current') }}
                                 </x-he4rt::tag>
                             @elseif ($isCompleted)
-                                <x-he4rt::tag variant="solid" size="xs" class="p-1">
+                                <x-he4rt::tag size="xs" class="p-1">
                                     {{ __('panel-organization::view.pipeline.done') }}
                                 </x-he4rt::tag>
                             @endif

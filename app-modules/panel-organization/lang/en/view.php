@@ -16,22 +16,6 @@ return [
         'portfolio' => 'Portfolio',
         'profile_image_alt' => 'User profile image',
     ],
-    'documents' => [
-        'title' => 'Documents',
-        'count' => '{0} no files|{1} :count file|[2,*] :count files',
-        'upload_button' => 'Upload Additional Document',
-        'total_files' => 'Total Files',
-        'total_size' => 'Total Size',
-        'types_title' => 'Document Types',
-        'type' => [
-            'resume' => 'Resume/CV',
-            'portfolio' => 'Portfolio',
-            'cover_letter' => 'Cover Letter',
-            'references' => 'References',
-        ],
-        'view_title' => 'View document',
-        'download_title' => 'Download document',
-    ],
     'ai' => [
         'title' => 'AI Match Score',
         'excellent' => 'Excellent Match',
@@ -86,7 +70,7 @@ return [
             'career_summary' => 'Career Summary',
             'career_timeline' => 'Career Timeline',
             'companies' => 'Companies',
-            'more' => '{1} +:count more|[2,*] +:count more',
+            'more' => '{0}|{1} +:count more|[2,*] +:count more',
         ],
         'education' => [
             'title' => 'Education',

@@ -40,11 +40,6 @@ return [
         ],
     ],
 
-    'fields' => [
-        'test_label' => 'Teste',
-        'test_placeholder' => 'Espaço reservado de teste',
-    ],
-
     'notifications' => [
         'ok_title' => 'Pronto',
         'ok_body' => 'Ação concluída com sucesso.',
@@ -53,7 +48,6 @@ return [
     'tables' => [
         'last_movement' => 'Última Movimentação',
         'position' => 'Cargo',
-        'published' => 'Publicado',
         'kanban' => 'Kanban',
     ],
 

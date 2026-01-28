@@ -13,12 +13,10 @@
         ->get();
     $hasEducation = $degrees->isNotEmpty();
 
-    // Education statistics
     $totalDegrees = $degrees->count();
     $currentEnrolled = $degrees->where('is_enrolled', true)->count();
     $completedDegrees = $degrees->where('is_enrolled', false)->count();
 
-    // Group degrees by level/type for better organization
     function categorizeDegree(string $degreeTitle): string
     {
         $degreeTypes = [
@@ -61,12 +59,12 @@
             @if ($hasEducation)
                 <div class="flex items-center gap-2">
                     @if ($currentEnrolled > 0)
-                        <x-he4rt::tag variant="solid">
+                        <x-he4rt::tag>
                             {{ $currentEnrolled }} {{ __('panel-organization::view.tabs.education.in_progress') }}
                         </x-he4rt::tag>
                     @endif
 
-                    <x-he4rt::tag variant="outline">
+                    <x-he4rt::tag>
                         {{ trans_choice('panel-organization::view.tabs.education.degree_count', $totalDegrees, ['count' => $totalDegrees]) }}
                     </x-he4rt::tag>
                 </div>
@@ -82,8 +80,8 @@
                         $isCompleted = ! $degree->is_enrolled;
                         $endDate = $degree->end_date ?? now();
                         $duration = $degree->start_date->diffInMonths($endDate);
-                        $durationYears = floor($duration / 12);
-                        $durationMonths = $duration % 12;
+                        $durationYears = (int) floor($duration / 12);
+                        $durationMonths = (int) $duration % 12;
 
                         $categoryColors = [
                             'PhD' => 'purple',
@@ -102,23 +100,15 @@
                         <div class="flex items-start justify-between">
                             <div class="flex-1 space-y-2">
                                 <div class="flex items-center gap-3">
-                                    <x-he4rt::tag variant="solid">
+                                    <x-he4rt::tag>
                                         {{ $degreeCategory }}
                                     </x-he4rt::tag>
                                     @if ($degree->is_enrolled)
-                                        <x-he4rt::tag
-                                            color="info"
-                                            :icon="\Filament\Support\Icons\Heroicon::OutlinedClock"
-                                        >
-                                            {{-- <x-heroicon-o-clock class="w-3 h-3 mr-1" /> --}}
+                                        <x-he4rt::tag color="info" :icon="\Filament\Support\Icons\Heroicon::Clock">
                                             {{ __('panel-organization::view.tabs.education.in_progress') }}
                                         </x-he4rt::tag>
                                     @else
-                                        <x-he4rt::tag
-                                            variant="solid"
-                                            :icon="\Filament\Support\Icons\Heroicon::CheckCircle"
-                                        >
-                                            {{-- <x-heroicon-o-check-circle class="w-3 h-3 mr-1" /> --}}
+                                        <x-he4rt::tag :icon="\Filament\Support\Icons\Heroicon::CheckCircle">
                                             {{ __('panel-organization::view.tabs.education.completed') }}
                                         </x-he4rt::tag>
                                     @endif
@@ -135,14 +125,12 @@
                                 </p>
                                 <p class="text-text-medium text-xs">
                                     @if ($durationYears > 0)
-                                        {{ $durationYears }}
                                         {{ trans_choice('panel-organization::view.time.year', $durationYears, ['count' => $durationYears]) }}
+
                                         @if ($durationMonths > 0)
-                                            {{ $durationMonths }}
                                             {{ trans_choice('panel-organization::view.time.month', $durationMonths, ['count' => $durationMonths]) }}
                                         @endif
                                     @else
-                                        {{ $durationMonths }}
                                         {{ trans_choice('panel-organization::view.time.month', $durationMonths, ['count' => $durationMonths]) }}
                                     @endif
                                 </p>
@@ -210,9 +198,7 @@
                         </p>
                         <div class="flex flex-wrap gap-2">
                             @foreach ($degreesByCategory as $category => $categoryDegrees)
-                                <x-he4rt::tag variant="solid">
-                                    {{ $category }} ({{ $categoryDegrees->count() }})
-                                </x-he4rt::tag>
+                                <x-he4rt::tag>{{ $category }} ({{ $categoryDegrees->count() }})</x-he4rt::tag>
                             @endforeach
                         </div>
                     </div>
@@ -224,7 +210,7 @@
                         </p>
                         <div class="flex flex-wrap gap-2">
                             @foreach ($fieldsByCategory as $field => $fieldDegrees)
-                                <x-he4rt::tag variant="outline">
+                                <x-he4rt::tag>
                                     {{ $field }}
                                     @if ($fieldDegrees->count() > 1)
                                         ({{ $fieldDegrees->count() }})
@@ -254,7 +240,7 @@
                         size="sm"
                         variant="outline"
                         :icon="\Filament\Support\Icons\Heroicon::Plus"
-                        disabled
+                        :disabled="true"
                     >
                         {{ __('panel-organization::view.tabs.education.add') }}
                     </x-he4rt::button>

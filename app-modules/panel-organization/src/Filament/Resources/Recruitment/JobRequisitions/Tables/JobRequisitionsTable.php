@@ -71,8 +71,7 @@ class JobRequisitionsTable
                     ->label(__('recruitment::filament.requisition.fields.recruiter')),
                 TextColumn::make('published_at')
                     ->label(__('recruitment::filament.requisition.fields.published_at'))
-                    ->date()
-                    ->label(__('panel-organization::filament.tables.published')),
+                    ->date(),
             ])
             ->filters([
                 SelectFilter::make('status')

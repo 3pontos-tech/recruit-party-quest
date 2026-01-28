@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use Exception;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
@@ -13,17 +12,19 @@ use He4rt\Candidates\Models\Skill;
 use He4rt\Candidates\Models\WorkExperience;
 use He4rt\Feedback\Models\ApplicationComment;
 use He4rt\Feedback\Models\Evaluation;
+use He4rt\Location\Address;
 use He4rt\Recruitment\Requisitions\Enums\JobRequisitionItemTypeEnum;
+use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Requisitions\Models\JobRequisitionItem;
 use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Screening\Models\ScreeningQuestion;
-use He4rt\Teams\Department;
 use He4rt\Teams\Team;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Collection;
 
 final class DevelopmentSeeder extends Seeder
 {
@@ -35,131 +36,347 @@ final class DevelopmentSeeder extends Seeder
         'benefit' => ['compensation', 'wellness', 'flexibility', 'development'],
     ];
 
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    private User $adminUser;
+
+    private Team $adminTeam;
+
+    private Collection $departments;
+
+    private Collection $skills;
+
+    public function run(array $adminData = []): void
     {
         $this->command->info('Running Development Seeder...');
 
-        Team::factory()->count(3)
-            ->has(Department::factory()->count(2))
-            ->create();
+        if ($adminData === []) {
+            $this->command->error('Admin data not provided to DevelopmentSeeder');
 
-        $teams = Team::all();
-
-        $entitiesCount = 3;
-        $users = User::factory()->count($entitiesCount)->create();
-
-        try {
-            $users->each(fn (User $user) => $user->teams()->attach($teams->random()));
-        } catch (Exception) {
-
+            return;
         }
 
-        $candidates = Candidate::factory()->count($entitiesCount)->recycle($users)->create();
+        $this->adminUser = $adminData['admin'];
+        $this->adminTeam = $adminData['team'];
+        $this->departments = $adminData['departments'];
 
-        $skills = Skill::factory()->count(10)->create();
+        $this->skills = $this->createFocusedSkills();
 
-        $candidates->each(function (Candidate $candidate) use ($skills): void {
-            Education::factory()->count(fake()->numberBetween(1, 2))->recycle($candidate)->create();
-            WorkExperience::factory()->count(fake()->numberBetween(1, 3))->recycle($candidate)->create();
+        $candidates = $this->createCandidates(10);
 
-            $candidate->skills()->attach(
-                $skills->random(fake()->numberBetween(2, 5))->pluck('id')->toArray(),
-                [
-                    'years_of_experience' => fake()->numberBetween(1, 10),
-                    'proficiency_level' => fake()->randomElement([1, 2, 3, 4]),
-                ]
-            );
-        });
+        $this->attachSkillsToCandidates($candidates);
 
-        $requisitions = JobRequisition::factory()
-            ->count(5)
-            ->hasPost()
-            ->recycle($teams)
-            ->recycle(Department::all())
-            ->recycle($users)
-            ->create();
+        $requisitions = $this->createJobRequisitions();
 
-        $requisitions->each(function (JobRequisition $requisition): void {
-            $this->seedRequisitionItems($requisition);
-
-            ScreeningQuestion::factory()
-                ->count(fake()->numberBetween(2, 4))
-                ->recycle($requisition->team)
-                ->create([
-                    'display_order' => fake()->randomDigit(),
-                    'screenable_type' => Relation::getMorphAlias(JobRequisition::class),
-                    'screenable_id' => $requisition->id,
-                ]);
-
-            $stages = [
-                ['type' => StageTypeEnum::New, 'name' => 'Newcomers'],
-                ['type' => StageTypeEnum::Screening, 'name' => 'Initial Screening'],
-                ['type' => StageTypeEnum::Assessment, 'name' => 'Technical Challenge'],
-                ['type' => StageTypeEnum::Interview, 'name' => 'Technical Interview'],
-                ['type' => StageTypeEnum::Interview, 'name' => 'Cultural Fit'],
-                ['type' => StageTypeEnum::Offer, 'name' => 'Offer Stage'],
-            ];
-
-            foreach ($stages as $index => $stageData) {
-                Stage::factory()
-                    ->recycle($requisition)
-                    ->recycle($requisition->team)
-                    ->hasInterviewers(2)
-                    ->create([
-                        'stage_type' => $stageData['type'],
-                        'name' => $stageData['name'],
-                        'display_order' => $index + 1,
-                    ]);
-
-            }
-        });
-
-        collect();
-        $pairs = [];
-        foreach ($requisitions as $requisition) {
-            foreach ($candidates as $candidate) {
-                $pairs[] = ['requisition_id' => $requisition->id, 'candidate_id' => $candidate->id];
-            }
-        }
-
-        $selectedPairs = collect($pairs)->shuffle()->all();
-
-        foreach ($selectedPairs as $pair) {
-            $requisition = $requisitions->firstWhere('id', $pair['requisition_id']);
-            $candidate = $candidates->firstWhere('id', $pair['candidate_id']);
-            $requisitionStages = $requisition->stages;
-
-            $application = Application::factory()
-                ->recycle($requisition)
-                ->recycle($candidate)
-                ->recycle($requisition->team)
-                ->recycle($users)
-                ->state([
-                    'current_stage_id' => $requisitionStages->first()->getKey(),
-                    'status' => ApplicationStatusEnum::New,
-                ])
-                ->create();
-
-            ApplicationComment::factory()
-                ->count(fake()->numberBetween(0, 3))
-                ->recycle($application->team)
-                ->recycle($application)
-                ->recycle($users)
-                ->create();
-
-            Evaluation::factory()
-                ->count(fake()->numberBetween(0, 2))
-                ->recycle($application->team)
-                ->recycle($application)
-                ->state(['stage_id' => $application->current_stage_id])
-                ->recycle($users)
-                ->create();
-        }
+        $this->createSmartApplications($candidates, $requisitions);
 
         $this->command->info('Development Seeder completed.');
+    }
+
+    private function createFocusedSkills(): Collection
+    {
+        $this->command->info('Creating focused skills...');
+
+        $skills = collect();
+
+        $hardSkills = [
+            'PHP', 'Laravel', 'Symfony', 'Node.js', 'Python', 'Java', 'C#', '.NET',
+            'JavaScript', 'TypeScript', 'React', 'Vue.js', 'Angular', 'HTML', 'CSS', 'Tailwind',
+            'Flutter', 'React Native', 'Swift', 'Kotlin', 'Dart',
+            'Docker', 'AWS', 'Azure', 'Kubernetes', 'CI/CD', 'Jenkins', 'GitLab',
+            'MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'ElasticSearch',
+            'Git', 'REST API', 'GraphQL',
+        ];
+
+        $softSkills = [
+            'Leadership', 'Communication', 'Teamwork', 'Problem Solving',
+            'Critical Thinking', 'Time Management', 'Adaptability',
+            'Project Management', 'Agile', 'Scrum',
+        ];
+
+        $languages = [
+            'English', 'Portuguese', 'Spanish', 'French', 'German',
+        ];
+
+        foreach ($hardSkills as $skillName) {
+            $skill = Skill::factory()->create([
+                'name' => $skillName,
+                'category' => 'hard_skill',
+            ]);
+
+            $skills->push($skill);
+        }
+
+        foreach ($softSkills as $skillName) {
+            $skill = Skill::factory()->create([
+                'name' => $skillName,
+                'category' => 'soft_skill',
+            ]);
+
+            $skills->push($skill);
+        }
+
+        foreach ($languages as $skillName) {
+            $skill = Skill::factory()->create([
+                'name' => $skillName,
+                'category' => 'language',
+            ]);
+
+            $skills->push($skill);
+        }
+
+        return $skills;
+    }
+
+    private function createCandidates(int $cont = 3): Collection
+    {
+        $this->command->info('Creating candidates...');
+
+        return Candidate::factory()
+            ->count($cont)
+            ->afterCreating(function (Candidate $candidate): void {
+                $candidate->address()->save(
+                    Address::factory()->make()
+                );
+                Education::factory()
+                    ->count(fake()->numberBetween(1, 2))
+                    ->create([
+                        'candidate_id' => $candidate->getKey(),
+                    ]);
+
+                WorkExperience::factory()
+                    ->count(fake()->numberBetween(2, 4))
+                    ->create([
+                        'candidate_id' => $candidate->getKey(),
+                    ]);
+            })
+            ->create();
+    }
+
+    private function attachSkillsToCandidates(Collection $candidates): void
+    {
+        $this->command->info('Attaching skills to candidates...');
+
+        $skillsByCategory = $this->skills->groupBy('category');
+
+        $candidates->each(function ($candidate) use ($skillsByCategory): void {
+            $candidateSkills = collect();
+
+            $hardSkills = $skillsByCategory->get('hard_skill', collect());
+            $selectedHardSkills = $hardSkills->random(min(fake()->numberBetween(3, 5), $hardSkills->count()));
+            $candidateSkills = $candidateSkills->merge($selectedHardSkills);
+
+            $softSkills = $skillsByCategory->get('soft_skill', collect());
+            $selectedSoftSkills = $softSkills->random(min(fake()->numberBetween(2, 3), $softSkills->count()));
+            $candidateSkills = $candidateSkills->merge($selectedSoftSkills);
+
+            $languages = $skillsByCategory->get('language', collect());
+            $selectedLanguages = $languages->random(min(fake()->numberBetween(1, 2), $languages->count()));
+            $candidateSkills = $candidateSkills->merge($selectedLanguages);
+
+            $pivotData = $candidateSkills->mapWithKeys(fn ($skill) => [
+                $skill->getKey() => [
+                    'years_of_experience' => fake()->numberBetween(1, 8),
+                    'proficiency_level' => fake()->randomElement([2, 3, 4]),
+                ],
+            ])->all();
+
+            $candidate->skills()->attach($pivotData);
+        });
+    }
+
+    private function createJobRequisitions(): Collection
+    {
+        $this->command->info('Creating job requisitions...');
+
+        $jobTitles = [
+            'Senior PHP Developer',
+            'Frontend React Developer',
+            'Full-Stack Laravel Developer',
+            'DevOps Engineer',
+            'Mobile Flutter Developer',
+        ];
+
+        $requisitions = collect();
+
+        foreach ($jobTitles as $title) {
+            $requisition = JobRequisition::factory()
+                ->afterCreating(function (JobRequisition $requisition) use ($title): void {
+                    JobPosting::factory()->create([
+                        'job_requisition_id' => $requisition->getKey(),
+                        'title' => $title,
+                        'description' => sprintf('Join our team as a %s. Work on exciting projects with modern technologies.',
+                            $title),
+                    ]);
+                })
+                ->create([
+                    'team_id' => $this->adminTeam->getKey(),
+                    'department_id' => $this->departments->random()->getKey(),
+                    'created_by_id' => $this->adminUser->getKey(),
+                ]);
+
+            $this->seedRequisitionItems($requisition);
+            $this->createRequisitionStages($requisition);
+            $this->createScreeningQuestions($requisition);
+
+            $requisitions->push($requisition);
+        }
+
+        return $requisitions;
+    }
+
+    private function createRequisitionStages(JobRequisition $requisition): void
+    {
+        $stages = [
+            ['type' => StageTypeEnum::New, 'name' => 'New Applications'],
+            ['type' => StageTypeEnum::Screening, 'name' => 'Initial Screening'],
+            ['type' => StageTypeEnum::Assessment, 'name' => 'Technical Assessment'],
+            ['type' => StageTypeEnum::Interview, 'name' => 'Technical Interview'],
+            ['type' => StageTypeEnum::Interview, 'name' => 'Cultural Interview'],
+            ['type' => StageTypeEnum::Offer, 'name' => 'Job Offer'],
+        ];
+
+        foreach ($stages as $index => $stageData) {
+            Stage::factory()
+                ->create([
+                    'job_requisition_id' => $requisition->getKey(),
+                    'team_id' => $requisition->team_id,
+                    'stage_type' => $stageData['type'],
+                    'name' => $stageData['name'],
+                    'display_order' => $index + 1,
+                ]);
+        }
+    }
+
+    private function createScreeningQuestions(JobRequisition $requisition): void
+    {
+        ScreeningQuestion::factory()
+            ->count(fake()->numberBetween(2, 4))
+            ->create([
+                'team_id' => $requisition->team_id,
+                'display_order' => fake()->randomDigit(),
+                'screenable_type' => Relation::getMorphAlias(JobRequisition::class),
+                'screenable_id' => $requisition->getKey(),
+            ]);
+    }
+
+    private function createSmartApplications(Collection $candidates, Collection $requisitions): void
+    {
+        $this->command->info('Creating smart applications with skill matching...');
+
+        foreach ($requisitions as $requisition) {
+            $requiredSkills = $this->extractRequiredSkills($requisition);
+
+            $compatibleCandidates = $candidates->filter(function ($candidate) use ($requiredSkills): bool {
+                $candidateSkills = $candidate->skills->pluck('name')->toArray();
+                $matchCount = count(array_intersect($candidateSkills, $requiredSkills));
+
+                return $matchCount >= 2;
+            });
+
+            $applicants = $compatibleCandidates->shuffle()->take(fake()->numberBetween(3, 6));
+
+            $this->createRealisticApplications($applicants, $requisition);
+        }
+    }
+
+    private function extractRequiredSkills(JobRequisition $requisition): array
+    {
+        $jobTitle = $requisition->post->title;
+
+        $skillMaps = [
+            'PHP' => ['PHP', 'Laravel', 'MySQL', 'Git'],
+            'React' => ['JavaScript', 'React', 'HTML', 'CSS'],
+            'Laravel' => ['PHP', 'Laravel', 'MySQL', 'JavaScript'],
+            'DevOps' => ['Docker', 'AWS', 'Kubernetes', 'CI/CD'],
+            'Flutter' => ['Flutter', 'Dart', 'Mobile', 'Git'],
+        ];
+
+        foreach ($skillMaps as $keyword => $skills) {
+            if (str_contains($jobTitle, $keyword)) {
+                return $skills;
+            }
+        }
+
+        return ['Git', 'Agile'];
+    }
+
+    private function createRealisticApplications(Collection $candidates, JobRequisition $requisition): void
+    {
+        $stages = $requisition->stages->sortBy('display_order');
+
+        $candidates->each(function ($candidate, $index) use ($requisition, $stages): void {
+            $weights = [
+                0 => 0.4,  // New
+                1 => 0.3,  // Screening
+                2 => 0.15, // Assessment
+                3 => 0.1,  // Interview 1
+                4 => 0.04, // Interview 2
+                5 => 0.01, // Offer
+            ];
+
+            $currentStageIndex = $this->selectStageByWeight($weights);
+            $currentStage = $stages->values()[$currentStageIndex] ?? $stages->first();
+            $status = $this->mapStageToStatus($currentStage);
+
+            $application = Application::factory()->create([
+                'candidate_id' => $candidate->getKey(),
+                'requisition_id' => $requisition->getKey(),
+                'current_stage_id' => $currentStage->getKey(),
+                'team_id' => $requisition->team_id,
+                'status' => $status,
+                'created_at' => fake()->dateTimeBetween('-2 months'),
+            ]);
+
+            if ($currentStageIndex > 0) {
+                $this->addApplicationFeedback($application);
+            }
+        });
+    }
+
+    private function selectStageByWeight(array $weights): int
+    {
+        $random = fake()->randomFloat(2, 0, 1);
+        $cumulative = 0;
+
+        foreach ($weights as $index => $weight) {
+            $cumulative += $weight;
+            if ($random <= $cumulative) {
+                return $index;
+            }
+        }
+
+        return 0; // Fallback to first stage
+    }
+
+    private function mapStageToStatus(Stage $stage): ApplicationStatusEnum
+    {
+        return match ($stage->stage_type) {
+            StageTypeEnum::Screening, StageTypeEnum::Assessment => ApplicationStatusEnum::InReview,
+            StageTypeEnum::Interview => ApplicationStatusEnum::InProgress,
+            StageTypeEnum::Offer => ApplicationStatusEnum::OfferExtended,
+            default => ApplicationStatusEnum::New,
+        };
+    }
+
+    private function addApplicationFeedback(Application $application): void
+    {
+        ApplicationComment::factory()
+            ->count(fake()->numberBetween(1, 3))
+            ->create([
+                'application_id' => $application->getKey(),
+                'team_id' => $application->team_id,
+                'author_id' => $this->adminUser->getKey(),
+            ]);
+
+        if ($application->status === ApplicationStatusEnum::InProgress) {
+            Evaluation::factory()
+                ->count(fake()->numberBetween(1, 2))
+                ->create([
+                    'application_id' => $application->getKey(),
+                    'team_id' => $application->team_id,
+                    'stage_id' => $application->current_stage_id,
+                    'evaluator_id' => $this->adminUser->getKey(),
+                ]);
+        }
     }
 
     private function seedRequisitionItems(JobRequisition $requisition): void
