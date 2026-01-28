@@ -74,6 +74,8 @@ return [
         'plural_label' => 'Requisições de Vagas',
         'navigation_label' => 'Requisições de Vagas',
         'tabs' => [
+            'details' => 'Vaga em Detalhes',
+            'screening_questions' => 'Perguntas',
             'basic_information' => 'Informações Básicas',
             'job_description' => 'Descrição da Vaga',
             'position_details' => 'Detalhes da Posição',
