@@ -30,7 +30,11 @@
 
     <div class="relative grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         <div class="absolute right-0 -z-10">
-            <img src="{{ asset('images/3pontos/logo-rounded.svg') }}" alt="" class="h-auto w-full translate-x-[60%]" />
+            <img
+                src="{{ asset('images/3pontos/logo-rounded.svg') }}"
+                alt=""
+                class="spin-slow h-auto w-full translate-x-[60%]"
+            />
         </div>
 
         @forelse ($this->jobs as $job)

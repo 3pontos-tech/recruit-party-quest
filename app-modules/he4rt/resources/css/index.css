@@ -66,6 +66,16 @@
     initial-value: 270deg;
 }
 
+@keyframes spin-slow {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spin-slow {
+    animation: spin-slow 40s linear infinite;
+}
+
 @keyframes infinite-scroll {
     0% {
         transform: translateX(0);
