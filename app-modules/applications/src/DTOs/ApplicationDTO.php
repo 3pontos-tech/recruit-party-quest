@@ -6,12 +6,10 @@ namespace He4rt\Applications\DTOs;
 
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\CandidateSourceEnum;
-use Ramsey\Uuid\Uuid;
 
 final readonly class ApplicationDTO
 {
     public function __construct(
-        public string|Uuid $applicationId,
         public string $requisitionId,
         public string $candidateId,
         public string $teamId,
@@ -21,7 +19,6 @@ final readonly class ApplicationDTO
 
     /**
      * @param array{
-     *   application_id: string,
      *   requisition_id: string,
      *   candidate_id: string,
      *   team_id: string,
@@ -32,7 +29,6 @@ final readonly class ApplicationDTO
     public static function make(array $data): self
     {
         return new self(
-            applicationId: $data['application_id'],
             requisitionId: $data['requisition_id'],
             candidateId: $data['candidate_id'],
             teamId: $data['team_id'],

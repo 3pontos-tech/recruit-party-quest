@@ -8,8 +8,8 @@ use Filament\Notifications\Notification;
 use He4rt\Applications\DTOs\ApplicationDTO;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\CandidateSourceEnum;
-use He4rt\Applications\Events\JobAppliedEvent;
 use He4rt\Applications\Models\Application;
+use He4rt\Applications\Services\Applications\StoreApplication;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Screening\Actions\ScreeningResponse\StoreScreeningResponse;
@@ -22,7 +22,6 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 use Livewire\Features\SupportRedirects\Redirector;
-use Ramsey\Uuid\Uuid;
 
 class JobApplicationForm extends Component
 {
@@ -56,19 +55,17 @@ class JobApplicationForm extends Component
     public function submit(): Redirector|RedirectResponse
     {
         $this->validate();
-        $applicationId = Uuid::uuid4();
         if (! $this->application instanceof Application) {
             /** @var Candidate $candidate */
             $candidate = auth()->user()->candidate;
 
-            event(new JobAppliedEvent(ApplicationDTO::make([
-                'application_id' => (string) $applicationId,
+            $this->application = resolve(StoreApplication::class)->execute(ApplicationDTO::make([
                 'requisition_id' => $this->requisition->getKey(),
                 'candidate_id' => $candidate->getKey(),
                 'team_id' => $this->requisition->team_id,
                 'status' => ApplicationStatusEnum::New->value,
                 'source' => $this->source->value,
-            ])));
+            ]));
 
         }
 
@@ -81,7 +78,7 @@ class JobApplicationForm extends Component
             $value = is_array($value) ? $value : ['value' => $value];
             $screeningCollection->add(new ScreeningResponseDTO(
                 teamId: $this->requisition->team_id,
-                applicationId: $applicationId->toString(),
+                applicationId: $this->application->getKey(),
                 questionId: $questionId,
                 response_value: $value,
             ));
@@ -94,7 +91,7 @@ class JobApplicationForm extends Component
             ->success()
             ->send();
 
-        return redirect(route('filament.app.resources.applications.view', ['record' => $applicationId]));
+        return redirect(route('filament.app.resources.applications.view', ['record' => $this->application->getKey()]));
     }
 
     public function render(): View|Factory|\Illuminate\View\View

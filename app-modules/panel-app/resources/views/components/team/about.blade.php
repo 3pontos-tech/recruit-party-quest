@@ -1,5 +1,5 @@
 @props([
-    'team' => null,
+    'team' => $this->record?->requisition?->team ?? null,
 ])
 
 <x-he4rt::card
