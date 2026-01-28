@@ -146,7 +146,6 @@ final class DevelopmentSeeder extends Seeder
                     ->count(fake()->numberBetween(2, 4))
                     ->create([
                         'candidate_id' => $candidate->getKey(),
-                        'is_currently_working_here' => fake()->boolean(30),
                     ]);
             })
             ->create();
