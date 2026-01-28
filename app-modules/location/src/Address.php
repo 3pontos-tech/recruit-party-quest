@@ -98,12 +98,13 @@ class Address extends BaseModel
                 'lat' => $this->latitude,
                 'lng' => $this->longitude,
             ],
-            set: fn (?array $value): array => is_array($value)
-                ? [
-                    'latitude' => $value['lat'] ?? null,
-                    'longitude' => $value['lng'] ?? null,
-                ]
-                : []
+            set: function (?array $value, array $attributes): void {
+                if (is_array($value)) {
+                    $this->attributes['latitude'] = $attributes['lat'];
+                    $this->attributes['longitude'] = $attributes['lng'];
+                    unset($this->attributes['location']);
+                }
+            }
         );
     }
 }
