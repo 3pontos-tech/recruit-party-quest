@@ -82,6 +82,8 @@ return [
             'settings' => 'Settings',
             'job_posting' => 'Job Posting',
             'misc' => 'Miscellaneous',
+            'details' => 'Job Details',
+            'screening_questions' => 'Screening Questions',
         ],
         'sections' => [
             'basic_information' => 'Basic Information',
@@ -115,6 +117,7 @@ return [
             'salary_range_min' => 'Minimum Salary',
             'salary_range_max' => 'Maximum Salary',
             'salary_currency' => 'Currency',
+            'show_salary_to_candidates' => 'Show Salary To Candidates',
             'is_internal_only' => 'Internal Only',
             'is_confidential' => 'Confidential',
             'target_start_at' => 'Target Start Date',

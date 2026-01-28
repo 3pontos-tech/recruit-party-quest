@@ -82,6 +82,8 @@ return [
             'settings' => 'Configurações',
             'job_posting' => 'Vaga',
             'misc' => 'Variados',
+            'details' => 'Detalhes da Vaga',
+            'screening_questions' => 'Perguntas de Triagem',
         ],
         'sections' => [
             'basic_information' => 'Informações Básicas',
@@ -114,6 +116,7 @@ return [
             'salary_range_min' => 'Salário Mínimo',
             'salary_range_max' => 'Salário Máximo',
             'salary_currency' => 'Moeda',
+            'show_salary_to_candidates' => 'Mostrar Salário aos Candidatos',
             'is_internal_only' => 'Apenas Interno',
             'is_confidential' => 'Confidencial',
             'target_start_at' => 'Data de Início Prevista',
