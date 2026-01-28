@@ -12,6 +12,7 @@ use He4rt\Candidates\Models\Skill;
 use He4rt\Candidates\Models\WorkExperience;
 use He4rt\Feedback\Models\ApplicationComment;
 use He4rt\Feedback\Models\Evaluation;
+use He4rt\Location\Address;
 use He4rt\Recruitment\Requisitions\Enums\JobRequisitionItemTypeEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
@@ -132,6 +133,9 @@ final class DevelopmentSeeder extends Seeder
         return Candidate::factory()
             ->count($cont)
             ->afterCreating(function (Candidate $candidate): void {
+                $candidate->address()->save(
+                    Address::factory()->make()
+                );
                 Education::factory()
                     ->count(fake()->numberBetween(1, 2))
                     ->create([
@@ -200,7 +204,8 @@ final class DevelopmentSeeder extends Seeder
                     JobPosting::factory()->create([
                         'job_requisition_id' => $requisition->getKey(),
                         'title' => $title,
-                        'description' => sprintf('Join our team as a %s. Work on exciting projects with modern technologies.', $title),
+                        'description' => sprintf('Join our team as a %s. Work on exciting projects with modern technologies.',
+                            $title),
                     ]);
                 })
                 ->create([
