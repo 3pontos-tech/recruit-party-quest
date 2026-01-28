@@ -33,7 +33,7 @@
     }
     $location = $candidate->address->label;
 
-    $education = 'Computer Science, University Name';
+    $education = $candidate->degrees->map(fn ($e) => "{$e->institution} — {$e->degree}")->implode(' | ');
 @endphp
 
 <x-filament::section>
@@ -178,7 +178,9 @@
                         <x-he4rt::icon :icon="Heroicon::AcademicCap" size="sm" class="text-icon-medium" />
                         {{ __('panel-organization::view.candidate_header.education') }}
                     </span>
-                    <p class="text-text-high ml-5 text-sm font-semibold">{{ $education }}</p>
+                    <p class="text-text-high ml-5 line-clamp-2 text-sm font-semibold" title="{{ $education }}">
+                        {{ $education }}
+                    </p>
                 </div>
 
                 <div class="space-y-3 sm:col-span-2 lg:col-span-4">
