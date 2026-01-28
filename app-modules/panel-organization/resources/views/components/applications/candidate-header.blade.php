@@ -33,7 +33,7 @@
             ? __('panel-organization::view.status.immediate')
             : __('panel-organization::view.status.available_from', ['date' => $availabilityDate->format('d M Y')]);
     }
-    $location = $candidate->address->label;
+    $location = $candidate->address?->label;
 
     $education = $candidate->degrees->map(fn ($e) => "{$e->institution} — {$e->degree}")->implode(' | ');
 @endphp
@@ -173,13 +173,15 @@
                     <p class="text-text-high ml-5 text-sm font-semibold">{{ $availability }}</p>
                 </div>
 
-                <div>
-                    <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500 uppercase">
-                        <x-he4rt::icon :icon="Heroicon::MapPin" size="sm" class="text-icon-medium" />
-                        {{ __('panel-organization::view.candidate_header.location') }}
-                    </span>
-                    <p class="text-text-high ml-5 text-sm font-semibold">{{ $location }}</p>
-                </div>
+                @if ($location)
+                    <div>
+                        <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                            <x-he4rt::icon :icon="Heroicon::MapPin" size="sm" class="text-icon-medium" />
+                            {{ __('panel-organization::view.candidate_header.location') }}
+                        </span>
+                        <p class="text-text-high ml-5 text-sm font-semibold">{{ $location }}</p>
+                    </div>
+                @endif
 
                 <div>
                     <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500 uppercase">
