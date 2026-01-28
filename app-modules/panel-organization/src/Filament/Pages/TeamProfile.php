@@ -33,6 +33,8 @@ class TeamProfile extends Page
 
     protected static ?string $slug = 'team-profile';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected string $view = 'panel-organization::pages.team-profile';
 
     public static function getNavigationIcon(): string|Heroicon|null
