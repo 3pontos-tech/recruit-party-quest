@@ -1,6 +1,4 @@
-@props([
-    'record',
-])
+@props(['record' => []])
 
 @php
     /** @var \He4rt\Applications\Models\Application $record */
@@ -13,12 +11,10 @@
         ->get();
     $hasEducation = $degrees->isNotEmpty();
 
-    // Education statistics
     $totalDegrees = $degrees->count();
     $currentEnrolled = $degrees->where('is_enrolled', true)->count();
     $completedDegrees = $degrees->where('is_enrolled', false)->count();
 
-    // Group degrees by level/type for better organization
     function categorizeDegree(string $degreeTitle): string
     {
         $degreeTypes = [
@@ -106,11 +102,7 @@
                                         {{ $degreeCategory }}
                                     </x-he4rt::tag>
                                     @if ($degree->is_enrolled)
-                                        <x-he4rt::tag
-                                            color="info"
-                                            :icon="\Filament\Support\Icons\Heroicon::OutlinedClock"
-                                        >
-                                            {{-- <x-heroicon-o-clock class="w-3 h-3 mr-1" /> --}}
+                                        <x-he4rt::tag color="info" :icon="\Filament\Support\Icons\Heroicon::Clock">
                                             {{ __('panel-organization::view.tabs.education.in_progress') }}
                                         </x-he4rt::tag>
                                     @else
@@ -118,7 +110,6 @@
                                             variant="solid"
                                             :icon="\Filament\Support\Icons\Heroicon::CheckCircle"
                                         >
-                                            {{-- <x-heroicon-o-check-circle class="w-3 h-3 mr-1" /> --}}
                                             {{ __('panel-organization::view.tabs.education.completed') }}
                                         </x-he4rt::tag>
                                     @endif
@@ -254,7 +245,7 @@
                         size="sm"
                         variant="outline"
                         :icon="\Filament\Support\Icons\Heroicon::Plus"
-                        disabled
+                        :disabled="true"
                     >
                         {{ __('panel-organization::view.tabs.education.add') }}
                     </x-he4rt::button>
