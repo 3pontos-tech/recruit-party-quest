@@ -196,18 +196,6 @@
                     </ul>
                 </section>
             @endif
-
-            {{-- Additional Information --}}
-            @if ($team->about)
-                <section class="space-y-4">
-                    <x-he4rt::heading level="2" size="sm" class="text-text-high">
-                        About {{ $team->name }}
-                    </x-he4rt::heading>
-                    <x-he4rt::text size="md">
-                        {{ $team->about }}
-                    </x-he4rt::text>
-                </section>
-            @endif
         </div>
 
         @if ($hasAction)

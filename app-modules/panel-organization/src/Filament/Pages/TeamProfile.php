@@ -13,13 +13,14 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use He4rt\Links\Filament\Components\LinkRepeater;
 use He4rt\Teams\Team;
 use Illuminate\Contracts\Support\Htmlable;
 
 /**
  * @property-read Schema $form
  */
-class CompanyProfile extends Page
+class TeamProfile extends Page
 {
     use InteractsWithSchemas;
 
@@ -30,9 +31,9 @@ class CompanyProfile extends Page
 
     protected static ?int $navigationSort = 100;
 
-    protected static ?string $slug = 'company-profile';
+    protected static ?string $slug = 'team-profile';
 
-    protected string $view = 'panel-organization::pages.company-profile';
+    protected string $view = 'panel-organization::pages.team-profile';
 
     public static function getNavigationIcon(): string|Heroicon|null
     {
@@ -60,11 +61,14 @@ class CompanyProfile extends Page
             'accessibility_accommodations' => $tenant?->accessibility_accommodations,
             'is_disability_confident' => $tenant?->is_disability_confident,
         ]);
+
+        $this->form->loadStateFromRelationships();
     }
 
     public function form(Schema $schema): Schema
     {
         return $schema
+            ->model(fn () => Filament::getTenant())
             ->statePath('data')
             ->components([
                 Section::make(__('teams::filament.profile.sections.about'))
@@ -73,7 +77,7 @@ class CompanyProfile extends Page
                     ->schema([
                         Textarea::make('about')
                             ->label(__('teams::filament.profile.fields.about'))
-                            ->rows(6)
+                            ->maxLength(255)
                             ->columnSpanFull(),
                     ]),
 
@@ -93,16 +97,25 @@ class CompanyProfile extends Page
                             ->label(__('teams::filament.profile.fields.is_disability_confident'))
                             ->default(false),
                     ]),
+
+                Section::make(__('teams::filament.profile.sections.team_links'))
+                    ->description(__('teams::filament.profile.sections.team_links_description'))
+                    ->icon(Heroicon::Link)
+                    ->schema([
+                        LinkRepeater::make(),
+                    ]),
             ]);
     }
 
     public function save(): void
     {
-        $data = $this->form->getState();
-
         /** @var Team|null $tenant */
         $tenant = Filament::getTenant();
+
+        $data = $this->form->getState();
         $tenant?->update($data);
+
+        $this->form->model($tenant)->saveRelationships();
 
         Notification::make()
             ->success()
