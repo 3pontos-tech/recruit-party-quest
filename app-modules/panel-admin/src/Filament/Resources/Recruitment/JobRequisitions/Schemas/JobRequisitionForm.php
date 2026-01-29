@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -22,6 +23,8 @@ use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 use He4rt\Screening\Filament\Schemas\ScreeningQuestionsFormSchema;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 class JobRequisitionForm
 {
@@ -69,6 +72,7 @@ class JobRequisitionForm
                             }
                         })
                         ->live(),
+                    Hidden::make('slug'),
                     Select::make('department_id')
                         ->label(__('recruitment::filament.requisition.fields.department'))
                         ->relationship(
@@ -76,6 +80,13 @@ class JobRequisitionForm
                             titleAttribute: 'name',
                             modifyQueryUsing: fn ($query, $get) => $query->when($get('team_id'), fn ($q) => $q->forTeam($get('team_id'))),
                         )
+                        ->afterStateUpdated(function (Set $set, Select $component): void {
+                            $uuid = Uuid::uuid4()->toString();
+                            $label = $component->getOptionLabel();
+                            $slug = sprintf('%s-%s', $label, $uuid);
+                            $slug = Str::slug($slug);
+                            $set('slug', $slug);
+                        })
                         ->required()
                         ->preload()
                         ->searchable(),
