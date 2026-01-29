@@ -32,14 +32,16 @@
                         </x-he4rt::text>
                     </div>
                     <div class="flex flex-col gap-2 sm:flex-row">
-                        <x-he4rt::button variant="outline" size="sm" iconLeading="heroicon-o-document-text">
+                        <x-he4rt::button variant="outline" size="sm" icon="heroicon-o-document-text">
                             Update Resume
                         </x-he4rt::button>
-                        <x-he4rt::button variant="solid" size="sm" iconLeading="heroicon-o-sparkles">
+                        <x-he4rt::button
+                            variant="solid"
+                            size="sm"
+                            icon="heroicon-o-sparkles"
+                            icon:trailing="heroicon-o-arrow-right"
+                        >
                             AI Career Assistant
-                            <x-slot name="trailing">
-                                <x-heroicon-o-arrow-right class="ml-2 h-4 w-4" />
-                            </x-slot>
                         </x-he4rt::button>
                     </div>
                 </div>

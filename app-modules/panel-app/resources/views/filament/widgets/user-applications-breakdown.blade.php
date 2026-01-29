@@ -1,5 +1,5 @@
 <x-filament-widgets::widget>
-    <x-he4rt::card class="p-4" density="compact">
+    <x-he4rt::card :interactive="false" class="p-4" density="compact">
         <x-he4rt::heading level="3" size="xs" class="mb-3">Application Status Breakdown</x-he4rt::heading>
         <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
             @foreach ([
@@ -10,10 +10,7 @@
                 ]
                 as $status)
                 <div class="bg-elevation-01dp flex items-center gap-2.5 rounded-lg p-2">
-                    <x-dynamic-component
-                        :component="$status['icon']"
-                        @class(['w-4 h-4 shrink-0', $status['color']])
-                    />
+                    <x-he4rt::icon :icon="$status['icon']" @class($status['color']) />
                     <div class="min-w-0">
                         <x-he4rt::text size="sm" class="text-text-high leading-none font-semibold">
                             {{ $status['value'] }}
