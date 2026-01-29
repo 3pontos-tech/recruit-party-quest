@@ -20,15 +20,15 @@ final class DatabaseSeeder extends Seeder
         $this->syncPermissions();
 
         if (! app()->isProduction()) {
-            $this->spawnAdminUser();
-            $this->call(DevelopmentSeeder::class);
+            $adminData = $this->spawnAdminUser();
+            $this->call(DevelopmentSeeder::class, false, ['adminData' => $adminData]);
         }
 
         $this->command->newLine();
         $this->command->info('Database seeding completed successfully. Have fun!');
     }
 
-    public function spawnAdminUser(): void
+    public function spawnAdminUser(): array
     {
         $this->command->warn('Creating admin user...');
 
@@ -47,7 +47,16 @@ final class DatabaseSeeder extends Seeder
             ]);
 
         $team->members()->attach($admin);
+
+        $departments = $team->departments;
+
         $this->command->info('Admin user created successfully.');
+
+        return [
+            'admin' => $admin,
+            'team' => $team,
+            'departments' => $departments,
+        ];
     }
 
     private function syncPermissions(): void

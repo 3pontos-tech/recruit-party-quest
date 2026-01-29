@@ -58,9 +58,11 @@ class WorkExperienceFactory extends Factory
         $experienceDurationMonths = fake()->numberBetween(6, 36);
         $endDate = $startDate->copy()->addMonths($experienceDurationMonths);
 
-        $isCurrentlyWorking = $endDate->isFuture() || fake()->boolean(30);
+        $isCurrentlyWorking = fake()->boolean(30);
 
-        if (! $isCurrentlyWorking && $endDate->isFuture()) {
+        if ($isCurrentlyWorking) {
+            $endDate = null;
+        } elseif ($endDate->isFuture()) {
             $endDate = Date::now()->subMonths(fake()->numberBetween(1, 24));
         }
 
@@ -94,8 +96,10 @@ class WorkExperienceFactory extends Factory
         ];
     }
 
-    private function generateJobDescription(string $position, array $technologies): string
-    {
+    private function generateJobDescription(
+        string $position,
+        array $technologies
+    ): string {
         $techString = implode(', ', $technologies);
 
         $descriptions = [

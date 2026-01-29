@@ -19,9 +19,9 @@
                     <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::User" size="sm" />
                 </div>
                 <div>
-                    <h3 class="text-text-high text-lg font-semibold">
+                    <x-he4rt::heading class="text-text-high text-lg font-semibold">
                         {{ __('panel-organization::view.tabs.professional_summary.title') }}
-                    </h3>
+                    </x-he4rt::heading>
                     <p class="text-text-medium text-sm">
                         {{ __('panel-organization::view.tabs.professional_summary.subtitle') }}
                     </p>
@@ -29,7 +29,7 @@
             </div>
             @if ($hasContent)
                 <div class="flex items-center gap-2">
-                    <x-he4rt::tag size="sm" variant="solid">
+                    <x-he4rt::tag size="sm">
                         {{ __('panel-organization::view.tabs.professional_summary.complete') }}
                     </x-he4rt::tag>
                 </div>
@@ -50,12 +50,12 @@
             <div class="bg-surface-01dp border-outline-low rounded-lg border p-8 text-center">
                 <x-he4rt::icon
                     :icon="\Filament\Support\Icons\Heroicon::DocumentText"
-                    size="xl"
+                    size="lg"
                     class="text-text-low mx-auto"
                 />
-                <h4 class="text-text-high mt-4 text-lg font-medium">
+                <x-he4rt::heading class="text-text-high mt-4 text-lg font-medium">
                     {{ __('panel-organization::view.tabs.professional_summary.no_summary') }}
-                </h4>
+                </x-he4rt::heading>
                 <p class="text-text-medium mt-2 text-sm">
                     {{ __('panel-organization::view.tabs.professional_summary.no_summary_text') }}
                 </p>

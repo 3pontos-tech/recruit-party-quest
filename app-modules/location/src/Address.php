@@ -94,7 +94,7 @@ class Address extends BaseModel
     protected function location(): Attribute
     {
         return Attribute::make(
-            get: fn (array $value): array => [
+            get: fn (): array => [
                 'lat' => $this->latitude,
                 'lng' => $this->longitude,
             ],

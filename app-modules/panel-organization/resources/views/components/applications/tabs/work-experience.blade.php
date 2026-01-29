@@ -1,4 +1,6 @@
-@props(['record' => []])
+@props([
+    'record',
+])
 
 @php
     /** @var \He4rt\Applications\Models\Application $record */
@@ -13,44 +15,24 @@
 
     $currentJob = $workExperiences->where('is_currently_working_here', true)->first();
 
-    $experience = $candidate->totalExperienceTime();
+    $totalExperienceTimeString = $candidate->totalExperienceFormatted;
 
-    $years = $experience['years'];
-    $months = $experience['months'];
-
-    $yearsPart = $years > 0 ? trans_choice('panel-organization::view.time.year', $years, ['count' => $years]) : '';
-    $monthsPart = $months > 0 ? trans_choice('panel-organization::view.time.month', $months, ['count' => $months]) : '';
-
-    $totalExperienceTimeString = '';
-
-    if ($years > 0 && $months > 0) {
-        $totalExperienceTimeString = $yearsPart . ' ' . __('panel-organization::view.time.and') . ' ' . $monthsPart;
-    } elseif ($years > 0) {
-        $totalExperienceTimeString = $yearsPart;
-    } else {
-        $totalExperienceTimeString = $monthsPart;
-    }
-
-    // Helper function to extract job title from description
     function extractJobTitle($description, $metadata = null): string
     {
         if ($metadata && isset($metadata['position'])) {
             return $metadata['position'];
         }
 
-        // Extract first line as potential job title
         $lines = explode("\n", trim($description));
         $firstLine = trim($lines[0]);
 
-        // If first line looks like a title (short and doesn't start with bullet), use it
         if (strlen($firstLine) <= 60 && ! preg_match('/^[•\-\*]/', $firstLine)) {
             return $firstLine;
         }
 
-        return 'Professional Role'; // Fallback
+        return 'Professional Role';
     }
 
-    // Helper function to extract skills from metadata or description
     function extractSkills($metadata, $description): array
     {
         $skills = [];
@@ -64,9 +46,7 @@
             }
         }
 
-        // If no skills in metadata, try to extract from description
         if (empty($skills)) {
-            // Look for common tech keywords in description
             $commonTech = ['PHP', 'Laravel', 'JavaScript', 'React', 'Vue', 'Node.js', 'Python', 'Java', 'MySQL', 'PostgreSQL', 'MongoDB', 'AWS', 'Docker', 'Kubernetes', 'Git'];
             foreach ($commonTech as $tech) {
                 if (stripos($description, $tech) !== false) {
@@ -78,12 +58,10 @@
         return array_unique($skills);
     }
 
-    // Helper function to format job description
     function formatJobDescription($description): string
     {
         $lines = explode("\n", trim($description));
 
-        // Remove first line if it looks like a job title
         if (count($lines) > 1) {
             $firstLine = trim($lines[0]);
             if (strlen($firstLine) <= 60 && ! preg_match('/^[•\-\*]/', $firstLine)) {
@@ -114,7 +92,7 @@
         @if ($hasExperience)
             <div class="flex items-center gap-2">
                 @if ($currentJob)
-                    <x-he4rt::tag size="sm" variant="solid">
+                    <x-he4rt::tag size="sm">
                         {{ __('panel-organization::view.tabs.work_experience.currently_employed') }}
                     </x-he4rt::tag>
                 @endif
@@ -134,19 +112,8 @@
 
                     $startDate = $experience->start_date;
                     $endDate = $isCurrent ? now() : $experience->end_date;
-                    $duration = $startDate->diffInMonths($endDate);
-                    $durationYears = floor($duration / 12);
-                    $durationMonths = $duration % 12;
 
-                    $durationText = '';
-                    if ($durationYears > 0) {
-                        $durationText = $durationYears . ' ' . trans_choice('panel-organization::view.time.year', $durationYears, ['count' => $durationYears]);
-                        if ($durationMonths > 0) {
-                            $durationText .= ' ' . $durationMonths . ' ' . trans_choice('panel-organization::view.time.month', $durationMonths, ['count' => $durationMonths]);
-                        }
-                    } else {
-                        $durationText = $durationMonths . ' ' . trans_choice('panel-organization::view.time.month', $durationMonths, ['count' => $durationMonths]);
-                    }
+                    $durationText = $candidate->getExperienceDuration($experience);
                 @endphp
 
                 {{-- Experience Card --}}
@@ -175,7 +142,7 @@
                                     </div>
 
                                     @if ($isCurrent)
-                                        <x-he4rt::tag variant="solid" size="sm">
+                                        <x-he4rt::tag size="sm">
                                             <x-he4rt::icon
                                                 :icon="\Filament\Support\Icons\Heroicon::Clock"
                                                 size="xs"
