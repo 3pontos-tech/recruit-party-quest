@@ -42,6 +42,7 @@ use Illuminate\Support\Carbon;
  * @property string $positions_available
  * @property int|null $salary_range_min
  * @property int|null $salary_range_max
+ * @property bool $show_salary_to_candidates
  * @property string $salary_currency
  * @property string $recruiter_id
  * @property string $created_by_id

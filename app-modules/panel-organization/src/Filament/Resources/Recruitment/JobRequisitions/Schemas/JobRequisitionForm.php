@@ -9,6 +9,7 @@ use App\Filament\Schemas\Components\He4rtSelect;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Components\Textarea;
@@ -45,9 +46,8 @@ class JobRequisitionForm
                             ->icon('heroicon-o-information-circle')
                             ->schema([
                                 Section::make(__('recruitment::filament.requisition.sections.basic_information'))
-                                    ->description('The title and summary are the first things candidates see')
+                                    ->description(__('recruitment::filament.requisition.sections.basic_information_description'))
                                     ->icon(Heroicon::Briefcase)
-
                                     ->relationship('post')
                                     ->schema([
                                         TextInput::make('title')
@@ -69,9 +69,15 @@ class JobRequisitionForm
                                             ->label(__('recruitment::filament.requisition.job_posting.fields.summary'))
                                             ->rows(3)
                                             ->columnSpanFull(),
+
+                                        RichEditor::make('description')
+                                            ->required()
+                                            ->label(__('recruitment::filament.requisition.job_posting.fields.description'))
+                                            ->columnSpanFull(),
+
                                     ]),
                                 Section::make(__('recruitment::filament.requisition.sections.position_details'))
-                                    ->description('Define where this role sits in the organization and how work will be conducted')
+                                    ->description(__('recruitment::filament.requisition.sections.position_details_description'))
                                     ->icon(Heroicon::Briefcase)
                                     ->schema([
                                         He4rtSelect::make('department_id')
@@ -79,10 +85,15 @@ class JobRequisitionForm
                                             ->relationship(
                                                 name: 'department',
                                                 titleAttribute: 'name',
-                                                /** @phpstan-ignore-next-line  */
-                                                modifyQueryUsing: fn (Builder $query, Get $get) => $query->when($get('team_id'), fn (Builder $q) => $q->forTeam($get('team_id'))),
+                                                modifyQueryUsing: fn (
+                                                    Builder $query,
+                                                    Get $get
+                                                    /** @phpstan-ignore-next-line */
+                                                ) => $query->when($get('team_id'),
+                                                    /** @phpstan-ignore-next-line */
+                                                    fn (Builder $q) => $q->forTeam($get('team_id'))),
                                             )
-                                            ->description('The team or division this role belongs to')
+                                            ->description(__('recruitment::filament.requisition.fields.department_description'))
                                             ->icon(Heroicon::BuildingOffice)
                                             ->required()
                                             ->iconColor('purple')
@@ -99,7 +110,7 @@ class JobRequisitionForm
                                         He4rtSelect::make('employment_type')
                                             ->label(__('recruitment::filament.requisition.fields.employment_type'))
                                             ->options(EmploymentTypeEnum::class)
-                                            ->description('The nature of the employment contract')
+                                            ->description(__('recruitment::filament.requisition.fields.employment_type_description'))
                                             ->icon(Heroicon::Clock)
                                             ->native(false)
                                             ->iconColor('green')
@@ -122,7 +133,7 @@ class JobRequisitionForm
                                             ->numeric()
                                             ->icon(Heroicon::Users)
                                             ->iconColor('blue')
-                                            ->description('How many positions should be available')
+                                            ->description(__('recruitment::filament.requisition.fields.positions_available_description'))
                                             ->default(1)
                                             ->minValue(1)
                                             ->required(),
@@ -130,13 +141,19 @@ class JobRequisitionForm
                                             ->label(__('recruitment::filament.requisition.fields.hiring_manager'))
                                             ->relationship(
                                                 name: 'recruiter',
-                                                /** @phpstan-ignore-next-line  */
-                                                modifyQueryUsing: fn (Builder $query, Get $get) => $query->when($get('team_id'), fn (Builder $q) => $q->forTeam($get('team_id'))),
+                                                modifyQueryUsing: fn (
+                                                    Builder $query,
+                                                    Get $get
+                                                    /** @phpstan-ignore-next-line */
+                                                ) => $query->when($get('team_id'),
+                                                    /** @phpstan-ignore-next-line */
+                                                    fn (Builder $q) => $q->forTeam($get('team_id'))),
                                             )
-                                            ->getOptionLabelFromRecordUsing(fn (Recruiter $record) => $record->user->name)
+                                            ->getOptionLabelFromRecordUsing(fn (Recruiter $record
+                                            ) => $record->user->name)
                                             ->icon(Heroicon::Users)
                                             ->iconColor('red')
-                                            ->description('The official recruiter that owns this job requisition.')
+                                            ->description(__('recruitment::filament.requisition.fields.hiring_manager_description'))
                                             ->required()
                                             ->preload()
                                             ->searchable(),
@@ -159,23 +176,20 @@ class JobRequisitionForm
                                     ]),
                             ]),
 
-                        Tab::make(__('recruitment::filament.requisition.tabs.job_description'))
-                            ->icon('heroicon-o-document-text')
-                            ->schema([
-                                Section::make(__('recruitment::filament.requisition.sections.job_description'))
-                                    ->description('Provide a detailed description of the role and what the position involves')
-                                    ->schema([
-                                        self::makeItemsRepeater(
-                                            'descriptions',
-                                            JobRequisitionItemTypeEnum::Description,
-                                        ),
-                                    ]),
-                            ]),
+                        //                        Tab::make(__('recruitment::filament.requisition.tabs.job_description'))
+                        //                            ->icon('heroicon-o-document-text')
+                        //                            ->schema([
+                        //                                Section::make(__('recruitment::filament.requisition.sections.job_description'))
+                        //                                    ->description(__('recruitment::filament.requisition.sections.section_description'))
+                        //                                    ->schema([
+                        //                                        self::makeItemsRepeater('items', JobRequisitionItemTypeEnum::Description),
+                        //                                    ]),
+                        //                            ]),
                         Tab::make(__('recruitment::filament.requisition.tabs.requirements'))
                             ->icon('heroicon-o-document-text')
                             ->schema([
                                 Section::make(__('recruitment::filament.requisition.sections.required_qualifications'))
-                                    ->description('Skills, experience, and qualifications that are required for this position')
+                                    ->description(__('recruitment::filament.requisition.sections.required_qualifications_description'))
                                     ->schema([
                                         self::makeItemsRepeater(
                                             'requiredQualifications',
@@ -183,7 +197,7 @@ class JobRequisitionForm
                                         ),
                                     ]),
                                 Section::make(__('recruitment::filament.requisition.sections.preferred_qualifications'))
-                                    ->description('Nice-to-have skills that would give candidates an advantage')
+                                    ->description(__('recruitment::filament.requisition.sections.preferred_qualifications_description'))
                                     ->schema([
                                         self::makeItemsRepeater(
                                             'preferredQualifications',
@@ -191,7 +205,7 @@ class JobRequisitionForm
                                         ),
                                     ]),
                                 Section::make(__('recruitment::filament.requisition.sections.responsibilities'))
-                                    ->description('Key duties and responsibilities for this role')
+                                    ->description(__('recruitment::filament.requisition.sections.responsibilities_description'))
                                     ->schema([
                                         self::makeItemsRepeater(
                                             'responsibilities',
@@ -199,7 +213,7 @@ class JobRequisitionForm
                                         ),
                                     ]),
                                 Section::make(__('recruitment::filament.requisition.sections.benefits'))
-                                    ->description('Perks, benefits, and what you offer to candidates')
+                                    ->description(__('recruitment::filament.requisition.sections.benefits_description'))
                                     ->schema([
                                         self::makeItemsRepeater(
                                             'benefits',
@@ -231,6 +245,9 @@ class JobRequisitionForm
                                                 'GBP' => 'GBP',
                                                 'BRL' => 'BRL',
                                             ]),
+                                        Toggle::make('show_salary_to_candidates')
+                                            ->default(false)
+                                            ->label(__('recruitment::filament.requisition.fields.show_salary_to_candidates')),
                                     ]),
                             ]),
 
