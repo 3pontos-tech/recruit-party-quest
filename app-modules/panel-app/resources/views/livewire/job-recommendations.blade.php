@@ -14,8 +14,8 @@
                 id="search-input"
                 wire:model.live.debounce.300ms="search"
                 class="border-border focus:border-primary w-full lg:w-64"
-                placeholder="Job title..."
-                aria-label="Search jobs by title"
+                placeholder="Pesquise por título..."
+                aria-label="Busque vagas por título"
             />
 
             <x-he4rt::button
