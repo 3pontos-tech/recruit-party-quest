@@ -46,12 +46,6 @@ class JobRequisitionItemFactory extends Factory
     private function generateContentForType(JobRequisitionItemTypeEnum $type): string
     {
         return match ($type) {
-            JobRequisitionItemTypeEnum::Description => fake()->randomElement([
-                'We are looking for a passionate developer to join our growing engineering team.',
-                'You will be responsible for designing, developing, and maintaining high-quality software solutions.',
-                'Our ideal candidate has a strong background in software development and a desire to learn and grow.',
-                'Join our innovative team and help us build cutting-edge products that impact millions of users.',
-            ]),
             JobRequisitionItemTypeEnum::Responsibility => fake()->randomElement([
                 'Design and implement scalable software solutions',
                 'Collaborate with cross-functional teams to define requirements',

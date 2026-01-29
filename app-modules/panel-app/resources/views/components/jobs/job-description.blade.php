@@ -114,7 +114,7 @@
         </header>
 
         @php
-            $descriptions = $jobRequisition->items->where('type', JobRequisitionItemTypeEnum::Description);
+            $description = $jobRequisition->post->description;
             $responsibilities = $jobRequisition->items->where('type', JobRequisitionItemTypeEnum::Responsibility);
             $requiredQualifications = $jobRequisition->items->where('type', JobRequisitionItemTypeEnum::RequiredQualification);
             $preferredQualifications = $jobRequisition->items->where('type', JobRequisitionItemTypeEnum::PreferredQualification);
@@ -130,11 +130,9 @@
                     <x-he4rt::text size="md">
                         {{ $posting->summary }}
                     </x-he4rt::text>
-                    @foreach ($descriptions as $item)
-                        <x-he4rt::text size="md">
-                            {{ $item->content }}
-                        </x-he4rt::text>
-                    @endforeach
+                    <x-he4rt::text size="md">
+                        {{ $description }}
+                    </x-he4rt::text>
                 </div>
             </section>
 

@@ -31,7 +31,6 @@ final class JobRequisitionItemSeeder extends Seeder
     private function seedItemsForRequisition(JobRequisition $requisition): void
     {
         $itemsConfig = [
-            ['type' => JobRequisitionItemTypeEnum::Description, 'count' => fake()->numberBetween(2, 4)],
             ['type' => JobRequisitionItemTypeEnum::Responsibility, 'count' => fake()->numberBetween(4, 6)],
             ['type' => JobRequisitionItemTypeEnum::RequiredQualification, 'count' => fake()->numberBetween(4, 6)],
             ['type' => JobRequisitionItemTypeEnum::PreferredQualification, 'count' => fake()->numberBetween(2, 4)],

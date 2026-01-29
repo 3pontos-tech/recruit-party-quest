@@ -175,16 +175,6 @@ class JobRequisitionForm
                                             ->required(),
                                     ]),
                             ]),
-
-                        //                        Tab::make(__('recruitment::filament.requisition.tabs.job_description'))
-                        //                            ->icon('heroicon-o-document-text')
-                        //                            ->schema([
-                        //                                Section::make(__('recruitment::filament.requisition.sections.job_description'))
-                        //                                    ->description(__('recruitment::filament.requisition.sections.section_description'))
-                        //                                    ->schema([
-                        //                                        self::makeItemsRepeater('items', JobRequisitionItemTypeEnum::Description),
-                        //                                    ]),
-                        //                            ]),
                         Tab::make(__('recruitment::filament.requisition.tabs.requirements'))
                             ->icon('heroicon-o-document-text')
                             ->schema([
