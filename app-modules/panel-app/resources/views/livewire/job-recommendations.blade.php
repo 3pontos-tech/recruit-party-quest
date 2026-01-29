@@ -5,7 +5,7 @@
 <div class="flex flex-col gap-16">
     <div class="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
         <div class="flex flex-col gap-4 sm:items-start">
-            <x-he4rt::heading size="2xl">Confira todas as nossas vagas</x-he4rt::heading>
+            <x-he4rt::heading size="2xl">Vagas em destaque</x-he4rt::heading>
             <x-he4rt::text>{{ $this->jobs->total() }} vagas disponíveis</x-he4rt::text>
         </div>
 

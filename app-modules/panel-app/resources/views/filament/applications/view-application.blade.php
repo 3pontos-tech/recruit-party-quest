@@ -2,6 +2,7 @@
     $jobRequisition = $this->getRecord()->requisition;
     $currentStage = $this->getRecord()->currentStage;
     $stages = $jobRequisition->stages;
+    $team = $jobRequisition->team;
 @endphp
 
 <x-filament-panels::page>
@@ -13,7 +14,7 @@
         <aside class="h-full pb-20 lg:pb-32">
             <div class="sticky top-24 flex flex-col gap-6">
                 <x-panel-app::applications.stage-timeline :$stages :$currentStage />
-                <x-panel-app::team.about />
+                <x-panel-app::team.about :team="$team" />
             </div>
         </aside>
     </div>
