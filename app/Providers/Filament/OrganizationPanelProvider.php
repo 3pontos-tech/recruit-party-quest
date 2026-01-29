@@ -6,6 +6,7 @@ namespace App\Providers\Filament;
 
 use App\Enums\FilamentPanel;
 use App\Filament\Shared\Pages\LoginPage;
+use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -14,9 +15,10 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Icons\Heroicon;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
-use He4rt\Organization\Filament\Pages\Tenancy\RegisterTenant;
+use He4rt\Organization\Filament\Pages\TeamProfile;
 use He4rt\Teams\Team;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -35,6 +37,11 @@ class OrganizationPanelProvider extends PanelProvider
             ->id($this->panelEnum->value)
             ->path($this->panelEnum->getPath())
             ->tenant(model: Team::class, slugAttribute: 'slug')
+            ->tenantMenuItems([
+                Action::make('Team Profile')
+                    ->url(fn (): string => TeamProfile::getUrl())
+                    ->icon(Heroicon::BuildingOffice2),
+            ])
             ->login(LoginPage::class)
             ->topbar(false)
             ->brandLogo(asset('images/3pontos/logo-compact.svg'))
@@ -49,7 +56,6 @@ class OrganizationPanelProvider extends PanelProvider
             ])
             ->sidebarCollapsibleOnDesktop()
             ->viteTheme(sprintf('resources/css/filament/%s/theme.css', $this->panelEnum->value))
-            ->tenantRegistration(RegisterTenant::class)
             ->discoverClusters(in: base_path('app-modules/panel-organization/src/Filament/Clusters'), for: 'He4rt\\Organization\\Filament\\Clusters')
             ->discoverPages(in: base_path('app-modules/panel-organization/src/Filament/Pages'), for: 'He4rt\\Organization\\Filament\\Pages')
             ->discoverResources(in: base_path('app-modules/panel-organization/src/Filament/Resources'), for: 'He4rt\\Organization\\Filament\\Resources')

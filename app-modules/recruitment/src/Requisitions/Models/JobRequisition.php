@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Recruitment\Requisitions\Models;
 
+use AlizHarb\ActivityLog\Contracts\HasActivityLogTitle;
 use App\Models\BaseModel;
 use He4rt\Applications\Models\Application;
 use He4rt\Recruitment\Database\Factories\JobRequisitionFactory;
@@ -68,7 +69,7 @@ use Illuminate\Support\Carbon;
  */
 #[UseFactory(JobRequisitionFactory::class)]
 #[UsePolicy(JobRequisitionPolicy::class)]
-class JobRequisition extends BaseModel
+class JobRequisition extends BaseModel implements HasActivityLogTitle
 {
     use BelongsToTeam;
     use SoftDeletes;
@@ -150,6 +151,11 @@ class JobRequisition extends BaseModel
         }
 
         return $availableStages->first();
+    }
+
+    public function getActivityLogTitle(): string
+    {
+        return 'Job Requisition'.$this->team_id;
     }
 
     protected function casts(): array

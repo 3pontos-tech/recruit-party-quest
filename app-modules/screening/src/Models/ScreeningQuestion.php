@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Screening\Models;
 
+use AlizHarb\ActivityLog\Contracts\HasActivityLogTitle;
 use App\Models\BaseModel;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Models\Stage;
@@ -40,7 +41,7 @@ use Illuminate\Support\Carbon;
  * @extends BaseModel<ScreeningQuestionFactory>
  */
 #[UseFactory(ScreeningQuestionFactory::class)]
-class ScreeningQuestion extends BaseModel
+class ScreeningQuestion extends BaseModel implements HasActivityLogTitle
 {
     use BelongsToTeam;
 
@@ -60,6 +61,11 @@ class ScreeningQuestion extends BaseModel
     public function screenable(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    public function getActivityLogTitle(): string
+    {
+        return 'Screening Question: '.$this->question_text;
     }
 
     protected function casts(): array
