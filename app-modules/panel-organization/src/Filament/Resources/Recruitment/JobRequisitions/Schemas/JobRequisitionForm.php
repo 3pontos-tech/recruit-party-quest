@@ -68,7 +68,7 @@ class JobRequisitionForm
                                             ->label(__('recruitment::filament.requisition.job_posting.fields.summary'))
                                             ->rows(3)
                                             ->columnSpanFull(),
-
+                                        // TODO: eu acredito que estava faltando repreentar esse campo, falta testa se está tudo ok
                                         Textarea::make('description')
                                             ->required()
                                             ->label('descrição da vaga')
