@@ -9,11 +9,11 @@
             <x-he4rt::text>{{ $this->jobs->total() }} vagas disponíveis</x-he4rt::text>
         </div>
 
-        <div class="flex flex-col items-center gap-8 lg:flex-row">
+        <div class="flex flex-col items-center gap-8 md:flex-row">
             <x-he4rt::input
                 id="search-input"
                 wire:model.live.debounce.300ms="search"
-                class="border-border focus:border-primary w-64"
+                class="border-border focus:border-primary w-full lg:w-64"
                 placeholder="Job title..."
                 aria-label="Search jobs by title"
             />

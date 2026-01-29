@@ -36,6 +36,7 @@ class AppPanelProvider extends PanelProvider
             ->login(LoginPage::class)
             ->registration()
             ->topNavigation()
+            ->brandLogo(asset('images/3pontos/logo-compact.svg'))
             ->maxContentWidth(Width::ScreenTwoExtraLarge)
             ->path($this->panelEnum->getPath())
             ->colors([

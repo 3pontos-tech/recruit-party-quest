@@ -37,6 +37,7 @@ class OrganizationPanelProvider extends PanelProvider
             ->tenant(model: Team::class, slugAttribute: 'slug')
             ->login(LoginPage::class)
             ->topbar(false)
+            ->brandLogo(asset('images/3pontos/logo-compact.svg'))
             ->colors([
                 'primary' => Color::Gray,
                 'success' => Color::Green,
