@@ -47,6 +47,4 @@ it('should be able to create a candidate', function (): void {
             'portfolio_url' => '',
         ])
         ->call('create');
-
-    $live->ddBody();
 });
