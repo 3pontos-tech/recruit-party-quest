@@ -64,7 +64,7 @@
         >
             {{ $job->employment_type?->getLabel() ?? 'Full Time' }}
         </x-he4rt::tag>
-        @if ($job->show_salary_to_candidates)
+        @if ($job->show_salary_to_candidates && ! is_null($job->salary_range_min) && ! is_null($job->salary_range_max))
             <x-he4rt::tag
                 :icon="\Filament\Support\Icons\Heroicon::CurrencyDollar"
                 variant="ghost"
