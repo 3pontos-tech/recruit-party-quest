@@ -85,11 +85,12 @@ class JobRequisitionForm
                                             ->relationship(
                                                 name: 'department',
                                                 titleAttribute: 'name',
-                                                /** @phpstan-ignore-next-line */
                                                 modifyQueryUsing: fn (
                                                     Builder $query,
                                                     Get $get
+                                                    /** @phpstan-ignore-next-line */
                                                 ) => $query->when($get('team_id'),
+                                                    /** @phpstan-ignore-next-line */
                                                     fn (Builder $q) => $q->forTeam($get('team_id'))),
                                             )
                                             ->description(__('recruitment::filament.requisition.fields.department_description'))
@@ -140,11 +141,12 @@ class JobRequisitionForm
                                             ->label(__('recruitment::filament.requisition.fields.hiring_manager'))
                                             ->relationship(
                                                 name: 'recruiter',
-                                                /** @phpstan-ignore-next-line */
                                                 modifyQueryUsing: fn (
                                                     Builder $query,
                                                     Get $get
+                                                    /** @phpstan-ignore-next-line */
                                                 ) => $query->when($get('team_id'),
+                                                    /** @phpstan-ignore-next-line */
                                                     fn (Builder $q) => $q->forTeam($get('team_id'))),
                                             )
                                             ->getOptionLabelFromRecordUsing(fn (Recruiter $record
