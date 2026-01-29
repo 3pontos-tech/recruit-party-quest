@@ -203,7 +203,7 @@ class JobRequisitionForm
                                         ),
                                     ]),
                                 Section::make(__('recruitment::filament.requisition.sections.responsibilities'))
-                                    ->description(__('recruitment::filament.requisition.sections.responsabilities_description'))
+                                    ->description(__('recruitment::filament.requisition.sections.responsibilities_description'))
                                     ->schema([
                                         self::makeItemsRepeater(
                                             'responsibilities',

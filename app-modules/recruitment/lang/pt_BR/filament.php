@@ -100,7 +100,7 @@ return [
             'preferred_qualifications' => 'Qualificações Desejáveis',
             'preferred_qualifications_description' => 'Habilidades interessantes que dariam uma vantagem aos candidatos',
             'responsibilities' => 'Responsabilidades',
-            'responsabilities_description' => 'Principais deveres e responsabilidades para esta função',
+            'responsibilities_description' => 'Principais deveres e responsabilidades para esta função',
             'benefits' => 'Benefícios',
             'benefits_description' => 'Vantagens, benefícios e o que você oferece aos candidatos',
             'company_info' => 'Informações da Empresa',

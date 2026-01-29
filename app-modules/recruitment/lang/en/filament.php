@@ -101,7 +101,7 @@ return [
             'preferred_qualifications' => 'Preferred Qualifications',
             'preferred_qualifications_description' => 'Nice-to-have skills that would give candidates an advantage',
             'responsibilities' => 'Responsibilities',
-            'responsabilities_description' => 'Key duties and responsibilities for this role',
+            'responsibilities_description' => 'Key duties and responsibilities for this role',
             'benefits' => 'Benefits',
             'benefits_description' => 'Perks, benefits, and what you offer to candidates',
             'company_info' => 'Company Information',
