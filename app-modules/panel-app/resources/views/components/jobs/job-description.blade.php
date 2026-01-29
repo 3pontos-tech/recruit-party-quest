@@ -61,7 +61,7 @@
                         </x-he4rt::tag>
 
                         {{-- Salary --}}
-                        @if ($jobRequisition->salary_range_min)
+                        @if ($jobRequisition->show_salary_to_candidates)
                             <x-he4rt::tag icon="heroicon-o-currency-dollar" variant="ghost">
                                 {{ $jobRequisition->salary_currency }}
                                 {{ number_format($jobRequisition->salary_range_min, 0, ',', '.') }}
