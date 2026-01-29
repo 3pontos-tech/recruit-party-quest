@@ -25,15 +25,7 @@
         <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <x-he4rt::card class="group p-8" density="compact">
                 <x-slot:icon class="gap-4">
-                    <div
-                        class="bg-elevation-01dp border-outline-dark group-hover:bg-elevation-05dp flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md border transition duration-500"
-                    >
-                        <x-he4rt::icon
-                            size="lg"
-                            icon="heroicon-o-briefcase"
-                            class="text-text-medium group-hover:text-text-high transition duration-500"
-                        />
-                    </div>
+                    <x-he4rt::badge icon="heroicon-o-briefcase" />
                 </x-slot>
 
                 <x-slot:title>Financeiro</x-slot>

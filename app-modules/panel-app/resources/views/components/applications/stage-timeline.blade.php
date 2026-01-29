@@ -22,9 +22,9 @@
     <div class="flex items-center justify-between">
         <x-he4rt::heading level="3" size="3xs" class="text-text-high">Application Status</x-he4rt::heading>
         @if ($currentStage)
-            <x-filament::badge>
+            <x-he4rt::tag variant="solid" size="xs">
                 Progresso: {{ $currentStage->display_order }} / {{ $stages->count() }}
-            </x-filament::badge>
+            </x-he4rt::tag>
         @endif
     </div>
 
@@ -57,7 +57,7 @@
                         ])
                     >
                         @if ($isCompleted)
-                            <x-heroicon-m-check class="h-5 w-5 text-white" />
+                            <x-he4rt::icon icon="heroicon-m-check" />
                         @elseif ($isCurrent)
                             <div class="h-2.5 w-2.5 animate-pulse rounded-full bg-white"></div>
                         @else
@@ -92,7 +92,7 @@
 
                         @if ($isCurrent)
                             <div class="mt-2 flex items-center gap-2">
-                                <x-filament::badge>You are currently at this stage</x-filament::badge>
+                                <x-he4rt::tag variant="solid" size="xs">You are currently at this stage</x-he4rt::tag>
                             </div>
                         @endif
                     </div>

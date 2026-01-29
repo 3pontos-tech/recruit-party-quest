@@ -44,6 +44,7 @@ class OrganizationPanelProvider extends PanelProvider
             ])
             ->login(LoginPage::class)
             ->topbar(false)
+            ->brandLogo(asset('images/3pontos/logo-compact.svg'))
             ->colors([
                 'primary' => Color::Gray,
                 'success' => Color::Green,

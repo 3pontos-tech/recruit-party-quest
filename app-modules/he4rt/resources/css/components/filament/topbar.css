@@ -15,13 +15,22 @@
 
                 &::after {
                     content: '';
-                    @apply bg-primary absolute bottom-0 left-0 h-0.5 w-full;
+                    @apply bg-primary absolute bottom-0 left-0 h-0.5 w-full rounded-t-md;
                     @apply origin-left scale-x-0 transform;
                     @apply transition-transform duration-200 ease-in-out;
                 }
 
                 &:hover::after {
                     @apply scale-x-100;
+                }
+            }
+
+            &.fi-active .fi-topbar-item-btn {
+                @apply bg-transparent;
+
+                &::after {
+                    @apply scale-x-100;
+                    @apply bg-icon-high;
                 }
             }
         }

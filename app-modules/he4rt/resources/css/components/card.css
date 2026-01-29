@@ -50,7 +50,8 @@
 }
 
 .hp-card-footer {
-    @apply border-outline-low border-t pt-4;
+    @apply border-outline-light dark:border-outline-dark border-t pt-4;
+    @apply group-hover:border-t-outline-high/32 transition duration-500;
 }
 
 .hp-card-disabled {

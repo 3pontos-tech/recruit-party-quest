@@ -40,7 +40,6 @@ class JobRecommendations extends Component
             ->with('post')
             ->withCount('applications')
             ->when($this->search, fn ($q) => $q->whereHas('post', fn (Builder $p) => $p->where('title', 'like', sprintf('%%%s%%', $this->search))))
-            ->when($this->workModel, fn ($q) => $q->where('work_arrangement', $this->workModel))
             ->unless($this->jobTypes === [], fn ($q) => $q->whereIn('employment_type', $this->jobTypes))
             ->latest()
             ->paginate(12);

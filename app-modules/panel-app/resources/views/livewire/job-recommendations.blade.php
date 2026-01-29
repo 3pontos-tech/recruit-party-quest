@@ -1,36 +1,42 @@
 @php
-    use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+    use He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource;
 @endphp
 
 <div class="flex flex-col gap-16">
     <div class="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
         <div class="flex flex-col gap-4 sm:items-start">
-            <x-he4rt::heading size="2xl">Confira todas as nossas vagas</x-he4rt::heading>
+            <x-he4rt::heading size="2xl">Vagas em destaque</x-he4rt::heading>
             <x-he4rt::text>{{ $this->jobs->total() }} vagas disponíveis</x-he4rt::text>
         </div>
 
-        <div class="flex items-center gap-8">
+        <div class="flex flex-col items-center gap-8 md:flex-row">
             <x-he4rt::input
                 id="search-input"
                 wire:model.live.debounce.300ms="search"
-                class="border-border focus:border-primary w-64"
-                placeholder="Job title, keywords, or company"
-                aria-label="Search jobs by title, keywords, or company"
+                class="border-border focus:border-primary w-full lg:w-64"
+                placeholder="Pesquise por título..."
+                aria-label="Busque vagas por título"
             />
 
-            <select
-                wire:model.live="workModel"
-                class="border-outline-dark bg-icon-high/95 hover:bg-icon-high text-text-light dark:text-text-dark rounded-md p-2 text-sm"
+            <x-he4rt::button
+                class="w-full lg:w-auto"
+                :href="JobRequisitionResource::getUrl()"
+                icon:trailing="heroicon-o-chevron-right"
             >
-                <option value="">Modelo de trabalho</option>
-                @foreach (WorkArrangementEnum::cases() as $case)
-                    <option value="{{ $case->value }}">{{ $case->getLabel() }}</option>
-                @endforeach
-            </select>
+                Pesquisar vagas
+            </x-he4rt::button>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3" wire:transition>
+    <div class="relative grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="absolute right-0 -z-10">
+            <img
+                src="{{ asset('images/3pontos/logo-rounded.svg') }}"
+                alt=""
+                class="spin-slow h-auto w-full translate-x-[60%]"
+            />
+        </div>
+
         @forelse ($this->jobs as $job)
             <x-panel-app::jobs.job-card :job="$job" wire:key="job-{{ $job->id }}" />
         @empty
