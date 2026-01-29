@@ -64,14 +64,17 @@
         >
             {{ $job->employment_type?->getLabel() ?? 'Full Time' }}
         </x-he4rt::tag>
-        <x-he4rt::tag
-            :icon="\Filament\Support\Icons\Heroicon::CurrencyDollar"
-            variant="ghost"
-            class="group-hover:text-text-high transition duration-500"
-        >
-            {{ $job->salary_currency }}&nbsp;{{ number_format($job->salary_range_min, 0, ',', '.') }} -
-            {{ number_format($job->salary_range_max, 0, ',', '.') }}
-        </x-he4rt::tag>
+        @if ($job->show_salary_to_candidates)
+            <x-he4rt::tag
+                :icon="\Filament\Support\Icons\Heroicon::CurrencyDollar"
+                variant="ghost"
+                class="group-hover:text-text-high transition duration-500"
+            >
+                {{ $job->salary_currency }}&nbsp;{{ number_format($job->salary_range_min, 0, ',', '.') }} -
+                {{ number_format($job->salary_range_max, 0, ',', '.') }}
+            </x-he4rt::tag>
+        @endif
+
         <x-he4rt::tag
             :icon="\Filament\Support\Icons\Heroicon::Users"
             variant="ghost"
