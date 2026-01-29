@@ -8,7 +8,6 @@ use Filament\Support\Contracts\HasLabel;
 
 enum JobRequisitionItemTypeEnum: string implements HasLabel
 {
-    case Description = 'description';
     case Responsibility = 'responsibility';
     case RequiredQualification = 'required_qualification';
     case PreferredQualification = 'preferred_qualification';

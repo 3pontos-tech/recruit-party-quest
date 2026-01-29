@@ -9,6 +9,7 @@ use App\Filament\Schemas\Components\He4rtSelect;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Components\Textarea;
@@ -68,11 +69,10 @@ class JobRequisitionForm
                                             ->label(__('recruitment::filament.requisition.job_posting.fields.summary'))
                                             ->rows(3)
                                             ->columnSpanFull(),
-                                        // TODO: eu acredito que estava faltando repreentar esse campo, falta testa se está tudo ok
-                                        Textarea::make('description')
+
+                                        RichEditor::make('description')
                                             ->required()
-                                            ->label('descrição da vaga')
-                                            ->rows(3)
+                                            ->label(__('recruitment::filament.requisition.job_posting.fields.description'))
                                             ->columnSpanFull(),
 
                                     ]),
@@ -176,15 +176,15 @@ class JobRequisitionForm
                                     ]),
                             ]),
 
-                        Tab::make(__('recruitment::filament.requisition.tabs.job_description'))
-                            ->icon('heroicon-o-document-text')
-                            ->schema([
-                                Section::make(__('recruitment::filament.requisition.sections.job_description'))
-                                    ->description(__('recruitment::filament.requisition.sections.section_description'))
-                                    ->schema([
-                                        self::makeItemsRepeater('items', JobRequisitionItemTypeEnum::Description),
-                                    ]),
-                            ]),
+                        //                        Tab::make(__('recruitment::filament.requisition.tabs.job_description'))
+                        //                            ->icon('heroicon-o-document-text')
+                        //                            ->schema([
+                        //                                Section::make(__('recruitment::filament.requisition.sections.job_description'))
+                        //                                    ->description(__('recruitment::filament.requisition.sections.section_description'))
+                        //                                    ->schema([
+                        //                                        self::makeItemsRepeater('items', JobRequisitionItemTypeEnum::Description),
+                        //                                    ]),
+                        //                            ]),
                         Tab::make(__('recruitment::filament.requisition.tabs.requirements'))
                             ->icon('heroicon-o-document-text')
                             ->schema([

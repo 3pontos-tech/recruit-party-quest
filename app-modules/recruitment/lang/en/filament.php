@@ -112,6 +112,7 @@ return [
             'slug' => 'Slug',
             'team' => 'Team',
             'department' => 'Department',
+            'description' => 'Description',
             'department_description' => 'The team or division this role belongs to',
             'hiring_manager' => 'Hiring Manager',
             'hiring_manager_description' => 'The official recruiter that owns this job requisition.',
