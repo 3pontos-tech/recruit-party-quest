@@ -16,6 +16,7 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\CommentApplicationAction;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\RejectApplicationAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
 
@@ -65,7 +66,7 @@ class ApplicationInfolist
                                     StateTransitionAction::make(),
                                     //                                    self::getScheduleInterviewAction(),
                                     //                                    self::getSendEmailAction(),
-                                    self::getAddCommentAction(),
+                                    CommentApplicationAction::make(),
                                     RejectApplicationAction::make(),
                                 ]),
                             ]),
@@ -147,31 +148,6 @@ class ApplicationInfolist
             ->outlined()
             ->modalHeading(__('panel-organization::filament.actions.send_email.modal_heading'))
             ->modalDescription(__('panel-organization::filament.actions.send_email.modal_description'))
-            ->schema([
-                Textarea::make('test')
-                    ->label(__('panel-organization::filament.fields.test_label'))
-                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
-                    ->rows(3),
-            ])
-            ->action(function (array $data): void {
-                Notification::make()
-                    ->title(__('panel-organization::filament.notifications.ok_title'))
-                    ->body(__('panel-organization::filament.notifications.ok_body'))
-                    ->success()
-                    ->send();
-            });
-    }
-
-    protected static function getAddCommentAction(): Action
-    {
-        return Action::make('add_comment')
-            ->label(__('panel-organization::filament.actions.add_comment.label'))
-            ->icon('heroicon-o-chat-bubble-left-ellipsis')
-            ->color('gray')
-            ->extraAttributes(fn () => ['class' => 'w-full'])
-            ->outlined()
-            ->modalHeading(__('panel-organization::filament.actions.add_comment.modal_heading'))
-            ->modalDescription(__('panel-organization::filament.actions.add_comment.modal_description'))
             ->schema([
                 Textarea::make('test')
                     ->label(__('panel-organization::filament.fields.test_label'))

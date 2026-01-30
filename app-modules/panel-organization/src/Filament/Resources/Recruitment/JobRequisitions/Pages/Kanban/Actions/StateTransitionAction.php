@@ -28,6 +28,7 @@ class StateTransitionAction extends Action
             ->outlined()
             ->label(__('applications::filament.actions.change_status.label'))
             ->icon('heroicon-o-play')
+            ->extraAttributes(fn () => ['class' => 'w-full'])
             ->visible(fn (Application $record): bool => ! $record->is_last_stage)
             ->disabled(fn (Application $record): bool => ! $record->current_step->canChange() || $record->is_last_stage)
             ->tooltip(fn (Application $record): ?string => $record->current_step->canChange() ? null : __('applications::filament.actions.change_status.no_transitions_tooltip'))
