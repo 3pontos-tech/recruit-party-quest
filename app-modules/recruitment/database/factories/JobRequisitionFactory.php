@@ -137,8 +137,8 @@ class JobRequisitionFactory extends Factory
     private function getRealisticPriority()
     {
         $distribution = [
-            70 => RequisitionPriorityEnum::High,
-            40 => RequisitionPriorityEnum::Medium,
+            60 => RequisitionPriorityEnum::High,
+            25 => RequisitionPriorityEnum::Medium,
             15 => RequisitionPriorityEnum::Low,
         ];
 
