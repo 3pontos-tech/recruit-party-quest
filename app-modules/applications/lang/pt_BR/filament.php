@@ -37,6 +37,7 @@ return [
         'created_at' => 'Criado em',
         'updated_at' => 'Atualizado em',
         'transition_notes' => 'Notas',
+        'comment' => 'Comentário',
     ],
     'filters' => [
         'status' => 'Status',

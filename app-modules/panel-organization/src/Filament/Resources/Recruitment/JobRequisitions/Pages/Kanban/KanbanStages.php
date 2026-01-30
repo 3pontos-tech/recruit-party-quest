@@ -10,6 +10,7 @@ use Filament\Navigation\NavigationItem;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use He4rt\Applications\Models\Application;
+use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\RejectApplicationAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\ViewCandidateAction;
@@ -102,6 +103,7 @@ class KanbanStages extends BoardResourcePage
             ->cardActions([
                 ViewCandidateAction::make()->model(Application::class),
                 StateTransitionAction::make(),
+                RejectApplicationAction::make(),
             ])
             ->query(
                 Application::query()

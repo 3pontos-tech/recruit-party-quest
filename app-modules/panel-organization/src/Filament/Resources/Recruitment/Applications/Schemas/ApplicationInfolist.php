@@ -14,6 +14,9 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
+use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\CommentApplicationAction;
+use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\RejectApplicationAction;
+use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
 
 class ApplicationInfolist
 {
@@ -58,11 +61,11 @@ class ApplicationInfolist
                             ->icon('heroicon-o-bolt')
                             ->schema([
                                 Actions::make([
-                                    self::getAdvanceStageAction(),
-                                    self::getScheduleInterviewAction(),
-                                    self::getSendEmailAction(),
-                                    self::getAddCommentAction(),
-                                    self::getRejectApplicationAction(),
+                                    StateTransitionAction::make(),
+                                    //                                    self::getScheduleInterviewAction(),
+                                    //                                    self::getSendEmailAction(),
+                                    CommentApplicationAction::make(),
+                                    RejectApplicationAction::make(),
                                 ]),
                             ]),
                         // Pipeline Progress
@@ -80,30 +83,6 @@ class ApplicationInfolist
             ]);
     }
 
-    protected static function getAdvanceStageAction(): Action
-    {
-        return Action::make('advance_stage')
-            ->label(__('panel-organization::filament.actions.advance_stage.label'))
-            ->icon('heroicon-o-arrow-right-circle')
-            ->color('primary')
-            ->extraAttributes(fn () => ['class' => 'w-full'])
-            ->modalHeading(__('panel-organization::filament.actions.advance_stage.modal_heading'))
-            ->modalDescription(__('panel-organization::filament.actions.advance_stage.modal_description'))
-            ->schema([
-                Textarea::make('test')
-                    ->label('example')
-                    ->placeholder('example')
-                    ->rows(3),
-            ])
-            ->action(function (array $data): void {
-                Notification::make()
-                    ->title(__('panel-organization::filament.notifications.ok_title'))
-                    ->body(__('panel-organization::filament.notifications.ok_body'))
-                    ->success()
-                    ->send();
-            });
-    }
-
     protected static function getScheduleInterviewAction(): Action
     {
         return Action::make('schedule_interview')
@@ -115,8 +94,8 @@ class ApplicationInfolist
             ->modalDescription(__('panel-organization::filament.actions.schedule_interview.modal_description'))
             ->schema([
                 Textarea::make('test')
-                    ->label('example')
-                    ->placeholder('example')
+                    ->label(__('panel-organization::filament.fields.test_label'))
+                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
                     ->rows(3),
             ])
             ->action(function (array $data): void {
@@ -140,59 +119,8 @@ class ApplicationInfolist
             ->modalDescription(__('panel-organization::filament.actions.send_email.modal_description'))
             ->schema([
                 Textarea::make('test')
-                    ->label('example')
-                    ->placeholder('example')
-                    ->rows(3),
-            ])
-            ->action(function (array $data): void {
-                Notification::make()
-                    ->title(__('panel-organization::filament.notifications.ok_title'))
-                    ->body(__('panel-organization::filament.notifications.ok_body'))
-                    ->success()
-                    ->send();
-            });
-    }
-
-    protected static function getAddCommentAction(): Action
-    {
-        return Action::make('add_comment')
-            ->label(__('panel-organization::filament.actions.add_comment.label'))
-            ->icon('heroicon-o-chat-bubble-left-ellipsis')
-            ->color('gray')
-            ->extraAttributes(fn () => ['class' => 'w-full'])
-            ->outlined()
-            ->modalHeading(__('panel-organization::filament.actions.add_comment.modal_heading'))
-            ->modalDescription(__('panel-organization::filament.actions.add_comment.modal_description'))
-            ->schema([
-                Textarea::make('test')
-                    ->label('example')
-                    ->placeholder('example')
-                    ->rows(3),
-            ])
-            ->action(function (array $data): void {
-                Notification::make()
-                    ->title(__('panel-organization::filament.notifications.ok_title'))
-                    ->body(__('panel-organization::filament.notifications.ok_body'))
-                    ->success()
-                    ->send();
-            });
-    }
-
-    protected static function getRejectApplicationAction(): Action
-    {
-        return Action::make('reject_application')
-            ->label(__('panel-organization::filament.actions.reject_application.label'))
-            ->icon('heroicon-o-x-circle')
-            ->color('danger')
-            ->extraAttributes(fn () => ['class' => 'w-full'])
-            ->outlined()
-            ->requiresConfirmation()
-            ->modalHeading(__('panel-organization::filament.actions.reject_application.modal_heading'))
-            ->modalDescription(__('panel-organization::filament.actions.reject_application.modal_description'))
-            ->schema([
-                Textarea::make('test')
-                    ->label('example')
-                    ->placeholder('example')
+                    ->label(__('panel-organization::filament.fields.test_label'))
+                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
                     ->rows(3),
             ])
             ->action(function (array $data): void {
