@@ -16,6 +16,7 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\RejectApplicationAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
 
 class ApplicationInfolist
@@ -62,11 +63,10 @@ class ApplicationInfolist
                             ->schema([
                                 Actions::make([
                                     StateTransitionAction::make(),
-                                    //                                    self::getAdvanceStageAction(),
-                                    self::getScheduleInterviewAction(),
-                                    self::getSendEmailAction(),
+                                    //                                    self::getScheduleInterviewAction(),
+                                    //                                    self::getSendEmailAction(),
                                     self::getAddCommentAction(),
-                                    self::getRejectApplicationAction(),
+                                    RejectApplicationAction::make(),
                                 ]),
                             ]),
                         // Pipeline Progress
@@ -172,32 +172,6 @@ class ApplicationInfolist
             ->outlined()
             ->modalHeading(__('panel-organization::filament.actions.add_comment.modal_heading'))
             ->modalDescription(__('panel-organization::filament.actions.add_comment.modal_description'))
-            ->schema([
-                Textarea::make('test')
-                    ->label(__('panel-organization::filament.fields.test_label'))
-                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
-                    ->rows(3),
-            ])
-            ->action(function (array $data): void {
-                Notification::make()
-                    ->title(__('panel-organization::filament.notifications.ok_title'))
-                    ->body(__('panel-organization::filament.notifications.ok_body'))
-                    ->success()
-                    ->send();
-            });
-    }
-
-    protected static function getRejectApplicationAction(): Action
-    {
-        return Action::make('reject_application')
-            ->label(__('panel-organization::filament.actions.reject_application.label'))
-            ->icon('heroicon-o-x-circle')
-            ->color('danger')
-            ->extraAttributes(fn () => ['class' => 'w-full'])
-            ->outlined()
-            ->requiresConfirmation()
-            ->modalHeading(__('panel-organization::filament.actions.reject_application.modal_heading'))
-            ->modalDescription(__('panel-organization::filament.actions.reject_application.modal_description'))
             ->schema([
                 Textarea::make('test')
                     ->label(__('panel-organization::filament.fields.test_label'))

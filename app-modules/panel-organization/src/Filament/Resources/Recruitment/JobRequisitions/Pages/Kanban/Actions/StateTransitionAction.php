@@ -16,6 +16,7 @@ use He4rt\Feedback\Actions\StoreEvaluationAction;
 use He4rt\Feedback\DTOs\CriteriaScoresDTO;
 use He4rt\Feedback\DTOs\EvaluationDTO;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Schemas\EvaluationForm;
+use Illuminate\Support\Arr;
 
 class StateTransitionAction extends Action
 {
@@ -70,8 +71,16 @@ class StateTransitionAction extends Action
     /** @return array<int, Field> */
     private function buildSchema(Application $record): array
     {
-
+        // Todo: remover o reject e criar o outro campo para usar no reject da action
         $choices = $record->current_step->choices();
+
+        $choices = Arr::except($choices, [
+            ApplicationStatusEnum::OfferAccepted->value,
+            ApplicationStatusEnum::OfferDeclined->value,
+            ApplicationStatusEnum::Hired->value,
+            ApplicationStatusEnum::Rejected->value,
+            ApplicationStatusEnum::OfferExtended->value,
+        ]);
 
         return [
             Select::make('to_status')
