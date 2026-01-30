@@ -49,7 +49,10 @@
 
         <div class="fi-simple-main-ctn px-2">
             <main
-                @class(['fi-simple-main relative overflow-hidden rounded-md ', $maxContentWidth instanceof Width ? "fi-width-{$maxContentWidth->value}" : $maxContentWidth])
+                @class([
+                    'fi-simple-main relative overflow-hidden rounded-md bg-gradient-to-br from-icon-high/6 to-elevation-surface ',
+                    $maxContentWidth instanceof Width ? "fi-width-{$maxContentWidth->value}" : $maxContentWidth,
+                ])
             >
                 {{ $slot }}
             </main>
