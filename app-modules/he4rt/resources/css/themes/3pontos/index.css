@@ -9,3 +9,4 @@
 @import './components/filament/stats-overview-widget.css' layer(components);
 @import './components/filament/file-upload.css' layer(components);
 @import './components/filament/topbar.css' layer(components);
+@import './components/filament/login.css' layer(components);

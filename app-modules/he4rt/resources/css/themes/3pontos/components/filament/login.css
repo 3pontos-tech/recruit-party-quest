@@ -1,0 +1,40 @@
+/* Custom Login Page Styles */
+
+.fi-custom-login {
+    background-color: rgb(var(--gray-50));
+}
+
+:is(.dark .fi-custom-login) {
+    background-color: rgb(var(--gray-950));
+}
+
+/* Ensure the login form section has proper background */
+.fi-custom-login > div:last-child {
+    background-color: rgb(var(--gray-50));
+}
+
+:is(.dark .fi-custom-login > div:last-child) {
+    background-color: rgb(var(--gray-950));
+}
+
+/* Override default simple page styles for the custom login */
+.fi-custom-login .fi-simple-page {
+    padding: 0;
+}
+
+.fi-custom-login .fi-simple-page-content {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+}
+
+/* Form styling enhancements */
+.fi-custom-login .fi-form {
+    margin-top: 1.5rem;
+}
+
+/* Button styling to match brand */
+.fi-custom-login .fi-btn-primary {
+    width: 100%;
+}
