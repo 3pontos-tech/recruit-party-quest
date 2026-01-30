@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Enums\FilamentPanel;
-use App\Filament\Shared\Pages\LoginPage;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
@@ -14,6 +13,7 @@ use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Width;
 use Filament\View\PanelsRenderHook;
 use He4rt\App\Filament\Pages\AppDashboard;
+use He4rt\App\Filament\Pages\AppLoginPage;
 use He4rt\App\RedirectIfOnboardingIncomplete;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -33,7 +33,7 @@ class AppPanelProvider extends PanelProvider
         return $panel
             ->id($this->panelEnum->value)
             ->default()
-            ->login(LoginPage::class)
+            ->login(AppLoginPage::class)
             ->registration()
             ->topNavigation()
             ->brandLogo(asset('images/3pontos/logo-compact.svg'))

@@ -18,7 +18,6 @@
         {{
             $attributes->class([
                 $sizeCls,
-                'mb-4',
                 'w-full',
                 'cursor-pointer',
             ])
