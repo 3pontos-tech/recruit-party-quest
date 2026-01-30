@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use He4rt\Applications\Enums\ApplicationStatusEnum;
+use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Candidates\Models\Education;
@@ -60,13 +61,20 @@ final class DevelopmentSeeder extends Seeder
 
         $this->skills = $this->createFocusedSkills();
 
-        $candidates = $this->createCandidates(10);
+        $candidates = $this->createCandidates(25);
+
+        $adminCandidate = $this->createAdminAsCandidate();
 
         $this->attachSkillsToCandidates($candidates);
+
+        // NEW: Attach skills to admin candidate
+        $this->attachAdminSkills($adminCandidate);
 
         $requisitions = $this->createJobRequisitions();
 
         $this->createSmartApplications($candidates, $requisitions);
+
+        $this->createAdminApplications($adminCandidate, $requisitions);
 
         $this->command->info('Development Seeder completed.');
     }
@@ -199,12 +207,9 @@ final class DevelopmentSeeder extends Seeder
 
         foreach ($jobTitles as $title) {
             $requisition = JobRequisition::factory()
-                ->afterCreating(function (JobRequisition $requisition) use ($title): void {
+                ->afterCreating(function (JobRequisition $requisition): void {
                     JobPosting::factory()->create([
                         'job_requisition_id' => $requisition->getKey(),
-                        'title' => $title,
-                        'description' => sprintf('Join our team as a %s. Work on exciting projects with modern technologies.',
-                            $title),
                     ]);
                 })
                 ->create([
@@ -272,7 +277,7 @@ final class DevelopmentSeeder extends Seeder
                 return $matchCount >= 2;
             });
 
-            $applicants = $compatibleCandidates->shuffle()->take(fake()->numberBetween(3, 6));
+            $applicants = $compatibleCandidates->shuffle()->take(fake()->numberBetween(8, 15));
 
             $this->createRealisticApplications($applicants, $requisition);
         }
@@ -406,5 +411,107 @@ final class DevelopmentSeeder extends Seeder
         $selectedTags = fake()->randomElements($availableTags, fake()->numberBetween(2, 3));
 
         $item->attachTags($selectedTags);
+    }
+
+    private function createAdminAsCandidate(): Candidate
+    {
+        $this->command->info('Creating admin as candidate...');
+
+        $existingCandidate = Candidate::query()->where('user_id', $this->adminUser->getKey())->first();
+        if ($existingCandidate) {
+            $this->command->info('Admin already has a candidate profile, using existing one.');
+
+            return $existingCandidate;
+        }
+
+        return Candidate::factory()->create([
+            'user_id' => $this->adminUser->getKey(),
+            'phone_number' => '(555) 123-4567',
+            'headline' => 'Senior Software Engineer & Team Lead',
+            'summary' => 'Experienced full-stack developer and technical leader with strong management skills.',
+            'availability_date' => fake()->dateTimeBetween('now', '+2 months')->format('Y-m-d'),
+            'willing_to_relocate' => fake()->boolean(30),
+            'is_open_to_remote' => true,
+            'expected_salary' => fake()->numberBetween(10000, 15000),
+            'expected_salary_currency' => 'USD',
+            'experience_level' => fake()->randomElement(['senior', 'lead']),
+            'source' => 'internal',
+            'is_onboarded' => true,
+            'data_consent_given' => true,
+        ]);
+    }
+
+    private function attachAdminSkills(Candidate $adminCandidate): void
+    {
+        $this->command->info('Attaching skills to admin candidate...');
+
+        $skillsByCategory = $this->skills->groupBy('category');
+        $candidateSkills = collect();
+
+        $managementSkills = $skillsByCategory->get('hard_skill', collect())->filter(fn ($skill) => in_array($skill->name, ['PHP', 'Laravel', 'Git', 'JavaScript', 'MySQL', 'Docker', 'AWS']));
+
+        if ($managementSkills->count() > 0) {
+            $candidateSkills = $candidateSkills->merge($managementSkills->take(5));
+        }
+
+        $adminSoftSkills = $skillsByCategory->get('soft_skill', collect())->filter(fn ($skill) => in_array($skill->name, ['Leadership', 'Project Management', 'Communication', 'Problem Solving']));
+
+        if ($adminSoftSkills->count() > 0) {
+            $candidateSkills = $candidateSkills->merge($adminSoftSkills);
+        }
+
+        $languages = $skillsByCategory->get('language', collect())->filter(fn ($skill) => in_array($skill->name, ['English', 'Portuguese']));
+
+        if ($languages->count() > 0) {
+            $candidateSkills = $candidateSkills->merge($languages);
+        }
+
+        $pivotData = $candidateSkills->mapWithKeys(fn ($skill) => [
+            $skill->getKey() => [
+                'years_of_experience' => fake()->numberBetween(5, 10),
+                'proficiency_level' => fake()->randomElement([4, 5]),
+            ],
+        ])->all();
+
+        if (filled($pivotData)) {
+            $adminCandidate->skills()->attach($pivotData);
+        }
+    }
+
+    private function createAdminApplications(Candidate $adminCandidate, Collection $requisitions): void
+    {
+        $this->command->info('Creating applications for admin candidate...');
+
+        $selectedRequisitions = $requisitions->shuffle()->take(fake()->numberBetween(2, 3));
+
+        $selectedRequisitions->each(function (JobRequisition $requisition) use ($adminCandidate): void {
+            $stages = $requisition->stages->sortBy('display_order');
+
+            $stageWeights = [
+                0 => 0.3,  // New - 30%
+                1 => 0.4,  // Screening - 40%
+                2 => 0.2,  // Assessment - 20%
+                3 => 0.1,  // Interview - 10%
+            ];
+
+            $currentStageIndex = $this->selectStageByWeight($stageWeights);
+            $currentStage = $stages->values()[$currentStageIndex] ?? $stages->first();
+            $status = $this->mapStageToStatus($currentStage);
+
+            Application::factory()->create([
+                'candidate_id' => $adminCandidate->getKey(),
+                'requisition_id' => $requisition->getKey(),
+                'current_stage_id' => $currentStage->getKey(),
+                'team_id' => $requisition->team_id,
+                'status' => $status,
+                'source' => fake()->randomElement([
+                    CandidateSourceEnum::Referral,
+                    CandidateSourceEnum::CareerPage,
+                ]),
+                'created_at' => fake()->dateTimeBetween('-1 month'),
+            ]);
+
+            $this->command->info('Admin applied to: '.$requisition->post->title);
+        });
     }
 }
