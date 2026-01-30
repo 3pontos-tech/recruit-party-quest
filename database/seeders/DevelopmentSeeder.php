@@ -67,7 +67,6 @@ final class DevelopmentSeeder extends Seeder
 
         $this->attachSkillsToCandidates($candidates);
 
-        // NEW: Attach skills to admin candidate
         $this->attachAdminSkills($adminCandidate);
 
         $requisitions = $this->createJobRequisitions();
@@ -448,19 +447,22 @@ final class DevelopmentSeeder extends Seeder
         $skillsByCategory = $this->skills->groupBy('category');
         $candidateSkills = collect();
 
-        $managementSkills = $skillsByCategory->get('hard_skill', collect())->filter(fn ($skill) => in_array($skill->name, ['PHP', 'Laravel', 'Git', 'JavaScript', 'MySQL', 'Docker', 'AWS']));
+        $managementSkills = $skillsByCategory->get('hard_skill', collect())->filter(fn ($skill) => in_array($skill->name,
+            ['PHP', 'Laravel', 'Git', 'JavaScript', 'MySQL', 'Docker', 'AWS']));
 
         if ($managementSkills->count() > 0) {
             $candidateSkills = $candidateSkills->merge($managementSkills->take(5));
         }
 
-        $adminSoftSkills = $skillsByCategory->get('soft_skill', collect())->filter(fn ($skill) => in_array($skill->name, ['Leadership', 'Project Management', 'Communication', 'Problem Solving']));
+        $adminSoftSkills = $skillsByCategory->get('soft_skill', collect())->filter(fn ($skill) => in_array($skill->name,
+            ['Leadership', 'Project Management', 'Communication', 'Problem Solving']));
 
         if ($adminSoftSkills->count() > 0) {
             $candidateSkills = $candidateSkills->merge($adminSoftSkills);
         }
 
-        $languages = $skillsByCategory->get('language', collect())->filter(fn ($skill) => in_array($skill->name, ['English', 'Portuguese']));
+        $languages = $skillsByCategory->get('language', collect())->filter(fn ($skill) => in_array($skill->name,
+            ['English', 'Portuguese']));
 
         if ($languages->count() > 0) {
             $candidateSkills = $candidateSkills->merge($languages);
