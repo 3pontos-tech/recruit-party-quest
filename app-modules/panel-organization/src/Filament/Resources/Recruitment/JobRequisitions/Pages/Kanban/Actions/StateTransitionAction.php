@@ -71,7 +71,6 @@ class StateTransitionAction extends Action
     /** @return array<int, Field> */
     private function buildSchema(Application $record): array
     {
-        // Todo: remover o reject e criar o outro campo para usar no reject da action
         $choices = $record->current_step->choices();
 
         $choices = Arr::except($choices, [
@@ -98,12 +97,6 @@ class StateTransitionAction extends Action
                     ->pluck('name', 'id'))
                 ->default($record->getNextStage()->id)
                 ->visible(fn (Get $get) => in_array($get('to_status'), [ApplicationStatusEnum::InProgress, ApplicationStatusEnum::OfferExtended])),
-
-            Textarea::make('rejection_reason_details')
-                ->label(__('applications::filament.fields.rejection_reason_details'))
-                ->rows(3)
-                ->visible(fn (Get $get) => $get('to_status') === ApplicationStatusEnum::Rejected)
-                ->required(fn (Get $get) => $get('to_status') === ApplicationStatusEnum::Rejected),
 
             Textarea::make('notes')
                 ->label(__('applications::filament.fields.transition_notes'))

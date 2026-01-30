@@ -51,7 +51,7 @@ class RejectApplicationAction extends Action
     {
         return [
             Select::make('rejection_reason_category')
-                ->label(__('panel-organization::filament.fields.rejection_reason_category.label'))
+                ->label(__('applications::filament.fields.rejection_reason_category'))
                 ->options(RejectionReasonCategoryEnum::class)
                 ->enum(RejectionReasonCategoryEnum::class)
                 ->required(),

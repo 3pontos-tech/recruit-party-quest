@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
+use He4rt\Applications\Actions\RejectApplicationAction;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
+use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Feedback\Enums\EvaluationRatingEnum;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ViewApplication;
@@ -13,6 +15,7 @@ use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 
 use function Pest\Laravel\actingAs;
+use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
@@ -79,3 +82,18 @@ it('should pass user to review stage', function (): void {
         ->callMountedAction()
         ->assertHasNoActionErrors();
 })->skip();
+
+it('should be able to reject an application', function (): void {
+    $sut = new RejectApplicationAction();
+    $sut->execute(
+        applicationId: $this->application->getKey(),
+        reason: RejectionReasonCategoryEnum::Availability,
+        details: 'n sei'
+    );
+    assertDatabaseHas(Application::class, [
+        'rejection_reason_details' => 'n sei',
+        'id' => $this->application->getKey(),
+        'rejection_reason_category' => RejectionReasonCategoryEnum::Availability,
+    ]);
+    // Just for now
+});
