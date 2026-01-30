@@ -50,7 +50,7 @@
         <div class="fi-simple-main-ctn px-2">
             <main
                 @class([
-                    'fi-simple-main relative overflow-hidden rounded-md bg-gradient-to-br from-icon-high/6 to-elevation-surface ',
+                    'fi-simple-main relative overflow-hidden rounded-xl bg-gradient-to-br from-icon-high/6 to-elevation-surface ',
                     $maxContentWidth instanceof Width ? "fi-width-{$maxContentWidth->value}" : $maxContentWidth,
                 ])
             >
