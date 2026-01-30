@@ -14,6 +14,9 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
+use He4rt\Applications\Enums\ApplicationStatusEnum;
+use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
 
 class ApplicationInfolist
 {
@@ -58,7 +61,8 @@ class ApplicationInfolist
                             ->icon('heroicon-o-bolt')
                             ->schema([
                                 Actions::make([
-                                    self::getAdvanceStageAction(),
+                                    StateTransitionAction::make(),
+                                    //                                    self::getAdvanceStageAction(),
                                     self::getScheduleInterviewAction(),
                                     self::getSendEmailAction(),
                                     self::getAddCommentAction(),
@@ -82,6 +86,7 @@ class ApplicationInfolist
 
     protected static function getAdvanceStageAction(): Action
     {
+        // Todo: extract to an external class
         return Action::make('advance_stage')
             ->label(__('panel-organization::filament.actions.advance_stage.label'))
             ->icon('heroicon-o-arrow-right-circle')
@@ -90,12 +95,16 @@ class ApplicationInfolist
             ->modalHeading(__('panel-organization::filament.actions.advance_stage.modal_heading'))
             ->modalDescription(__('panel-organization::filament.actions.advance_stage.modal_description'))
             ->schema([
-                Textarea::make('test')
-                    ->label('example')
-                    ->placeholder('example')
-                    ->rows(3),
+                ...EvaluationForm::make(),
             ])
-            ->action(function (array $data): void {
+            ->action(function (array $data, $record): void {
+
+                $transitionData = new TransitionData(
+                    toStatus: ApplicationStatusEnum::InReview,
+                    byUserId: auth()->user()->getKey(),
+                );
+                $record->current_step->handle();
+
                 Notification::make()
                     ->title(__('panel-organization::filament.notifications.ok_title'))
                     ->body(__('panel-organization::filament.notifications.ok_body'))
@@ -115,8 +124,8 @@ class ApplicationInfolist
             ->modalDescription(__('panel-organization::filament.actions.schedule_interview.modal_description'))
             ->schema([
                 Textarea::make('test')
-                    ->label('example')
-                    ->placeholder('example')
+                    ->label(__('panel-organization::filament.fields.test_label'))
+                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
                     ->rows(3),
             ])
             ->action(function (array $data): void {
@@ -140,8 +149,8 @@ class ApplicationInfolist
             ->modalDescription(__('panel-organization::filament.actions.send_email.modal_description'))
             ->schema([
                 Textarea::make('test')
-                    ->label('example')
-                    ->placeholder('example')
+                    ->label(__('panel-organization::filament.fields.test_label'))
+                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
                     ->rows(3),
             ])
             ->action(function (array $data): void {
@@ -165,8 +174,8 @@ class ApplicationInfolist
             ->modalDescription(__('panel-organization::filament.actions.add_comment.modal_description'))
             ->schema([
                 Textarea::make('test')
-                    ->label('example')
-                    ->placeholder('example')
+                    ->label(__('panel-organization::filament.fields.test_label'))
+                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
                     ->rows(3),
             ])
             ->action(function (array $data): void {
@@ -191,8 +200,8 @@ class ApplicationInfolist
             ->modalDescription(__('panel-organization::filament.actions.reject_application.modal_description'))
             ->schema([
                 Textarea::make('test')
-                    ->label('example')
-                    ->placeholder('example')
+                    ->label(__('panel-organization::filament.fields.test_label'))
+                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
                     ->rows(3),
             ])
             ->action(function (array $data): void {

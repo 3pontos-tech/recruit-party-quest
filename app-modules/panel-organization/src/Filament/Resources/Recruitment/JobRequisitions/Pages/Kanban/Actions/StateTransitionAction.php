@@ -12,6 +12,10 @@ use Filament\Schemas\Components\Utilities\Get;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Feedback\Actions\StoreEvaluationAction;
+use He4rt\Feedback\DTOs\CriteriaScoresDTO;
+use He4rt\Feedback\DTOs\EvaluationDTO;
+use He4rt\Organization\Filament\Resources\Recruitment\Applications\Schemas\EvaluationForm;
 
 class StateTransitionAction extends Action
 {
@@ -41,6 +45,24 @@ class StateTransitionAction extends Action
      */
     private function processAction(Application $record, array $data): void
     {
+        $criteria = $data['criteria_scores'];
+        resolve(StoreEvaluationAction::class)->execute(new EvaluationDTO(
+            teamId: $data['team_id'],
+            applicationId: $record->getKey(),
+            stageId: $record->current_stage_id,
+            evaluatorId: $data['evaluator_id'],
+            overallRating: $data['overall_rating'],
+            recommendation: $data['recommendation'],
+            strengths: $data['strengths'],
+            concerns: $data['concerns'],
+            notes: $data['notes'],
+            criteriaScores: CriteriaScoresDTO::make([
+                'technical_skills' => $criteria['technical_skills'],
+                'communication' => $criteria['communication'],
+                'problem_solving' => $criteria['problem_solving'],
+                'culture_fit' => $criteria['culture_fit'],
+            ]),
+        ));
         $transitionData = TransitionData::fromArray($data, auth()->id());
         $record->current_step->handle($transitionData);
     }
@@ -77,6 +99,7 @@ class StateTransitionAction extends Action
             Textarea::make('notes')
                 ->label(__('applications::filament.fields.transition_notes'))
                 ->rows(2),
+            ...EvaluationForm::make(),
         ];
 
     }
