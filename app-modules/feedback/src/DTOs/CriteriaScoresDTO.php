@@ -15,6 +15,14 @@ final readonly class CriteriaScoresDTO implements JsonSerializable
         public string $cultureFit,
     ) {}
 
+    /**
+     * @param array{
+     *   technical_skills: string,
+     *   communication: string,
+     *   problem_solving: string,
+     *   culture_fit: string
+     * } $data
+     */
     public static function make(array $data): self
     {
         return new self(
@@ -25,6 +33,9 @@ final readonly class CriteriaScoresDTO implements JsonSerializable
         );
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function jsonSerialize(): array
     {
         return [

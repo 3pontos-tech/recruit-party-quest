@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions;
 
 use Filament\Actions\Action;
+use Filament\Forms\Components\Field;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
@@ -47,6 +48,9 @@ class RejectApplicationAction extends Action
         return 'reject_application-action';
     }
 
+    /**
+     * @return array<int, Field>
+     */
     private function formSchema(): array
     {
         return [

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Organization\Filament\Resources\Recruitment\Applications\Schemas;
 
+use Filament\Forms\Components\Field;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
@@ -13,6 +14,9 @@ use He4rt\Feedback\Enums\EvaluationRatingEnum;
 
 final class EvaluationForm
 {
+    /**
+     * @return array<int, Field>
+     */
     public static function make(): array
     {
         $criteriaFields = [

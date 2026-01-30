@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions;
 
 use Filament\Actions\Action;
+use Filament\Forms\Components\Field;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use He4rt\Applications\Models\Application;
@@ -49,6 +50,9 @@ class CommentApplicationAction extends Action
         return 'comment_application-action';
     }
 
+    /**
+     * @return array<int, Field>
+     */
     private function formSchema(): array
     {
         return [

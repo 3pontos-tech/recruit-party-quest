@@ -22,6 +22,20 @@ final readonly class EvaluationDTO
 
     ) {}
 
+    /**
+     * @param array{
+     *   team_id: string,
+     *   application_id: string,
+     *   stage_id: string,
+     *   evaluator_id: string,
+     *   overall_rating: string|int,
+     *   recommendation?: string|null,
+     *   strengths?: string|null,
+     *   concerns?: string|null,
+     *   notes?: string|null,
+     *   criteria_scores: CriteriaScoresDTO
+     * } $data
+     */
     public static function make(array $data): self
     {
         return new self(

@@ -14,8 +14,6 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
-use He4rt\Applications\Enums\ApplicationStatusEnum;
-use He4rt\Applications\Services\Transitions\TransitionData;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\CommentApplicationAction;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\RejectApplicationAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
@@ -83,35 +81,6 @@ class ApplicationInfolist
                         //                            ->view('panel-organization::components.applications.sidebar.evaluation-summary'),
                     ]),
             ]);
-    }
-
-    protected static function getAdvanceStageAction(): Action
-    {
-        // Todo: extract to an external class
-        return Action::make('advance_stage')
-            ->label(__('panel-organization::filament.actions.advance_stage.label'))
-            ->icon('heroicon-o-arrow-right-circle')
-            ->color('primary')
-            ->extraAttributes(fn () => ['class' => 'w-full'])
-            ->modalHeading(__('panel-organization::filament.actions.advance_stage.modal_heading'))
-            ->modalDescription(__('panel-organization::filament.actions.advance_stage.modal_description'))
-            ->schema([
-                ...EvaluationForm::make(),
-            ])
-            ->action(function (array $data, $record): void {
-
-                $transitionData = new TransitionData(
-                    toStatus: ApplicationStatusEnum::InReview,
-                    byUserId: auth()->user()->getKey(),
-                );
-                $record->current_step->handle();
-
-                Notification::make()
-                    ->title(__('panel-organization::filament.notifications.ok_title'))
-                    ->body(__('panel-organization::filament.notifications.ok_body'))
-                    ->success()
-                    ->send();
-            });
     }
 
     protected static function getScheduleInterviewAction(): Action

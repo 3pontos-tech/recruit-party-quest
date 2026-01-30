@@ -14,6 +14,15 @@ final readonly class CommentDTO
         public bool $isInternal = true,
     ) {}
 
+    /**
+     * @param array{
+     *   team_id: string,
+     *   application_id: string,
+     *   author_id: string,
+     *   content: string,
+     *   is_internal?: bool
+     * } $data
+     */
     public static function make(array $data): self
     {
         return new self(
