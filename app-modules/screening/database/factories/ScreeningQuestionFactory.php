@@ -154,12 +154,18 @@ class ScreeningQuestionFactory extends Factory
         $questions = $this->getQuestionsByType($questionType);
         $question = fake()->randomElement($questions);
 
+        $settings = $question['settings'] ?? [];
+
+        $knockoutCriteria = $question['knockout_criteria'] ?? null;
+
+        $isKnockout = $knockoutCriteria !== null;
+
         return [
             'text' => $question['text'],
-            'settings' => $question['settings'] ?? null,
+            'settings' => $settings,
             'is_required' => $question['is_required'] ?? fake()->boolean(70),
-            'is_knockout' => $question['is_knockout'] ?? fake()->boolean(20),
-            'knockout_criteria' => $question['knockout_criteria'] ?? null,
+            'is_knockout' => $isKnockout,
+            'knockout_criteria' => $isKnockout ? $knockoutCriteria : null,
         ];
     }
 
