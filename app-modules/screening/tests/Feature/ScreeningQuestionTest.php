@@ -26,7 +26,7 @@ it('can create a single choice question with choices', function (): void {
 
     expect($question->question_type)->toBe(QuestionTypeEnum::SingleChoice)
         ->and($question->settings)->toBeArray()
-        ->and($question->settings['choices'])->toHaveCount(3);
+        ->and($question->settings['choices'])->toHaveCount(5);
 });
 
 it('can create a multiple choice question with choices', function (): void {
@@ -34,7 +34,7 @@ it('can create a multiple choice question with choices', function (): void {
 
     expect($question->question_type)->toBe(QuestionTypeEnum::MultipleChoice)
         ->and($question->settings)->toBeArray()
-        ->and($question->settings['choices'])->toHaveCount(4);
+        ->and($question->settings['choices'])->toHaveCount(5);
 });
 
 it('can create a knockout question', function (): void {
