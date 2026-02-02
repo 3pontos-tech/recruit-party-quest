@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace He4rt\App\Filament\Pages;
 
+use App\Filament\Schemas\Components\He4rtAction;
+use App\Filament\Schemas\Components\He4rtWizard;
 use BackedEnum;
 use DateTimeZone;
-use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithRecord;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
@@ -67,11 +68,11 @@ class OnboardingWizard extends Page
 
     protected static string|null|BackedEnum $navigationIcon = 'heroicon-o-academic-cap';
 
-    protected static string $layout = 'filament-panels::components.layout.simple';
+    protected static string $layout = 'panel-app::filament.layouts.3pontos-simple';
 
     protected ?string $heading = '';
 
-    protected Width|string|null $maxContentWidth = Width::ScreenSmall;
+    protected Width|string|null $maxContentWidth = Width::ScreenTwoExtraLarge;
 
     //    protected string $view = 'filament-panels::pages.simple';
 
@@ -97,12 +98,13 @@ class OnboardingWizard extends Page
     {
         return $schema
             ->components([
-                Section::make(__('panel-app::pages/onboarding.steps.cv.sections.upload_cv'))
+                Section::make()
                     ->visible(fn () => ! $this->wizardVisible)
+                    ->contained(false)
                     ->compact()
                     ->schema([
                         ResumeFileUpload::make('cv_file'),
-                        Action::make('continue-onboarding')
+                        He4rtAction::make('continue-onboarding')
                             ->visible(fn () => $this->canSkipResumeAnalysis)
                             ->disabled(fn () => ! $this->canSkipResumeAnalysis)
                             ->label(__('panel-app::pages/onboarding.actions.continue_without_upload'))
@@ -192,7 +194,7 @@ class OnboardingWizard extends Page
                 ->schema($data['schema']))
             ->toArray();
 
-        return Wizard::make()
+        return He4rtWizard::make()
             ->steps($steps)
             ->visible(fn () => $this->wizardVisible)
             ->persistStepInQueryString()
@@ -251,6 +253,7 @@ class OnboardingWizard extends Page
             'label' => __('panel-app::pages/onboarding.steps.account.label'),
             'schema' => [
                 Section::make(__('panel-app::pages/onboarding.steps.account.sections.account_info'))
+                    ->contained(false)
                     ->schema([
                         TextInput::make('email')
                             ->label(__('panel-app::pages/onboarding.steps.account.fields.email'))
@@ -291,6 +294,7 @@ class OnboardingWizard extends Page
             'label' => __('panel-app::pages/onboarding.steps.profile.label'),
             'schema' => [
                 Section::make(__('panel-app::pages/onboarding.steps.profile.sections.work_experience'))
+                    ->contained(false)
                     ->schema([
                         Repeater::make('work_experiences')
                             ->label(__('panel-app::pages/onboarding.steps.profile.fields.work_experience'))
@@ -315,6 +319,7 @@ class OnboardingWizard extends Page
                             ->columnSpanFull(),
                     ]),
                 Section::make(__('panel-app::pages/onboarding.steps.profile.sections.education'))
+                    ->contained(false)
                     ->schema([
                         Repeater::make('education')
                             ->label(__('panel-app::pages/onboarding.steps.profile.fields.education'))

@@ -1,0 +1,91 @@
+.fi-hp-wizard {
+    @apply grid grid-cols-1 gap-x-12 lg:grid-cols-[1fr_400px];
+}
+
+.fi-hp-wizard-header {
+    @apply bg-elevation-01dp! order-1 flex! h-fit! flex-col gap-y-4 rounded-lg! border-0! lg:order-2 lg:overflow-y-auto lg:p-8;
+
+    & .fi-hp-wizard-header-step {
+        @apply border-outline-light dark:border-outline-dark bg-elevation-02dp rounded-md border;
+
+        &:not(.fi-active) {
+            @apply hidden! lg:flex!;
+        }
+
+        & .fi-hp-wizard-header-step-btn {
+            @apply flex w-full flex-col items-start! gap-y-6 md:p-4!;
+
+            & .fi-hp-wizard-header-step-icon-ctn {
+                @apply size-6!;
+
+                & .fi-hp-wizard-header-step-number {
+                    @apply font-bold!;
+                }
+            }
+
+            & .fi-hp-wizard-header-step-text {
+                @apply flex! w-full! gap-4! md:max-w-none!;
+
+                & .fi-hp-wizard-header-step-status-completed {
+                    @apply text-helper-success font-bold;
+                }
+
+                & .fi-hp-wizard-header-step-status-waiting {
+                    @apply text-helper-info font-bold;
+                }
+
+                & .fi-hp-wizard-header-step-label {
+                    @apply text-lg! font-bold!;
+                }
+
+                & .fi-hp-wizard-header-step-description {
+                    @apply text-text-medium! font-medium!;
+                }
+            }
+        }
+
+        &.fi-completed {
+            & .fi-hp-wizard-header-step-btn {
+                & .fi-hp-wizard-header-step-icon-ctn {
+                    @apply border-helper-success! border-2! bg-transparent!;
+
+                    & .fi-icon {
+                        @apply text-helper-success! stroke-3!;
+                    }
+                }
+
+                & .fi-hp-wizard-header-step-text {
+                    & .fi-hp-wizard-header-step-label {
+                        @apply text-text-high!;
+                    }
+                }
+            }
+        }
+
+        &:not(.fi-completed) {
+            &:not(.fi-active) {
+                & .fi-hp-wizard-header-step-btn {
+                    @apply opacity-50!;
+                }
+            }
+        }
+
+        &.fi-active {
+            & .fi-hp-wizard-header-step-btn {
+                & .fi-hp-wizard-header-step-icon-ctn {
+                    @apply border-icon-medium!;
+
+                    & .fi-hp-wizard-header-step-number {
+                        @apply text-icon-medium!;
+                    }
+                }
+
+                & .fi-hp-wizard-header-step-text {
+                    & .fi-hp-wizard-header-step-label {
+                        @apply text-text-high!;
+                    }
+                }
+            }
+        }
+    }
+}

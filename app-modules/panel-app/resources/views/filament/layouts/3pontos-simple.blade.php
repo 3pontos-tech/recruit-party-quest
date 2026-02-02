@@ -18,12 +18,20 @@
     'subheading' => null,
 ])
 
-    <div class="fi-simple-layout relative overflow-hidden">
-        <div class="absolute top-0 left-0 -z-10">
+    <div class="fi-simple-layout relative">
+        <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
             <img
                 src="{{ asset('images/3pontos/hourglass.svg') }}"
                 alt=""
-                class="h-auto w-full -translate-x-1/3 -translate-y-1/3"
+                class="absolute top-0 left-0 h-auto w-full -translate-x-1/3 -translate-y-1/3"
+            />
+        </div>
+
+        <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+            <img
+                src="{{ asset('images/3pontos/logo-chain.webp') }}"
+                alt=""
+                class="absolute bottom-0 left-0 h-auto w-full translate-y-1/2"
             />
         </div>
 
@@ -50,11 +58,17 @@
         <div class="fi-simple-main-ctn">
             <main
                 @class([
-                    'fi-simple-main relative overflow-hidden rounded-xl bg-gradient-to-br from-icon-high/6 to-elevation-surface ',
+                    'fi-simple-main bg-elevation-surface/32 relative rounded-xl backdrop-blur-md',
                     $maxContentWidth instanceof Width ? "fi-width-{$maxContentWidth->value}" : $maxContentWidth,
                 ])
             >
-                {{ $slot }}
+                <div
+                    class="from-icon-high/6 to-elevation-surface/32 pointer-events-none absolute inset-0 bg-gradient-to-br"
+                ></div>
+
+                <div class="relative">
+                    {{ $slot }}
+                </div>
             </main>
         </div>
 
