@@ -66,6 +66,20 @@ return [
         'skill_name' => 'Nome da Habilidade',
     ],
 
+    'forms' => [
+        'overall_rating' => 'Avaliação Geral',
+        'scores' => 'Pontuações',
+        'criteria_key_placeholder' => 'Critério',
+        'comments' => 'Comentários',
+        'comments_placeholder' => 'Digite seus comentários...',
+        'recommendation' => 'Recomendação',
+        'recommendation_placeholder' => 'Digite sua recomendação...',
+        'strengths' => 'Pontos Fortes',
+        'strengths_placeholder' => 'Descreva os pontos fortes do candidato...',
+        'concerns' => 'Preocupações',
+        'concerns_placeholder' => 'Descreva quaisquer preocupações...',
+    ],
+
     'proficiency' => [
         1 => 'Iniciante',
         2 => 'Básico',
