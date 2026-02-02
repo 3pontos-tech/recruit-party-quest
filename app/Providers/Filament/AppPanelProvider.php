@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Enums\FilamentPanel;
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
+use DutchCodingCompany\FilamentSocialite\Provider;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
@@ -20,6 +22,7 @@ use He4rt\App\Livewire\MyProfile\CandidateProfileInfo;
 use He4rt\App\Livewire\MyProfile\CandidateSkills;
 use He4rt\App\Livewire\MyProfile\CandidateWorkExperience;
 use He4rt\App\RedirectIfOnboardingIncomplete;
+use He4rt\Users\User;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -94,6 +97,27 @@ class AppPanelProvider extends PanelProvider
                         'candidate_skills' => CandidateSkills::class,
                     ])
                     ->enableBrowserSessions(),
+                FilamentSocialitePlugin::make()
+                    ->providers([
+                        Provider::make('google')
+                            ->label('Google')
+                            ->icon('fab-google')
+                            ->color(Color::Red),
+                        Provider::make('github')
+                            ->label('GitHub')
+                            ->icon('fab-github')
+                            ->color(Color::Zinc),
+                        Provider::make('linkedin-openid')
+                            ->label('LinkedIn')
+                            ->icon('fab-linkedin')
+                            ->color(Color::Sky),
+                        Provider::make('discord')
+                            ->label('Discord')
+                            ->icon('fab-discord')
+                            ->color(Color::Indigo),
+                    ])
+                    ->registration(true)
+                    ->userModelClass(User::class),
             ])
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'He4rt\App\Filament\Widgets')
             ->globalSearch(false)
