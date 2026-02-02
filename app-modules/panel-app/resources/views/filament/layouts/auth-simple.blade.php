@@ -47,7 +47,7 @@
             </div>
         @endif
 
-        <div class="fi-simple-main-ctn px-4 sm:px-8">
+        <div class="fi-simple-main-ctn">
             <main
                 @class([
                     'fi-simple-main relative overflow-hidden rounded-xl bg-gradient-to-br from-icon-high/6 to-elevation-surface ',
