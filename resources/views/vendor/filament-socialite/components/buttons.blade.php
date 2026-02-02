@@ -25,7 +25,7 @@
                 @endforeach
             </div>
 
-            <div class="flex sm:hidden items-center justify-center gap-8">
+            <div class="flex md:hidden items-center justify-center gap-8">
                 @foreach($visibleProviders as $key => $provider)
                     <x-he4rt::button
                         variant="outline"
