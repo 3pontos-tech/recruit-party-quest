@@ -5,3 +5,7 @@
 .fi-hp-wizard-header {
     @apply order-1 flex! flex-col border-0! lg:order-2;
 }
+
+.fi-hp-wizard-header-step-icon-ctn {
+    @apply size-6!;
+}

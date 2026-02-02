@@ -74,7 +74,7 @@
                         role="step"
                         class="fi-sc-wizard-header-step-btn"
                     >
-                        <div class="fi-sc-wizard-header-step-icon-ctn">
+                        <div class="fi-sc-wizard-header-step-icon-ctn fi-hp-wizard-header-step-icon-ctn">
                             @php
                                 $completedIcon = $step->getCompletedIcon();
                             @endphp
@@ -107,7 +107,7 @@
                                     x-show="getStepIndex(step) <= {{ $loop->index }}"
                                     class="fi-sc-wizard-header-step-number"
                                 >
-                                    {{ str_pad($loop->index + 1, 2, "0", STR_PAD_LEFT) }}
+                                    {{ $loop->index + 1 }}
                                 </span>
                             @endif
                         </div>
