@@ -48,6 +48,7 @@ class GenerateJobRequisition
             'work_arrangement' => $dto->workArrangement,
             'priority' => $dto->priority,
             'status' => RequisitionStatusEnum::Draft,
+            'summary' => $response['summary'],
             'items' => $response['items'],
         ]);
     }
@@ -67,6 +68,10 @@ class GenerateJobRequisition
                 'description' => new StringSchema(
                     'description',
                     'Descrição da vaga alinhada com os dados da empresa'
+                ),
+                'summary' => new StringSchema(
+                    'summary',
+                    'Gere um resumo da vaga.'
                 ),
 
                 'items' => new ObjectSchema(

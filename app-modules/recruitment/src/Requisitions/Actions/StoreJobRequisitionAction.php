@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Recruitment\Requisitions\Actions;
 
+use He4rt\Recruitment\Requisitions\DTOs\JobPostingDTO;
 use He4rt\Recruitment\Requisitions\DTOs\JobRequisitionDTO;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
@@ -39,6 +40,16 @@ final class StoreJobRequisitionAction
             ]);
         }
 
+        $jobPostingDTO = JobPostingDTO::make([
+            'job_requisition_id' => $jobRequisition->getKey(),
+            'title' => $dto->title,
+            'slug' => $dto->slug,
+            'team_id' => $dto->teamId,
+            'summary' => $dto->summary,
+            'description' => $dto->description,
+        ]);
+
+        resolve(CreateJobPostingAction::class)->execute($jobPostingDTO);
         // dispatch event
     }
 }

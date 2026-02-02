@@ -26,6 +26,7 @@ final readonly class JobRequisitionDTO
         public WorkArrangementEnum $workArrangement,
         public ?RequisitionPriorityEnum $priority,
         public RequisitionStatusEnum $status,
+        public string $summary,
 
         /** @var JobRequisitionItemDTO[] */
         public array $items,
@@ -48,6 +49,7 @@ final readonly class JobRequisitionDTO
             workArrangement: $data['work_arrangement'],
             priority: $data['priority'] ?? null,
             status: $data['status'],
+            summary: $data['summary'],
             items: self::mapItems($data['items']),
         );
     }

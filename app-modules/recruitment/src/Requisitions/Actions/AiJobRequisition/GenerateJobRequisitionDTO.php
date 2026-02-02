@@ -11,7 +11,7 @@ use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 use JsonSerializable;
 
-class GenerateJobRequisitionDTO implements JsonSerializable
+final readonly class GenerateJobRequisitionDTO implements JsonSerializable
 {
     public function __construct(
         public string $title,
