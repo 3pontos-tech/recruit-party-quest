@@ -19,16 +19,20 @@
 ])
 
     <div class="fi-simple-layout relative overflow-hidden">
-        <div class="absolute top-0 left-0 -z-10">
+        <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
             <img
                 src="{{ asset('images/3pontos/hourglass.svg') }}"
                 alt=""
-                class="h-auto w-full -translate-x-1/3 -translate-y-1/3"
+                class="absolute top-0 left-0 h-auto w-full -translate-x-1/3 -translate-y-1/3"
             />
         </div>
 
-        <div class="absolute bottom-0 -z-10">
-            <img src="{{ asset('images/3pontos/logo-chain.webp') }}" alt="" class="h-auto w-full translate-y-1/2" />
+        <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+            <img
+                src="{{ asset('images/3pontos/logo-chain.webp') }}"
+                alt=""
+                class="absolute bottom-0 left-0 h-auto w-full translate-y-1/2"
+            />
         </div>
 
         {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::SIMPLE_LAYOUT_START, scopes: $renderHookScopes) }}
@@ -54,7 +58,7 @@
         <div class="fi-simple-main-ctn">
             <main
                 @class([
-                    'fi-simple-main bg-elevation-surface/32 relative overflow-hidden rounded-xl backdrop-blur-md',
+                    'fi-simple-main bg-elevation-surface/32 relative rounded-xl backdrop-blur-md',
                     $maxContentWidth instanceof Width ? "fi-width-{$maxContentWidth->value}" : $maxContentWidth,
                 ])
             >
