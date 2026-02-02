@@ -3,13 +3,77 @@
 }
 
 .fi-hp-wizard-header {
-    @apply order-1 flex! flex-col border-0! lg:order-2;
-}
+    @apply bg-elevation-01dp! order-1 flex! flex-col gap-y-4 rounded-lg! border-0! p-8 md:overflow-y-auto lg:order-2;
 
-.fi-hp-wizard-header-step-btn {
-    @apply flex flex-col items-start! gap-y-6;
-}
+    & .fi-hp-wizard-header-step {
+        @apply border-outline-light dark:border-outline-dark bg-elevation-02dp rounded-md border;
 
-.fi-hp-wizard-header-step-icon-ctn {
-    @apply size-6!;
+        & .fi-hp-wizard-header-step-btn {
+            @apply flex w-full flex-col items-start! gap-y-6 p-4!;
+
+            & .fi-hp-wizard-header-step-icon-ctn {
+                @apply size-6!;
+            }
+
+            & .fi-hp-wizard-header-step-text {
+                & .fi-hp-wizard-header-step-label {
+                    @apply text-lg! font-bold!;
+                }
+            }
+        }
+
+        &.fi-completed {
+            & .fi-hp-wizard-header-step-btn {
+                & .fi-hp-wizard-header-step-icon-ctn {
+                    @apply border-helper-success! border-2! bg-transparent!;
+
+                    & .fi-icon {
+                        @apply text-helper-success! stroke-3!;
+                    }
+                }
+
+                & .fi-hp-wizard-header-step-text {
+                    & .fi-hp-wizard-header-step-label {
+                        @apply text-text-high!;
+                    }
+                }
+            }
+        }
+
+        &:not(.fi-completed) {
+            &.fi-active {
+                & .fi-hp-wizard-header-step-btn {
+                    & .fi-hp-wizard-header-step-icon-ctn {
+                        & .fi-icon {
+                            @apply text-red-500!;
+                        }
+                    }
+                }
+            }
+
+            &:not(.fi-active) {
+                & .fi-hp-wizard-header-step-btn {
+                    @apply opacity-50!;
+                }
+            }
+        }
+
+        &.fi-active {
+            & .fi-sc-wizard-header-step-btn {
+                & .fi-hp-wizard-header-step-icon-ctn {
+                    @apply border-icon-medium!;
+
+                    & .fi-hp-wizard-header-step-number {
+                        @apply text-icon-medium!;
+                    }
+                }
+
+                & .fi-hp-wizard-header-step-text {
+                    & .fi-hp-wizard-header-step-label {
+                        @apply text-text-high!;
+                    }
+                }
+            }
+        }
+    }
 }

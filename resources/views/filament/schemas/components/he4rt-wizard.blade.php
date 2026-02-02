@@ -60,7 +60,7 @@
         >
             @foreach ($steps as $step)
                 <li
-                    class="fi-sc-wizard-header-step"
+                    class="fi-sc-wizard-header-step fi-hp-wizard-header-step"
                     x-bind:class="{
                         'fi-active': getStepIndex(step) === {{ $loop->index }},
                         'fi-completed': getStepIndex(step) > {{ $loop->index }},
@@ -87,7 +87,7 @@
                                         "x-cloak" => "x-cloak",
                                         "x-show" => "getStepIndex(step) > {$loop->index}",
                                     ]),
-                                    size: \Filament\Support\Enums\IconSize::Large,
+                                    size: \Filament\Support\Enums\IconSize::ExtraSmall,
                                 )
                             }}
 
@@ -99,22 +99,22 @@
                                             "x-cloak" => "x-cloak",
                                             "x-show" => "getStepIndex(step) <= {$loop->index}",
                                         ]),
-                                        size: \Filament\Support\Enums\IconSize::Large,
+                                        size: \Filament\Support\Enums\IconSize::ExtraSmall,
                                     )
                                 }}
                             @else
                                 <span
                                     x-show="getStepIndex(step) <= {{ $loop->index }}"
-                                    class="fi-sc-wizard-header-step-number"
+                                    class="fi-sc-wizard-header-step-number fi-hp-wizard-header-step-number"
                                 >
                                     {{ $loop->index + 1 }}
                                 </span>
                             @endif
                         </div>
 
-                        <div class="fi-sc-wizard-header-step-text">
+                        <div class="fi-sc-wizard-header-step-text fi-hp-wizard-header-step-text">
                             @if (! $step->isLabelHidden())
-                                <span class="fi-sc-wizard-header-step-label">
+                                <span class="fi-sc-wizard-header-step-label fi-hp-wizard-header-step-label">
                                     {{ $step->getLabel() }}
                                 </span>
                             @endif
