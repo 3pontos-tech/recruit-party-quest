@@ -82,11 +82,6 @@ class OnboardingWizard extends Page
 
     protected static ?int $navigationSort = -1;
 
-    public static function canAccess(): bool
-    {
-        return true;
-    }
-
     public function mount(): void
     {
         $user = auth()->user();
@@ -97,8 +92,8 @@ class OnboardingWizard extends Page
             return;
         }
 
-        $this->record = $user->candidate;
         $this->user = $user;
+        $this->record = $user->candidate;
         $this->content->fill();
     }
 
