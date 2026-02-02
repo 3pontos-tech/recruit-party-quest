@@ -101,20 +101,16 @@ class AppPanelProvider extends PanelProvider
                     ->providers([
                         Provider::make('google')
                             ->label('Google')
-                            ->icon('fab-google')
-                            ->color(Color::Red),
+                            ->icon('fab-google'),
                         Provider::make('github')
                             ->label('GitHub')
-                            ->icon('fab-github')
-                            ->color(Color::Zinc),
+                            ->icon('fab-github'),
                         Provider::make('linkedin-openid')
                             ->label('LinkedIn')
-                            ->icon('fab-linkedin')
-                            ->color(Color::Sky),
+                            ->icon('fab-linkedin'),
                         Provider::make('discord')
                             ->label('Discord')
-                            ->icon('fab-discord')
-                            ->color(Color::Indigo),
+                            ->icon('fab-discord'),
                     ])
                     ->registration(true)
                     ->userModelClass(User::class),
