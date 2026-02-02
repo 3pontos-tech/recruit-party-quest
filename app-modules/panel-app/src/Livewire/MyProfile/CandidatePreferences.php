@@ -18,6 +18,7 @@ class CandidatePreferences extends MyProfileComponent
     public ?array $data = [];
 
     public static $sort = 25;
+
     protected string $view = 'panel-app::livewire.my-profile.candidate-preferences';
 
     public function mount(): void

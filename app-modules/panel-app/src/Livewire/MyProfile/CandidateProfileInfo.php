@@ -15,6 +15,7 @@ class CandidateProfileInfo extends MyProfileComponent
     public ?array $data = [];
 
     public static $sort = 15;
+
     protected string $view = 'panel-app::livewire.my-profile.candidate-profile-info';
 
     public function mount(): void

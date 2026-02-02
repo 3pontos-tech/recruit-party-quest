@@ -17,6 +17,7 @@ class CandidateSkills extends MyProfileComponent
     public ?array $data = [];
 
     public static $sort = 40;
+
     protected string $view = 'panel-app::livewire.my-profile.candidate-skills';
 
     public function mount(): void

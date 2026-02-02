@@ -20,6 +20,7 @@ class CandidateWorkExperience extends MyProfileComponent
     public ?array $data = [];
 
     public static $sort = 35;
+
     protected string $view = 'panel-app::livewire.my-profile.candidate-work-experience';
 
     public function mount(): void
@@ -75,7 +76,7 @@ class CandidateWorkExperience extends MyProfileComponent
         $existingIds = [];
 
         foreach ($data['work_experiences'] as $entry) {
-            if (! empty($entry['id'])) {
+            if (filled($entry['id'])) {
                 $candidate->workExperiences()->where('id', $entry['id'])->update([
                     'company_name' => $entry['company_name'],
                     'description' => $entry['description'],

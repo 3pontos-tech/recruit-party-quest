@@ -19,6 +19,7 @@ class CandidateEducation extends MyProfileComponent
     public ?array $data = [];
 
     public static $sort = 30;
+
     protected string $view = 'panel-app::livewire.my-profile.candidate-education';
 
     public function mount(): void
@@ -77,7 +78,7 @@ class CandidateEducation extends MyProfileComponent
         $existingIds = [];
 
         foreach ($data['education'] as $entry) {
-            if (! empty($entry['id'])) {
+            if (filled($entry['id'])) {
                 $candidate->degrees()->where('id', $entry['id'])->update([
                     'institution' => $entry['institution'],
                     'degree' => $entry['degree'],
