@@ -71,7 +71,7 @@
         }
 
         &.fi-active {
-            & .fi-sc-wizard-header-step-btn {
+            & .fi-hp-wizard-header-step-btn {
                 & .fi-hp-wizard-header-step-icon-ctn {
                     @apply border-icon-medium!;
 

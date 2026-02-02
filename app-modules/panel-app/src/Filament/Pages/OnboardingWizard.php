@@ -251,7 +251,6 @@ class OnboardingWizard extends Page
         return [
             'id' => 'account',
             'label' => __('panel-app::pages/onboarding.steps.account.label'),
-            'description' => 'teste',
             'schema' => [
                 Section::make(__('panel-app::pages/onboarding.steps.account.sections.account_info'))
                     ->contained(false)

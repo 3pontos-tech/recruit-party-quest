@@ -123,14 +123,14 @@
                                         x-show="getStepIndex(step) > {{ $loop->index }}"
                                         class="fi-hp-wizard-header-step-status-completed"
                                     >
-                                        Finished
+                                        {{ __("filament-schemas::components.wizard.step.finished") }}
                                     </span>
                                     <span
                                         x-cloak
                                         x-show="getStepIndex(step) === {{ $loop->index }}"
                                         class="fi-hp-wizard-header-step-status-waiting"
                                     >
-                                        Waiting
+                                        {{ __("filament-schemas::components.wizard.step.waiting") }}
                                     </span>
                                 </div>
                             @endif
