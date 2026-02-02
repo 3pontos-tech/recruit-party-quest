@@ -1,0 +1,6 @@
+.fi-hp-wizard {
+    @apply grid grid-cols-1 lg:grid-cols-2;
+}
+
+.fi-hp-wizard-header {
+}

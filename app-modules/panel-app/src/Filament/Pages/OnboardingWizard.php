@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\App\Filament\Pages;
 
+use App\Filament\Schemas\Components\He4rtWizard;
 use BackedEnum;
 use DateTimeZone;
 use Filament\Actions\Action;
@@ -71,7 +72,7 @@ class OnboardingWizard extends Page
 
     protected ?string $heading = '';
 
-    protected Width|string|null $maxContentWidth = Width::ScreenSmall;
+    protected Width|string|null $maxContentWidth = Width::ScreenTwoExtraLarge;
 
     //    protected string $view = 'filament-panels::pages.simple';
 
@@ -192,7 +193,7 @@ class OnboardingWizard extends Page
                 ->schema($data['schema']))
             ->toArray();
 
-        return Wizard::make()
+        return He4rtWizard::make()
             ->steps($steps)
             ->visible(fn () => $this->wizardVisible)
             ->persistStepInQueryString()
