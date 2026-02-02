@@ -40,7 +40,7 @@
                         <div class="flex items-center gap-4">
                             <x-he4rt::text size="sm" class="text-muted-foreground">
                                 <span class="text-foreground font-semibold">{{ $this->jobs->total() }}</span>
-                                jobs found
+                                {{ __('panel-app::filament.pages.search_jobs.jobs_found') }}
                             </x-he4rt::text>
                         </div>
                     </div>
@@ -57,9 +57,11 @@
                                     icon="heroicon-o-magnifying-glass"
                                     class="bg-elevation-05dp rounded-full border-0"
                                 />
-                                <x-he4rt::heading size="sm">No jobs found</x-he4rt::heading>
+                                <x-he4rt::heading size="sm">
+                                    {{ __('panel-app::filament.pages.search_jobs.no_jobs_found') }}
+                                </x-he4rt::heading>
                                 <x-he4rt::text size="sm" class="text-muted-foreground mt-1">
-                                    Try adjusting your search or filters to find what you're looking for.
+                                    {{ __('panel-app::filament.pages.search_jobs.no_jobs_description') }}
                                 </x-he4rt::text>
                                 <x-he4rt::button
                                     wire:click="$set('search', '')"
@@ -67,7 +69,7 @@
                                     size="sm"
                                     class="mt-4"
                                 >
-                                    Clear all filters
+                                    {{ __('panel-app::filament.pages.search_jobs.clear_filters') }}
                                 </x-he4rt::button>
                             </x-he4rt::card>
                         @endforelse

@@ -5,9 +5,11 @@
         <div class="mb-6 flex items-center gap-3">
             <x-he4rt::badge icon="heroicon-o-briefcase" />
             <div class="flex flex-col gap-0.5">
-                <x-he4rt::heading size="md" level="1">Search Jobs</x-he4rt::heading>
+                <x-he4rt::heading size="md" level="1">
+                    {{ __('panel-app::filament.pages.search_jobs.header') }}
+                </x-he4rt::heading>
                 <x-he4rt::text size="sm" class="text-muted-foreground">
-                    Find your next opportunity from {{ $jobsCount }} open positions
+                    {{ __('panel-app::filament.pages.search_jobs.description', ['count' => $jobsCount]) }}
                 </x-he4rt::text>
             </div>
         </div>
@@ -17,13 +19,13 @@
                     <x-he4rt::input
                         wire:model.live.debounce.300ms="search"
                         class="border-border focus:border-primary"
-                        placeholder="Job title, keywords, or company"
-                        aria-label="Search jobs by title, keywords, or company"
+                        :placeholder="__('panel-app::filament.pages.search_jobs.search_placeholder')"
+                        :aria-label="__('panel-app::filament.pages.search_jobs.search_placeholder')"
                     />
                 </div>
 
                 <x-he4rt::button wire:click="$refresh" :icon="\Filament\Support\Icons\Heroicon::MagnifyingGlass">
-                    Search Jobs
+                    {{ __('panel-app::filament.pages.search_jobs.search_button') }}
                 </x-he4rt::button>
             </div>
         </div>

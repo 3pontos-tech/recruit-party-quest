@@ -22,7 +22,7 @@
 
 @if (! $posting)
     <div class="mx-auto w-full max-w-7xl py-12 text-center">
-        <x-he4rt::text>Job posting details are currently unavailable.</x-he4rt::text>
+        <x-he4rt::text>{{ __('panel-app::filament.pages.job_description.no_posting') }}</x-he4rt::text>
     </div>
 @else
     <div
@@ -48,7 +48,9 @@
 
                     <div class="flex flex-wrap gap-x-6 gap-y-3 pt-1">
                         {{-- Location - Fallback to Remote if not available --}}
-                        <x-he4rt::tag icon="heroicon-o-map-pin" variant="ghost">Remote</x-he4rt::tag>
+                        <x-he4rt::tag icon="heroicon-o-map-pin" variant="ghost">
+                            {{ __('panel-app::filament.pages.job_description.location_remote') }}
+                        </x-he4rt::tag>
 
                         {{-- Work Model --}}
                         <x-he4rt::tag :icon="$jobRequisition->work_arrangement->getIcon()" variant="ghost">
@@ -78,7 +80,9 @@
 
                         {{-- Diversity Tag --}}
                         @if ($team->is_disability_confident)
-                            <x-he4rt::tag icon="heroicon-o-heart" variant="ghost">Diversity</x-he4rt::tag>
+                            <x-he4rt::tag icon="heroicon-o-heart" variant="ghost">
+                                {{ __('panel-app::filament.pages.job_description.diversity') }}
+                            </x-he4rt::tag>
                         @endif
                     </div>
                 </div>
@@ -88,7 +92,7 @@
                 @if ($hasAction)
                     @guest
                         <x-he4rt::button variant="solid" class="w-full sm:w-auto" href="/login">
-                            Apply for job
+                            {{ __('panel-app::filament.pages.job_description.apply_button') }}
                         </x-he4rt::button>
                     @else
                         @php
@@ -101,8 +105,12 @@
                             :disabled="$hasApplied"
                             @click="if (!hasApplied) {{ $hasScreeningQuestions ? 'showApplicationModal = true' : '$wire.applyDirectly()' }}"
                         >
-                            <span x-show="!hasApplied">Apply for job</span>
-                            <span x-show="hasApplied" x-cloak>Applied</span>
+                            <span x-show="!hasApplied">
+                                {{ __('panel-app::filament.pages.job_description.apply_button') }}
+                            </span>
+                            <span x-show="hasApplied" x-cloak>
+                                {{ __('panel-app::filament.pages.job_description.applied_button') }}
+                            </span>
                         </x-he4rt::button>
                     @endguest
                     <div class="flex w-full justify-center gap-3 sm:w-auto">
@@ -125,7 +133,9 @@
         <div class="mt-5 max-w-3xl space-y-10">
             {{-- About this job --}}
             <section class="space-y-4">
-                <x-he4rt::heading level="2" size="sm" class="text-text-high">About this job</x-he4rt::heading>
+                <x-he4rt::heading level="2" size="sm" class="text-text-high">
+                    {{ __('panel-app::filament.pages.job_description.about_this_job') }}
+                </x-he4rt::heading>
                 <div class="space-y-4">
                     <x-he4rt::text size="md">
                         {{ $posting->summary }}
@@ -139,7 +149,9 @@
             {{-- Responsibilities --}}
             @if ($responsibilities->isNotEmpty())
                 <section class="space-y-4">
-                    <x-he4rt::heading level="2" size="sm" class="text-text-high">Responsibilities</x-he4rt::heading>
+                    <x-he4rt::heading level="2" size="sm" class="text-text-high">
+                        {{ __('panel-app::filament.pages.job_description.responsibilities') }}
+                    </x-he4rt::heading>
                     <ul class="space-y-3">
                         @foreach ($responsibilities as $item)
                             <li class="flex items-start gap-3">
@@ -154,7 +166,9 @@
             {{-- Requirements --}}
             @if ($requiredQualifications->isNotEmpty())
                 <section class="space-y-4">
-                    <x-he4rt::heading level="2" size="sm" class="text-text-high">Requirements</x-he4rt::heading>
+                    <x-he4rt::heading level="2" size="sm" class="text-text-high">
+                        {{ __('panel-app::filament.pages.job_description.requirements') }}
+                    </x-he4rt::heading>
                     <ul class="space-y-3">
                         @foreach ($requiredQualifications as $item)
                             <li class="flex items-start gap-3">
@@ -169,7 +183,9 @@
             {{-- Desirable skills --}}
             @if ($preferredQualifications->isNotEmpty())
                 <section class="space-y-4">
-                    <x-he4rt::heading level="2" size="sm" class="text-text-high">Desirable skills</x-he4rt::heading>
+                    <x-he4rt::heading level="2" size="sm" class="text-text-high">
+                        {{ __('panel-app::filament.pages.job_description.desirable_skills') }}
+                    </x-he4rt::heading>
                     <ul class="list-inside list-disc space-y-2">
                         @foreach ($preferredQualifications as $item)
                             <li class="text-text-medium pl-1">
@@ -183,7 +199,9 @@
             {{-- Benefits --}}
             @if ($benefits->isNotEmpty())
                 <section class="space-y-4">
-                    <x-he4rt::heading level="2" size="sm" class="text-text-high">Benefits</x-he4rt::heading>
+                    <x-he4rt::heading level="2" size="sm" class="text-text-high">
+                        {{ __('panel-app::filament.pages.job_description.benefits') }}
+                    </x-he4rt::heading>
                     <ul class="space-y-3">
                         @foreach ($benefits as $item)
                             <li class="flex items-start gap-3">
@@ -198,7 +216,10 @@
 
         @if ($hasAction)
             @if ($jobRequisition->screeningQuestions->isNotEmpty())
-                <x-he4rt::modal show="showApplicationModal" title="Apply for {{ $posting->title }}">
+                <x-he4rt::modal
+                    show="showApplicationModal"
+                    :title="__('panel-app::filament.pages.job_description.apply_modal_title', ['title' => $posting->title])"
+                >
                     <livewire:screening.job-application-form :requisition="$jobRequisition" />
                 </x-he4rt::modal>
             @endif
