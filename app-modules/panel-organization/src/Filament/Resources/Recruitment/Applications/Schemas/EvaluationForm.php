@@ -41,18 +41,18 @@ final class EvaluationForm
             KeyValue::make('criteria_scores')
                 ->default($criteriaFields)
                 ->formatStateUsing(fn ($state) => blank($state) ? $criteriaFields : $state)
-                ->keyPlaceholder('tanto faz')
+                ->keyPlaceholder(__('forms.criteria_key_placeholder'))
                 ->columnSpanFull()
                 ->addable(false)
                 ->deletable(false)
                 ->editableKeys(false)
                 ->label('Scores'),
             Textarea::make('comments')
-                ->label('comments')
-                ->placeholder('comments'),
+                ->label(__('forms.comments_label'))
+                ->placeholder(__('forms.comments_placeholder')),
             Textarea::make('recommendation')
-                ->label('Recommendation')
-                ->placeholder('Recommendations'),
+                ->label(__('forms.recommendation_label'))
+                ->placeholder(__('forms.recommendation_placeholder')),
             Textarea::make('strengths')
                 ->label('Strengths')
                 ->placeholder('Strengths'),
