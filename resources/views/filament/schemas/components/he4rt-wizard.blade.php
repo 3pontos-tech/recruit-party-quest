@@ -129,20 +129,6 @@
                     </button>
 
                     @if (! $loop->last)
-                        <svg
-                            fill="none"
-                            preserveAspectRatio="none"
-                            viewBox="0 0 22 80"
-                            aria-hidden="true"
-                            class="fi-sc-wizard-header-step-separator"
-                        >
-                            <path
-                                d="M0 -2L20 40L0 82"
-                                stroke-linejoin="round"
-                                stroke="currentcolor"
-                                vector-effect="non-scaling-stroke"
-                            ></path>
-                        </svg>
                     @endif
                 </li>
             @endforeach

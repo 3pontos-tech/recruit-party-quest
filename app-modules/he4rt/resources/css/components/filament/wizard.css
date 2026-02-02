@@ -3,4 +3,5 @@
 }
 
 .fi-hp-wizard-header {
+    @apply flex! flex-col border-0!;
 }
