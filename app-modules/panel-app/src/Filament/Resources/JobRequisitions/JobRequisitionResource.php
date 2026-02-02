@@ -22,11 +22,13 @@ class JobRequisitionResource extends Resource
 {
     protected static ?string $model = JobRequisition::class;
 
+    protected static ?int $navigationSort = 1;
+
     protected static bool $shouldSkipAuthorization = true;
 
     protected static bool $shouldRegisterNavigation = true;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBriefcase;
 
     protected static ?string $recordTitleAttribute = 'id';
 
