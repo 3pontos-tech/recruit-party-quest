@@ -114,9 +114,25 @@
 
                         <div class="fi-sc-wizard-header-step-text fi-hp-wizard-header-step-text">
                             @if (! $step->isLabelHidden())
-                                <span class="fi-sc-wizard-header-step-label fi-hp-wizard-header-step-label">
-                                    {{ $step->getLabel() }}
-                                </span>
+                                <div class="flex w-full items-center justify-between gap-2">
+                                    <span class="fi-sc-wizard-header-step-label fi-hp-wizard-header-step-label">
+                                        {{ $step->getLabel() }}
+                                    </span>
+                                    <span
+                                        x-cloak
+                                        x-show="getStepIndex(step) > {{ $loop->index }}"
+                                        class="fi-hp-wizard-header-step-status-completed"
+                                    >
+                                        Finished
+                                    </span>
+                                    <span
+                                        x-cloak
+                                        x-show="getStepIndex(step) === {{ $loop->index }}"
+                                        class="fi-hp-wizard-header-step-status-waiting"
+                                    >
+                                        Waiting
+                                    </span>
+                                </div>
                             @endif
 
                             @if (filled($description = $step->getDescription()))
