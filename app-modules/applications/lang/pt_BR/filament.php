@@ -6,7 +6,7 @@ return [
     'resource' => [
         'label' => 'Candidatura',
         'plural_label' => 'Candidaturas',
-        'navigation_label' => 'Candidaturas',
+        'navigation_label' => 'Minhas Candidaturas',
     ],
     'sections' => [
         'application_info' => 'Informações da Candidatura',
