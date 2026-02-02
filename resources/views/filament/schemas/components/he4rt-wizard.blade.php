@@ -150,12 +150,12 @@
         </ol>
     @endif
 
-    <div class="order-2 lg:order-1">
+    <div class="order-2 flex h-full flex-col lg:order-1">
         @foreach ($steps as $step)
             {{ $step }}
         @endforeach
 
-        <div x-cloak class="fi-sc-wizard-footer">
+        <div x-cloak class="fi-sc-wizard-footer md:mt-auto!">
             <div
                 x-cloak
                 @if (! $previousAction->isDisabled())
