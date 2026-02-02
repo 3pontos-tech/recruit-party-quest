@@ -72,7 +72,7 @@
                         x-on:click="step = @js($step->getKey())"
                         x-bind:disabled="! isStepAccessible(@js($step->getKey())) || @js($previousAction->isDisabled())"
                         role="step"
-                        class="fi-sc-wizard-header-step-btn"
+                        class="fi-sc-wizard-header-step-btn fi-hp-wizard-header-step-btn"
                     >
                         <div class="fi-sc-wizard-header-step-icon-ctn fi-hp-wizard-header-step-icon-ctn">
                             @php
