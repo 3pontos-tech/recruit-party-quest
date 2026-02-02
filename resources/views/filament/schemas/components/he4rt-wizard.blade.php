@@ -32,7 +32,6 @@
             ->merge($getExtraAlpineAttributes(), escape: false)
             ->class([
                 "fi-sc-wizard fi-hp-wizard",
-                "fi-contained" => $isContained,
                 "fi-sc-wizard-header-hidden" => $isHeaderHidden,
             ])
     }}
@@ -135,7 +134,7 @@
         </ol>
     @endif
 
-    <div>
+    <div class="order-2 lg:order-1">
         @foreach ($steps as $step)
             {{ $step }}
         @endforeach
