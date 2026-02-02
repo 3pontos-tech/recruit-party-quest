@@ -8,6 +8,7 @@ use He4rt\App\Livewire\JobRecommendations;
 use He4rt\App\Livewire\ResumeFileUploadProgress;
 use He4rt\App\Livewire\SearchJobs;
 use He4rt\App\Livewire\UserLatestApplications;
+use He4rt\App\Livewire\UserProfileOverview;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 
@@ -21,6 +22,7 @@ class PanelAppServiceProvider extends ServiceProvider
         Livewire::component('resume-file-upload-progress', ResumeFileUploadProgress::class);
         Livewire::component('search-jobs', SearchJobs::class);
         Livewire::component('job-recommendations', JobRecommendations::class);
+        Livewire::component('user-profile-overview', UserProfileOverview::class);
 
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'panel-app');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'panel-app');

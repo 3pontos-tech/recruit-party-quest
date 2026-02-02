@@ -50,8 +50,18 @@
 
         <section class="py-4">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="mb-5">
-                    {{ $this->headerWidgets }}
+                <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                    {{-- Left side: Header widgets (2/3 width on large screens) --}}
+                    <div class="lg:col-span-2">
+                        <div class="mb-5">
+                            {{ $this->headerWidgets }}
+                        </div>
+                    </div>
+
+                    {{-- Right side: Profile overview (1/3 width on large screens) --}}
+                    <div>
+                        <livewire:user-profile-overview />
+                    </div>
                 </div>
             </div>
         </section>
