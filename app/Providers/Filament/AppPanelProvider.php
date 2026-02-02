@@ -108,9 +108,6 @@ class AppPanelProvider extends PanelProvider
                         Provider::make('linkedin-openid')
                             ->label('LinkedIn')
                             ->icon('fab-linkedin'),
-                        Provider::make('discord')
-                            ->label('Discord')
-                            ->icon('fab-discord'),
                     ])
                     ->registration(true)
                     ->userModelClass(User::class),
