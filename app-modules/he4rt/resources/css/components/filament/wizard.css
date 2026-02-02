@@ -3,10 +3,14 @@
 }
 
 .fi-hp-wizard-header {
-    @apply bg-elevation-01dp! order-1 flex! h-fit! flex-col gap-y-4 rounded-lg! border-0! md:overflow-y-auto md:p-8 lg:order-2;
+    @apply bg-elevation-01dp! order-1 flex! h-fit! flex-col gap-y-4 rounded-lg! border-0! lg:order-2 lg:overflow-y-auto lg:p-8;
 
     & .fi-hp-wizard-header-step {
         @apply border-outline-light dark:border-outline-dark bg-elevation-02dp rounded-md border;
+
+        &:not(.fi-active) {
+            @apply hidden! lg:flex!;
+        }
 
         & .fi-hp-wizard-header-step-btn {
             @apply flex w-full flex-col items-start! gap-y-6 md:p-4!;

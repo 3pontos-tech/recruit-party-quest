@@ -18,7 +18,7 @@
     'subheading' => null,
 ])
 
-    <div class="fi-simple-layout relative overflow-hidden">
+    <div class="fi-simple-layout relative">
         <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
             <img
                 src="{{ asset('images/3pontos/hourglass.svg') }}"

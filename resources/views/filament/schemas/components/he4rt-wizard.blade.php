@@ -56,7 +56,7 @@
             role="list"
             x-cloak
             x-ref="header"
-            class="fi-sc-wizard-header fi-hp-wizard-header"
+            class="fi-sc-wizard-header fi-hp-wizard-header top-8! lg:sticky!"
         >
             @foreach ($steps as $step)
                 <li
