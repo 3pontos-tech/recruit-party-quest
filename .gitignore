@@ -35,7 +35,6 @@ tests/Browser/Screenshots
 /.composer
 boost.json
 .junie
-.ai
 .output.txt
 .github/git-commit-instructions.md
 .github/copilot-instructions.md
@@ -43,3 +42,6 @@ AGENTS.md
 GEMINI.md
 opencode.json
 .gemini
+.claude
+CLAUDE.md
+.mcp.json
