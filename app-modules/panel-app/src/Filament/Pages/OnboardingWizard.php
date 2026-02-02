@@ -68,7 +68,7 @@ class OnboardingWizard extends Page
 
     protected static string|null|BackedEnum $navigationIcon = 'heroicon-o-academic-cap';
 
-    protected static string $layout = 'filament-panels::components.layout.simple';
+    protected static string $layout = 'panel-app::filament.layouts.3pontos-simple';
 
     protected ?string $heading = '';
 
@@ -250,8 +250,10 @@ class OnboardingWizard extends Page
         return [
             'id' => 'account',
             'label' => __('panel-app::pages/onboarding.steps.account.label'),
+            'description' => 'teste',
             'schema' => [
                 Section::make(__('panel-app::pages/onboarding.steps.account.sections.account_info'))
+                    ->contained(false)
                     ->schema([
                         TextInput::make('email')
                             ->label(__('panel-app::pages/onboarding.steps.account.fields.email'))
@@ -292,6 +294,7 @@ class OnboardingWizard extends Page
             'label' => __('panel-app::pages/onboarding.steps.profile.label'),
             'schema' => [
                 Section::make(__('panel-app::pages/onboarding.steps.profile.sections.work_experience'))
+                    ->contained(false)
                     ->schema([
                         Repeater::make('work_experiences')
                             ->label(__('panel-app::pages/onboarding.steps.profile.fields.work_experience'))
@@ -316,6 +319,7 @@ class OnboardingWizard extends Page
                             ->columnSpanFull(),
                     ]),
                 Section::make(__('panel-app::pages/onboarding.steps.profile.sections.education'))
+                    ->contained(false)
                     ->schema([
                         Repeater::make('education')
                             ->label(__('panel-app::pages/onboarding.steps.profile.fields.education'))
