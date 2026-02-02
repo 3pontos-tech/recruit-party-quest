@@ -10,7 +10,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
-use He4rt\Recruitment\Requisitions\Actions\AiJobRequisition\GenerateJobRequisition;
 
 class GenerateJobRequisitionAction extends Action
 {
@@ -29,9 +28,7 @@ class GenerateJobRequisitionAction extends Action
             ->modalDescription(__('panel-organization::filament.actions.x.modal_description'))
             ->schema($this->formSchema())
             ->action(function (array $data): void {
-                resolve(GenerateJobRequisition::class)->execute(
-                    // TODO
-                );
+                // resolve(GenerateJobRequisition::class)->execute();
                 Notification::make()
                     ->danger()
                     ->title('User rejected successfully')
