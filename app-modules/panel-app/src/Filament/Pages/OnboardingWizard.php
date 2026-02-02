@@ -98,8 +98,9 @@ class OnboardingWizard extends Page
     {
         return $schema
             ->components([
-                Section::make(__('panel-app::pages/onboarding.steps.cv.sections.upload_cv'))
+                Section::make()
                     ->visible(fn () => ! $this->wizardVisible)
+                    ->contained(false)
                     ->compact()
                     ->schema([
                         ResumeFileUpload::make('cv_file'),
