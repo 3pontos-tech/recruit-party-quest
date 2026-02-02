@@ -16,8 +16,14 @@
             }
 
             & .fi-hp-wizard-header-step-text {
+                @apply gap-4;
+
                 & .fi-hp-wizard-header-step-label {
                     @apply text-lg! font-bold!;
+                }
+
+                & .fi-hp-wizard-header-step-description {
+                    @apply text-text-medium! font-medium!;
                 }
             }
         }

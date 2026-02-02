@@ -120,7 +120,7 @@
                             @endif
 
                             @if (filled($description = $step->getDescription()))
-                                <span class="fi-sc-wizard-header-step-description">
+                                <span class="fi-sc-wizard-header-step-description fi-hp-wizard-header-step-description">
                                     {{ $description }}
                                 </span>
                             @endif
