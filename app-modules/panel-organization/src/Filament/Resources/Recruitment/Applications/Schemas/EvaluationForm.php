@@ -36,29 +36,29 @@ final class EvaluationForm
             Select::make('overall_rating')
                 ->options(EvaluationRatingEnum::class)
                 ->enum(EvaluationRatingEnum::class)
-                ->label('Overall rating')
+                ->label(__('panel-organization::filament.forms.overall_rating'))
                 ->required(),
             KeyValue::make('criteria_scores')
                 ->default($criteriaFields)
                 ->formatStateUsing(fn ($state) => blank($state) ? $criteriaFields : $state)
-                ->keyPlaceholder('tanto faz')
+                ->keyPlaceholder(__('panel-organization::filament.forms.criteria_key_placeholder'))
                 ->columnSpanFull()
                 ->addable(false)
                 ->deletable(false)
                 ->editableKeys(false)
-                ->label('Scores'),
+                ->label(__('panel-organization::filament.forms.scores')),
             Textarea::make('comments')
-                ->label('comments')
-                ->placeholder('comments'),
+                ->label(__('panel-organization::filament.forms.comments'))
+                ->placeholder(__('panel-organization::filament.forms.comments_placeholder')),
             Textarea::make('recommendation')
-                ->label('Recommendation')
-                ->placeholder('Recommendations'),
+                ->label(__('panel-organization::filament.forms.recommendation'))
+                ->placeholder(__('panel-organization::filament.forms.recommendation_placeholder')),
             Textarea::make('strengths')
-                ->label('Strengths')
-                ->placeholder('Strengths'),
+                ->label(__('panel-organization::filament.forms.strengths'))
+                ->placeholder(__('panel-organization::filament.forms.strengths_placeholder')),
             Textarea::make('concerns')
-                ->label('Concerns')
-                ->placeholder('Concerns'),
+                ->label(__('panel-organization::filament.forms.concerns'))
+                ->placeholder(__('panel-organization::filament.forms.concerns_placeholder')),
         ];
     }
 }
