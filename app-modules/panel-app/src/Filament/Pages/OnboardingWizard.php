@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace He4rt\App\Filament\Pages;
 
+use App\Filament\Schemas\Components\He4rtAction;
 use App\Filament\Schemas\Components\He4rtWizard;
 use BackedEnum;
 use DateTimeZone;
-use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithRecord;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
@@ -104,7 +104,7 @@ class OnboardingWizard extends Page
                     ->compact()
                     ->schema([
                         ResumeFileUpload::make('cv_file'),
-                        Action::make('continue-onboarding')
+                        He4rtAction::make('continue-onboarding')
                             ->visible(fn () => $this->canSkipResumeAnalysis)
                             ->disabled(fn () => ! $this->canSkipResumeAnalysis)
                             ->label(__('panel-app::pages/onboarding.actions.continue_without_upload'))

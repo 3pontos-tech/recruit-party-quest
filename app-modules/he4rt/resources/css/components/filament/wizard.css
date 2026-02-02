@@ -20,7 +20,7 @@
             }
 
             & .fi-hp-wizard-header-step-text {
-                @apply flex! w-full! max-w-none! gap-4!;
+                @apply flex! w-full! gap-4! md:max-w-none!;
 
                 & .fi-hp-wizard-header-step-status-completed {
                     @apply text-helper-success font-bold;
