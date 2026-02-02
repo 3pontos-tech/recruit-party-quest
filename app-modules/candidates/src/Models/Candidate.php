@@ -185,7 +185,7 @@ class Candidate extends BaseModel
             return $yearsPart;
         }
 
-        return $monthsPart ?: '0 '.trans_choice('panel-organization::view.time.month', 0, ['count' => 0]);
+        return $monthsPart ?: trans_choice('panel-organization::view.time.month', 0, ['count' => 0]);
 
     }
 }

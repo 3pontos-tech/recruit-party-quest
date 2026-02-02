@@ -237,7 +237,7 @@
         <div class="bg-surface-01dp border-outline-low rounded-lg border p-8 text-center">
             <x-he4rt::icon
                 :icon="\Filament\Support\Icons\Heroicon::Briefcase"
-                size="xl"
+                size="md"
                 class="text-text-low mx-auto"
             />
             <h4 class="text-text-high mt-4 text-lg font-medium">
