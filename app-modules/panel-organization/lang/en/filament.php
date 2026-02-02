@@ -66,6 +66,20 @@ return [
         'skill_name' => 'Skill Name',
     ],
 
+    'forms' => [
+        'overall_rating' => 'Overall Rating',
+        'scores' => 'Scores',
+        'criteria_key_placeholder' => 'Criterion',
+        'comments' => 'Comments',
+        'comments_placeholder' => 'Enter your comments...',
+        'recommendation' => 'Recommendation',
+        'recommendation_placeholder' => 'Enter your recommendation...',
+        'strengths' => 'Strengths',
+        'strengths_placeholder' => 'Enter candidate strengths...',
+        'concerns' => 'Concerns',
+        'concerns_placeholder' => 'Enter any concerns...',
+    ],
+
     'proficiency' => [
         1 => 'Beginner',
         2 => 'Basic',
