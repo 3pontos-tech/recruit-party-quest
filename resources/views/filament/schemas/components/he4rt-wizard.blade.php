@@ -155,7 +155,7 @@
             {{ $step }}
         @endforeach
 
-        <div x-cloak class="fi-sc-wizard-footer md:mt-auto!">
+        <div x-cloak class="fi-sc-wizard-footer md:mt-auto! md:pt-8">
             <div
                 x-cloak
                 @if (! $previousAction->isDisabled())
