@@ -14,6 +14,11 @@ use Filament\Support\Enums\Width;
 use Filament\View\PanelsRenderHook;
 use He4rt\App\Filament\Pages\AppDashboard;
 use He4rt\App\Filament\Pages\AppLoginPage;
+use He4rt\App\Livewire\MyProfile\CandidateEducation;
+use He4rt\App\Livewire\MyProfile\CandidatePreferences;
+use He4rt\App\Livewire\MyProfile\CandidateProfileInfo;
+use He4rt\App\Livewire\MyProfile\CandidateSkills;
+use He4rt\App\Livewire\MyProfile\CandidateWorkExperience;
 use He4rt\App\RedirectIfOnboardingIncomplete;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -78,9 +83,16 @@ class AppPanelProvider extends PanelProvider
             ->plugins([
                 BreezyCore::make()
                     ->myProfile(
-                        shouldRegisterUserMenu: false, // Disable - we have custom profile page
+                        shouldRegisterUserMenu: true,
                         hasAvatars: false,
                     )
+                    ->myProfileComponents([
+                        'candidate_profile_info' => CandidateProfileInfo::class,
+                        'candidate_preferences' => CandidatePreferences::class,
+                        'candidate_education' => CandidateEducation::class,
+                        'candidate_work_experience' => CandidateWorkExperience::class,
+                        'candidate_skills' => CandidateSkills::class,
+                    ])
                     ->enableBrowserSessions(),
             ])
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'He4rt\App\Filament\Widgets')

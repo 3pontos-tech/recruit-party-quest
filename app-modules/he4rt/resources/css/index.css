@@ -30,6 +30,8 @@
 @source '../../../../app-modules/**/resources/views/**/*.blade.php';
 @source '../../../../app/Filament/**/*';
 @source '../../../../vendor/filament/**/*.blade.php';
+@source '../../../../vendor/jeffgreco13/filament-breezy/resources/**/*';
+
 @source '../**/*.blade.php';
 @source '../**/*.php';
 

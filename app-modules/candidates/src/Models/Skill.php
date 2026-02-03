@@ -21,6 +21,7 @@ use Illuminate\Support\Carbon;
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Carbon|null $deleted_at
+ * @property CandidateSkill|null $pivot
  *
  * @extends BaseModel<SkillFactory>
  */
