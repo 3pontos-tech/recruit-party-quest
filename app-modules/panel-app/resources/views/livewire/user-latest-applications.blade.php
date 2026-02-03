@@ -1,10 +1,10 @@
 <div>
     <div class="mb-4 flex flex-col justify-between gap-4 md:flex-row md:items-center">
-        <div>
-            <x-he4rt::heading level="2" size="sm" class="mb-1 italic">
+        <div class="flex flex-col gap-4">
+            <x-he4rt::heading level="2" size="sm">
                 {{ __('panel-app::livewire/user-latest-applications.title') }}
             </x-he4rt::heading>
-            <x-he4rt::text size="sm" class="text-text-medium mt-0.5">
+            <x-he4rt::text size="sm" class="text-text-medium">
                 {{ __('panel-app::livewire/user-latest-applications.subtitle') }}
             </x-he4rt::text>
         </div>
@@ -49,46 +49,12 @@
         </x-he4rt::button>
     </div>
 
-    <div class="space-y-2">
+    <div class="space-y-2" wire:transition>
         @forelse ($this->applications as $application)
-            <x-he4rt::card :interactive="true" class="group p-3" density="compact">
-                <div class="flex flex-col justify-between gap-3 md:flex-row md:items-center">
-                    <div class="flex items-start gap-3">
-                        <div class="bg-elevation-02dp flex h-10 w-10 shrink-0 items-center justify-center rounded-lg">
-                            <x-heroicon-m-photo class="text-icon-medium h-5 w-5" />
-                        </div>
-                        <div class="min-w-0">
-                            <x-he4rt::heading
-                                level="3"
-                                size="xs"
-                                class="group-hover:text-primary truncate transition-colors"
-                            >
-                                {{ $application->requisition->post?->title ?? __('panel-app::livewire/user-latest-applications.application_card.default_title') }}
-                            </x-he4rt::heading>
-                            <x-he4rt::text size="xs" class="text-text-medium truncate">
-                                {{ $application->requisition->team->name }}
-                            </x-he4rt::text>
-                            <div
-                                class="text-text-low mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] sm:text-xs"
-                            >
-                                <span class="flex items-center gap-1">
-                                    <x-heroicon-o-map-pin class="h-3 w-3" />
-                                    São Paulo
-                                </span>
-                                <span class="flex items-center gap-1">
-                                    <x-heroicon-o-briefcase class="h-3 w-3" />
-                                    Remote
-                                </span>
-                                <span class="flex items-center gap-1">
-                                    <x-heroicon-o-calendar class="h-3 w-3" />
-                                    {{ __('panel-app::livewire/user-latest-applications.application_card.applied') }}
-                                    {{ $application->created_at->format('d de M.') }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between gap-3 md:justify-end md:gap-4">
-                        <div class="flex flex-col items-start gap-0.5 md:items-end">
+            <x-panel-app::jobs.job-card :job="$application->requisition">
+                <x-slot:footer>
+                    <div class="flex items-center justify-between">
+                        <div class="flex flex-col items-start gap-0.5">
                             <span
                                 @class(['inline-flex w-fit items-center justify-center rounded-md px-1.5 py-0.5 text-[10px] font-medium whitespace-nowrap', $this->getStatusColor($application->status)])
                             >
@@ -99,6 +65,14 @@
                             </x-he4rt::text>
                         </div>
                         <div class="flex items-center gap-2">
+                            <x-he4rt::tag
+                                icon="heroicon-o-calendar"
+                                variant="ghost"
+                                class="group-hover:text-text-high transition duration-500"
+                            >
+                                {{ __('panel-app::livewire/user-latest-applications.application_card.applied') }}
+                                {{ $application->created_at->format('d/m/Y') }}
+                            </x-he4rt::tag>
                             <x-he4rt::button
                                 variant="outline"
                                 size="xs"
@@ -109,16 +83,8 @@
                             </x-he4rt::button>
                         </div>
                     </div>
-                </div>
-                <div class="border-outline-low mt-2 border-t pt-2">
-                    <x-he4rt::text size="xs" class="text-text-low text-[10px]">
-                        <span class="text-text-high font-medium">
-                            {{ __('panel-app::livewire/user-latest-applications.application_card.last_activity') }}
-                        </span>
-                        {{ $application->stageHistory->first()?->notes ?? __('panel-app::livewire/user-latest-applications.application_card.activity_fallback') }}
-                    </x-he4rt::text>
-                </div>
-            </x-he4rt::card>
+                </x-slot>
+            </x-panel-app::jobs.job-card>
         @empty
             <div class="py-8 text-center">
                 <x-he4rt::text size="sm" class="text-text-medium">
