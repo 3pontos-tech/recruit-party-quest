@@ -52,6 +52,12 @@ class ApplicationInfolist
                                 ViewEntry::make('work_experience')
                                     ->view('panel-organization::components.applications.tabs.work-experience'),
                             ]),
+
+                        Tab::make('Comments')
+                            ->schema([
+                                ViewEntry::make('comments')
+                                    ->view('panel-organization::components.applications.tabs.comments'),
+                            ]),
                     ]),
                 Grid::make(1)
                     ->columnSpan(1)
