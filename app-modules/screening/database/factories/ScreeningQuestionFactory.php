@@ -60,6 +60,8 @@ class ScreeningQuestionFactory extends Factory
             'question_type' => QuestionTypeEnum::SingleChoice,
             'settings' => $question['settings'],
             'is_required' => $question['is_required'] ?? true,
+            'is_knockout' => false,
+            'knockout_criteria' => null,
         ]);
     }
 
