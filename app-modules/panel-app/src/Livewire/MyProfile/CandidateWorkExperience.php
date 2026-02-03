@@ -53,21 +53,46 @@ class CandidateWorkExperience extends MyProfileComponent
                     ->schema([
                         TextInput::make('company_name')
                             ->label(__('panel-app::pages/settings.work_experience.fields.company_name'))
-                            ->required(),
+                            ->prefixIcon('heroicon-o-building-office')
+                            ->placeholder(__('panel-app::pages/settings.work_experience.placeholders.company_name'))
+                            ->maxLength(255)
+                            ->required()
+                            ->columnSpanFull(),
                         Textarea::make('description')
                             ->label(__('panel-app::pages/settings.work_experience.fields.description'))
-                            ->rows(3)
-                            ->required(),
+                            ->placeholder(__('panel-app::pages/settings.work_experience.placeholders.description'))
+                            ->rows(4)
+                            ->maxLength(1000)
+                            ->required()
+                            ->columnSpanFull(),
                         DatePicker::make('start_date')
                             ->label(__('panel-app::pages/settings.work_experience.fields.start_date'))
+                            ->prefixIcon('heroicon-o-calendar')
+                            ->native(false)
+                            ->displayFormat('M Y')
+                            ->format('Y-m-d')
+                            ->maxDate(now())
                             ->required(),
                         DatePicker::make('end_date')
                             ->label(__('panel-app::pages/settings.work_experience.fields.end_date'))
-                            ->required(fn (Get $get) => $get('is_currently_working_here') === false),
+                            ->prefixIcon('heroicon-o-calendar')
+                            ->native(false)
+                            ->displayFormat('M Y')
+                            ->format('Y-m-d')
+                            ->maxDate(now())
+                            ->required(fn (Get $get) => $get('is_currently_working_here') === false)
+                            ->hidden(fn (Get $get) => $get('is_currently_working_here') === true),
                         Toggle::make('is_currently_working_here')
-                            ->label(__('panel-app::pages/settings.work_experience.fields.is_currently_working_here')),
+                            ->label(__('panel-app::pages/settings.work_experience.fields.is_currently_working_here'))
+                            ->inline(false)
+                            ->live(),
                     ])
                     ->itemLabel(fn (array $state): ?string => $state['company_name'] ?? null)
+                    ->addActionLabel(__('panel-app::pages/settings.work_experience.add_work_experience'))
+                    ->reorderable()
+                    ->collapsible()
+                    ->cloneable()
+                    ->columns(2)
                     ->columnSpanFull(),
             ])
             ->statePath('data');

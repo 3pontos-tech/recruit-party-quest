@@ -48,35 +48,55 @@ class CandidatePreferences extends MyProfileComponent
             ->components([
                 TextInput::make('expected_salary')
                     ->label(__('panel-app::pages/settings.preferences.fields.expected_salary'))
+                    ->prefixIcon('heroicon-o-currency-dollar')
                     ->numeric()
-                    ->prefix('$'),
+                    ->placeholder(__('panel-app::pages/settings.preferences.placeholders.expected_salary'))
+                    ->minValue(0)
+                    ->maxValue(9999999),
                 Select::make('expected_salary_currency')
                     ->label(__('panel-app::pages/settings.preferences.fields.expected_salary_currency'))
+                    ->prefixIcon('heroicon-o-banknotes')
                     ->options([
-                        'USD' => 'USD',
-                        'EUR' => 'EUR',
-                        'BRL' => 'BRL',
+                        'USD' => 'USD ($)',
+                        'EUR' => 'EUR (€)',
+                        'BRL' => 'BRL (R$)',
+                        'GBP' => 'GBP (£)',
                     ])
-                    ->default('USD'),
+                    ->default('USD')
+                    ->placeholder(__('panel-app::pages/settings.preferences.placeholders.expected_salary_currency')),
                 DatePicker::make('availability_date')
-                    ->label(__('panel-app::pages/settings.preferences.fields.availability_date')),
+                    ->label(__('panel-app::pages/settings.preferences.fields.availability_date'))
+                    ->prefixIcon('heroicon-o-calendar')
+                    ->native(false)
+                    ->displayFormat('d M Y')
+                    ->minDate(now())
+                    ->maxDate(now()->addYear()),
                 Toggle::make('willing_to_relocate')
-                    ->label(__('panel-app::pages/settings.preferences.fields.willing_to_relocate')),
+                    ->label(__('panel-app::pages/settings.preferences.fields.willing_to_relocate'))
+                    ->inline(false),
                 Toggle::make('is_open_to_remote')
-                    ->label(__('panel-app::pages/settings.preferences.fields.is_open_to_remote')),
+                    ->label(__('panel-app::pages/settings.preferences.fields.is_open_to_remote'))
+                    ->inline(false),
                 Select::make('experience_level')
                     ->label(__('panel-app::pages/settings.preferences.fields.experience_level'))
-                    ->options(__('panel-app::pages/settings.preferences.options.experience_levels')),
+                    ->prefixIcon('heroicon-o-briefcase')
+                    ->options(__('panel-app::pages/settings.preferences.options.experience_levels'))
+                    ->placeholder(__('panel-app::pages/settings.preferences.placeholders.experience_level')),
                 Select::make('timezone')
                     ->label(__('panel-app::pages/settings.preferences.fields.timezone'))
+                    ->prefixIcon('heroicon-o-globe-alt')
                     ->options(fn () => collect(DateTimeZone::listIdentifiers())
                         ->mapWithKeys(fn ($tz) => [$tz => $tz])
                         ->all())
-                    ->searchable(),
+                    ->searchable()
+                    ->placeholder(__('panel-app::pages/settings.preferences.placeholders.timezone')),
                 Select::make('preferred_language')
                     ->label(__('panel-app::pages/settings.preferences.fields.preferred_language'))
-                    ->options(__('panel-app::pages/settings.preferences.options.languages')),
+                    ->prefixIcon('heroicon-o-language')
+                    ->options(__('panel-app::pages/settings.preferences.options.languages'))
+                    ->placeholder(__('panel-app::pages/settings.preferences.placeholders.preferred_language')),
             ])
+            ->columns(2)
             ->statePath('data');
     }
 

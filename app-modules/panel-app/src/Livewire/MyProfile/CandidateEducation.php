@@ -15,14 +15,13 @@ use He4rt\Candidates\Models\Education;
 use Jeffgreco13\FilamentBreezy\Livewire\MyProfileComponent;
 
 /**
- * @property mixed $form
+ * @property \Filament\Forms\Form $form
  */
 class CandidateEducation extends MyProfileComponent
 {
     /** @var array<string, mixed>|null */
     public ?array $data = [];
 
-    /** @var int */
     public static $sort = 30;
 
     protected string $view = 'panel-app::livewire.my-profile.candidate-education';
@@ -53,23 +52,51 @@ class CandidateEducation extends MyProfileComponent
                     ->schema([
                         TextInput::make('institution')
                             ->label(__('panel-app::pages/settings.education.fields.institution'))
-                            ->required(),
+                            ->prefixIcon('heroicon-o-building-library')
+                            ->placeholder(__('panel-app::pages/settings.education.placeholders.institution'))
+                            ->maxLength(255)
+                            ->required()
+                            ->columnSpan(2),
                         TextInput::make('degree')
                             ->label(__('panel-app::pages/settings.education.fields.degree'))
+                            ->prefixIcon('heroicon-o-academic-cap')
+                            ->placeholder(__('panel-app::pages/settings.education.placeholders.degree'))
+                            ->maxLength(255)
                             ->required(),
                         TextInput::make('field_of_study')
                             ->label(__('panel-app::pages/settings.education.fields.field_of_study'))
+                            ->prefixIcon('heroicon-o-book-open')
+                            ->placeholder(__('panel-app::pages/settings.education.placeholders.field_of_study'))
+                            ->maxLength(255)
                             ->required(),
                         DatePicker::make('start_date')
                             ->label(__('panel-app::pages/settings.education.fields.start_date'))
+                            ->prefixIcon('heroicon-o-calendar')
+                            ->native(false)
+                            ->displayFormat('M Y')
+                            ->format('Y-m-d')
+                            ->maxDate(now())
                             ->required(),
                         DatePicker::make('end_date')
                             ->label(__('panel-app::pages/settings.education.fields.end_date'))
-                            ->required(fn (Get $get) => $get('is_enrolled') === false),
+                            ->prefixIcon('heroicon-o-calendar')
+                            ->native(false)
+                            ->displayFormat('M Y')
+                            ->format('Y-m-d')
+                            ->maxDate(now()->addYears(10))
+                            ->required(fn (Get $get) => $get('is_enrolled') === false)
+                            ->hidden(fn (Get $get) => $get('is_enrolled') === true),
                         Toggle::make('is_enrolled')
-                            ->label(__('panel-app::pages/settings.education.fields.is_enrolled')),
+                            ->label(__('panel-app::pages/settings.education.fields.is_enrolled'))
+                            ->inline(false)
+                            ->live(),
                     ])
                     ->itemLabel(fn (array $state): ?string => $state['institution'] ?? null)
+                    ->addActionLabel(__('panel-app::pages/settings.education.add_education'))
+                    ->reorderable()
+                    ->collapsible()
+                    ->cloneable()
+                    ->columns(2)
                     ->columnSpanFull(),
             ])
             ->statePath('data');

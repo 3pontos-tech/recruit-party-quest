@@ -19,7 +19,7 @@ class CandidateProfileInfo extends MyProfileComponent
     public ?array $data = [];
 
     /** @var int */
-    public static $sort = 15;
+    public static $sort = 30;
 
     protected string $view = 'panel-app::livewire.my-profile.candidate-profile-info';
 
@@ -42,24 +42,38 @@ class CandidateProfileInfo extends MyProfileComponent
             ->components([
                 TextInput::make('headline')
                     ->label(__('panel-app::pages/settings.profile_info.fields.headline'))
-                    ->maxLength(255),
+                    ->prefixIcon('heroicon-o-user-circle')
+                    ->placeholder(__('panel-app::pages/settings.profile_info.placeholders.headline'))
+                    ->maxLength(255)
+                    ->columnSpanFull(),
                 Textarea::make('summary')
                     ->label(__('panel-app::pages/settings.profile_info.fields.summary'))
-                    ->rows(4)
-                    ->maxLength(2000),
+                    ->placeholder(__('panel-app::pages/settings.profile_info.placeholders.summary'))
+                    ->rows(5)
+                    ->maxLength(2000)
+                    ->columnSpanFull(),
                 TextInput::make('phone_number')
                     ->label(__('panel-app::pages/settings.profile_info.fields.phone_number'))
+                    ->prefixIcon('heroicon-o-phone')
                     ->tel()
+                    ->mask('(99) 99999-9999')
+                    ->placeholder(__('panel-app::pages/settings.profile_info.placeholders.phone_number'))
                     ->maxLength(20),
                 TextInput::make('linkedin_url')
                     ->label(__('panel-app::pages/settings.profile_info.fields.linkedin_url'))
+                    ->prefixIcon('fab-linkedin')
+                    ->placeholder('Ex: https://linkedin.com/in/danielhe4rt')
                     ->url()
                     ->maxLength(255),
                 TextInput::make('portfolio_url')
                     ->label(__('panel-app::pages/settings.profile_info.fields.portfolio_url'))
+                    ->prefixIcon('heroicon-o-link')
+                    ->hint('Behance, GitHub, Site Pessoal etc.')
+                    ->placeholder('Ex: https://github.com/danielhe4rt')
                     ->url()
                     ->maxLength(255),
             ])
+            ->columns(2)
             ->statePath('data');
     }
 

@@ -15,6 +15,13 @@ return [
             'linkedin_url' => 'LinkedIn URL',
             'portfolio_url' => 'Portfolio URL',
         ],
+        'placeholders' => [
+            'headline' => 'e.g., Senior Software Engineer | Full-Stack Developer',
+            'summary' => 'Write a brief professional summary highlighting your expertise, experience, and career goals...',
+            'phone_number' => 'e.g., +1 (555) 123-4567',
+            'linkedin_url' => 'your-profile-name',
+            'portfolio_url' => 'www.yourportfolio.com',
+        ],
     ],
 
     'preferences' => [
@@ -31,6 +38,13 @@ return [
             'experience_level' => 'Experience Level',
             'timezone' => 'Timezone',
             'preferred_language' => 'Preferred Language',
+        ],
+        'placeholders' => [
+            'expected_salary' => 'e.g., 80000',
+            'expected_salary_currency' => 'Select currency...',
+            'experience_level' => 'Select your experience level...',
+            'timezone' => 'Search or select timezone...',
+            'preferred_language' => 'Select preferred language...',
         ],
         'options' => [
             'experience_levels' => [
@@ -53,6 +67,7 @@ return [
         'description' => 'Manage your educational background.',
         'submit' => 'Save Education',
         'notify' => 'Education updated successfully.',
+        'add_education' => 'Add Education',
         'fields' => [
             'education' => 'Education',
             'institution' => 'Institution',
@@ -62,6 +77,11 @@ return [
             'end_date' => 'End Date',
             'is_enrolled' => 'Currently Enrolled',
         ],
+        'placeholders' => [
+            'institution' => 'e.g., University of São Paulo',
+            'degree' => 'e.g., Bachelor of Computer Science',
+            'field_of_study' => 'e.g., Software Engineering',
+        ],
     ],
 
     'work_experience' => [
@@ -69,6 +89,7 @@ return [
         'description' => 'Manage your professional work history.',
         'submit' => 'Save Work Experience',
         'notify' => 'Work experience updated successfully.',
+        'add_work_experience' => 'Add Work Experience',
         'fields' => [
             'work_experiences' => 'Work Experiences',
             'company_name' => 'Company Name',
@@ -77,6 +98,10 @@ return [
             'end_date' => 'End Date',
             'is_currently_working_here' => 'Currently Working Here',
         ],
+        'placeholders' => [
+            'company_name' => 'e.g., Google, Microsoft, Startup Inc.',
+            'description' => 'Describe your responsibilities, achievements, and key projects...',
+        ],
     ],
 
     'skills' => [
@@ -84,11 +109,17 @@ return [
         'description' => 'Manage your skills and proficiency levels.',
         'submit' => 'Save Skills',
         'notify' => 'Skills updated successfully.',
+        'add_skill' => 'Add Skill',
         'fields' => [
             'skills' => 'Skills',
             'skill' => 'Skill',
             'years_of_experience' => 'Years of Experience',
             'proficiency_level' => 'Proficiency Level',
+        ],
+        'placeholders' => [
+            'skill' => 'Search or select a skill...',
+            'years_suffix' => 'years',
+            'proficiency_level' => 'Select proficiency level...',
         ],
         'options' => [
             'proficiency_levels' => [
