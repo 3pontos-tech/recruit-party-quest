@@ -40,6 +40,24 @@
             </div>
         </div>
 
-        <div>contact info</div>
+        <div class="flex flex-col gap-8">
+            <div class="flex flex-col gap-4">
+                <x-he4rt::text class="text-text-high">Informações de contato</x-he4rt::text>
+                <x-he4rt::tag icon="heroicon-o-phone" variant="ghost">+55 11 9000-0000</x-he4rt::tag>
+                <x-he4rt::tag icon="heroicon-o-envelope" variant="ghost">gabriel@3pontos.com</x-he4rt::tag>
+                <hr class="border-outline-light dark:border-outline-dark" />
+            </div>
+
+            <div class="flex flex-col gap-4">
+                <x-he4rt::text class="text-text-high">Redes sociais e afins</x-he4rt::text>
+                <x-he4rt::tag icon="fab-instagram" variant="ghost">diogo_kaster</x-he4rt::tag>
+                <x-he4rt::tag icon="fab-github" variant="ghost">DiogoKaster</x-he4rt::tag>
+                <hr class="border-outline-light dark:border-outline-dark" />
+            </div>
+
+            <div class="flex flex-col gap-4">
+                <x-he4rt::text class="text-text-high">Preferências de trabalho</x-he4rt::text>
+            </div>
+        </div>
     </div>
 </aside>
