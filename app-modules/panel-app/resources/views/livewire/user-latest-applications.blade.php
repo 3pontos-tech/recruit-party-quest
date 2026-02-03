@@ -49,38 +49,47 @@
         </x-he4rt::button>
     </div>
 
-    <div class="space-y-2" wire:transition>
+    <div class="flex flex-col gap-8" wire:transition>
         @forelse ($this->applications as $application)
             <x-panel-app::jobs.job-card :job="$application->requisition">
                 <x-slot:footer>
+                    @php
+                        $visibleStages = $application->requisition->stages
+                            ->where('hidden', false)
+                            ->sortBy('display_order')
+                            ->values();
+                        $totalStages = $visibleStages->count();
+                        $currentStageOrder = $application->currentStage?->display_order ?? 0;
+                        $currentStageIndex = $visibleStages->search(fn ($s) => $s->id === $application->current_stage_id);
+                        $currentPosition = $currentStageIndex !== false ? $currentStageIndex + 1 : 1;
+                    @endphp
+
                     <div class="flex items-center justify-between">
-                        <div class="flex flex-col items-start gap-0.5">
-                            <span
-                                @class(['inline-flex w-fit items-center justify-center rounded-md px-1.5 py-0.5 text-[10px] font-medium whitespace-nowrap', $this->getStatusColor($application->status)])
+                        <div class="flex items-center gap-2">
+                            <x-he4rt::icon
+                                icon="fas-spinner"
+                                @class(['bg-transparent! group-hover:scale-110 group-hover:rotate-360 transition duration-700', $this->getStatusColor($application->status)])
+                            />
+                            <x-he4rt::text
+                                size="sm"
+                                @class(['bg-transparent!', $this->getStatusColor($application->status)])
                             >
+                                {{ __('panel-app::livewire/user-latest-applications.application_card.stage', ['current' => $currentPosition, 'total' => $totalStages]) }}
                                 {{ $application->status->getLabel() }}
-                            </span>
-                            <x-he4rt::text size="xs" class="text-text-low text-[10px]">
-                                {{ $application->currentStage?->name ?? __('panel-app::livewire/user-latest-applications.application_card.no_stage') }}
                             </x-he4rt::text>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <x-he4rt::tag
-                                icon="heroicon-o-calendar"
-                                variant="ghost"
-                                class="group-hover:text-text-high transition duration-500"
-                            >
-                                {{ __('panel-app::livewire/user-latest-applications.application_card.applied') }}
-                                {{ $application->created_at->format('d/m/Y') }}
-                            </x-he4rt::tag>
-                            <x-he4rt::button
-                                variant="outline"
-                                size="xs"
-                                icon="heroicon-o-chat-bubble-left-right"
-                                icon-position="leading"
-                            >
-                                {{ __('panel-app::livewire/user-latest-applications.application_card.view_job') }}
-                            </x-he4rt::button>
+
+                        <div class="flex items-center gap-1">
+                            @foreach ($visibleStages as $index => $stage)
+                                <div
+                                    @class([
+                                        'h-1 w-8 rounded-full',
+                                        'group-hover:animate-pulse' => $index < $currentPosition,
+                                        $this->getStatusBarColor($application->status) => $index < $currentPosition,
+                                        'border-outline-light dark:border-outline-dark bg-elevation-02dp border' => $index >= $currentPosition,
+                                    ])
+                                ></div>
+                            @endforeach
                         </div>
                     </div>
                 </x-slot>
