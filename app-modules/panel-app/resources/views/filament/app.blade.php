@@ -1,5 +1,5 @@
 <filament::page class="relative" full-height="true">
-    <div class="pointer-events-none absolute top-0 left-0 max-w-7xl">
+    <div class="pointer-events-none absolute top-0 left-0 -z-10 max-w-7xl">
         <img
             src="{{ asset('images/3pontos/hourglass.svg') }}"
             alt=""
@@ -7,33 +7,37 @@
         />
     </div>
 
-    <section class="relative overflow-hidden py-6 md:py-10">
-        <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-                <div>
-                    <x-he4rt::text class="mb-1">Welcome back</x-he4rt::text>
-                    <x-he4rt::heading size="xl">
-                        {{ auth()->user()->name }}
-                    </x-he4rt::heading>
-                </div>
-                <div class="flex flex-col gap-4 sm:flex-row">
-                    <x-he4rt::button variant="outline" size="sm" icon="heroicon-o-document-text">
-                        Update Resume
-                    </x-he4rt::button>
-                    <x-he4rt::button
-                        variant="solid"
-                        size="sm"
-                        icon="heroicon-o-sparkles"
-                        icon:trailing="heroicon-o-arrow-right"
-                    >
-                        AI Career Assistant
-                    </x-he4rt::button>
-                </div>
+    <section class="py-6 md:py-10">
+        <div
+            class="mx-auto flex max-w-7xl flex-col justify-between gap-4 px-4 sm:px-6 md:flex-row md:items-center lg:px-8"
+        >
+            <div>
+                <x-he4rt::text class="mb-1">Welcome back</x-he4rt::text>
+                <x-he4rt::heading size="xl">
+                    {{ auth()->user()->name }}
+                </x-he4rt::heading>
+            </div>
+            <div class="flex flex-col gap-4 sm:flex-row">
+                <x-he4rt::button variant="outline" size="sm" icon="heroicon-o-document-text">
+                    Update Resume
+                </x-he4rt::button>
+                <x-he4rt::button
+                    variant="solid"
+                    size="sm"
+                    icon="heroicon-o-sparkles"
+                    icon:trailing="heroicon-o-arrow-right"
+                >
+                    AI Career Assistant
+                </x-he4rt::button>
             </div>
         </div>
     </section>
 
-    <section class="py-4">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <hr class="border-outline-light dark:border-outline-dark" />
+    </div>
+
+    <section class="py-6 md:py-10">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="mb-5">
                 {{ $this->headerWidgets }}
