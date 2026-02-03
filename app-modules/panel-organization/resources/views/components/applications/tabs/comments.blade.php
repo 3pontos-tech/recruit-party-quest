@@ -13,8 +13,8 @@
         <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::ChatBubbleBottomCenterText" size="sm" />
     </div>
     <div>
-        <h3 class="text-text-high text-lg font-semibold">Comments</h3>
-        <p class="text-text-medium text-sm">Internal Comments</p>
+        <h3 class="text-text-high text-lg font-semibold">{{ __('panel-organization::view.tabs.comments.title') }}</h3>
+        <p class="text-text-medium text-sm">{{ __('panel-organization::view.tabs.comments.subtitle') }}</p>
     </div>
 </div>
 
@@ -28,7 +28,9 @@
                 </div>
                 <div>
                     <h3 class="text-text-high text-lg font-semibold">{{ $comment->author->name }}</h3>
-                    <p class="text-text-medium text-sm">Published at: {{ $comment->created_at }}</p>
+                    <p class="text-text-medium text-sm">
+                        {{ __('panel-organization::view.tabs.comments.published_at') . $comment->created_at }}
+                    </p>
                 </div>
             </div>
 

@@ -97,6 +97,11 @@ return [
             'title' => 'Cover Letter',
             'subtitle' => 'Personal message from candidate',
         ],
+        'comments' => [
+            'title' => 'Comments',
+            'subtitle' => 'Internal comments',
+            'published_at' => 'Published at: ',
+        ],
     ],
     'last_movement' => [
         'applied' => 'Application submitted',

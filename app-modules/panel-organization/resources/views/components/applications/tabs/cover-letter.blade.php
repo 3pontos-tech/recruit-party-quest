@@ -19,8 +19,12 @@
                     <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::DocumentText" size="sm" />
                 </div>
                 <div>
-                    <h3 class="text-text-high text-lg font-semibold">Cover Letter</h3>
-                    <p class="text-text-medium text-sm">Personal message from candidate</p>
+                    <h3 class="text-text-high text-lg font-semibold">
+                        {{ __('panel-organization::view.tabs.cover_letter.title') }}
+                    </h3>
+                    <p class="text-text-medium text-sm">
+                        {{ __('panel-organization::view.tabs.cover_letter.subtitle') }}
+                    </p>
                 </div>
             </div>
 
