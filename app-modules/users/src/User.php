@@ -10,6 +10,7 @@ use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
 use He4rt\Candidates\Models\Candidate;
+use He4rt\Links\HasLinks;
 use He4rt\Permissions\Permission;
 use He4rt\Permissions\Role;
 use He4rt\Permissions\Roles;
@@ -53,6 +54,7 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory;
+    use HasLinks;
     use HasRoles;
     use HasUuids;
     use InteractsWithInterviewStages;

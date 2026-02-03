@@ -50,6 +50,7 @@ use Spatie\Tags\HasTags;
  * @property Carbon|null $deleted_at
  * @property int $total_experience_months
  * @property string $total_experience_formatted
+ * @property int $profile_completion_percentage
  * @property-read User $user
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Application> $applications
  *
@@ -122,6 +123,46 @@ class Candidate extends BaseModel
         return $this->formatExperienceTime($months);
     }
 
+    public function calculateProfileCompletion(): int
+    {
+        $sections = $this->getProfileSections();
+        $totalCompletion = 0;
+
+        foreach ($sections as $section) {
+            $completedFields = count(array_filter($section['fields']));
+            $totalFields = count($section['fields']);
+            $sectionCompletion = $totalFields > 0 ? ($completedFields / $totalFields) : 0;
+            $totalCompletion += $sectionCompletion * $section['weight'];
+        }
+
+        return (int) round($totalCompletion);
+    }
+
+    /**
+     * @return array<string, array{weight: int, completed: bool, label: string}>
+     */
+    public function getMissingProfileSections(): array
+    {
+        $sections = $this->getProfileSections();
+        $missing = [];
+
+        foreach ($sections as $key => $section) {
+            $completedFields = count(array_filter($section['fields']));
+            $totalFields = count($section['fields']);
+            $isComplete = $completedFields === $totalFields;
+
+            if (! $isComplete) {
+                $missing[$key] = [
+                    'weight' => $section['weight'],
+                    'completed' => $isComplete,
+                    'label' => $section['label'],
+                ];
+            }
+        }
+
+        return $missing;
+    }
+
     /** @return Attribute<int, void> */
     protected function totalExperienceMonths(): Attribute
     {
@@ -140,6 +181,16 @@ class Candidate extends BaseModel
         );
     }
 
+    /**
+     * @return Attribute<int, void>
+     */
+    protected function profileCompletionPercentage(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->calculateProfileCompletion()
+        );
+    }
+
     protected function casts(): array
     {
         return [
@@ -152,6 +203,64 @@ class Candidate extends BaseModel
             'is_onboarded' => 'boolean',
             'data_consent_given' => 'boolean',
             'onboarding_completed_at' => 'datetime',
+        ];
+    }
+
+    /**
+     * @return array<string, array{weight: int, fields: array<bool>, label: string}>
+     */
+    private function getProfileSections(): array
+    {
+        return [
+            'basic_info' => [
+                'weight' => 20,
+                'label' => 'basic_info',
+                'fields' => [
+                    filled($this->user->name),
+                    filled($this->user->email),
+                    $this->phone_number !== null,
+                    $this->headline !== null,
+                ],
+            ],
+            'professional' => [
+                'weight' => 25,
+                'label' => 'professional',
+                'fields' => [
+                    $this->summary !== null,
+                    $this->experience_level !== null,
+                    $this->workExperiences()->count() >= 1,
+                ],
+            ],
+            'education' => [
+                'weight' => 15,
+                'label' => 'education',
+                'fields' => [
+                    $this->degrees()->count() >= 1,
+                ],
+            ],
+            'skills' => [
+                'weight' => 15,
+                'label' => 'skills',
+                'fields' => [
+                    $this->skills()->count() >= 3,
+                ],
+            ],
+            'preferences' => [
+                'weight' => 15,
+                'label' => 'preferences',
+                'fields' => [
+                    $this->expected_salary !== null,
+                    $this->availability_date !== null,
+                    $this->is_open_to_remote || $this->willing_to_relocate,
+                ],
+            ],
+            'links' => [
+                'weight' => 10,
+                'label' => 'links',
+                'fields' => [
+                    $this->user->links()->count() >= 2,
+                ],
+            ],
         ];
     }
 

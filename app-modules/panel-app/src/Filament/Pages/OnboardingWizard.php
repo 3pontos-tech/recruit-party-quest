@@ -89,8 +89,16 @@ class OnboardingWizard extends Page
 
     public function mount(): void
     {
-        $this->record = auth()->user()->candidate;
-        $this->user = auth()->user();
+        $user = auth()->user();
+
+        if (! $user) {
+            $this->redirect(route('filament.app.auth.login'));
+
+            return;
+        }
+
+        $this->record = $user->candidate;
+        $this->user = $user;
         $this->content->fill();
     }
 

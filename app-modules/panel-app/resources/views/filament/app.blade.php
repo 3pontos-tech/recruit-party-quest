@@ -1,92 +1,78 @@
-<filament::page>
-    <main class="flex-1 pt-8 sm:pt-16">
-        <section class="relative overflow-hidden py-6 md:py-10">
-            <div class="absolute inset-0 opacity-20">
-                <svg class="h-full w-full" viewBox="0 0 1200 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M0 200 Q 300 100 600 200 T 1200 200"
-                        stroke="currentColor"
-                        stroke-width="1"
-                        class="text-outline-low"
-                    ></path>
-                    <path
-                        d="M0 250 Q 300 150 600 250 T 1200 250"
-                        stroke="currentColor"
-                        stroke-width="1"
-                        class="text-outline-low"
-                    ></path>
-                    <path
-                        d="M0 150 Q 300 50 600 150 T 1200 150"
-                        stroke="currentColor"
-                        stroke-width="1"
-                        class="text-outline-low"
-                    ></path>
-                </svg>
-            </div>
-            <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-                    <div>
-                        <x-he4rt::heading level="1" size="md" class="mb-1">Welcome back, Maria!</x-he4rt::heading>
-                        <x-he4rt::text size="sm" class="text-text-medium">
-                            Financial Consultant | 5+ years of experience
-                        </x-he4rt::text>
-                    </div>
-                    <div class="flex flex-col gap-2 sm:flex-row">
-                        <x-he4rt::button variant="outline" size="sm" icon="heroicon-o-document-text">
-                            Update Resume
-                        </x-he4rt::button>
-                        <x-he4rt::button
-                            variant="solid"
-                            size="sm"
-                            icon="heroicon-o-sparkles"
-                            icon:trailing="heroicon-o-arrow-right"
-                        >
-                            AI Career Assistant
-                        </x-he4rt::button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="py-4">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                    {{-- Left side: Header widgets (2/3 width on large screens) --}}
-                    <div class="lg:col-span-2">
-                        <div class="mb-5">
-                            {{ $this->headerWidgets }}
-                        </div>
-                    </div>
-
-                    {{-- Right side: Profile overview (1/3 width on large screens) --}}
-                    <div>
-                        <livewire:user-profile-overview />
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="py-6">
-            <livewire:user-latest-applications />
-        </section>
-        <x-he4rt::partials.footer
-            logoPath="images/3pontos/logo.svg"
-            logoSize="sm"
-            description="Somos o ecossistema que une solução e conhecimento em um único lugar. Aceleramos sua empresa. Fortalecemos sua carreira."
-            company="3 Pontos"
-            :columns="[
-                'Navegação' => [
-                    'Home' => '#',
-                    'Missão social' => '#social-action',
-                    'Comunidade' => '#community',
-                    'Propósito' => '#meet-up',
-                    'Palestrantes' => '#speakers',
-                    'Lineup' => '#lineup',
-                    'Ao vivo' => '#watch-live',
-                    'Parceiros' => '#partners',
-                    'Saiba mais' => '#about',
-                ]
-            ]"
+<filament::page full-height="true">
+    <div class="pointer-events-none absolute top-0 left-0 -z-10 max-w-7xl">
+        <img
+            src="{{ asset('images/3pontos/hourglass.svg') }}"
+            alt=""
+            class="h-auto w-full -translate-x-1/3 -translate-y-1/3"
         />
-    </main>
+    </div>
+
+    <section class="py-6 md:py-10">
+        <div
+            class="mx-auto flex max-w-7xl flex-col justify-between gap-4 px-4 sm:px-6 md:flex-row md:items-center lg:px-8"
+        >
+            <div>
+                <x-he4rt::text class="mb-1">Welcome back</x-he4rt::text>
+                <x-he4rt::heading size="xl">
+                    {{ auth()->user()->name }}
+                </x-he4rt::heading>
+            </div>
+            <div class="flex flex-col gap-4 sm:flex-row">
+                <x-he4rt::button variant="outline" size="sm" icon="heroicon-o-document-text">
+                    Update Resume
+                </x-he4rt::button>
+                <x-he4rt::button
+                    variant="solid"
+                    size="sm"
+                    icon="heroicon-o-sparkles"
+                    icon:trailing="heroicon-o-arrow-right"
+                >
+                    AI Career Assistant
+                </x-he4rt::button>
+            </div>
+        </div>
+    </section>
+
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <hr class="border-outline-light dark:border-outline-dark" />
+    </div>
+
+    <section class="py-6 md:py-10">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="mb-5">
+                {{ $this->headerWidgets }}
+            </div>
+        </div>
+    </section>
+
+    <section class="pb-6 md:pb-10">
+        <div class="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 sm:px-6 lg:grid-cols-[1fr_400px] lg:px-8">
+            <div class="order-2 lg:order-1">
+                <livewire:user-latest-applications />
+            </div>
+            <div class="order-1 lg:order-2">
+                <livewire:profile-card />
+            </div>
+        </div>
+    </section>
+
+    <x-he4rt::partials.footer
+        logoPath="images/3pontos/logo.svg"
+        logoSize="sm"
+        description="Somos o ecossistema que une solução e conhecimento em um único lugar. Aceleramos sua empresa. Fortalecemos sua carreira."
+        company="3 Pontos"
+        :columns="[
+            'Navegação' => [
+                'Home' => '#',
+                'Missão social' => '#social-action',
+                'Comunidade' => '#community',
+                'Propósito' => '#meet-up',
+                'Palestrantes' => '#speakers',
+                'Lineup' => '#lineup',
+                'Ao vivo' => '#watch-live',
+                'Parceiros' => '#partners',
+                'Saiba mais' => '#about',
+            ]
+        ]"
+    />
 </filament::page>
