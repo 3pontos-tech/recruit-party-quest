@@ -49,7 +49,7 @@
         <div class="border-text-low/20 mb-4 flex justify-between border-b pb-4">
             <div class="flex flex-col items-center gap-6 sm:flex-row">
                 {{-- Profile Photo Placeholder --}}
-                <div class="flex h-100 w-100 shrink-0 items-center justify-center overflow-hidden rounded-full">
+                <div class="flex h-40 w-40 shrink-0 items-center justify-center overflow-hidden rounded-full">
                     <img
                         src="https://placehold.co/100/black/ffffff?text={{ $initials }}"
                         class="h-40 w-40"

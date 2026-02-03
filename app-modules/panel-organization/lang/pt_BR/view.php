@@ -109,4 +109,11 @@ return [
         'immediate' => 'Imediato',
         'available_from' => 'Disponível a partir de :date',
     ],
+    'proficiency' => [
+        1 => 'Iniciante',
+        2 => 'Básico',
+        3 => 'Intermediário',
+        4 => 'Avançado',
+        5 => 'Especialista',
+    ],
 ];
