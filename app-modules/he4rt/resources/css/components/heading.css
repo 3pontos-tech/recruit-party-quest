@@ -28,7 +28,7 @@
 }
 
 .hp-heading-size-xl {
-    @apply text-xl sm:text-3xl md:text-2xl lg:text-3xl xl:text-4xl;
+    @apply text-4xl;
 }
 
 .hp-heading-size-2xl {
