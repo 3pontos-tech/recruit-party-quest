@@ -9,6 +9,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Enums\Width;
@@ -59,10 +60,11 @@ class GenerateJobRequisitionAction extends Action
                 ]);
 
                 dispatch(new GeneratePostJob($dto));
-                //                Notification::make()
-                //                    ->danger()
-                //                    ->title('User rejected successfully')
-                //                    ->send();
+
+                Notification::make()
+                    ->success()
+                    ->title(__('recruitment::filament.requisition.job_posting.notifications.generating'))
+                    ->send();
             });
     }
 

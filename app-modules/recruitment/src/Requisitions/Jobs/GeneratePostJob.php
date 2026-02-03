@@ -36,9 +36,7 @@ class GeneratePostJob implements ShouldQueue
 
         Notification::make()
             ->success()
-            ->title('Job Saved Successfully')
+            ->title(__('recruitment::filament.requisition.job_posting.notifications.successful'))
             ->broadcast($notifiable);
-        // may handle right there tha something went wrong
-        // receives $result and then dispatch an event, on dispatching the event creates the JobRequisition, and then dispatch another event to notify the creator that was successfully or not
     }
 }

@@ -74,8 +74,6 @@ return [
         'plural_label' => 'Job Requisitions',
         'navigation_label' => 'Job Requisitions',
         'tabs' => [
-            'details' => 'Details',
-            'screening_questions' => 'Screening Questions',
             'basic_information' => 'Basic Information',
             'position_details' => 'Position Details',
             'job_description' => 'Job Description',
@@ -163,6 +161,11 @@ return [
             ],
             'helpers' => [
                 'one_per_line' => 'Enter one item per line',
+            ],
+            'notifications' => [
+                'successful' => 'Job Saved Successfully',
+                'generating' => "We're generating your job post, wait a few seconds",
+                'failed' => 'Something went wrong',
             ],
         ],
         'filters' => [

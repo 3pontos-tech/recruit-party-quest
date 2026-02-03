@@ -63,7 +63,7 @@ class GenerateJobRequisition
 
             return Notification::make()
                 ->danger()
-                ->title('Something went wrong')
+                ->title(__('recruitment::filament.requisition.job_posting.notifications.failed'))
                 ->broadcast($notifiable);
         }
 

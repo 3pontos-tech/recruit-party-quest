@@ -160,6 +160,11 @@ return [
             'helpers' => [
                 'one_per_line' => 'Digite um item por linha',
             ],
+            'notifications' => [
+                'successful' => 'Vaga criada com sucesso.',
+                'generating' => 'Estamos gerando sua vaga, aguarde alguns segundos.',
+                'failed' => 'Algo deu Errado, vaga não foi gerada.',
+            ],
         ],
         'filters' => [
             'status' => 'Status',

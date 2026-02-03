@@ -50,6 +50,5 @@ final class StoreJobRequisitionAction
         ]);
 
         resolve(CreateJobPostingAction::class)->execute($jobPostingDTO);
-        // dispatch event
     }
 }
