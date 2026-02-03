@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace He4rt\Recruitment\Requisitions\Actions\AiJobRequisition;
 
+use Exception;
+use Filament\Notifications\Notification;
 use He4rt\Recruitment\Requisitions\DTOs\JobRequisitionDTO;
 use He4rt\Recruitment\Requisitions\Enums\JobRequisitionItemTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
+use He4rt\Users\User;
 use Prism\Prism\Facades\Prism;
 use Prism\Prism\Schema\ArraySchema;
 use Prism\Prism\Schema\ObjectSchema;
@@ -14,17 +17,20 @@ use Prism\Prism\Schema\StringSchema;
 
 class GenerateJobRequisition
 {
-    public function execute(GenerateJobRequisitionDTO $dto): JobRequisitionDTO
+    public function execute(GenerateJobRequisitionDTO $dto): JobRequisitionDTO|Notification
     {
-        $response = Prism::structured()
-            ->using(config('ai.provider.gemini.enum'), config('ai.provider.gemini.model'))
-            ->withSchema($this->structureSchema())
-            ->withPrompt(
-                <<<PROMPT
+        try {
+            $response = Prism::structured()
+                ->using(config('ai.provider.gemini.enum'), config('ai.provider.gemini.model'))
+                ->withSchema($this->structureSchema())
+                ->withPrompt(
+                    <<<PROMPT
                         Contexto da empresa:
                         {$dto->companyDescription}
 
                         Dados da vaga:
+                        - Título da Vaga: {$dto->title}
+                        - Descrição da Vaga: {$dto->description}
                         - Nível de experiência: {$dto->experienceLevel->value}
                         - Tipo de contratação: {$dto->employmentType->value}
                         - Regime de trabalho: {$dto->workArrangement->value}
@@ -32,25 +38,35 @@ class GenerateJobRequisition
 
                         Gere o conteúdo completo da vaga com base nessas informações.
                         PROMPT
-            )
-            ->asStructured();
-        $response = $response->structured;
+                )
+                ->asStructured();
+            $response = $response->structured;
 
-        return JobRequisitionDTO::make([
-            'title' => $response['title'],
-            'slug' => $response['title'],
-            'description' => $response['description'],
-            'department_id' => $dto->departmentId,
-            'team_id' => $dto->teamId,
-            'recruiter_id' => $dto->recruiterId,
-            'experience_level' => $dto->experienceLevel,
-            'employment_type' => $dto->employmentType,
-            'work_arrangement' => $dto->workArrangement,
-            'priority' => $dto->priority,
-            'status' => RequisitionStatusEnum::Draft,
-            'summary' => $response['summary'],
-            'items' => $response['items'],
-        ]);
+            return JobRequisitionDTO::make([
+                'title' => $response['title'],
+                'slug' => $response['title'],
+                'description' => $response['description'],
+                'department_id' => $dto->departmentId,
+                'team_id' => $dto->teamId,
+                'recruiter_id' => $dto->recruiterId,
+                'experience_level' => $dto->experienceLevel,
+                'employment_type' => $dto->employmentType,
+                'work_arrangement' => $dto->workArrangement,
+                'priority' => $dto->priority,
+                'status' => RequisitionStatusEnum::Draft,
+                'summary' => $response['summary'],
+                'created_by' => $dto->createdBy,
+                'items' => $response['items'],
+            ]);
+        } catch (Exception) {
+            $notifiable = User::whereId($dto->createdBy)->first();
+
+            return Notification::make()
+                ->danger()
+                ->title('Something went wrong')
+                ->broadcast($notifiable);
+        }
+
     }
 
     private function structureSchema(): ObjectSchema

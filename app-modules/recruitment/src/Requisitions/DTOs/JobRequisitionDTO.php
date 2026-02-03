@@ -27,6 +27,7 @@ final readonly class JobRequisitionDTO
         public ?RequisitionPriorityEnum $priority,
         public RequisitionStatusEnum $status,
         public string $summary,
+        public string $createdBy,
 
         /** @var JobRequisitionItemDTO[] */
         public array $items,
@@ -50,6 +51,7 @@ final readonly class JobRequisitionDTO
             priority: $data['priority'] ?? null,
             status: $data['status'],
             summary: $data['summary'],
+            createdBy: $data['created_by'],
             items: self::mapItems($data['items']),
         );
     }

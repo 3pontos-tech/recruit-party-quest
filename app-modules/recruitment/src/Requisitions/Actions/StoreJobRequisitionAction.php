@@ -13,7 +13,7 @@ final class StoreJobRequisitionAction
 {
     public function execute(JobRequisitionDTO $dto): void
     {
-        $recruiter = Recruiter::query()->find($dto->recruiterId);
+        Recruiter::query()->find($dto->recruiterId);
         $jobRequisition = JobRequisition::query()->create([
             'slug' => $dto->slug,
             'team_id' => $dto->teamId,
@@ -25,7 +25,7 @@ final class StoreJobRequisitionAction
             'positions_available' => 1,
             'show_salary_to_candidates' => false,
             'recruiter_id' => $dto->recruiterId,
-            'created_by_id' => $recruiter->user_id,
+            'created_by_id' => $dto->createdBy,
             'status' => $dto->status,
             'priority' => $dto->priority,
             'is_confidential' => false,

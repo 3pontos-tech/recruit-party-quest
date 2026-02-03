@@ -26,6 +26,8 @@ final readonly class GenerateJobRequisitionDTO implements JsonSerializable
         public string $companyDescription,
         public string $departmentId,
         public string $teamId,
+        public string $createdBy,
+
     ) {}
 
     /**
@@ -45,7 +47,8 @@ final readonly class GenerateJobRequisitionDTO implements JsonSerializable
             recruiterId: $data['recruiter_id'],
             companyDescription: $data['company_description'],
             departmentId: $data['department_id'],
-            teamId: $data['team_id']
+            teamId: $data['team_id'],
+            createdBy: $data['created_by']
         );
     }
 

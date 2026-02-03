@@ -18,7 +18,7 @@ use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
-use He4rt\Recruitment\Requisitions\Jobs\GenerateDescriptionJob;
+use He4rt\Recruitment\Requisitions\Jobs\GeneratePostJob;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Teams\Team;
 use Illuminate\Database\Eloquent\Builder;
@@ -52,12 +52,13 @@ class GenerateJobRequisitionAction extends Action
                     'experience_level' => $data['experience_level']->value,
                     'priority' => $data['priority']->value,
                     'recruiter_id' => $data['recruiter_id'],
+                    'created_by' => auth()->user()->getKey(),
                     'company_description' => $team->about,
                     'department_id' => $data['department_id'],
                     'team_id' => $team->getKey(),
                 ]);
 
-                dispatch(new GenerateDescriptionJob($dto));
+                dispatch(new GeneratePostJob($dto));
                 //                Notification::make()
                 //                    ->danger()
                 //                    ->title('User rejected successfully')
