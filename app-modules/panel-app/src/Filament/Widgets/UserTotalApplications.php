@@ -11,6 +11,8 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class UserTotalApplications extends StatsOverviewWidget
 {
+    protected ?string $pollingInterval = '10s';
+
     protected function getStats(): array
     {
         // TODO: o numero na descrição deve ser dinâmico.
