@@ -9,7 +9,7 @@
                     ['label' => 'Rejected', 'value' => '4', 'icon' => 'heroicon-o-x-circle', 'color' => 'text-red-500']
                 ]
                 as $status)
-                <div class="bg-elevation-01dp flex items-center gap-2.5 rounded-lg p-2">
+                <div class="bg-elevation-01dp/64 flex items-center gap-2.5 rounded-lg p-2">
                     <x-he4rt::icon :icon="$status['icon']" :class="$status['color']" />
                     <div class="min-w-0">
                         <x-he4rt::text size="sm" class="text-text-high leading-none font-semibold">
