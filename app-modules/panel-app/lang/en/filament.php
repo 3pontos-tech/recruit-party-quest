@@ -41,11 +41,20 @@ return [
         'empty' => 'No stage history available.',
     ],
     'widgets' => [
-        'user_total_applications' => [
-            'unique_views' => 'Unique views',
-            'unique_views_description' => '32k increase',
-            'bounce_rate' => 'Bounce rate',
-            'bounce_rate_description' => '7% decrease',
+        'user_stats' => [
+            'total_applications' => 'Total Applications',
+            'total_applications_description' => 'All time applications',
+            'active_applications' => 'Active',
+            'active_applications_description' => 'In progress',
+            'offers_received' => 'Offers',
+            'offers_received_description' => 'Offers received',
+        ],
+        'user_breakdown' => [
+            'title' => 'Application Status Breakdown',
+            'in_review' => 'In Review',
+            'interview' => 'Interview',
+            'offer' => 'Offer',
+            'rejected' => 'Rejected',
         ],
     ],
 ];

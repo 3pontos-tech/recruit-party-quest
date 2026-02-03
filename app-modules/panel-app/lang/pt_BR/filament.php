@@ -41,11 +41,20 @@ return [
         'empty' => 'Nenhum histórico de fases disponível.',
     ],
     'widgets' => [
-        'user_total_applications' => [
-            'unique_views' => 'Visualizações únicas',
-            'unique_views_description' => '32k de aumento',
-            'bounce_rate' => 'Taxa de rejeição',
-            'bounce_rate_description' => '7% de queda',
+        'user_stats' => [
+            'total_applications' => 'Total de Candidaturas',
+            'total_applications_description' => 'Todas as candidaturas',
+            'active_applications' => 'Ativas',
+            'active_applications_description' => 'Em andamento',
+            'offers_received' => 'Propostas',
+            'offers_received_description' => 'Propostas recebidas',
+        ],
+        'user_breakdown' => [
+            'title' => 'Resumo por Status',
+            'in_review' => 'Em Análise',
+            'interview' => 'Entrevista',
+            'offer' => 'Proposta',
+            'rejected' => 'Rejeitadas',
         ],
     ],
 ];

@@ -1,5 +1,6 @@
 @props([
     'job',
+    'footer' => null,
 ])
 
 @php
@@ -85,21 +86,25 @@
     </x-slot>
 
     <x-slot:footer>
-        <div class="flex items-center justify-between">
-            <x-he4rt::tag
-                icon="heroicon-o-user"
-                variant="ghost"
-                class="group-hover:text-text-high gap-2 transition duration-500"
-            >
-                {{ $job->applications_count }} aplicações
-            </x-he4rt::tag>
-            <x-he4rt::tag
-                icon="heroicon-o-clock"
-                variant="ghost"
-                class="group-hover:text-text-high gap-2 transition duration-500"
-            >
-                {{ $job->created_at->format('d/m/Y') }}
-            </x-he4rt::tag>
-        </div>
+        @if ($footer)
+            {{ $footer }}
+        @else
+            <div class="flex items-center justify-between">
+                <x-he4rt::tag
+                    icon="heroicon-o-user"
+                    variant="ghost"
+                    class="group-hover:text-text-high gap-2 transition duration-500"
+                >
+                    {{ $job->applications_count }} aplicações
+                </x-he4rt::tag>
+                <x-he4rt::tag
+                    icon="heroicon-o-clock"
+                    variant="ghost"
+                    class="group-hover:text-text-high gap-2 transition duration-500"
+                >
+                    {{ $job->created_at->format('d/m/Y') }}
+                </x-he4rt::tag>
+            </div>
+        @endif
     </x-slot>
 </x-he4rt::card>

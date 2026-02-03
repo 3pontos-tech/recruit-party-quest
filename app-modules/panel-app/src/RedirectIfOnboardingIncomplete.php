@@ -17,11 +17,11 @@ class RedirectIfOnboardingIncomplete
             return $next($request);
         }
 
-        /** @var Candidate $candidate */
+        /** @var ?Candidate $candidate */
         $candidate = $request->user()->candidate;
         $isOnboarding = $request->route()->uri === 'onboarding';
 
-        if (! $candidate->hasCompletedOnboarding() && ! $isOnboarding) {
+        if ((! $candidate || ! $candidate->hasCompletedOnboarding()) && ! $isOnboarding) {
             return redirect(route('filament.app.pages.onboarding'));
         }
 

@@ -47,28 +47,6 @@
             {{ $this->content }}
 
             <div class="flex flex-col gap-8">
-                <x-he4rt::text class="text-center">Voce também pode fazer login utilizando:</x-he4rt::text>
-
-                <div class="hidden grid-cols-3 gap-8 md:grid">
-                    <x-he4rt::button icon="fab-google" variant="outline" class="px-1 font-bold">
-                        Entrar com google
-                    </x-he4rt::button>
-
-                    <x-he4rt::button icon="fab-github" variant="outline" class="px-1 font-bold">
-                        Entrar com Github
-                    </x-he4rt::button>
-
-                    <x-he4rt::button icon="fab-linkedin" variant="outline" class="px-1 font-bold">
-                        Entrar com LinkedIn
-                    </x-he4rt::button>
-                </div>
-
-                <div class="flex items-center justify-center gap-8 md:hidden">
-                    <x-he4rt::button icon="fab-google" variant="outline" size="lg" />
-                    <x-he4rt::button icon="fab-github" variant="outline" size="lg" />
-                    <x-he4rt::button icon="fab-linkedin" variant="outline" size="lg" />
-                </div>
-
                 <div class="flex flex-col items-center justify-center gap-1 md:flex-row">
                     <x-he4rt::text>Não possui uma conta?</x-he4rt::text>
                     <a class="group" href="{{ route('filament.app.auth.register') }}">

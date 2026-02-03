@@ -82,15 +82,18 @@ class OnboardingWizard extends Page
 
     protected static ?int $navigationSort = -1;
 
-    public static function canAccess(): bool
-    {
-        return true;
-    }
-
     public function mount(): void
     {
-        $this->record = auth()->user()->candidate;
-        $this->user = auth()->user();
+        $user = auth()->user();
+
+        if (! $user) {
+            $this->redirect(route('filament.app.auth.login'));
+
+            return;
+        }
+
+        $this->user = $user;
+        $this->record = $user->candidate;
         $this->content->fill();
     }
 

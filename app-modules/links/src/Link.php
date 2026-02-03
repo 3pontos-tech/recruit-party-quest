@@ -15,6 +15,8 @@ use Illuminate\Support\Str;
  * @property string $name
  * @property string $url
  * @property string|null $icon
+ * @property LinkTypeEnum|null $type
+ * @property int|null $order_column
  *
  * @extends BaseModel<LinkFactory>
  */

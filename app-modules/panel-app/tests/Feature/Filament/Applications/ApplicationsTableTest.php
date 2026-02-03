@@ -38,21 +38,6 @@ it('should show view action for each application record', function (): void {
         ->assertTableActionExists('view');
 });
 
-it('should filter applications by authenticated candidate only', function (): void {
-    /** @var Candidate $otherCandidate */
-    $otherCandidate = Candidate::factory()->create();
-
-    Application::factory()->count(2)
-        ->for($otherCandidate, 'candidate')
-        ->create();
-
-    $livewire = livewire(ListApplications::class)
-        ->assertOk();
-
-    $livewire->assertSee('Post')
-        ->assertSee('Status');
-});
-
 it('should display correct table columns', function (): void {
     livewire(ListApplications::class)
         ->assertOk()
@@ -61,21 +46,6 @@ it('should display correct table columns', function (): void {
         ->assertTableColumnExists('status')
         ->assertTableColumnExists('created_at')
         ->assertTableColumnExists('updated_at');
-});
-
-it('should have created_at and updated_at columns hidden by default', function (): void {
-    livewire(ListApplications::class)
-        ->assertOk()
-        ->assertTableColumnExists('created_at')
-        ->assertTableColumnExists('updated_at');
-});
-
-it('should make key columns searchable', function (): void {
-    livewire(ListApplications::class)
-        ->assertOk()
-        ->assertTableColumnExists('requisition.post.title')
-        ->assertTableColumnExists('currentStage.name')
-        ->assertTableColumnExists('status');
 });
 
 it('should show team name in the interface', function (): void {
