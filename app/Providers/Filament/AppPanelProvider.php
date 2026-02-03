@@ -85,10 +85,7 @@ class AppPanelProvider extends PanelProvider
             ])
             ->plugins([
                 BreezyCore::make()
-                    ->myProfile(
-                        shouldRegisterUserMenu: true,
-                        hasAvatars: false,
-                    )
+                    ->myProfile()
                     ->myProfileComponents([
                         'candidate_profile_info' => CandidateProfileInfo::class,
                         'candidate_preferences' => CandidatePreferences::class,
@@ -101,15 +98,18 @@ class AppPanelProvider extends PanelProvider
                     ->providers([
                         Provider::make('google')
                             ->label('Google')
+                            ->visible(config('services.google.client_id') && config('services.google.client_secret'))
                             ->icon('fab-google'),
                         Provider::make('github')
                             ->label('GitHub')
+                            ->visible(config('services.github.client_id') && config('services.github.client_secret'))
                             ->icon('fab-github'),
                         Provider::make('linkedin-openid')
                             ->label('LinkedIn')
+                            ->visible(config('services.linkedin-openid.client_id') && config('services.linkedin-openid.client_secret'))
                             ->icon('fab-linkedin'),
                     ])
-                    ->registration(true)
+                    ->registration()
                     ->userModelClass(User::class),
             ])
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'He4rt\App\Filament\Widgets')
