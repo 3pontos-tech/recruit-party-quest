@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Enums\FilamentPanel;
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
+use DutchCodingCompany\FilamentSocialite\Provider;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
@@ -20,6 +22,7 @@ use He4rt\App\Livewire\MyProfile\CandidateProfileInfo;
 use He4rt\App\Livewire\MyProfile\CandidateSkills;
 use He4rt\App\Livewire\MyProfile\CandidateWorkExperience;
 use He4rt\App\RedirectIfOnboardingIncomplete;
+use He4rt\Users\User;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -82,10 +85,7 @@ class AppPanelProvider extends PanelProvider
             ])
             ->plugins([
                 BreezyCore::make()
-                    ->myProfile(
-                        shouldRegisterUserMenu: true,
-                        hasAvatars: false,
-                    )
+                    ->myProfile()
                     ->myProfileComponents([
                         'candidate_profile_info' => CandidateProfileInfo::class,
                         'candidate_preferences' => CandidatePreferences::class,
@@ -94,6 +94,23 @@ class AppPanelProvider extends PanelProvider
                         'candidate_skills' => CandidateSkills::class,
                     ])
                     ->enableBrowserSessions(),
+                FilamentSocialitePlugin::make()
+                    ->providers([
+                        Provider::make('google')
+                            ->label('Google')
+                            ->visible(config('services.google.client_id') && config('services.google.client_secret'))
+                            ->icon('fab-google'),
+                        Provider::make('github')
+                            ->label('GitHub')
+                            ->visible(config('services.github.client_id') && config('services.github.client_secret'))
+                            ->icon('fab-github'),
+                        Provider::make('linkedin-openid')
+                            ->label('LinkedIn')
+                            ->visible(config('services.linkedin-openid.client_id') && config('services.linkedin-openid.client_secret'))
+                            ->icon('fab-linkedin'),
+                    ])
+                    ->registration()
+                    ->userModelClass(User::class),
             ])
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'He4rt\App\Filament\Widgets')
             ->globalSearch(false)

@@ -13,10 +13,13 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Schema\Builder;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use SocialiteProviders\Discord\Provider;
+use SocialiteProviders\Manager\SocialiteWasCalled;
 
 final class AppServiceProvider extends ServiceProvider
 {
@@ -40,6 +43,7 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureVite();
         $this->configureUrl();
         $this->configureHttp();
+        $this->configureSocialite();
     }
 
     /**
@@ -97,6 +101,16 @@ final class AppServiceProvider extends ServiceProvider
         if ($this->app->runningUnitTests()) {
             Http::preventStrayRequests();
         }
+    }
+
+    /**
+     * Configure Socialite providers
+     */
+    private function configureSocialite(): void
+    {
+        Event::listen(function (SocialiteWasCalled $event): void {
+            $event->extendSocialite('discord', Provider::class);
+        });
     }
 
     private function registerDebugbar(): void
