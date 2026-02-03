@@ -216,8 +216,8 @@ class Candidate extends BaseModel
                 'weight' => 20,
                 'label' => 'basic_info',
                 'fields' => [
-                    $this->user->name !== null,
-                    $this->user->email !== null,
+                    filled($this->user->name),
+                    filled($this->user->email),
                     $this->phone_number !== null,
                     $this->headline !== null,
                 ],
@@ -251,7 +251,7 @@ class Candidate extends BaseModel
                 'fields' => [
                     $this->expected_salary !== null,
                     $this->availability_date !== null,
-                    $this->is_open_to_remote !== null || $this->willing_to_relocate !== null,
+                    $this->is_open_to_remote || $this->willing_to_relocate,
                 ],
             ],
             'links' => [

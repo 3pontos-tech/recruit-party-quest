@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\App\Livewire;
 
+use He4rt\Links\Link;
 use He4rt\Links\LinkTypeEnum;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -18,19 +19,23 @@ class ProfileCard extends Component
         $links = $user->links;
         $candidate = $user->candidate;
 
+        /** @var Collection<string, Collection<int, Link>> $groupedLinks */
         $groupedLinks = $links->groupBy(fn ($link) => $link->type->value);
 
         return view('panel-app::livewire.profile-card', [
             'contactLinks' => $this->getContactLinks($groupedLinks),
             'socialLinks' => $this->getSocialLinks($groupedLinks),
             'candidate' => $candidate,
-            'profileCompletionPercentage' => $candidate?->profile_completion_percentage ?? 0,
-            'missingSections' => $candidate?->getMissingProfileSections() ?? [],
+            'profileCompletionPercentage' => $candidate->profile_completion_percentage ?? 0,
+            'missingSections' => $candidate ? $candidate->getMissingProfileSections() : [],
         ]);
     }
 
     /**
      * Returns contact-type links (Email, Phone).
+     *
+     * @param  Collection<string, Collection<int, Link>>  $groupedLinks
+     * @return Collection<int, Link>
      */
     private function getContactLinks(Collection $groupedLinks): Collection
     {
@@ -42,6 +47,9 @@ class ProfileCard extends Component
 
     /**
      * Returns social/external links (Social, Website, External).
+     *
+     * @param  Collection<string, Collection<int, Link>>  $groupedLinks
+     * @return Collection<int, Link>
      */
     private function getSocialLinks(Collection $groupedLinks): Collection
     {
