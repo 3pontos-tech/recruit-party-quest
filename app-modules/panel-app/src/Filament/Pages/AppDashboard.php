@@ -8,7 +8,6 @@ use Filament\Pages\Dashboard;
 use Filament\Support\Enums\Width;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
-use He4rt\App\Filament\Widgets\UserApplicationsBreakdown;
 use He4rt\App\Filament\Widgets\UserTotalApplications;
 use Illuminate\Support\Facades\Blade;
 
@@ -45,7 +44,7 @@ class AppDashboard extends Dashboard
         if (auth()->check()) {
             return [
                 UserTotalApplications::make(),
-                UserApplicationsBreakdown::make(),
+                // UserApplicationsBreakdown::make(),
             ];
         }
 
