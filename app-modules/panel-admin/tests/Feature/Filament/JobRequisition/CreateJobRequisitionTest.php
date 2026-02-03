@@ -41,7 +41,7 @@ beforeEach(function (): void {
         ->create();
 });
 
-it('should render ', function (): void {
+it('should render Create Job Requisition Page', function (): void {
     livewire(CreateJobRequisition::class)
         ->assertOk();
 });
