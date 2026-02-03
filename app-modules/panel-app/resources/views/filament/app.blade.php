@@ -47,8 +47,12 @@
 
     <section class="pb-6 md:pb-10">
         <div class="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 sm:px-6 lg:grid-cols-[1fr_400px] lg:px-8">
-            <livewire:user-latest-applications />
-            <livewire:profile-card />
+            <div class="order-2 lg:order-1">
+                <livewire:user-latest-applications />
+            </div>
+            <div class="order-1 lg:order-2">
+                <livewire:profile-card />
+            </div>
         </div>
     </section>
 

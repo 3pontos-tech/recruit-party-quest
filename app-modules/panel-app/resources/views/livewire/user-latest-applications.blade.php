@@ -1,6 +1,6 @@
 <div>
-    <div class="mb-4 flex flex-col justify-between gap-4 md:flex-row md:items-center">
-        <div class="flex flex-col gap-4">
+    <div class="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center">
+        <div class="flex flex-col gap-2">
             <x-he4rt::heading level="2" size="sm">
                 {{ __('panel-app::livewire/user-latest-applications.title') }}
             </x-he4rt::heading>
@@ -18,31 +18,31 @@
         </div>
     </div>
 
-    <div class="no-scrollbar mb-4 flex items-center gap-2 overflow-x-auto pb-1">
+    <div class="no-scrollbar mb-8 flex items-center gap-2 overflow-x-auto pb-1">
         <x-he4rt::button
             variant="{{ $statusFilter === null ? 'solid' : 'outline' }}"
-            size="xs"
+            size="sm"
             wire:click="filterByStatus(null)"
         >
             {{ __('panel-app::livewire/user-latest-applications.filters.all') }}
         </x-he4rt::button>
         <x-he4rt::button
             variant="{{ $statusFilter === 'in_review' ? 'solid' : 'outline' }}"
-            size="xs"
+            size="sm"
             wire:click="filterByStatus('in_review')"
         >
             {{ __('panel-app::livewire/user-latest-applications.filters.in_review') }}
         </x-he4rt::button>
         <x-he4rt::button
             variant="{{ $statusFilter === 'interview' ? 'solid' : 'outline' }}"
-            size="xs"
+            size="sm"
             wire:click="filterByStatus('interview')"
         >
             {{ __('panel-app::livewire/user-latest-applications.filters.interview') }}
         </x-he4rt::button>
         <x-he4rt::button
             variant="{{ $statusFilter === 'offer' ? 'solid' : 'outline' }}"
-            size="xs"
+            size="sm"
             wire:click="filterByStatus('offer')"
         >
             {{ __('panel-app::livewire/user-latest-applications.filters.offer') }}
@@ -68,7 +68,7 @@
                         <div class="flex items-center gap-2">
                             <x-he4rt::icon
                                 icon="fas-spinner"
-                                @class(['bg-transparent! group-hover:scale-110 group-hover:rotate-360 transition duration-700', $this->getStatusColor($application->status)])
+                                @class(['bg-transparent! group-hover:scale-110 group-hover:rotate-360 transition duration-1000', $this->getStatusColor($application->status)])
                             />
                             <x-he4rt::text
                                 size="sm"
@@ -79,11 +79,11 @@
                             </x-he4rt::text>
                         </div>
 
-                        <div class="flex items-center gap-1">
+                        <div class="flex items-center gap-2">
                             @foreach ($visibleStages as $index => $stage)
                                 <div
                                     @class([
-                                        'h-1 w-8 rounded-full',
+                                        'h-1 w-12 rounded-full',
                                         'group-hover:animate-pulse' => $index < $currentPosition,
                                         $this->getStatusBarColor($application->status) => $index < $currentPosition,
                                         'border-outline-light dark:border-outline-dark bg-elevation-02dp border' => $index >= $currentPosition,
