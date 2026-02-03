@@ -1,4 +1,4 @@
-<filament::page class="relative" full-height="true">
+<filament::page full-height="true">
     <div class="pointer-events-none absolute top-0 left-0 -z-10 max-w-7xl">
         <img
             src="{{ asset('images/3pontos/hourglass.svg') }}"
