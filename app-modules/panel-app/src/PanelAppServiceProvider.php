@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\App;
 
 use He4rt\App\Livewire\JobRecommendations;
+use He4rt\App\Livewire\ProfileCard;
 use He4rt\App\Livewire\ResumeFileUploadProgress;
 use He4rt\App\Livewire\SearchJobs;
 use He4rt\App\Livewire\UserLatestApplications;
@@ -21,6 +22,7 @@ class PanelAppServiceProvider extends ServiceProvider
         Livewire::component('resume-file-upload-progress', ResumeFileUploadProgress::class);
         Livewire::component('search-jobs', SearchJobs::class);
         Livewire::component('job-recommendations', JobRecommendations::class);
+        Livewire::component('profile-card', ProfileCard::class);
 
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'panel-app');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'panel-app');
