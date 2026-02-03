@@ -15,24 +15,24 @@
     /** @var Collection<int, Stage>  $stages */
     $stages = $record->requisition
         ->stages()
+        ->where('hidden', false)
+        ->where('active', true)
         ->orderBy('display_order')
         ->get();
 
-    $currentStageIndex = $currentStage ? $stages->search(fn ($stage) => $stage->name === $currentStage->name) : 0;
-
-    if ($currentStageIndex === false) {
-        $currentStageIndex = 0;
-    }
+    $currentStageIndex = $currentStage
+        ? $stages->search(fn ($stage) => $stage->id === $currentStage->id)
+        : 0;
 @endphp
 
-<div class="bg-surface-01dp border-outline-low space-y-4 rounded-lg border p-4">
+<div class="bg-elevation-01dp border-outline-low space-y-4 rounded-lg border p-4">
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
             <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::ChartBar" size="sm" class="text-icon-medium" />
             <h3 class="text-text-high text-sm font-semibold">{{ __('panel-organization::view.pipeline.title') }}</h3>
         </div>
         @if ($currentStage)
-            <x-he4rt::tag size="sm">{{ $currentStageIndex + 1 }} / {{ $stages->count() }}</x-he4rt::tag>
+            <x-he4rt::tag size="sm">{{ $currentStageIndex + 1 }} / {{ max($stages->count(), 1) }}</x-he4rt::tag>
         @endif
     </div>
     <div class="space-y-4 rounded-lg">

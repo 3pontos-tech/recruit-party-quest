@@ -49,11 +49,11 @@
         <div class="border-text-low/20 mb-4 flex justify-between border-b pb-4">
             <div class="flex flex-col items-center gap-6 sm:flex-row">
                 {{-- Profile Photo Placeholder --}}
-                <div class="flex h-40 w-40 shrink-0 items-center justify-center overflow-hidden rounded-full">
-                    <x-he4rt::avatar
-                        src="https://placehold.co/100/16a34a/ffffff?text={{ $initials }}"
+                <div class="flex h-100 w-100 shrink-0 items-center justify-center overflow-hidden rounded-full">
+                    <img
+                        src="https://placehold.co/100/black/ffffff?text={{ $initials }}"
                         class="h-40 w-40"
-                        alt="{{$user->name}}"
+                        alt="{{ $user->name }}"
                     />
                 </div>
 
@@ -201,12 +201,18 @@
                         </span>
                     </div>
 
-                    <div class="ml-5 flex flex-wrap gap-2">
-                        @foreach ($skills as $skill)
-                            <x-he4rt::tag size="sm">
-                                {{ $skill->name }}
-                            </x-he4rt::tag>
+                    <div class="ml-5 line-clamp-2">
+                        @foreach ($skills->take(7) as $skill)
+                            <span class="mr-2 mb-1 inline-block">
+                                <x-he4rt::tag size="sm">
+                                    {{ $skill->name }}
+                                </x-he4rt::tag>
+                            </span>
                         @endforeach
+
+                        @if ($skills->count() > 7)
+                            <span class="text-xs text-gray-400">+{{ $skills->count() - 7 }}</span>
+                        @endif
                     </div>
                 </div>
             </div>

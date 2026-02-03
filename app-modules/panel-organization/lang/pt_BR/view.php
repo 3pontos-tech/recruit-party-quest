@@ -43,7 +43,7 @@ return [
         'schedule_button' => 'Agendar nova avaliação',
     ],
     'pipeline' => [
-        'title' => 'Progresso do Pipeline',
+        'title' => 'Progresso da Pipeline',
         'overall_progress' => 'Progresso geral',
         'application_submitted' => 'Aplicação enviada',
         'last_updated' => 'Última atualização',
