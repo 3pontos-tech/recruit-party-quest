@@ -25,24 +25,24 @@
             </div>
         </div>
 
-        <div class="flex flex-col gap-3">
-            <div class="flex items-center justify-between gap-2">
-                <x-he4rt::text class="text-text-high">
-                    {{ __('panel-app::livewire/profile-card.progress.title') }}
-                </x-he4rt::text>
-                <x-he4rt::text>50%</x-he4rt::text>
-            </div>
+        {{-- <div class="flex flex-col gap-3"> --}}
+        {{-- <div class="flex items-center justify-between gap-2"> --}}
+        {{-- <x-he4rt::text class="text-text-high"> --}}
+        {{-- {{ __('panel-app::livewire/profile-card.progress.title') }} --}}
+        {{-- </x-he4rt::text> --}}
+        {{-- <x-he4rt::text>50%</x-he4rt::text> --}}
+        {{-- </div> --}}
 
-            <div class="bg-border-outline-light dark:bg-border-outline-dark relative h-1 w-full rounded-full">
-                <div class="bg-outline-high inset-0 h-1 rounded-full" style="width: var(--progress)"></div>
-            </div>
+        {{-- <div class="bg-border-outline-light dark:bg-border-outline-dark relative h-1 w-full rounded-full"> --}}
+        {{-- <div class="bg-outline-high inset-0 h-1 rounded-full" style="width: var(--progress)"></div> --}}
+        {{-- </div> --}}
 
-            <div>
-                <x-he4rt::text size="sm">
-                    {{ __('panel-app::livewire/profile-card.progress.description') }}
-                </x-he4rt::text>
-            </div>
-        </div>
+        {{-- <div> --}}
+        {{-- <x-he4rt::text size="sm"> --}}
+        {{-- {{ __('panel-app::livewire/profile-card.progress.description') }} --}}
+        {{-- </x-he4rt::text> --}}
+        {{-- </div> --}}
+        {{-- </div> --}}
 
         <div class="flex flex-col gap-8">
             <div class="flex flex-col gap-4">
