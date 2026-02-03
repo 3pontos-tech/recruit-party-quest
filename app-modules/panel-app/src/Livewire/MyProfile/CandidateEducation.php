@@ -14,10 +14,15 @@ use Filament\Schemas\Schema;
 use He4rt\Candidates\Models\Education;
 use Jeffgreco13\FilamentBreezy\Livewire\MyProfileComponent;
 
+/**
+ * @property mixed $form
+ */
 class CandidateEducation extends MyProfileComponent
 {
+    /** @var array<string, mixed>|null */
     public ?array $data = [];
 
+    /** @var int */
     public static $sort = 30;
 
     protected string $view = 'panel-app::livewire.my-profile.candidate-education';

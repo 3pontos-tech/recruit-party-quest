@@ -15,10 +15,15 @@ use Filament\Schemas\Schema;
 use He4rt\Candidates\Models\WorkExperience;
 use Jeffgreco13\FilamentBreezy\Livewire\MyProfileComponent;
 
+/**
+ * @property mixed $form
+ */
 class CandidateWorkExperience extends MyProfileComponent
 {
+    /** @var array<string, mixed>|null */
     public ?array $data = [];
 
+    /** @var int */
     public static $sort = 35;
 
     protected string $view = 'panel-app::livewire.my-profile.candidate-work-experience';

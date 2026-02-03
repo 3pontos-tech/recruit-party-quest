@@ -10,10 +10,15 @@ use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
 use Jeffgreco13\FilamentBreezy\Livewire\MyProfileComponent;
 
+/**
+ * @property mixed $form
+ */
 class CandidateProfileInfo extends MyProfileComponent
 {
+    /** @var array<string, mixed>|null */
     public ?array $data = [];
 
+    /** @var int */
     public static $sort = 15;
 
     protected string $view = 'panel-app::livewire.my-profile.candidate-profile-info';
