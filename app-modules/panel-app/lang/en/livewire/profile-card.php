@@ -8,6 +8,15 @@ return [
     'progress' => [
         'title' => 'Complete your profile',
         'description' => 'Complete your profile to increase your visibility to recruiters',
+        'missing_sections' => "What's missing:",
+        'sections' => [
+            'basic_info' => 'Basic information (phone, headline)',
+            'professional' => 'Professional experience',
+            'education' => 'Education history',
+            'skills' => 'Skills (at least 3)',
+            'preferences' => 'Job preferences',
+            'links' => 'Social links (at least 2)',
+        ],
     ],
 
     'contact' => [

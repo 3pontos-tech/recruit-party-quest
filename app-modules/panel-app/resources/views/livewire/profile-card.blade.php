@@ -25,24 +25,60 @@
             </div>
         </div>
 
-        {{-- <div class="flex flex-col gap-3"> --}}
-        {{-- <div class="flex items-center justify-between gap-2"> --}}
-        {{-- <x-he4rt::text class="text-text-high"> --}}
-        {{-- {{ __('panel-app::livewire/profile-card.progress.title') }} --}}
-        {{-- </x-he4rt::text> --}}
-        {{-- <x-he4rt::text>50%</x-he4rt::text> --}}
-        {{-- </div> --}}
+        @php
+            $completionColor =
+                $profileCompletionPercentage < 50
+                    ? 'text-yellow-600 dark:text-yellow-400'
+                    : ($profileCompletionPercentage < 100
+                        ? 'text-blue-600 dark:text-blue-400'
+                        : 'text-green-600 dark:text-green-400');
+            $completionBgColor =
+                $profileCompletionPercentage < 50
+                    ? 'bg-yellow-600 dark:bg-yellow-400'
+                    : ($profileCompletionPercentage < 100
+                        ? 'bg-blue-600 dark:bg-blue-400'
+                        : 'bg-green-600 dark:bg-green-400');
+        @endphp
 
-        {{-- <div class="bg-border-outline-light dark:bg-border-outline-dark relative h-1 w-full rounded-full"> --}}
-        {{-- <div class="bg-outline-high inset-0 h-1 rounded-full" style="width: var(--progress)"></div> --}}
-        {{-- </div> --}}
+        <div class="flex flex-col gap-3">
+            <div class="flex items-center justify-between gap-2">
+                <x-he4rt::text class="text-text-high">
+                    {{ __('panel-app::livewire/profile-card.progress.title') }}
+                </x-he4rt::text>
+                <x-he4rt::text :class="$completionColor">{{ $profileCompletionPercentage }}%</x-he4rt::text>
+            </div>
 
-        {{-- <div> --}}
-        {{-- <x-he4rt::text size="sm"> --}}
-        {{-- {{ __('panel-app::livewire/profile-card.progress.description') }} --}}
-        {{-- </x-he4rt::text> --}}
-        {{-- </div> --}}
-        {{-- </div> --}}
+            <div class="bg-border-outline-light dark:bg-border-outline-dark relative h-1 w-full rounded-full">
+                <div
+                    class="{{ $completionBgColor }} absolute inset-0 h-1 rounded-full transition-all duration-300"
+                    style="width: {{ $profileCompletionPercentage }}%"
+                ></div>
+            </div>
+
+            <div>
+                <x-he4rt::text size="sm">
+                    {{ __('panel-app::livewire/profile-card.progress.description') }}
+                </x-he4rt::text>
+            </div>
+
+            @if ($profileCompletionPercentage < 100 && count($missingSections) > 0)
+                <div class="mt-2 flex flex-col gap-2">
+                    <x-he4rt::text size="sm" class="text-text-high">
+                        {{ __('panel-app::livewire/profile-card.progress.missing_sections') }}
+                    </x-he4rt::text>
+                    <ul class="flex flex-col gap-1">
+                        @foreach ($missingSections as $sectionKey => $section)
+                            <li class="flex items-start gap-2">
+                                <span class="text-text-medium">•</span>
+                                <x-he4rt::text size="sm" class="text-text-medium">
+                                    {{ __('panel-app::livewire/profile-card.progress.sections.' . $section['label']) }}
+                                </x-he4rt::text>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+        </div>
 
         <div class="flex flex-col gap-8">
             <div class="flex flex-col gap-4">

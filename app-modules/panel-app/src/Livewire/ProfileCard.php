@@ -24,6 +24,8 @@ class ProfileCard extends Component
             'contactLinks' => $this->getContactLinks($groupedLinks),
             'socialLinks' => $this->getSocialLinks($groupedLinks),
             'candidate' => $candidate,
+            'profileCompletionPercentage' => $candidate?->profile_completion_percentage ?? 0,
+            'missingSections' => $candidate?->getMissingProfileSections() ?? [],
         ]);
     }
 
