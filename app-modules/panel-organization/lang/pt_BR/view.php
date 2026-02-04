@@ -96,6 +96,11 @@ return [
             'title' => 'Carta de apresentação',
             'subtitle' => 'Mensagem pessoal do candidato',
         ],
+        'comments' => [
+            'title' => 'Comentários',
+            'subtitle' => 'Comentários internos',
+            'published_at' => 'Publicado em: ',
+        ],
     ],
     'last_movement' => [
         'applied' => 'Aplicação enviada',

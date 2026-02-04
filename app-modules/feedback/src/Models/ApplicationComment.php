@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace He4rt\Feedback\Models;
 
 use App\Models\BaseModel;
+use DateTimeInterface;
 use He4rt\Applications\Models\Application;
 use He4rt\Feedback\Database\Factories\ApplicationCommentFactory;
 use He4rt\Teams\Concerns\BelongsToTeam;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
 
 /**
  * @property string $id
@@ -47,6 +50,16 @@ class ApplicationComment extends BaseModel
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author_id');
+    }
+
+    /**
+     * @return Attribute<Date, never>
+     */
+    protected function createdAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn (DateTimeInterface $value): string => $value->format('d/m/Y H:i'),
+        );
     }
 
     protected function casts(): array

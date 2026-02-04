@@ -29,7 +29,8 @@ class ApplicationInfolist
                 Tabs::make('application_tabs')
                     ->columnSpan(3)
                     ->schema([
-                        Tab::make(__('panel-organization::filament.tabs.overview'))
+                        Tab::make('Overview')
+                            ->label(__('panel-organization::filament.tabs.overview'))
                             ->schema([
                                 ViewEntry::make('cover_letter')
                                     ->view('panel-organization::components.applications.tabs.cover-letter'),
@@ -44,10 +45,18 @@ class ApplicationInfolist
                                     ->view('panel-organization::components.applications.tabs.education'),
                             ]),
 
-                        Tab::make(__('panel-organization::filament.tabs.experience'))
+                        Tab::make('Experience')
+                            ->label(__('panel-organization::filament.tabs.experience'))
                             ->schema([
                                 ViewEntry::make('work_experience')
                                     ->view('panel-organization::components.applications.tabs.work-experience'),
+                            ]),
+
+                        Tab::make('Comments')
+                            ->label(__('panel-organization::filament.tabs.comments'))
+                            ->schema([
+                                ViewEntry::make('comments')
+                                    ->view('panel-organization::components.applications.tabs.comments'),
                             ]),
                     ]),
                 Grid::make(1)

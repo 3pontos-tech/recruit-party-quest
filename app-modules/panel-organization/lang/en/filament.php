@@ -6,6 +6,7 @@ return [
     'tabs' => [
         'overview' => 'Overview',
         'experience' => 'Experience',
+        'comments' => 'Comments',
     ],
 
     'section' => [
