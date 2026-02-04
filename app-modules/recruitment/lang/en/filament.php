@@ -163,8 +163,8 @@ return [
                 'one_per_line' => 'Enter one item per line',
             ],
             'notifications' => [
-                'successful' => 'Job Saved Successfully',
-                'generating' => "We're generating your job post, wait a few seconds",
+                'successful' => 'Job saved successfully',
+                'generating' => "We're generating your job post. Please wait a few seconds",
                 'failed' => 'Something went wrong',
             ],
         ],

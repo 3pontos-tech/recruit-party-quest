@@ -7,13 +7,11 @@ namespace He4rt\Recruitment\Requisitions\Actions;
 use He4rt\Recruitment\Requisitions\DTOs\JobPostingDTO;
 use He4rt\Recruitment\Requisitions\DTOs\JobRequisitionDTO;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
-use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 
 final class StoreJobRequisitionAction
 {
     public function execute(JobRequisitionDTO $dto): void
     {
-        Recruiter::query()->find($dto->recruiterId);
         $jobRequisition = JobRequisition::query()->create([
             'slug' => $dto->slug,
             'team_id' => $dto->teamId,

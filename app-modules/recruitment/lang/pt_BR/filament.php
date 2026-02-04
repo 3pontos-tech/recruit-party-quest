@@ -163,7 +163,7 @@ return [
             'notifications' => [
                 'successful' => 'Vaga criada com sucesso.',
                 'generating' => 'Estamos gerando sua vaga, aguarde alguns segundos.',
-                'failed' => 'Algo deu Errado, vaga não foi gerada.',
+                'failed' => 'Algo deu errado, vaga não foi gerada.',
             ],
         ],
         'filters' => [

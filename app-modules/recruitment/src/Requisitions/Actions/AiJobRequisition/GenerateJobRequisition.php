@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace He4rt\Recruitment\Requisitions\Actions\AiJobRequisition;
 
-use Exception;
 use Filament\Notifications\Notification;
 use He4rt\Recruitment\Requisitions\DTOs\JobRequisitionDTO;
 use He4rt\Recruitment\Requisitions\Enums\JobRequisitionItemTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
+use He4rt\Recruitment\Requisitions\Exceptions\GenerateJobRequisitionException;
 use He4rt\Users\User;
 use Prism\Prism\Facades\Prism;
 use Prism\Prism\Schema\ArraySchema;
@@ -17,7 +17,10 @@ use Prism\Prism\Schema\StringSchema;
 
 class GenerateJobRequisition
 {
-    public function execute(GenerateJobRequisitionDTO $dto): JobRequisitionDTO|Notification
+    /**
+     * @throws GenerateJobRequisitionException
+     */
+    public function execute(GenerateJobRequisitionDTO $dto): JobRequisitionDTO
     {
         try {
             $response = Prism::structured()
@@ -58,15 +61,16 @@ class GenerateJobRequisition
                 'created_by' => $dto->createdBy,
                 'items' => $response['items'],
             ]);
-        } catch (Exception) {
+        } catch (GenerateJobRequisitionException) {
             $notifiable = User::whereId($dto->createdBy)->first();
 
-            return Notification::make()
+            Notification::make()
                 ->danger()
                 ->title(__('recruitment::filament.requisition.job_posting.notifications.failed'))
                 ->broadcast($notifiable);
-        }
 
+            throw GenerateJobRequisitionException::somethingWentWrong();
+        }
     }
 
     private function structureSchema(): ObjectSchema
