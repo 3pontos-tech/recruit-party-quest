@@ -57,7 +57,7 @@ class CandidateLinks extends MyProfileComponent
 
         foreach ($data['links'] ?? [] as $index => $entry) {
             if (filled($entry['id'] ?? null)) {
-                $link = Link::query()->find($entry['id']);
+                $link = $user->links()->find($entry['id']);
                 if ($link) {
                     $link->update([
                         'name' => $entry['name'],
