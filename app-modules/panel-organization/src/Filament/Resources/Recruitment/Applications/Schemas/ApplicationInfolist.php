@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Organization\Filament\Resources\Recruitment\Applications\Schemas;
 
-use Filament\Actions\Action;
-use Filament\Forms\Components\Textarea;
 use Filament\Infolists\Components\ViewEntry;
-use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -66,13 +63,11 @@ class ApplicationInfolist
                     ->columnSpan(1)
                     ->schema([
                         // Quick Actions
-                        Section::make('Quick Actions')
+                        Section::make(__('panel-organization::filament.section.quick_actions'))
                             ->icon('heroicon-o-bolt')
                             ->schema([
                                 Actions::make([
                                     StateTransitionAction::make(),
-                                    //                                    self::getScheduleInterviewAction(),
-                                    //                                    self::getSendEmailAction(),
                                     CommentApplicationAction::make(),
                                     RejectApplicationAction::make(),
                                 ]),
@@ -90,54 +85,5 @@ class ApplicationInfolist
                         //                            ->view('panel-organization::components.applications.sidebar.evaluation-summary'),
                     ]),
             ]);
-    }
-
-    protected static function getScheduleInterviewAction(): Action
-    {
-        return Action::make('schedule_interview')
-            ->label(__('panel-organization::filament.actions.schedule_interview.label'))
-            ->icon('heroicon-o-calendar-days')
-            ->color('success')
-            ->extraAttributes(fn () => ['class' => 'w-full'])
-            ->modalHeading(__('panel-organization::filament.actions.schedule_interview.modal_heading'))
-            ->modalDescription(__('panel-organization::filament.actions.schedule_interview.modal_description'))
-            ->schema([
-                Textarea::make('test')
-                    ->label(__('panel-organization::filament.fields.test_label'))
-                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
-                    ->rows(3),
-            ])
-            ->action(function (array $data): void {
-                Notification::make()
-                    ->title(__('panel-organization::filament.notifications.ok_title'))
-                    ->body(__('panel-organization::filament.notifications.ok_body'))
-                    ->success()
-                    ->send();
-            });
-    }
-
-    protected static function getSendEmailAction(): Action
-    {
-        return Action::make('send_email')
-            ->label(__('panel-organization::filament.actions.send_email.label'))
-            ->icon('heroicon-o-envelope')
-            ->color('info')
-            ->extraAttributes(fn () => ['class' => 'w-full'])
-            ->outlined()
-            ->modalHeading(__('panel-organization::filament.actions.send_email.modal_heading'))
-            ->modalDescription(__('panel-organization::filament.actions.send_email.modal_description'))
-            ->schema([
-                Textarea::make('test')
-                    ->label(__('panel-organization::filament.fields.test_label'))
-                    ->placeholder(__('panel-organization::filament.fields.test_placeholder'))
-                    ->rows(3),
-            ])
-            ->action(function (array $data): void {
-                Notification::make()
-                    ->title(__('panel-organization::filament.notifications.ok_title'))
-                    ->body(__('panel-organization::filament.notifications.ok_body'))
-                    ->success()
-                    ->send();
-            });
     }
 }

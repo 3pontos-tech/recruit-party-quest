@@ -2,7 +2,7 @@
     <div class="hp-container grid grid-cols-1 gap-16 gap-x-32 lg:grid-cols-[1fr_3fr]">
         <div class="mb-0 flex shrink-0 items-center justify-center">
             <img
-                src="{{ asset('images/3pontos/3pontos-ball.png') }}"
+                src="{{ asset('images/3pontos/3pontos-ball.svg') }}"
                 alt="3 Pontos Criação"
                 class="h-auto w-1/2 max-w-full object-contain lg:w-full"
             />

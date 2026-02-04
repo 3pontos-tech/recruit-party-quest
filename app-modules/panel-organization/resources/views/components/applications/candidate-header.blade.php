@@ -50,11 +50,7 @@
             <div class="flex flex-col items-center gap-6 sm:flex-row">
                 {{-- Profile Photo Placeholder --}}
                 <div class="flex h-40 w-40 shrink-0 items-center justify-center overflow-hidden rounded-full">
-                    <x-he4rt::avatar
-                        src="https://placehold.co/100/16a34a/ffffff?text={{ $initials }}"
-                        class="h-40 w-40"
-                        alt="{{$user->name}}"
-                    />
+                    <img src="{{ $user->getFilamentAvatarUrl() }}" class="h-40 w-40" alt="{{ $user->name }}" />
                 </div>
 
                 <div class="space-y-3">
@@ -192,22 +188,22 @@
                         {{ $education }}
                     </p>
                 </div>
+            </div>
 
-                <div class="space-y-3 sm:col-span-2 lg:col-span-4">
-                    <div class="flex items-center gap-2">
-                        <x-he4rt::icon :icon="Heroicon::CodeBracket" size="sm" class="text-icon-medium" />
-                        <span class="text-text-medium text-xs font-semibold tracking-wider uppercase">
-                            {{ __('panel-organization::view.candidate_header.key_skills') }}
-                        </span>
-                    </div>
+            <div class="space-y-3">
+                <div class="flex items-center gap-2">
+                    <x-he4rt::icon :icon="Heroicon::CodeBracket" size="sm" class="text-icon-medium" />
+                    <span class="text-text-medium text-xs font-semibold tracking-wider uppercase">
+                        {{ __('panel-organization::view.candidate_header.key_skills') }}
+                    </span>
+                </div>
 
-                    <div class="ml-5 flex flex-wrap gap-2">
-                        @foreach ($skills as $skill)
-                            <x-he4rt::tag size="sm">
-                                {{ $skill->name }}
-                            </x-he4rt::tag>
-                        @endforeach
-                    </div>
+                <div class="ml-5">
+                    @foreach ($skills->take(7) as $skill)
+                        <x-he4rt::tag size="sm">
+                            {{ $skill->name }}
+                        </x-he4rt::tag>
+                    @endforeach
                 </div>
             </div>
         </div>

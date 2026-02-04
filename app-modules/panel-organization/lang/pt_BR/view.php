@@ -43,7 +43,7 @@ return [
         'schedule_button' => 'Agendar nova avaliação',
     ],
     'pipeline' => [
-        'title' => 'Progresso do Pipeline',
+        'title' => 'Progresso da Pipeline',
         'overall_progress' => 'Progresso geral',
         'application_submitted' => 'Aplicação enviada',
         'last_updated' => 'Última atualização',
@@ -113,5 +113,12 @@ return [
     'status' => [
         'immediate' => 'Imediato',
         'available_from' => 'Disponível a partir de :date',
+    ],
+    'proficiency' => [
+        1 => 'Iniciante',
+        2 => 'Básico',
+        3 => 'Intermediário',
+        4 => 'Avançado',
+        5 => 'Especialista',
     ],
 ];

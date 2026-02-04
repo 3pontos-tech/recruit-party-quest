@@ -20,11 +20,11 @@
 
     <div class="fi-simple-layout relative">
         <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-            <img
-                src="{{ asset('images/3pontos/hourglass.svg') }}"
-                alt=""
-                class="absolute top-0 left-0 h-auto w-full -translate-x-1/3 -translate-y-1/3"
-            />
+            <div
+                class="text-outline-light dark:text-outline-dark absolute top-0 left-0 h-auto w-full -translate-x-1/3 -translate-y-1/3"
+            >
+                @include('partials.hourglass')
+            </div>
         </div>
 
         <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
@@ -63,7 +63,7 @@
                 ])
             >
                 <div
-                    class="from-icon-high/6 to-elevation-surface/32 pointer-events-none absolute inset-0 bg-gradient-to-br"
+                    class="from-icon-high/16 dark:from-icon-high/6 to-elevation-surface/32 pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-br"
                 ></div>
 
                 <div class="relative">

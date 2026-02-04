@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Recruitment\Requisitions\Enums;
 
 use App\Enums\Concerns\StringifyEnum;
+use Filament\Support\Colors\Color;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
@@ -15,21 +16,25 @@ enum ExperienceLevelEnum: string implements HasColor, HasIcon, HasLabel
     use StringifyEnum;
 
     case Intern = 'intern';
-    case EntryLevel = 'entry_level';
+    case Junior = 'junior';
     case MidLevel = 'mid_level';
     case Senior = 'senior';
-    case Lead = 'lead';
-    case Principal = 'principal';
+    case Specialist = 'specialist';
+    case Coordinator = 'coordinator';
+    case Manager = 'manager';
+    case Head = 'head';
+    case CLevel = 'c_level';
 
-    public function getColor(): string
+    public function getColor(): array
     {
         return match ($this) {
-            self::Intern => 'secondary',
-            self::EntryLevel => 'success',
-            self::MidLevel => 'warning',
-            self::Senior => 'danger',
-            self::Lead => 'primary',
-            self::Principal => 'info',
+            self::Intern => Color::Blue,
+            self::Junior => Color::Green,
+            self::MidLevel => Color::Yellow,
+            self::Senior => Color::Red,
+            self::Specialist => Color::Teal,
+            self::Coordinator, self::Manager => Color::Indigo,
+            self::Head, self::CLevel => Color::Gray,
         };
     }
 
@@ -37,11 +42,14 @@ enum ExperienceLevelEnum: string implements HasColor, HasIcon, HasLabel
     {
         return match ($this) {
             self::Intern => Heroicon::AcademicCap,
-            self::EntryLevel => Heroicon::User,
+            self::Junior => Heroicon::User,
             self::MidLevel => Heroicon::Briefcase,
             self::Senior => Heroicon::Star,
-            self::Lead => Heroicon::UserGroup,
-            self::Principal => Heroicon::ShieldCheck,
+            self::Specialist => Heroicon::ShieldCheck,
+            self::Coordinator => Heroicon::UserGroup,
+            self::Manager => Heroicon::BuildingOffice,
+            self::Head => Heroicon::CommandLine,
+            self::CLevel => Heroicon::Trophy,
         };
     }
 

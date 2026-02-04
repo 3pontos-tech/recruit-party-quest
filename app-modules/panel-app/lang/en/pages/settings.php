@@ -131,4 +131,23 @@ return [
             ],
         ],
     ],
+
+    'links' => [
+        'heading' => 'Links',
+        'description' => 'Manage your social and professional links.',
+        'submit' => 'Save Links',
+        'notify' => 'Links updated successfully.',
+        'add_link' => 'Add Link',
+        'fields' => [
+            'links' => 'Links',
+            'url' => 'URL',
+            'name' => 'Label',
+            'type' => 'Type',
+            'icon' => 'Icon',
+        ],
+        'placeholders' => [
+            'url' => 'https://...',
+            'name' => 'e.g., My Portfolio',
+        ],
+    ],
 ];

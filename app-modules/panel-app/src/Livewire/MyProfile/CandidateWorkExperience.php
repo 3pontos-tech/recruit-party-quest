@@ -106,7 +106,7 @@ class CandidateWorkExperience extends MyProfileComponent
         $existingIds = [];
 
         foreach ($data['work_experiences'] as $entry) {
-            if (filled($entry['id'])) {
+            if (filled($entry['id'] ?? null)) {
                 $candidate->workExperiences()->where('id', $entry['id'])->update([
                     'company_name' => $entry['company_name'],
                     'description' => $entry['description'],

@@ -16,17 +16,23 @@ use He4rt\Links\LinkTypeEnum;
 class LinkRepeater
 {
     public static function make(
-        string $relationship = 'links',
-        ?string $label = 'Links'
+        string $name = 'links',
+        ?string $label = 'Links',
+        bool $useRelationship = true
     ): Repeater {
-        return Repeater::make($relationship)
+        $repeater = Repeater::make($name)
             ->label($label)
-            ->relationship($relationship)
             ->orderColumn('order_column')
             ->defaultItems(0)
             ->collapsible()
             ->cloneable()
             ->schema(static::schema());
+
+        if ($useRelationship) {
+            $repeater->relationship($name);
+        }
+
+        return $repeater;
     }
 
     /**

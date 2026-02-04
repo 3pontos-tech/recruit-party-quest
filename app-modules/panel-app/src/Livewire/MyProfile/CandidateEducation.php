@@ -111,7 +111,7 @@ class CandidateEducation extends MyProfileComponent
         $existingIds = [];
 
         foreach ($data['education'] as $entry) {
-            if (filled($entry['id'])) {
+            if (filled($entry['id'] ?? null)) {
                 $candidate->degrees()->where('id', $entry['id'])->update([
                     'institution' => $entry['institution'],
                     'degree' => $entry['degree'],

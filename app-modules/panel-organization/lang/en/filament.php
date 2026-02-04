@@ -12,6 +12,20 @@ return [
     'section' => [
         'quick_actions' => 'Quick Actions',
     ],
+    'applications' => [
+        'resource' => [
+            'navigation_label' => 'Applications',
+            'label' => 'Application',
+            'plural_label' => 'Applications',
+        ],
+    ],
+    'job-requisitions' => [
+        'resource' => [
+            'navigation_label' => 'Job Requisitions',
+            'label' => 'Job Requisition',
+            'plural_label' => 'Job Requisitions',
+        ],
+    ],
 
     'actions' => [
         'advance_stage' => [
@@ -38,6 +52,23 @@ return [
             'label' => 'Reject Application',
             'modal_heading' => 'Reject Application',
             'modal_description' => 'This action cannot be undone. The candidate will be notified of the rejection.',
+        ],
+        'generate_job_requisition' => [
+            'label' => 'Generate with AI',
+            'modal_heading' => 'Generate Job Requisition with AI',
+            'modal_description' => 'Provide basic information and let AI generate a complete job requisition and posting based on your company profile.',
+            'fields' => [
+                'title' => 'Job Title',
+                'description' => 'Technologies & Work Details',
+                'description_helper' => 'List key technologies, tools, and important work details. AI will use this to generate the full description.',
+                'experience_level' => 'Experience Level',
+                'employment_type' => 'Employment Type',
+                'work_arrangement' => 'Work Arrangement',
+                'priority' => 'Priority',
+            ],
+            'success_title' => 'Job Requisition Generated',
+            'success_body' => 'The AI has generated your job requisition and posting. Review and edit as needed before publishing.',
+            'error_title' => 'Generation Failed',
         ],
     ],
 
@@ -81,11 +112,4 @@ return [
         'concerns_placeholder' => 'Enter any concerns...',
     ],
 
-    'proficiency' => [
-        1 => 'Beginner',
-        2 => 'Basic',
-        3 => 'Intermediate',
-        4 => 'Advanced',
-        5 => 'Expert',
-    ],
 ];

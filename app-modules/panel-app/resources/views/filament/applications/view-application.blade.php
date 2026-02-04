@@ -1,7 +1,6 @@
 @php
-    $jobRequisition = $this->getRecord()->requisition;
-    $currentStage = $this->getRecord()->currentStage;
-    $stages = $jobRequisition->stages;
+    $application = $this->getRecord();
+    $jobRequisition = $application->requisition;
     $team = $jobRequisition->team;
 @endphp
 
@@ -13,7 +12,7 @@
 
         <aside class="h-full pb-20 lg:pb-32">
             <div class="sticky top-24 flex flex-col gap-6">
-                <x-panel-app::applications.stage-timeline :$stages :$currentStage />
+                <x-panel-organization::applications.sidebar.pipeline-progress :record="$application" />
                 <x-panel-app::team.about :team="$team" />
             </div>
         </aside>

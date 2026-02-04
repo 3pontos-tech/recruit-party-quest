@@ -29,6 +29,7 @@ return [
         'no_stage' => '-',
         'activity_fallback' => 'Application submitted',
         'stage' => 'Stage :current/:total:',
+        'unknown_stage' => 'Unknown',
     ],
 
     'loading' => 'Loading...',

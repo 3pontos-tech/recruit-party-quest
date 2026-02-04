@@ -31,9 +31,9 @@ return [
     ],
     'experience_level' => [
         'intern' => [
-            'label' => 'Estagiário',
+            'label' => 'Estagiário(a)',
         ],
-        'entry_level' => [
+        'junior' => [
             'label' => 'Júnior',
         ],
         'mid_level' => [
@@ -42,11 +42,20 @@ return [
         'senior' => [
             'label' => 'Sênior',
         ],
-        'lead' => [
-            'label' => 'Líder',
+        'specialist' => [
+            'label' => 'Especialista',
         ],
-        'principal' => [
-            'label' => 'Principal',
+        'coordinator' => [
+            'label' => 'Coordenador(a)',
+        ],
+        'manager' => [
+            'label' => 'Gerente',
+        ],
+        'head' => [
+            'label' => 'Head',
+        ],
+        'c_level' => [
+            'label' => 'C-Level',
         ],
     ],
     'requisition_priority' => [

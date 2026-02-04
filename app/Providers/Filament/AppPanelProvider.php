@@ -17,12 +17,15 @@ use Filament\View\PanelsRenderHook;
 use He4rt\App\Filament\Pages\AppDashboard;
 use He4rt\App\Filament\Pages\AppLoginPage;
 use He4rt\App\Livewire\MyProfile\CandidateEducation;
+use He4rt\App\Livewire\MyProfile\CandidateLinks;
 use He4rt\App\Livewire\MyProfile\CandidatePreferences;
 use He4rt\App\Livewire\MyProfile\CandidateProfileInfo;
 use He4rt\App\Livewire\MyProfile\CandidateSkills;
 use He4rt\App\Livewire\MyProfile\CandidateWorkExperience;
 use He4rt\App\RedirectIfOnboardingIncomplete;
 use He4rt\Users\User;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -44,7 +47,7 @@ class AppPanelProvider extends PanelProvider
             ->login(AppLoginPage::class)
             ->registration()
             ->topNavigation()
-            ->brandLogo(asset('images/3pontos/logo-compact.svg'))
+            ->brandLogo(fn () => view('partials.logo-compact'))
             ->maxContentWidth(Width::ScreenTwoExtraLarge)
             ->path($this->panelEnum->getPath())
             ->colors([
@@ -75,6 +78,17 @@ class AppPanelProvider extends PanelProvider
                @endguest
             BLADE
             ))
+            ->renderHook(PanelsRenderHook::FOOTER, function (): null|Factory|View {
+                if (request()->routeIs('filament.app.pages.onboarding')) {
+                    return null;
+                }
+
+                if (request()->routeIs('filament.app.auth.login')) {
+                    return null;
+                }
+
+                return view('panel-app::partials.app-footer');
+            })
             ->viteTheme('app-modules/he4rt/resources/css/themes/3pontos/theme.css')
             ->discoverClusters(in: base_path('app-modules/panel-app/src/Filament/Clusters'), for: 'He4rt\\App\\Filament\\Clusters')
             ->discoverPages(in: base_path('app-modules/panel-app/src/Filament/Pages'), for: 'He4rt\\App\\Filament\\Pages')
@@ -92,6 +106,7 @@ class AppPanelProvider extends PanelProvider
                         'candidate_education' => CandidateEducation::class,
                         'candidate_work_experience' => CandidateWorkExperience::class,
                         'candidate_skills' => CandidateSkills::class,
+                        'candidate_links' => CandidateLinks::class,
                     ])
                     ->enableBrowserSessions(),
                 FilamentSocialitePlugin::make()

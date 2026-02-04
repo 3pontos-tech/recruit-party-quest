@@ -68,7 +68,7 @@
                 action="mailto:contato@3pontos.com"
                 method="POST"
                 enctype="text/plain"
-                class="bg-elevation-surface/20 border-outline-dark order-2 flex flex-1 flex-col gap-8 rounded-lg border p-4 lg:order-1 lg:p-6"
+                class="bg-elevation-surface/20 border-outline-light dark:border-outline-dark order-2 flex flex-1 flex-col gap-8 rounded-lg border p-4 lg:order-1 lg:p-6"
             >
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <x-he4rt::input label="Nome completo" placeholder="Digite seu nome completo" name="name" />
@@ -90,7 +90,7 @@
                         <x-he4rt::card :interactive="false" class="h-fit border-none bg-transparent p-0">
                             <x-slot:icon class="flex-col items-start gap-3 sm:flex-row sm:items-center">
                                 <div
-                                    class="bg-elevation-01dp border-outline-dark flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md border"
+                                    class="bg-elevation-01dp border-outline-light dark:border-outline-dark flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md border"
                                 >
                                     <x-he4rt::icon size="lg" :icon="$item['icon']" class="bg-elevation-02dp" />
                                 </div>
@@ -111,7 +111,7 @@
                     <x-he4rt::card :interactive="false" class="h-fit border-none bg-transparent p-0">
                         <x-slot:icon class="flex-col items-start gap-3 sm:flex-row sm:items-center">
                             <div
-                                class="bg-elevation-01dp border-outline-dark flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md border"
+                                class="bg-elevation-01dp border-outline-light dark:border-outline-dark flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md border"
                             >
                                 <x-he4rt::icon size="lg" icon="heroicon-o-arrow-path" class="bg-elevation-02dp" />
                             </div>

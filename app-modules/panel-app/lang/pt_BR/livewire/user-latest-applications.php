@@ -29,6 +29,7 @@ return [
         'no_stage' => '-',
         'activity_fallback' => 'Candidatura enviada',
         'stage' => 'Estágio :current/:total:',
+        'unknown_stage' => 'Desconhecido',
     ],
 
     'loading' => 'Carregando...',
