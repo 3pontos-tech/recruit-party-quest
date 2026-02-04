@@ -12,9 +12,7 @@
 @endphp
 
 <a href="{{ $href }}">
-    <img
-        src="{{ asset($path) }}"
-        alt="logo"
+    <div
         {{
             $attributes->class([
                 $sizeCls,
@@ -22,5 +20,7 @@
                 'cursor-pointer',
             ])
         }}
-    />
+    >
+        @include('partials.logo')
+    </div>
 </a>

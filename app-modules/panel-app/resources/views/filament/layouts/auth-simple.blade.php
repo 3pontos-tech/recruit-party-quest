@@ -20,11 +20,9 @@
 
     <div class="fi-simple-layout relative overflow-hidden">
         <div class="absolute top-0 left-0 -z-10">
-            <img
-                src="{{ asset('images/3pontos/hourglass.svg') }}"
-                alt=""
-                class="h-auto w-full -translate-x-1/3 -translate-y-1/3"
-            />
+            <div class="text-outline-light dark:text-outline-dark h-auto w-full -translate-x-1/3 -translate-y-1/3">
+                @include('partials.hourglass')
+            </div>
         </div>
 
         {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::SIMPLE_LAYOUT_START, scopes: $renderHookScopes) }}
@@ -50,7 +48,7 @@
         <div class="fi-simple-main-ctn">
             <main
                 @class([
-                    'fi-simple-main relative overflow-hidden rounded-xl bg-gradient-to-br from-icon-high/6 to-elevation-surface ',
+                    'fi-simple-main relative overflow-hidden rounded-xl bg-gradient-to-br from-icon-high/20 to-elevation-03dp dark:from-icon-high/6 dark:to-elevation-surface ',
                     $maxContentWidth instanceof Width ? "fi-width-{$maxContentWidth->value}" : $maxContentWidth,
                 ])
             >

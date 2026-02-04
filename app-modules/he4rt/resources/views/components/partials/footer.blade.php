@@ -27,7 +27,9 @@
     ];
 @endphp
 
-<footer class="bg-elevation-surface/32 border-outline-dark relative z-10 border-t backdrop-blur-md">
+<footer
+    class="bg-elevation-surface/32 border-outline-light dark:border-outline-dark relative z-10 border-t backdrop-blur-md"
+>
     <div class="hp-section mb-0! min-h-0! p-0!">
         <div
             class="grid grid-cols-1 content-start items-start gap-8 p-8 sm:gap-10 sm:p-12 lg:grid-cols-2 lg:gap-12 lg:p-16 lg:py-12 xl:grid-cols-7 xl:p-24 xl:py-16"
