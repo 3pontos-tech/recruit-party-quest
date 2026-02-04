@@ -10,18 +10,19 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\KeyValue;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Components\Group;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use He4rt\Screening\Enums\QuestionTypeEnum;
 use He4rt\Screening\Models\ScreeningQuestion;
+use He4rt\Screening\QuestionTypes\QuestionTypeRegistry;
 use Illuminate\Database\Eloquent\Model;
 
 class ScreeningQuestionsRelationManager extends RelationManager
@@ -46,27 +47,30 @@ class ScreeningQuestionsRelationManager extends RelationManager
                     ->label(__('screening::filament.question.fields.question_type'))
                     ->options(QuestionTypeEnum::class)
                     ->required()
-                    ->live(),
+                    ->live()
+                    ->afterStateUpdated(function ($set): void {
+                        $set('settings', null);
+                    }),
                 TextInput::make('display_order')
                     ->label(__('screening::filament.question.fields.display_order'))
                     ->numeric()
                     ->default(0)
                     ->required(),
-                Repeater::make('choices')
-                    ->label(__('screening::filament.question.fields.choices'))
-                    ->schema([
-                        TextInput::make('value')
-                            ->label(__('screening::filament.question.fields.choice_value'))
-                            ->required(),
-                        TextInput::make('label')
-                            ->label(__('screening::filament.question.fields.choice_label'))
-                            ->required(),
-                    ])
-                    ->columns(2)
-                    ->visible(fn ($get): bool => in_array($get('question_type'), [
-                        QuestionTypeEnum::SingleChoice->value,
-                        QuestionTypeEnum::MultipleChoice->value,
-                    ]))
+                Group::make()
+                    ->schema(function ($get): array {
+                        $typeValue = $get('question_type');
+
+                        if ($typeValue === null) {
+                            return [];
+                        }
+
+                        $type = $typeValue instanceof QuestionTypeEnum
+                            ? $typeValue
+                            : QuestionTypeEnum::tryFrom($typeValue);
+
+                        return QuestionTypeRegistry::getSettingsSchema($type);
+                    })
+                    ->visible(fn ($get): bool => $get('question_type') !== null)
                     ->columnSpanFull(),
                 Toggle::make('is_required')
                     ->label(__('screening::filament.question.fields.is_required'))
