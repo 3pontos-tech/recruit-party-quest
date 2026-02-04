@@ -40,7 +40,7 @@ beforeEach(function (): void {
 
 it('should be able to create job post with ai', function (): void {
     $dto = GenerateJobRequisitionDTO::make([
-        'title' => 'title',
+        'title' => 'title without slug',
         'description' => 'description',
         'work_arrangement' => WorkArrangementEnum::OnSite->value,
         'employment_type' => EmploymentTypeEnum::Contractor->value,
@@ -99,6 +99,7 @@ it('should be able to create job post with ai', function (): void {
     assertDatabaseCount(JobPosting::class, 1);
     assertDatabaseHas(JobPosting::class, [
         'job_requisition_id' => $jobRequisition->getKey(),
+        'slug' => 'title-without-slug',
         'title' => $dto->title,
         'team_id' => $dto->teamId,
         'summary' => 'fake summary',

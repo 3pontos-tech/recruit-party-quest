@@ -40,7 +40,7 @@ final readonly class JobRequisitionDTO
     {
         return new self(
             title: $data['title'],
-            slug: $data['slug'] ?? Str::slug($data['title']),
+            slug: Str::slug($data['slug']),
             departmentId: $data['department_id'],
             teamId: $data['team_id'],
             recruiterId: $data['recruiter_id'],
