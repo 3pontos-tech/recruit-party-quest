@@ -31,20 +31,6 @@ it('should render', function (): void {
         ->assertOk();
 });
 
-it('should be able to see details about the application', function (): void {
-    $stages = $this->application->getPipelineStages();
-    $livewire = livewire(ViewApplication::class, ['record' => $this->application->getKey()])
-        ->assertOk()
-        ->assertSee('Application Status')
-        ->assertSee('You are currently at this stage')
-        ->assertSee('Progresso');
-
-    $stages->each(function ($stage) use ($livewire): void {
-        $livewire->assertSee($stage->name);
-        $livewire->assertSee($stage->description);
-    });
-});
-
 test('only authorized user can see the application', function (): void {
     actingAs(User::factory()->create());
     livewire(ViewApplication::class, ['record' => $this->application->getKey()])

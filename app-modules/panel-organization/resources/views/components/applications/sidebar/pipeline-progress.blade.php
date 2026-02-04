@@ -41,13 +41,13 @@
             <div class="flex justify-between text-xs">
                 <span class="text-text-medium">{{ __('panel-organization::view.pipeline.overall_progress') }}</span>
                 <span class="text-text-high font-semibold">
-                    {{ round((($currentStageIndex + 1) / $stages->count()) * 100) }}%
+                    {{ round((($currentStageIndex + 1) / max($stages->count(), 1)) * 100) }}%
                 </span>
             </div>
             <div class="border-outline-low h-3 w-full overflow-hidden rounded-full border">
                 <div
                     class="h-full bg-gray-500 transition-all duration-500"
-                    style="width: {{ round((($currentStageIndex + 1) / $stages->count()) * 100) }}%"
+                    style="width: {{ round((($currentStageIndex + 1) / max($stages->count(), 1)) * 100) }}%"
                 ></div>
             </div>
         </div>

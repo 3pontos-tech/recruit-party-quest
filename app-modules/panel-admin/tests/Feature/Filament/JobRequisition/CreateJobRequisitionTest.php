@@ -49,7 +49,7 @@ it('should render Create Job Requisition Page', function (): void {
 it('should be able to publish a job requisition', function (): void {
     $workArrangement = WorkArrangementEnum::Hybrid;
     $employmentType = EmploymentTypeEnum::Contractor;
-    $experienceLevel = ExperienceLevelEnum::Lead;
+    $experienceLevel = ExperienceLevelEnum::Head;
 
     livewire(CreateJobRequisition::class)
         ->assertOk()
