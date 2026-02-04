@@ -51,6 +51,9 @@ return [
         'community' => [
             'label' => '3 Pontos Comunidade',
         ],
+        'three_points' => [
+            'label' => '3 Pontos',
+        ],
         'other' => [
             'label' => 'Outro',
         ],
