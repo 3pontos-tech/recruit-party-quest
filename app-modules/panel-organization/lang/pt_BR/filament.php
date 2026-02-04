@@ -11,6 +11,20 @@ return [
     'section' => [
         'quick_actions' => 'Ações Rápidas',
     ],
+    'applications' => [
+        'resource' => [
+            'navigation_label' => 'Candidaturas',
+            'label' => 'Candidatura',
+            'plural_label' => 'Candidaturas',
+        ],
+    ],
+    'job-requisitions' => [
+        'resource' => [
+            'navigation_label' => 'Gestão de Vagas',
+            'label' => 'Gestão de Vaga',
+            'plural_label' => 'Gestão de Vagas',
+        ],
+    ],
 
     'actions' => [
         'advance_stage' => [

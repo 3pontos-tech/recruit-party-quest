@@ -75,7 +75,7 @@
                                     <div class="mb-2 flex items-center justify-between">
                                         <h5 class="text-text-high font-medium">{{ $skill->name }}</h5>
                                         <x-he4rt::tag size="xs">
-                                            {{ __('panel-organization::filament.proficiency.' . $proficiencyLevel) }}
+                                            {{ __('panel-organization::view.proficiency.' . $proficiencyLevel) }}
                                         </x-he4rt::tag>
                                     </div>
 
@@ -91,7 +91,7 @@
                                         {{-- Experience Info --}}
                                         <div class="text-text-medium flex items-center justify-between text-xs">
                                             <span>
-                                                {{ __('panel-organization::filament.proficiency.' . $proficiencyLevel) }}
+                                                {{ __('panel-organization::view.proficiency.' . $proficiencyLevel) }}
                                             </span>
                                             <span>
                                                 {{ trans_choice('panel-organization::view.time.year', $yearsOfExperience ?? 0, ['count' => $yearsOfExperience ?? 0]) }}

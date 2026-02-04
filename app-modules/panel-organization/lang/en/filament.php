@@ -11,6 +11,20 @@ return [
     'section' => [
         'quick_actions' => 'Quick Actions',
     ],
+    'applications' => [
+        'resource' => [
+            'navigation_label' => 'Applications',
+            'label' => 'Application',
+            'plural_label' => 'Applications',
+        ],
+    ],
+    'job-requisitions' => [
+        'resource' => [
+            'navigation_label' => 'Job Requisitions',
+            'label' => 'Job Requisition',
+            'plural_label' => 'Job Requisitions',
+        ],
+    ],
 
     'actions' => [
         'advance_stage' => [
@@ -80,11 +94,4 @@ return [
         'concerns_placeholder' => 'Enter any concerns...',
     ],
 
-    'proficiency' => [
-        1 => 'Beginner',
-        2 => 'Basic',
-        3 => 'Intermediate',
-        4 => 'Advanced',
-        5 => 'Expert',
-    ],
 ];

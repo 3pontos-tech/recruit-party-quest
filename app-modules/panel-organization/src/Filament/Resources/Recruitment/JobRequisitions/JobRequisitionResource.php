@@ -84,17 +84,17 @@ class JobRequisitionResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return __('recruitment::filament.requisition.label');
+        return __('panel-organization::filament.job-requisitions.resource.label');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('recruitment::filament.requisition.plural_label');
+        return __('panel-organization::filament.job-requisitions.resource.plural_label');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('recruitment::filament.requisition.navigation_label');
+        return __('panel-organization::filament.job-requisitions.resource.navigation_label');
     }
 
     /**

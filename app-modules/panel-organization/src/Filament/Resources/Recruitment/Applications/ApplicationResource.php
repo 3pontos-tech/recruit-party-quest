@@ -66,16 +66,16 @@ class ApplicationResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return __('applications::filament.resource.label');
+        return __('panel-organization::filament.applications.resource.label');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('applications::filament.resource.plural_label');
+        return __('panel-organization::filament.applications.resource.plural_label');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('applications::filament.resource.navigation_label');
+        return __('panel-organization::filament.applications.resource.navigation_label');
     }
 }

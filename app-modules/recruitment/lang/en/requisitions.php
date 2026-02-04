@@ -33,20 +33,29 @@ return [
         'intern' => [
             'label' => 'Intern',
         ],
-        'entry_level' => [
-            'label' => 'Entry Level',
+        'junior' => [
+            'label' => 'Junior',
         ],
         'mid_level' => [
-            'label' => 'Mid Level',
+            'label' => 'Mid-Level',
         ],
         'senior' => [
             'label' => 'Senior',
         ],
-        'lead' => [
-            'label' => 'Lead',
+        'specialist' => [
+            'label' => 'Specialist',
         ],
-        'principal' => [
-            'label' => 'Principal',
+        'coordinator' => [
+            'label' => 'Coordinator',
+        ],
+        'manager' => [
+            'label' => 'Manager',
+        ],
+        'head' => [
+            'label' => 'Head',
+        ],
+        'c_level' => [
+            'label' => 'C-Level',
         ],
     ],
     'requisition_priority' => [
