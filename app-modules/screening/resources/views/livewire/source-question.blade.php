@@ -9,6 +9,12 @@
         </p>
     @enderror
 
+    <x-he4rt::heading size="2xs mb-1">
+        <p>
+            {{ __('screening::question_types.source-question.label') }}
+            <span class="text-helper-error">*</span>
+        </p>
+    </x-he4rt::heading>
     <x-filament::input.wrapper>
         <x-filament::input.select wire:model="value">
             <option value="">{{ __('screening::question_types.single_choice.select_placeholder') }}</option>

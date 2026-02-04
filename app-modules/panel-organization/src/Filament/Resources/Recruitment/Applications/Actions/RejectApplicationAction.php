@@ -12,6 +12,7 @@ use Filament\Notifications\Notification;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Models\Application;
+use Illuminate\Routing\Redirector;
 
 class RejectApplicationAction extends Action
 {
@@ -30,7 +31,7 @@ class RejectApplicationAction extends Action
             ->modalHeading(__('panel-organization::filament.actions.reject_application.modal_heading'))
             ->modalDescription(__('panel-organization::filament.actions.reject_application.modal_description'))
             ->schema($this->formSchema())
-            ->action(function (array $data, Application $record): void {
+            ->action(function (array $data, Application $record): Redirector {
                 resolve(\He4rt\Applications\Actions\RejectApplicationAction::class)->execute(
                     $record->getKey(),
                     $data['rejection_reason_category'],
@@ -40,7 +41,10 @@ class RejectApplicationAction extends Action
                     ->danger()
                     ->title('User rejected successfully')
                     ->send();
+
+                return redirect(request()->header('Referer'));
             });
+
     }
 
     public static function getDefaultName(): ?string

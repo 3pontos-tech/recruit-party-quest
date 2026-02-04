@@ -20,6 +20,9 @@ return [
             'placeholder_example' => 'Digite o texto do placeholder...',
         ],
     ],
+    'source-question' => [
+        'label' => 'Por onde ficou sabendo dessa vaga?',
+    ],
     'number' => [
         'label' => 'Número',
         'settings' => [

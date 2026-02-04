@@ -48,6 +48,9 @@ return [
         'career_page' => [
             'label' => 'Página de Carreiras',
         ],
+        'community' => [
+            'label' => '3 Pontos Comunidade',
+        ],
         'other' => [
             'label' => 'Outro',
         ],
