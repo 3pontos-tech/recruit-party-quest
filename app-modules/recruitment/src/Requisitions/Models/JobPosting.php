@@ -17,15 +17,11 @@ use Illuminate\Support\Carbon;
 /**
  * @property string $id
  * @property string $job_requisition_id
+ * @property string $team_id
  * @property string $title
  * @property string $slug
  * @property string $summary
  * @property string $description
- * @property string $about_company
- * @property string $about_team
- * @property string $work_schedule
- * @property string $accessibility_accommodations
- * @property bool $is_disability_confident
  * @property string $external_post_url
  * @property Carbon $created_at
  * @property Carbon $updated_at

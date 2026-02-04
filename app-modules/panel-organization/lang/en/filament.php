@@ -52,6 +52,23 @@ return [
             'modal_heading' => 'Reject Application',
             'modal_description' => 'This action cannot be undone. The candidate will be notified of the rejection.',
         ],
+        'generate_job_requisition' => [
+            'label' => 'Generate with AI',
+            'modal_heading' => 'Generate Job Requisition with AI',
+            'modal_description' => 'Provide basic information and let AI generate a complete job requisition and posting based on your company profile.',
+            'fields' => [
+                'title' => 'Job Title',
+                'description' => 'Technologies & Work Details',
+                'description_helper' => 'List key technologies, tools, and important work details. AI will use this to generate the full description.',
+                'experience_level' => 'Experience Level',
+                'employment_type' => 'Employment Type',
+                'work_arrangement' => 'Work Arrangement',
+                'priority' => 'Priority',
+            ],
+            'success_title' => 'Job Requisition Generated',
+            'success_body' => 'The AI has generated your job requisition and posting. Review and edit as needed before publishing.',
+            'error_title' => 'Generation Failed',
+        ],
     ],
 
     'notifications' => [

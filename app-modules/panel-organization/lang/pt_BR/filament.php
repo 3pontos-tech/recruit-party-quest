@@ -52,6 +52,23 @@ return [
             'modal_heading' => 'Rejeitar Candidatura',
             'modal_description' => 'Esta ação não pode ser desfeita. O candidato será notificado da rejeição.',
         ],
+        'generate_job_requisition' => [
+            'label' => 'Gerar com IA',
+            'modal_heading' => 'Gerar Requisição de Vaga com IA',
+            'modal_description' => 'Forneça informações básicas e deixe a IA gerar uma requisição e anúncio de vaga completo baseado no perfil da sua empresa.',
+            'fields' => [
+                'title' => 'Título da Vaga',
+                'description' => 'Tecnologias & Detalhes do Trabalho',
+                'description_helper' => 'Liste tecnologias-chave, ferramentas e detalhes importantes do trabalho. A IA usará isso para gerar a descrição completa.',
+                'experience_level' => 'Nível de Experiência',
+                'employment_type' => 'Tipo de Contratação',
+                'work_arrangement' => 'Modelo de Trabalho',
+                'priority' => 'Prioridade',
+            ],
+            'success_title' => 'Requisição de Vaga Gerada',
+            'success_body' => 'A IA gerou sua requisição e anúncio de vaga. Revise e edite conforme necessário antes de publicar.',
+            'error_title' => 'Falha na Geração',
+        ],
     ],
 
     'notifications' => [

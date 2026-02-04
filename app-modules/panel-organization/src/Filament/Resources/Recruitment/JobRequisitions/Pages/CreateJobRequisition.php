@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages;
 
 use Filament\Resources\Pages\CreateRecord;
+use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Actions\GenerateJobRequisitionAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
 use Illuminate\Support\Str;
 
@@ -23,5 +24,12 @@ class CreateJobRequisition extends CreateRecord
         $data['created_by_id'] = auth()->id();
 
         return $data;
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            GenerateJobRequisitionAction::make(),
+        ];
     }
 }
