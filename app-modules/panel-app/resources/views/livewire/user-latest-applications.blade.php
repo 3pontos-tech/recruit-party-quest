@@ -59,9 +59,17 @@
                             ->sortBy('display_order')
                             ->values();
                         $totalStages = $visibleStages->count();
-                        $currentStageOrder = $application->currentStage?->display_order ?? 0;
+                        $currentStage = $application->currentStage;
                         $currentStageIndex = $visibleStages->search(fn ($s) => $s->id === $application->current_stage_id);
                         $currentPosition = $currentStageIndex !== false ? $currentStageIndex + 1 : 1;
+
+                        if ($currentStage && ! $currentStage->hidden) {
+                            $stageName = $currentStage->name;
+                        } else {
+                            $currentDisplayOrder = $currentStage?->display_order ?? 0;
+                            $lastVisibleStage = $visibleStages->filter(fn ($s) => $s->display_order <= $currentDisplayOrder)->last();
+                            $stageName = $lastVisibleStage?->name ?? ($visibleStages->first()?->name ?? '-');
+                        }
                     @endphp
 
                     <div class="flex items-center justify-between">
@@ -72,10 +80,10 @@
                             />
                             <x-he4rt::text
                                 size="sm"
-                                @class(['bg-transparent!', $this->getStatusColor($application->status)])
+                                @class(['bg-transparent! font-semibold', $this->getStatusColor($application->status)])
                             >
                                 {{ __('panel-app::livewire/user-latest-applications.application_card.stage', ['current' => $currentPosition, 'total' => $totalStages]) }}
-                                {{ $application->status->getLabel() }}
+                                {{ $stageName }}
                             </x-he4rt::text>
                         </div>
 
