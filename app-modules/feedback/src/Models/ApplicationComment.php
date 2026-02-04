@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace He4rt\Feedback\Models;
 
 use App\Models\BaseModel;
-use Carbon\Month;
-use Carbon\WeekDay;
 use DateTimeInterface;
 use He4rt\Applications\Models\Application;
 use He4rt\Feedback\Database\Factories\ApplicationCommentFactory;
@@ -54,10 +52,13 @@ class ApplicationComment extends BaseModel
         return $this->belongsTo(User::class, 'author_id');
     }
 
+    /**
+     * @return Attribute<Date, never>
+     */
     protected function createdAt(): Attribute
     {
         return Attribute::make(
-            get: fn (DateTimeInterface|WeekDay|Month|string|int|float|null $value) => Date::parse($value)->format('d/m/Y H:i'),
+            get: fn (DateTimeInterface $value): string => $value->format('d/m/Y H:i'),
         );
     }
 
