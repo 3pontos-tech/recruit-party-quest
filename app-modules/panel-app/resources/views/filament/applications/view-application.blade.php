@@ -1,8 +1,6 @@
 @php
     $application = $this->getRecord();
-    $jobRequisition = $this->getRecord()->requisition;
-    $currentStage = $this->getRecord()->currentStage;
-    $stages = $jobRequisition->stages;
+    $jobRequisition = $application->requisition;
     $team = $jobRequisition->team;
 @endphp
 
