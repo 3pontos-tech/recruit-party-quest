@@ -7,7 +7,9 @@
 
     {{-- <section class="py-6 md:py-10"> --}}
     {{-- <div --}}
-    {{-- class="mx-auto flex max-w-7xl flex-col justify-between gap-4 px-4 sm:px-6 md:flex-row md:items-center lg:px-8" --}}
+    {{--
+        class="mx-auto flex max-w-7xl flex-col justify-between gap-4 px-4 sm:px-6 md:flex-row md:items-center lg:px-8"
+    --}}
     {{-- > --}}
     {{-- <div> --}}
     {{-- <x-he4rt::text class="mb-1">Welcome back</x-he4rt::text> --}}
@@ -22,7 +24,9 @@
     {{-- <x-he4rt::button --}}
     {{-- variant="solid" --}}
     {{-- size="sm" --}}
-    {{-- icon="heroicon-o-sparkles" --}}
+    {{--
+        icon="heroicon-o-sparkles"
+    --}}
     {{-- icon:trailing="heroicon-o-arrow-right" --}}
     {{-- > --}}
     {{-- AI Career Assistant --}}
@@ -32,8 +36,12 @@
     {{-- </section> --}}
 
     {{-- <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"> --}}
-    {{-- <hr class="border-outline-light dark:border-outline-dark" /> --}}
-    {{-- </div> --}}
+    {{--
+        <hr class="border-outline-light dark:border-outline-dark" />
+    --}}
+    {{--
+        </div>
+    --}}
 
     <section class="py-6 md:py-10">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -53,24 +61,4 @@
             </div>
         </div>
     </section>
-
-    <x-he4rt::partials.footer
-        logoPath="images/3pontos/logo.svg"
-        logoSize="sm"
-        description="Somos o ecossistema que une solução e conhecimento em um único lugar. Aceleramos sua empresa. Fortalecemos sua carreira."
-        company="3 Pontos"
-        :columns="[
-            'Navegação' => [
-                'Home' => '#',
-                'Missão social' => '#social-action',
-                'Comunidade' => '#community',
-                'Propósito' => '#meet-up',
-                'Palestrantes' => '#speakers',
-                'Lineup' => '#lineup',
-                'Ao vivo' => '#watch-live',
-                'Parceiros' => '#partners',
-                'Saiba mais' => '#about',
-            ]
-        ]"
-    />
 </filament::page>

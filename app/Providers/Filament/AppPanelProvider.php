@@ -23,6 +23,8 @@ use He4rt\App\Livewire\MyProfile\CandidateSkills;
 use He4rt\App\Livewire\MyProfile\CandidateWorkExperience;
 use He4rt\App\RedirectIfOnboardingIncomplete;
 use He4rt\Users\User;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -75,6 +77,17 @@ class AppPanelProvider extends PanelProvider
                @endguest
             BLADE
             ))
+            ->renderHook(PanelsRenderHook::FOOTER, function (): null|Factory|View {
+                if (request()->routeIs('filament.app.pages.onboarding')) {
+                    return null;
+                }
+
+                if (request()->routeIs('filament.app.auth.login')) {
+                    return null;
+                }
+
+                return view('panel-app::partials.app-footer');
+            })
             ->viteTheme('app-modules/he4rt/resources/css/themes/3pontos/theme.css')
             ->discoverClusters(in: base_path('app-modules/panel-app/src/Filament/Clusters'), for: 'He4rt\\App\\Filament\\Clusters')
             ->discoverPages(in: base_path('app-modules/panel-app/src/Filament/Pages'), for: 'He4rt\\App\\Filament\\Pages')

@@ -7,26 +7,6 @@
 
     <x-panel-app::sections.contact />
 
-    <x-he4rt::partials.footer
-        logoPath="images/3pontos/logo.svg"
-        logoSize="sm"
-        description="Somos o ecossistema que une solução e conhecimento em um único lugar. Aceleramos sua empresa. Fortalecemos sua carreira."
-        company="3 Pontos"
-        :columns="[
-            'Navegação' => [
-                'Home' => '#',
-                'Missão social' => '#social-action',
-                'Comunidade' => '#community',
-                'Propósito' => '#meet-up',
-                'Palestrantes' => '#speakers',
-                'Lineup' => '#lineup',
-                'Ao vivo' => '#watch-live',
-                'Parceiros' => '#partners',
-                'Saiba mais' => '#about',
-            ]
-        ]"
-    />
-
     <div class="absolute bottom-[5%] z-0 translate-x-[90%] lg:-translate-x-[60%] lg:translate-y-1/3">
         <img
             src="{{ asset('images/3pontos/logo-creation.webp') }}"
