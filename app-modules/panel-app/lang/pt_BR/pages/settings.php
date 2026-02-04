@@ -131,4 +131,23 @@ return [
             ],
         ],
     ],
+
+    'links' => [
+        'heading' => 'Links',
+        'description' => 'Gerencie seus links sociais e profissionais.',
+        'submit' => 'Salvar Links',
+        'notify' => 'Links atualizados com sucesso.',
+        'add_link' => 'Adicionar Link',
+        'fields' => [
+            'links' => 'Links',
+            'url' => 'URL',
+            'name' => 'Rótulo',
+            'type' => 'Tipo',
+            'icon' => 'Ícone',
+        ],
+        'placeholders' => [
+            'url' => 'https://...',
+            'name' => 'ex: Meu Portfólio',
+        ],
+    ],
 ];

@@ -14,12 +14,17 @@
                     <x-he4rt::text class="text-text-high">
                         {{ auth()->user()->name }}
                     </x-he4rt::text>
-                    <x-he4rt::text>Designer</x-he4rt::text>
+                    <x-he4rt::text>{{ auth()->user()->candidate->headline }}</x-he4rt::text>
                 </div>
             </div>
 
             <div class="self-start">
-                <x-he4rt::button icon="heroicon-o-pencil" variant="outline" size="sm">
+                <x-he4rt::button
+                    href="{{ route('filament.app.pages.my-profile') }}"
+                    icon="heroicon-o-pencil"
+                    variant="outline"
+                    size="sm"
+                >
                     {{ __('panel-app::livewire/profile-card.edit_profile') }}
                 </x-he4rt::button>
             </div>
@@ -48,7 +53,7 @@
                 <x-he4rt::text :class="$completionColor">{{ $profileCompletionPercentage }}%</x-he4rt::text>
             </div>
 
-            <div class="bg-border-outline-light dark:bg-border-outline-dark relative h-1 w-full rounded-full">
+            <div class="bg-outline-light dark:bg-outline-dark relative h-1 w-full rounded-full">
                 <div
                     class="{{ $completionBgColor }} absolute inset-0 h-1 rounded-full transition-all duration-300"
                     style="width: {{ $profileCompletionPercentage }}%"
@@ -68,7 +73,7 @@
                     </x-he4rt::text>
                     <ul class="flex flex-col gap-1">
                         @foreach ($missingSections as $sectionKey => $section)
-                            <li class="flex items-start gap-2">
+                            <li class="flex items-center gap-2">
                                 <span class="text-text-medium">•</span>
                                 <x-he4rt::text size="sm" class="text-text-medium">
                                     {{ __('panel-app::livewire/profile-card.progress.sections.' . $section['label']) }}

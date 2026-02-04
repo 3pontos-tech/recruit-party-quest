@@ -17,6 +17,7 @@ use Filament\View\PanelsRenderHook;
 use He4rt\App\Filament\Pages\AppDashboard;
 use He4rt\App\Filament\Pages\AppLoginPage;
 use He4rt\App\Livewire\MyProfile\CandidateEducation;
+use He4rt\App\Livewire\MyProfile\CandidateLinks;
 use He4rt\App\Livewire\MyProfile\CandidatePreferences;
 use He4rt\App\Livewire\MyProfile\CandidateProfileInfo;
 use He4rt\App\Livewire\MyProfile\CandidateSkills;
@@ -92,6 +93,7 @@ class AppPanelProvider extends PanelProvider
                         'candidate_education' => CandidateEducation::class,
                         'candidate_work_experience' => CandidateWorkExperience::class,
                         'candidate_skills' => CandidateSkills::class,
+                        'candidate_links' => CandidateLinks::class,
                     ])
                     ->enableBrowserSessions(),
                 FilamentSocialitePlugin::make()
