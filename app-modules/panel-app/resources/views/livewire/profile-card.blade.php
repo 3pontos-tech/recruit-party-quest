@@ -1,24 +1,24 @@
 <aside class="sticky top-24 self-start">
+    @php
+        $user = auth()->user();
+    @endphp
+
     <div
         class="bg-elevation-01dp/32 border-outline-light dark:border-outline-dark flex flex-col gap-6 rounded-md border p-8 backdrop-blur-md"
     >
         <div class="flex items-center justify-between gap-2">
-            <div class="flex flex-row items-center gap-3">
-                <x-he4rt::avatar
-                    src="{{ auth()->user()->getFilamentAvatarUrl() }}"
-                    alt="{{ auth()->user()->name }}"
-                    class="size-11"
-                />
+            <div class="flex min-w-0 flex-row items-center gap-3">
+                <x-he4rt::avatar :src="$user->getFilamentAvatarUrl()" :alt="$user->name" class="size-11 shrink-0" />
 
-                <div class="flex flex-col justify-center">
+                <div class="flex min-w-0 flex-col justify-center">
                     <x-he4rt::text class="text-text-high">
-                        {{ auth()->user()->name }}
+                        {{ $user->name }}
                     </x-he4rt::text>
-                    <x-he4rt::text>{{ auth()->user()->candidate->headline }}</x-he4rt::text>
+                    <x-he4rt::text>{{ $user->candidate->headline }}</x-he4rt::text>
                 </div>
             </div>
 
-            <div class="self-start">
+            <div class="shrink-0">
                 <x-he4rt::button
                     href="{{ route('filament.app.pages.my-profile') }}"
                     icon="heroicon-o-pencil"
