@@ -20,9 +20,13 @@
         ->orderBy('display_order')
         ->get();
 
-    $currentStageIndex = $currentStage
-        ? $stages->search(fn ($stage) => $stage->id === $currentStage->id)
-        : 0;
+    $currentStageIndex = 0;
+
+    if ($currentStage) {
+        $index = $stages->search(fn ($stage) => $stage->id === $currentStage->id);
+
+        $currentStageIndex = $index !== false ? $index : 0;
+    }
 @endphp
 
 <div class="bg-elevation-01dp border-outline-low space-y-4 rounded-lg border p-4">
