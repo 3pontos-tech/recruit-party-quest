@@ -51,12 +51,17 @@
 
 .border-conic {
     --progress: 270deg;
+    --outline-color: var(--color-outline-dark);
 
-    background: conic-gradient(from 180deg, var(--color-outline-light) var(--progress), transparent var(--progress));
+    background: conic-gradient(from 180deg, var(--outline-color) var(--progress), transparent var(--progress));
 
     mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
 
     transition: --progress 400ms ease;
+}
+
+.dark .border-conic {
+    --outline-color: var(--outline-light);
 }
 
 .group:hover .border-conic {
