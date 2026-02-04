@@ -10,6 +10,7 @@ use He4rt\Recruitment\Requisitions\Enums\JobRequisitionItemTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Exceptions\GenerateJobRequisitionException;
 use He4rt\Users\User;
+use Prism\Prism\Exceptions\PrismException;
 use Prism\Prism\Facades\Prism;
 use Prism\Prism\Schema\ArraySchema;
 use Prism\Prism\Schema\ObjectSchema;
@@ -61,7 +62,7 @@ class GenerateJobRequisition
                 'created_by' => $dto->createdBy,
                 'items' => $response['items'],
             ]);
-        } catch (GenerateJobRequisitionException) {
+        } catch (PrismException) {
             $notifiable = User::whereId($dto->createdBy)->first();
 
             Notification::make()
