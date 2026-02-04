@@ -14,7 +14,7 @@
                     <x-he4rt::text class="text-text-high">
                         {{ $user->name }}
                     </x-he4rt::text>
-                    <x-he4rt::text>{{ $user->candidate->headline }}</x-he4rt::text>
+                    <x-he4rt::text>{{ $user->candidate?->headline }}</x-he4rt::text>
                 </div>
             </div>
 
