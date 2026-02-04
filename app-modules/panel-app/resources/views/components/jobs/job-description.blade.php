@@ -31,7 +31,9 @@
         {{ $attributes->merge(['mx-auto w-full max-w-7xl space-y-8 py-8 lg:py-12']) }}
     >
         {{-- Job Header --}}
-        <header class="border-outline-low grid grid-cols-1 items-start gap-8 border-b pb-8 md:grid-cols-[1fr_auto]">
+        <header
+            class="border-outline-light dark:border-outline-dark grid grid-cols-1 items-start gap-8 border-b pb-8 md:grid-cols-[1fr_auto]"
+        >
             <div class="flex flex-col items-start gap-6 sm:flex-row">
                 {{-- Company Logo Placeholder --}}
                 <x-he4rt::badge size="xl" icon="heroicon-o-briefcase" />

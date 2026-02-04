@@ -1,10 +1,8 @@
 <filament::page full-height="true">
-    <div class="pointer-events-none absolute top-0 left-0 -z-10 max-w-7xl">
-        <img
-            src="{{ asset('images/3pontos/hourglass.svg') }}"
-            alt=""
-            class="h-auto w-full -translate-x-1/3 -translate-y-1/3"
-        />
+    <div class="pointer-events-none absolute top-0 left-0 -z-10 h-screen overflow-hidden">
+        <div class="text-outline-light dark:text-outline-dark h-auto w-full -translate-x-1/3 -translate-y-1/3">
+            @include('partials.hourglass')
+        </div>
     </div>
 
     {{-- <section class="py-6 md:py-10"> --}}
