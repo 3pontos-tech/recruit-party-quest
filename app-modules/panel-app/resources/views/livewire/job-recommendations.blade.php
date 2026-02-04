@@ -31,7 +31,7 @@
     <div class="relative grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         <div class="text-text-high absolute right-0 -z-10">
             <div class="spin-slow h-auto w-full translate-x-[60%]">
-                @include('panel-app::partials.logo-rounded')
+                @include('partials.logo-rounded')
             </div>
         </div>
 

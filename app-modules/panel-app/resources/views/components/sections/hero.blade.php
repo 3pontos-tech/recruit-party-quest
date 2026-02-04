@@ -1,10 +1,8 @@
 <section class="hp-section relative" id="hero">
-    <div class="absolute top-0 left-0">
-        <img
-            src="{{ asset('images/3pontos/hourglass.svg') }}"
-            alt=""
-            class="h-auto w-full -translate-x-1/3 -translate-y-1/3"
-        />
+    <div class="text-outline-light dark:text-outline-dark absolute top-0 left-0">
+        <div class="h-auto w-full -translate-x-1/3 -translate-y-1/3">
+            @include('partials.hourglass')
+        </div>
     </div>
     <div class="hp-container z-10">
         <div class="grid grid-cols-1">
