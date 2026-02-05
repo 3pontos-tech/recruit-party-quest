@@ -21,7 +21,6 @@ use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Model;
 
 class DepartmentsRelationManager extends RelationManager
@@ -108,7 +107,7 @@ class DepartmentsRelationManager extends RelationManager
                 ->required()
                 ->searchable()
                 ->preload()
-                ->options(fn (): array => User::query()
+                ->options(fn (): array => $this->getOwnerRecord()->members()
                     ->orderBy('name')
                     ->pluck('name', 'id')
                     ->all()),
@@ -151,6 +150,7 @@ class DepartmentsRelationManager extends RelationManager
                         ->schema([
                             TextEntry::make('requisitions_count')
                                 ->label(__('teams::filament.department.fields.requisitions_count'))
+                                ->counts('requisitions')
                                 ->badge(),
                         ]),
                 ]),
