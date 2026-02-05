@@ -27,23 +27,16 @@ enum StageTypeEnum: string implements HasColor, HasIcon, HasLabel
     case Rejected = 'rejected';
     case Declined = 'declined';
 
-    public static function getColorClassFromString(string $stageType): string
-    {
-        $enum = self::tryFrom($stageType);
-
-        return $enum?->getTailwindColorClass() ?? 'bg-slate-500';
-    }
-
     public function getColor(): array
     {
         return match ($this) {
             self::New => Color::Gray,
-            self::HiddenStage, self::Rejected, self::Declined => Color::Red,
             self::Screening => Color::Yellow,
             self::Assessment => Color::Blue,
             self::Interview => Color::Emerald,
-            self::Offer => Color::Purple,
-            self::Hired => Color::Green,
+            self::Offer => Color::Green,
+            self::Hired => Color::Emerald,
+            self::HiddenStage, self::Rejected, self::Declined => Color::Red,
         };
     }
 
@@ -71,39 +64,21 @@ enum StageTypeEnum: string implements HasColor, HasIcon, HasLabel
             self::New => 'bg-gray-600',
             self::Screening => 'bg-yellow-500',
             self::Assessment => 'bg-blue-500',
-            self::Interview => 'bg-emerald-500',
-            self::Offer => 'bg-purple-500',
-            self::Hired => 'bg-green-500',
-            self::Rejected, self::Declined => 'bg-red-500',
-            self::HiddenStage => 'bg-slate-500',
-        };
-    }
-
-    public function getCandidateTailwindColorClass(): string
-    {
-        return match ($this) {
-            self::New => 'bg-gray-600',
-            self::Screening => 'bg-yellow-500',
-            self::Assessment => 'bg-blue-500',
-            self::Interview => 'bg-emerald-500',
+            self::Interview, self::Hired => 'bg-emerald-500',
             self::Offer => 'bg-green-500',
-            self::Hired => 'bg-emerald-500',
-            self::Rejected, self::Declined => 'bg-red-500',
-            self::HiddenStage => 'bg-slate-500',
+            self::HiddenStage, self::Rejected, self::Declined => 'bg-red-500',
         };
     }
 
-    public function getCandidateTailwindBadgeClass(): string
+    public function getBadgeClasses(): string
     {
         return match ($this) {
             self::New => 'bg-gray-600/10 text-gray-600',
             self::Screening => 'bg-yellow-500/10 text-yellow-500',
             self::Assessment => 'bg-blue-500/10 text-blue-500',
-            self::Interview => 'bg-emerald-500/10 text-emerald-500',
+            self::Interview, self::Hired => 'bg-emerald-500/10 text-emerald-500',
             self::Offer => 'bg-green-500/10 text-green-500',
-            self::Hired => 'bg-emerald-500/10 text-emerald-500',
-            self::Rejected, self::Declined => 'bg-red-500/10 text-red-500',
-            self::HiddenStage => 'bg-slate-500/10 text-slate-500',
+            self::HiddenStage, self::Rejected, self::Declined => 'bg-red-500/10 text-red-500',
         };
     }
 }

@@ -1,7 +1,7 @@
 @php
     /** @var Application $record */
     use He4rt\Applications\Models\Application;
-    use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
+
     $stages = $record->getPipelineStages();
     $statusLabel = $record->currentStage->stage_type->getLabel();
 
@@ -21,11 +21,8 @@
                     $isCompleted = $record->isStageCompleted($stage);
                     $isCurrent = $record->isCurrentStage($stage);
 
-                    if ($isCompleted) {
-                        $colorClass = StageTypeEnum::getColorClassFromString($stage->stage_type->value);
-                        $extraClasses = 'opacity-100';
-                    } elseif ($isCurrent) {
-                        $colorClass = StageTypeEnum::getColorClassFromString($stage->stage_type->value);
+                    if ($isCompleted || $isCurrent) {
+                        $colorClass = $stage->stage_type->getTailwindColorClass();
                         $extraClasses = 'opacity-100';
                     } else {
                         $colorClass = 'bg-gray-200';
