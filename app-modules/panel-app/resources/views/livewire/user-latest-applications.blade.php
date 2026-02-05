@@ -76,14 +76,14 @@
                         <div class="flex items-center gap-2">
                             <x-he4rt::icon
                                 icon="fas-spinner"
-                                @class(['bg-transparent! group-hover:scale-110 group-hover:rotate-360 transition duration-1000', $this->getStatusColor($application->status)])
+                                @class(['bg-transparent! group-hover:scale-110 group-hover:rotate-360 transition duration-1000', $application->status->getTailwindBadgeClass()])
                             />
                             <x-he4rt::text
                                 size="sm"
-                                @class(['bg-transparent! font-semibold', $this->getStatusColor($application->status)])
+                                @class(['bg-transparent! font-semibold', $application->status->getTailwindBadgeClass()])
                             >
                                 {{ __('panel-app::livewire/user-latest-applications.application_card.stage', ['current' => $currentPosition, 'total' => $totalStages]) }}
-                                {{ $stageName }}
+                                {{ $application->status->getLabel() }}
                             </x-he4rt::text>
                         </div>
 
@@ -93,7 +93,7 @@
                                     @class([
                                         'h-1 w-12 rounded-full',
                                         'group-hover:animate-pulse' => $index < $currentPosition,
-                                        $this->getStatusBarColor($application->status) => $index < $currentPosition,
+                                        $application->status->getTailwindColorClass() => $index < $currentPosition,
                                         'border-outline-light dark:border-outline-dark bg-elevation-02dp border' => $index >= $currentPosition,
                                     ])
                                 ></div>

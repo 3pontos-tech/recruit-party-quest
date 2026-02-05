@@ -85,4 +85,34 @@ enum ApplicationStatusEnum: string implements HasColor, HasIcon, HasLabel
             self::Withdrawn => new WithdrawnTransition($application),
         };
     }
+
+    public function getTailwindColorClass(): string
+    {
+        return match ($this) {
+            self::New => 'bg-gray-500',
+            self::InReview => 'bg-yellow-500',
+            self::InProgress => 'bg-blue-500',
+            self::OfferExtended => 'bg-indigo-500',
+            self::OfferAccepted => 'bg-green-500',
+            self::OfferDeclined => 'bg-red-500',
+            self::Hired => 'bg-emerald-500',
+            self::Rejected => 'bg-slate-500',
+            self::Withdrawn => 'bg-orange-500',
+        };
+    }
+
+    public function getTailwindBadgeClass(): string
+    {
+        return match ($this) {
+            self::New => 'bg-gray-500/10 text-gray-500',
+            self::InReview => 'bg-yellow-500/10 text-yellow-500',
+            self::InProgress => 'bg-blue-500/10 text-blue-500',
+            self::OfferExtended => 'bg-indigo-500/10 text-indigo-500',
+            self::OfferAccepted => 'bg-green-500/10 text-green-500',
+            self::OfferDeclined => 'bg-red-500/10 text-red-500',
+            self::Hired => 'bg-emerald-500/10 text-emerald-500',
+            self::Rejected => 'bg-slate-500/10 text-slate-500',
+            self::Withdrawn => 'bg-orange-500/10 text-orange-500',
+        };
+    }
 }
