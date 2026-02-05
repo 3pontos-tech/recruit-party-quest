@@ -25,6 +25,7 @@
 @import './components/filament/sidebar.css' layer(components);
 @import './components/filament/topbar.css' layer(components);
 @import './components/filament/wizard.css' layer(components);
+@import './components/filament/table.css' layer(components);
 
 @source '../../../../resources/views/**/*.blade.php';
 @source '../../../../app-modules/**/resources/views/**/*.blade.php';
