@@ -21,8 +21,12 @@ use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use He4rt\Teams\Team;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method Team getOwnerRecord()
+ */
 class DepartmentsRelationManager extends RelationManager
 {
     protected static string $relationship = 'departments';
