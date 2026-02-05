@@ -9,8 +9,6 @@ use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Feedback\Enums\EvaluationRatingEnum;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ViewApplication;
-use He4rt\Permissions\Permission;
-use He4rt\Permissions\PermissionsEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 
@@ -22,14 +20,6 @@ beforeEach(function (): void {
     filament()->setCurrentPanel(FilamentPanel::Organization->value);
     $this->evaluator = Recruiter::factory()->createOne();
     actingAs($this->evaluator->user);
-
-    Permission::factory()
-        ->create([
-            'name' => 'view_any_applications',
-            'guard_name' => 'web',
-            'action' => PermissionsEnum::View,
-        ]);
-    $this->evaluator->user->givePermissionTo('view_applications');
     $this->evaluator->user->givePermissionTo('view_any_applications');
 
     $this->application = Application::factory()->createOne();
