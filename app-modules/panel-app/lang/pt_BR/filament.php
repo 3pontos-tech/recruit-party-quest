@@ -39,6 +39,7 @@ return [
         'filters' => [
             'heading' => 'Filtros',
             'clear' => 'Limpar',
+            'apply' => 'Aplicar',
         ],
     ],
     'stage_timeline' => [
