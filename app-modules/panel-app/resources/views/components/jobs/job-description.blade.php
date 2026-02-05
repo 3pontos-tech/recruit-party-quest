@@ -138,13 +138,8 @@
                 <x-he4rt::heading level="2" size="sm" class="text-text-high">
                     {{ __('panel-app::filament.pages.job_description.about_this_job') }}
                 </x-he4rt::heading>
-                <div class="space-y-4">
-                    <x-he4rt::text size="md">
-                        {{ $posting->summary }}
-                    </x-he4rt::text>
-                    <x-he4rt::text size="md">
-                        {{ $description }}
-                    </x-he4rt::text>
+                <div class="prose prose-sm text-text-medium max-w-none">
+                    {{ \Filament\Forms\Components\RichEditor\RichContentRenderer::make($description) }}
                 </div>
             </section>
 
