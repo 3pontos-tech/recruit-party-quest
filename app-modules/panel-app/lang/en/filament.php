@@ -6,6 +6,12 @@ return [
     'recruitment' => [
         'navigation_group' => 'Recruitment',
     ],
+    'categories' => [
+        'section_title' => 'Categories',
+        'headline_title' => 'Browse by Categories',
+        'headline_description' => 'Explore job opportunities organized by industry and specialization. Find the perfect role that matches your skills and career goals.',
+        'average_salary' => 'Average Salary',
+    ],
     'pages' => [
         'search_jobs' => [
             'header' => 'Search Jobs',
@@ -32,6 +38,7 @@ return [
         ],
         'filters' => [
             'heading' => 'Filters',
+            'clear' => 'Clear',
         ],
     ],
     'stage_timeline' => [

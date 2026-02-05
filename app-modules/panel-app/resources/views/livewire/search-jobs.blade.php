@@ -2,6 +2,7 @@
     use Filament\Support\Icons\Heroicon;
     use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
     use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
+    use He4rt\Recruitment\Requisitions\Enums\JobCategoryEnum;
     use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 @endphp
 
@@ -30,6 +31,13 @@
                                 :title="__('recruitment::filament.requisition.filters.experience_level')"
                                 wire:model.live="experienceLevel"
                                 :items="ExperienceLevelEnum::cases()"
+                                type="radio"
+                            />
+
+                            <x-panel-app::jobs.filter
+                                :title="__('recruitment::filament.requisition.filters.category')"
+                                wire:model.live="category"
+                                :items="JobCategoryEnum::cases()"
                                 type="radio"
                             />
                         </x-panel-app::jobs.filters>
@@ -63,12 +71,7 @@
                                 <x-he4rt::text size="sm" class="text-muted-foreground mt-1">
                                     {{ __('panel-app::filament.pages.search_jobs.no_jobs_description') }}
                                 </x-he4rt::text>
-                                <x-he4rt::button
-                                    wire:click="$set('search', '')"
-                                    variant="outline"
-                                    size="sm"
-                                    class="mt-4"
-                                >
+                                <x-he4rt::button wire:click="clearFilters" variant="outline" size="sm" class="mt-4">
                                     {{ __('panel-app::filament.pages.search_jobs.clear_filters') }}
                                 </x-he4rt::button>
                             </x-he4rt::card>

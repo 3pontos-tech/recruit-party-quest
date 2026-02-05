@@ -6,6 +6,7 @@ namespace He4rt\App\Livewire;
 
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
+use He4rt\Recruitment\Requisitions\Enums\JobCategoryEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Users\User;
@@ -46,6 +47,9 @@ class SearchJobs extends Component
     #[Url]
     public string $location = '';
 
+    #[Url]
+    public ?JobCategoryEnum $category = null;
+
     public int $perPage = 4;
 
     #[Computed]
@@ -76,6 +80,9 @@ class SearchJobs extends Component
             })
             ->when($this->experienceLevel, function ($query): void {
                 $query->where('experience_level', $this->experienceLevel);
+            })
+            ->when($this->category, function ($query): void {
+                $query->where('category', $this->category);
             })
             ->when($this->location, function ($query): void {
                 $query->where(function (Builder $q): void {
@@ -117,6 +124,22 @@ class SearchJobs extends Component
 
     public function updatingLocation(): void
     {
+        $this->resetPage();
+    }
+
+    public function updatingCategory(): void
+    {
+        $this->resetPage();
+    }
+
+    public function clearFilters(): void
+    {
+        $this->search = '';
+        $this->workArrangements = [];
+        $this->employmentTypes = [];
+        $this->experienceLevel = null;
+        $this->location = '';
+        $this->category = null;
         $this->resetPage();
     }
 

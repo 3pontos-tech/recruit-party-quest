@@ -174,6 +174,7 @@ return [
             'work_arrangement' => 'Work Arrangement',
             'employment_type' => 'Employment Type',
             'experience_level' => 'Experience Level',
+            'category' => 'Category',
             'team' => 'Team',
             'department' => 'Department',
             'is_internal_only' => 'Internal Only',

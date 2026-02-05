@@ -172,6 +172,7 @@ return [
             'work_arrangement' => 'Regime de Trabalho',
             'employment_type' => 'Tipo de Contratação',
             'experience_level' => 'Nível de Experiência',
+            'category' => 'Categoria',
             'team' => 'Empresa',
             'department' => 'Departamento',
             'is_internal_only' => 'Apenas Interno',
