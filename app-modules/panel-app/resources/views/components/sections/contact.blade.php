@@ -12,7 +12,7 @@
         ],
         [
             'label' => 'Endereço',
-            'value' => 'R. Gomes de Carvalho, 1629 - sala 105 - Vila Olímpia, São Paulo - SP, 04547-006',
+            'value' => 'R. Gomes de Carvalho, 1629 - sala 103 - Vila Olímpia, São Paulo - SP, 04547-006',
             'icon' => 'heroicon-o-map-pin',
         ],
     ];
