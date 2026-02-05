@@ -123,6 +123,8 @@ return [
             'employment_type' => 'Employment Type',
             'employment_type_description' => 'The nature of the employment contract',
             'experience_level' => 'Experience Level',
+            'category' => 'Category',
+            'category_description' => 'The functional area or industry of this position',
             'positions_available' => 'Positions Available',
             'positions_available_description' => 'How many positions should be available',
             'salary_range' => 'Salary Range',

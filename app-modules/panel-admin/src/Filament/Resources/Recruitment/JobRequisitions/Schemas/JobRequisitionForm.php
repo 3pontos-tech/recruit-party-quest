@@ -18,6 +18,7 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
+use He4rt\Recruitment\Requisitions\Enums\JobCategoryEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
@@ -136,6 +137,9 @@ class JobRequisitionForm
                         ->label(__('recruitment::filament.requisition.fields.experience_level'))
                         ->options(ExperienceLevelEnum::class)
                         ->required(),
+                    Select::make('category')
+                        ->label(__('recruitment::filament.requisition.fields.category'))
+                        ->options(JobCategoryEnum::class),
                     TextInput::make('positions_available')
                         ->label(__('recruitment::filament.requisition.fields.positions_available'))
                         ->numeric()
