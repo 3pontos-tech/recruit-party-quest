@@ -17,7 +17,7 @@ final class AnalyzeResumeEvent implements ShouldBroadcast
 
     public function __construct(
         public readonly ResumeAnalyzeStatus $status,
-        public readonly CandidateOnboardingDTO $fields,
+        public readonly array|CandidateOnboardingDTO $fields,
         public readonly string $userId
     ) {}
 

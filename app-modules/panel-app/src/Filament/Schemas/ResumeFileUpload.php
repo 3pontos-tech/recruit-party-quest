@@ -18,7 +18,7 @@ class ResumeFileUpload extends FileUpload
     protected function setUp(): void
     {
         $this->label(__('panel-app::pages/onboarding.steps.cv.fields.cv_file'))
-            ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
+            ->acceptedFileTypes(['application/pdf'])
             ->maxSize(10240)
             ->directory('cv-uploads')
             ->visibility('private')

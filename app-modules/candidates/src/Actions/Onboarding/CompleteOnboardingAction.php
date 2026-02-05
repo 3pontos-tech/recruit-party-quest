@@ -8,6 +8,9 @@ use He4rt\Candidates\AiAutocompleteInterface;
 use He4rt\Candidates\DTOs\CandidateEducationDTO;
 use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\DTOs\CandidateWorkExperienceDTO;
+use He4rt\Candidates\Enums\ResumeAnalyzeStatus;
+use He4rt\Candidates\Events\AnalyzeResumeEvent;
+use He4rt\Candidates\Exceptions\OnboardingException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Prism\Prism\Facades\Prism;
@@ -22,15 +25,30 @@ final class CompleteOnboardingAction implements AiAutocompleteInterface
 {
     /**
      * @throws FileNotFoundException
+     * @throws OnboardingException
      */
-    public function execute(TemporaryUploadedFile $file): CandidateOnboardingDTO
+    public function execute(TemporaryUploadedFile $file, string $userId): CandidateOnboardingDTO
     {
         /** @var Response $response */
         $response = Prism::structured()
             ->using(config('ai.provider.gemini.enum'), config('ai.provider.gemini.model'))
             ->withSchema($this->structureSchema())
             ->withPrompt(
-                'Extraia os dados do currículo anexado para preencher o formulário conforme o esquema.',
+                <<<'PROMPT'
+                           Você é um assistente de triagem de currículos. Analise o arquivo anexo:
+
+                            ### CRITÉRIOS DE REJEIÇÃO (is_cv: FALSE):
+                            1. **Tipo de Arquivo**: Se NÃO for um currículo, perfil profissional ou certificado.
+                            2. **Extensão/Tamanho**: Se o documento tiver MAIS DE 3 PÁGINAS, rejeite-o.
+                            3. **Conteúdo**: Documentos fiscais, fotos pessoais ou textos sem nexo profissional.
+
+                            ### JUSTIFICATIVA (rejection_reason):
+                            - Se tiver mais de 5 páginas, escreva: "O arquivo é muito longo. Envie um currículo com no máximo 3 páginas."
+                            - Se não for um currículo, escreva: "O arquivo enviado não é um currículo".
+
+                            ### EXTRAÇÃO (Se is_cv: TRUE):
+                            - Extraia até 5 experiências profissionais e a formação acadêmica.
+PROMPT,
                 [
                     Document::fromRawContent(
                         rawContent: $file->get(),
@@ -41,6 +59,7 @@ final class CompleteOnboardingAction implements AiAutocompleteInterface
             ->asStructured();
 
         $output = $response->structured;
+        $this->validate($output, $userId);
         $workExperiences = [];
         $education = [];
 
@@ -70,6 +89,15 @@ final class CompleteOnboardingAction implements AiAutocompleteInterface
             'Dados extraídos do currículo',
             /** @phpstan-ignore-next-line argument.type */
             [
+                'is_cv' => new BooleanSchema(
+                    'is_cv',
+                    'Define se o arquivo é um currículo válido e tem 5 páginas ou menos.'
+                ),
+
+                'rejection_reason' => new StringSchema(
+                    'rejection_reason',
+                    'Motivo da rejeição em português (ex: arquivo muito longo, ou não é um currículo).'
+                ),
                 'work_experiences' => new ArraySchema(
                     'work_experiences',
                     'Lista de experiências profissionais',
@@ -99,5 +127,26 @@ final class CompleteOnboardingAction implements AiAutocompleteInterface
                 ),
             ]
         );
+    }
+
+    /**
+     * @throws OnboardingException
+     */
+    private function validate(array $output, string $userId): void
+    {
+        if ($output['is_cv'] === true) {
+            return;
+        }
+
+        $reason = $output['rejection_reason'] ?? '';
+
+        if (str_contains($reason, 'muito longo') || str_contains($reason, '3 páginas')) {
+            broadcast(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Error, ['message' => 'O arquivo é muito longo. Envie um currículo com no máximo 3 páginas.'], $userId));
+            throw OnboardingException::toExpensive();
+        }
+
+        broadcast(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Error, ['message' => 'Arquivo enviado não é um currículo.'], $userId));
+
+        throw OnboardingException::invalidCv();
     }
 }
