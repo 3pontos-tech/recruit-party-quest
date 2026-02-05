@@ -22,8 +22,10 @@ use He4rt\Teams\Concerns\BelongsToTeam;
 use He4rt\Teams\Department;
 use He4rt\Teams\Team;
 use He4rt\Users\User;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -158,6 +160,16 @@ class JobRequisition extends BaseModel implements HasActivityLogTitle
     public function getActivityLogTitle(): string
     {
         return 'Job Requisition'.$this->team_id;
+    }
+
+    /**
+     * @param  Builder<self>  $query
+     * @return Builder<self>
+     */
+    #[Scope]
+    protected function hasStages(Builder $query): Builder
+    {
+        return $query->has('stages');
     }
 
     protected function casts(): array

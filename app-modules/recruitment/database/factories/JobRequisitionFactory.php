@@ -9,8 +9,10 @@ use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
+use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Teams\Department;
 use He4rt\Teams\Team;
 use He4rt\Users\User;
@@ -62,6 +64,16 @@ class JobRequisitionFactory extends Factory
             'recruiter_id' => fn (array $attributes) => Recruiter::factory()->create(['team_id' => $attributes['team_id']])->getKey(),
             'created_by_id' => User::factory(),
         ];
+    }
+
+    public function available(): self
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => fake()->randomElement([RequisitionStatusEnum::Published, RequisitionStatusEnum::Approved]),
+        ])->afterCreating(function (JobRequisition $jobRequisition): void {
+            Stage::factory()->for($jobRequisition, 'requisition')->create();
+            JobPosting::factory()->for($jobRequisition, 'jobRequisition')->create();
+        });
     }
 
     private function getSalaryRangeByExperience($experienceLevel): array

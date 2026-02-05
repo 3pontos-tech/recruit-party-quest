@@ -23,15 +23,26 @@ class UserObserver
                 'expected_salary_currency' => 'USD',
                 'is_open_to_remote' => true,
             ]);
-            $permission = Permission::query()->firstOrCreate([
+
+            $viewPermission = Permission::query()->firstOrCreate([
                 'name' => 'view_applications',
                 'guard_name' => 'web',
+            ], [
                 'resource' => Application::class,
                 'resource_group' => 'Applications',
                 'action' => 'view',
             ]);
+            $createPermission = Permission::query()->firstOrCreate([
+                'name' => 'create_applications',
+                'guard_name' => 'web',
+            ], [
+                'resource' => Application::class,
+                'resource_group' => 'Applications',
+                'action' => 'create',
+            ]);
 
-            $user->givePermissionTo($permission->name);
+            $user->givePermissionTo($viewPermission->name);
+            $user->givePermissionTo($createPermission->name);
         }
     }
 

@@ -6,6 +6,7 @@ namespace He4rt\App\Livewire;
 
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
+use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\JobCategoryEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
@@ -66,6 +67,8 @@ class SearchJobs extends Component
     {
         return JobRequisition::query()
             ->withCount('applications')
+            ->whereIn('status', [RequisitionStatusEnum::Approved->value, RequisitionStatusEnum::Published->value])
+            ->hasStages()
             ->when($this->search, function ($query): void {
                 $query->whereHas('post', function (Builder $q): void {
                     $q->where('title', 'like', sprintf('%%%s%%', $this->search))

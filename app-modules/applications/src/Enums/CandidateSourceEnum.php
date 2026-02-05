@@ -21,7 +21,7 @@ enum CandidateSourceEnum: string implements HasColor, HasIcon, HasLabel
     case Referral = 'referral';
     case CareerPage = 'career_page';
     case Community = 'community';
-    case ThreePoints = 'three_points';
+    case ThreeDots = 'three_dots';
     case Other = 'other';
 
     public function getLabel(): string
@@ -39,7 +39,7 @@ enum CandidateSourceEnum: string implements HasColor, HasIcon, HasLabel
             self::CareerPage => Color::Purple,
             self::Other => Color::Teal,
             self::Community => Color::Orange,
-            self::ThreePoints => Color::Lime,
+            self::ThreeDots => Color::Lime,
         };
     }
 
@@ -53,7 +53,7 @@ enum CandidateSourceEnum: string implements HasColor, HasIcon, HasLabel
             self::CareerPage => Heroicon::GlobeAlt,
             self::Other => Heroicon::User,
             self::Community => Heroicon::OutlinedAcademicCap,
-            self::ThreePoints => Heroicon::BugAnt,
+            self::ThreeDots => Heroicon::BugAnt,
         };
     }
 }
