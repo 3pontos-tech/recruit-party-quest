@@ -21,6 +21,7 @@ class UserObserver
                 'expected_salary_currency' => 'USD',
                 'is_open_to_remote' => true,
             ]);
+            $user->givePermissionTo('view_applications');
         }
     }
 
