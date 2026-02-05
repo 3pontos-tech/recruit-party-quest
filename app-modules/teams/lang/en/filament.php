@@ -58,6 +58,12 @@ return [
             'updated_at' => 'Updated At',
             'deleted_at' => 'Deleted At',
         ],
+        'sections' => [
+            'identity' => 'Identity',
+            'management' => 'Management',
+            'metrics' => 'Metrics',
+            'metadata' => 'Metadata',
+        ],
         'filters' => [
             'team' => 'Team',
         ],
