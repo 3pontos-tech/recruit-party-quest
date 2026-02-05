@@ -15,16 +15,18 @@
         </div>
         <div class="w-full">
             <div class="flex flex-col items-center gap-3 md:flex-row">
-                <div class="relative flex-1">
-                    <x-he4rt::input
-                        wire:model.live.debounce.300ms="search"
-                        class="border-border focus:border-primary"
-                        :placeholder="__('panel-app::filament.pages.search_jobs.search_placeholder')"
-                        :aria-label="__('panel-app::filament.pages.search_jobs.search_placeholder')"
-                    />
-                </div>
+                <x-he4rt::input
+                    wire:model.live.debounce.300ms="search"
+                    class="border-border focus:border-primary w-full"
+                    :placeholder="__('panel-app::filament.pages.search_jobs.search_placeholder')"
+                    :aria-label="__('panel-app::filament.pages.search_jobs.search_placeholder')"
+                />
 
-                <x-he4rt::button wire:click="$refresh" :icon="\Filament\Support\Icons\Heroicon::MagnifyingGlass">
+                <x-he4rt::button
+                    class="w-full shrink-0 sm:w-fit"
+                    wire:click="$refresh"
+                    :icon="\Filament\Support\Icons\Heroicon::MagnifyingGlass"
+                >
                     {{ __('panel-app::filament.pages.search_jobs.search_button') }}
                 </x-he4rt::button>
             </div>
