@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace He4rt\Users;
 
+use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
+use He4rt\Permissions\Permission;
 
 class UserObserver
 {
@@ -21,7 +23,15 @@ class UserObserver
                 'expected_salary_currency' => 'USD',
                 'is_open_to_remote' => true,
             ]);
-            $user->givePermissionTo('view_applications');
+            $permission = Permission::query()->firstOrCreate([
+                'name' => 'view_applications',
+                'guard_name' => 'web',
+                'resource' => Application::class,
+                'resource_group' => 'Applications',
+                'action' => 'view',
+            ]);
+
+            $user->givePermissionTo($permission->name);
         }
     }
 

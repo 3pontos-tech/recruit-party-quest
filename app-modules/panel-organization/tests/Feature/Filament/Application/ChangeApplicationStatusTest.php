@@ -22,12 +22,7 @@ beforeEach(function (): void {
     filament()->setCurrentPanel(FilamentPanel::Organization->value);
     $this->evaluator = Recruiter::factory()->createOne();
     actingAs($this->evaluator->user);
-    Permission::factory()
-        ->create([
-            'name' => 'view_applications',
-            'guard_name' => 'web',
-            'action' => PermissionsEnum::View,
-        ]);
+
     Permission::factory()
         ->create([
             'name' => 'view_any_applications',

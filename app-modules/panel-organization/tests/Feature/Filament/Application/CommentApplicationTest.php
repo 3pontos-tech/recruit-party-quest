@@ -22,12 +22,6 @@ beforeEach(function (): void {
     actingAs($this->evaluator->user);
     Permission::factory()
         ->create([
-            'name' => 'view_applications',
-            'guard_name' => 'web',
-            'action' => PermissionsEnum::View,
-        ]);
-    Permission::factory()
-        ->create([
             'name' => 'view_any_applications',
             'guard_name' => 'web',
             'action' => PermissionsEnum::View,
