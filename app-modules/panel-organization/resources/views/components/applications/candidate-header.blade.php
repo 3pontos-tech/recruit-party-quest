@@ -53,20 +53,19 @@
                     <img src="{{ $user->getFilamentAvatarUrl() }}" class="h-40 w-40" alt="{{ $user->name }}" />
                 </div>
 
-                <div class="space-y-3">
-                    <div class="space-y-1">
-                        {{-- Candidate Name --}}
-                        <x-he4rt::heading level="1" size="lg" class="text-text-high leading-tight">
-                            {{ $user->name }}
-                        </x-he4rt::heading>
+                <div class="flex flex-col justify-evenly space-y-3">
+                    {{-- Candidate Name --}}
+                    <x-he4rt::heading level="1" size="lg" class="text-text-high leading-tight">
+                        {{ $user->name }}
+                    </x-he4rt::heading>
 
-                        {{-- Professional Title --}}
-                        @if ($candidate->headline)
-                            <x-he4rt::text size="md" class="text-text-medium font-medium">
-                                {{ $candidate->headline }}
-                            </x-he4rt::text>
-                        @endif
-                    </div>
+                    {{-- Professional Title --}}
+                    @if ($candidate->headline)
+                        <x-he4rt::text size="md" class="text-text-medium font-medium">
+                            {{ $candidate->headline }}
+                        </x-he4rt::text>
+                    @endif
+
                     <div>
                         <x-he4rt::tag>
                             {{ $record->status->getLabel() }}
@@ -78,7 +77,7 @@
                 </div>
             </div>
 
-            <div class="flex flex-col items-end gap-x-6 gap-y-3 pt-1">
+            <div class="flex flex-col items-end justify-evenly pt-1">
                 {{-- Email --}}
                 <div class="flex items-center gap-2">
                     <x-he4rt::icon :icon="Heroicon::Envelope" size="sm" class="text-icon-medium" />
@@ -93,7 +92,7 @@
                     </div>
                 @endif
 
-                <div class="flex gap-2">
+                <div class="flex">
                     {{-- LinkedIn --}}
                     @if ($candidate->linkedin_url)
                         <x-he4rt::tag
@@ -122,9 +121,9 @@
         </div>
         {{-- Application Info --}}
         <div class="border-border border-outline-low w-full">
-            <div class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="grid w-full grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
                 <div>
-                    <span class="mb-1 flex items-center gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                    <span class="mb-1 flex items-center gap-1 text-xs tracking-wider text-gray-500">
                         <x-he4rt::icon :icon="Heroicon::Briefcase" size="sm" class="text-icon-medium" />
                         {{ __('panel-organization::view.candidate_header.position') }}
                     </span>
@@ -134,7 +133,7 @@
                 </div>
 
                 <div>
-                    <span class="mb-1 flex items-center gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                    <span class="mb-1 flex items-center gap-1 text-xs tracking-wider text-gray-500">
                         <x-he4rt::icon :icon="Heroicon::BuildingOffice2" size="sm" class="text-icon-medium" />
                         {{ __('panel-organization::view.candidate_header.department') }}
                     </span>
@@ -144,7 +143,7 @@
                 </div>
 
                 <div>
-                    <span class="mb-1 flex items-center gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                    <span class="mb-1 flex items-center gap-1 text-xs tracking-wider text-gray-500">
                         <x-he4rt::icon :icon="Heroicon::Calendar" size="sm" class="text-icon-medium" />
                         {{ __('panel-organization::view.candidate_header.applied') }}
                     </span>
@@ -154,7 +153,7 @@
                 </div>
 
                 <div>
-                    <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                    <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500">
                         <x-he4rt::icon :icon="Heroicon::Briefcase" size="sm" class="text-icon-medium" />
                         {{ __('panel-organization::view.candidate_header.experience') }}
                     </span>
@@ -162,7 +161,7 @@
                 </div>
 
                 <div>
-                    <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                    <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500">
                         <x-he4rt::icon :icon="Heroicon::Clock" size="sm" class="text-icon-medium" />
                         {{ __('panel-organization::view.candidate_header.availability') }}
                     </span>
@@ -171,7 +170,7 @@
 
                 @if ($location)
                     <div>
-                        <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                        <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500">
                             <x-he4rt::icon :icon="Heroicon::MapPin" size="sm" class="text-icon-medium" />
                             {{ __('panel-organization::view.candidate_header.location') }}
                         </span>
@@ -180,7 +179,7 @@
                 @endif
 
                 <div>
-                    <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500 uppercase">
+                    <span class="mb-1 flex gap-1 text-xs tracking-wider text-gray-500">
                         <x-he4rt::icon :icon="Heroicon::AcademicCap" size="sm" class="text-icon-medium" />
                         {{ __('panel-organization::view.candidate_header.education') }}
                     </span>
@@ -190,10 +189,10 @@
                 </div>
             </div>
 
-            <div class="space-y-3">
+            <div class="mt-5 space-y-3">
                 <div class="flex items-center gap-2">
                     <x-he4rt::icon :icon="Heroicon::CodeBracket" size="sm" class="text-icon-medium" />
-                    <span class="text-text-medium text-xs font-semibold tracking-wider uppercase">
+                    <span class="text-text-medium text-xs font-semibold tracking-wide">
                         {{ __('panel-organization::view.candidate_header.key_skills') }}
                     </span>
                 </div>
