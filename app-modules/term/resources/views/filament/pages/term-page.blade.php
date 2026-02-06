@@ -27,7 +27,7 @@
                         <x-he4rt::heading :level="2" class="font-family-secondary mb-6 font-normal">
                             {{ $section['title'] }}
                         </x-he4rt::heading>
-                        <div class="fi-prose prose-h2:text-red-500 prose-p:text-green-500 max-w-none">
+                        <div class="fi-prose term-prose max-w-none">
                             {{ \Filament\Forms\Components\RichEditor\RichContentRenderer::make($section['body']) }}
                         </div>
                     </section>
