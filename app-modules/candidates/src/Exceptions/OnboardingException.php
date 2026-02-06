@@ -9,11 +9,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 class OnboardingException extends Exception
 {
-    public static function invalidCv(string $message = 'Arquivo enviado não é um currículo.'): self
+    public static function invalidCv(?string $message = null): self
     {
         return new self(
-            message: $message,
+            message: $message ?? __('panel-app::pages/onboarding.notifications.is_not_cv.message'),
             code: Response::HTTP_UNPROCESSABLE_ENTITY
+        );
+    }
+
+    public static function rateLimiting(?string $message = null): self
+    {
+        return new self(
+            message: $message ?? __('panel-app::pages/onboarding.notifications.something_went_wrong.message'),
+            code: Response::HTTP_SERVICE_UNAVAILABLE
         );
     }
 }

@@ -14,6 +14,8 @@ use He4rt\Candidates\Events\AnalyzeResumeEvent;
 use He4rt\Candidates\Exceptions\OnboardingException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Prism\Prism\Exceptions\PrismException;
+use Prism\Prism\Exceptions\PrismRateLimitedException;
 use Prism\Prism\Facades\Prism;
 use Prism\Prism\Schema\ArraySchema;
 use Prism\Prism\Schema\BooleanSchema;
@@ -34,12 +36,13 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
      */
     public function execute(TemporaryUploadedFile $file, string $userId): CandidateOnboardingDTO
     {
-        /** @var Response $response */
-        $response = Prism::structured()
-            ->using(config('ai.provider.gemini.enum'), config('ai.provider.gemini.model'))
-            ->withSchema($this->structureSchema())
-            ->withPrompt(
-                <<<PROMPT
+        try {
+            /** @var Response $response */
+            $response = Prism::structured()
+                ->using(config('ai.provider.gemini.enum'), config('ai.provider.gemini.model'))
+                ->withSchema($this->structureSchema())
+                ->withPrompt(
+                    <<<PROMPT
                            Você é um assistente de triagem de currículos. Analise o arquivo anexo:
 
                             ### CRITÉRIOS DE REJEIÇÃO (is_cv: FALSE):
@@ -52,36 +55,40 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
                             ### EXTRAÇÃO (Se is_cv: TRUE):
                             - Extraia até 5 experiências profissionais e a formação acadêmica.
 PROMPT,
-                [
-                    Document::fromRawContent(
-                        rawContent: $file->get(),
-                        mimeType: $file->getMimeType()
-                    ),
-                ]
-            )
-            ->asStructured();
+                    [
+                        Document::fromRawContent(
+                            rawContent: $file->get(),
+                            mimeType: $file->getMimeType()
+                        ),
+                    ]
+                )
+                ->asStructured();
 
-        $output = $response->structured;
-        $this->validate($output, $userId);
-        $workExperiences = [];
-        $education = [];
+            $output = $response->structured;
+            $this->validate($output, $userId);
+            $workExperiences = [];
+            $education = [];
 
-        foreach ($output['work_experiences'] as $item) {
-            $workExperiences[] = CandidateWorkExperienceDTO::make(
-                $item
-            );
+            foreach ($output['work_experiences'] as $item) {
+                $workExperiences[] = CandidateWorkExperienceDTO::make(
+                    $item
+                );
+            }
+
+            foreach ($output['education'] as $item) {
+                $education[] = CandidateEducationDTO::make(
+                    $item
+                );
+            }
+
+            return CandidateOnboardingDTO::make([
+                'education' => $education,
+                'work_experiences' => $workExperiences,
+            ]);
+        } catch (PrismRateLimitedException|PrismException) {
+            broadcast(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Error, null, $userId, 'Something went wrong'));
+            throw OnboardingException::rateLimiting();
         }
-
-        foreach ($output['education'] as $item) {
-            $education[] = CandidateEducationDTO::make(
-                $item
-            );
-        }
-
-        return CandidateOnboardingDTO::make([
-            'education' => $education,
-            'work_experiences' => $workExperiences,
-        ]);
 
     }
 
@@ -99,7 +106,7 @@ PROMPT,
 
                 'rejection_reason' => new StringSchema(
                     'rejection_reason',
-                    sprintf('Motivo da rejeição seguindo esses padrões (ex: {%s}}).', $this->notAnCv->value)
+                    sprintf('Motivo da rejeição seguindo esses padrões (ex: {%s}).', $this->notAnCv->value)
                 ),
                 'work_experiences' => new ArraySchema(
                     'work_experiences',

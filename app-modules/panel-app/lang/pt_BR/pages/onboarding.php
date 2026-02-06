@@ -30,6 +30,12 @@ return [
             'title' => 'Onboarding Concluído',
             'message' => 'Seu perfil foi configurado com sucesso! Você já pode começar a se candidatar a vagas.',
         ],
+        'something_went_wrong' => [
+            'message' => 'Algo deu errado, tente novamente.',
+        ],
+        'is_not_cv' => [
+            'message' => 'Arquivo enviado não é um currículo.',
+        ],
     ],
     'steps' => [
         'account' => [
