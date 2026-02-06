@@ -41,6 +41,23 @@ return [
             'title' => 'Departamentos',
             'label' => 'Departamento',
             'plural_label' => 'Departamentos',
+            'fields' => [
+                'id' => 'ID',
+                'team' => 'Empresa',
+                'name' => 'Nome',
+                'description' => 'Descrição',
+                'head_user' => 'Responsável',
+                'requisitions_count' => 'Requisições',
+                'created_at' => 'Criado em',
+                'updated_at' => 'Atualizado em',
+                'deleted_at' => 'Excluído em',
+            ],
+            'sections' => [
+                'identity' => 'Identidade',
+                'management' => 'Gerência',
+                'metrics' => 'Métricas',
+                'metadata' => 'Metadados',
+            ],
         ],
     ],
     'department' => [
