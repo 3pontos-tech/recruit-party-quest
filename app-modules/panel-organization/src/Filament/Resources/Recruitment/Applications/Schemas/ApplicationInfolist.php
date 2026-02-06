@@ -28,6 +28,7 @@ class ApplicationInfolist
 
                 Tabs::make('application_tabs')
                     ->columnSpan(3)
+                    ->contained(false)
                     ->schema([
                         Tab::make('Overview')
                             ->label(__('panel-organization::filament.tabs.overview'))

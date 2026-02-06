@@ -49,8 +49,8 @@
         <div class="border-text-low/20 mb-4 flex justify-between border-b pb-4">
             <div class="flex flex-col items-center gap-6 sm:flex-row">
                 {{-- Profile Photo Placeholder --}}
-                <div class="flex h-40 w-40 shrink-0 items-center justify-center overflow-hidden rounded-full">
-                    <img src="{{ $user->getFilamentAvatarUrl() }}" class="h-40 w-40" alt="{{ $user->name }}" />
+                <div class="flex h-32 w-32 shrink-0 items-center justify-center overflow-hidden rounded-full">
+                    <img src="{{ $user->getFilamentAvatarUrl() }}" class="h-32 w-32" alt="{{ $user->name }}" />
                 </div>
 
                 <div class="flex flex-col justify-evenly space-y-3">
@@ -121,7 +121,7 @@
         </div>
         {{-- Application Info --}}
         <div class="border-border border-outline-low w-full">
-            <div class="grid w-full grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="grid w-full grid-cols-1 gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
                 <div>
                     <span class="mb-1 flex items-center gap-1 text-xs tracking-wider text-gray-500">
                         <x-he4rt::icon :icon="Heroicon::Briefcase" size="sm" class="text-icon-medium" />
@@ -183,7 +183,7 @@
                         <x-he4rt::icon :icon="Heroicon::AcademicCap" size="sm" class="text-icon-medium" />
                         {{ __('panel-organization::view.candidate_header.education') }}
                     </span>
-                    <p class="text-text-high ml-5 line-clamp-2 text-sm font-semibold" title="{{ $education }}">
+                    <p class="text-text-high ml-5 line-clamp-3 text-sm font-semibold" title="{{ $education }}">
                         {{ $education }}
                     </p>
                 </div>

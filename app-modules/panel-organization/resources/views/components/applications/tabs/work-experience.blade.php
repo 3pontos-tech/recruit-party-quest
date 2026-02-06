@@ -73,32 +73,22 @@
     }
 @endphp
 
-<div class="space-y-6">
-    {{-- Header --}}
-    <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::Briefcase" size="sm" />
-            </div>
-            <div>
-                <h3 class="text-text-high text-lg font-semibold">
-                    {{ __('panel-organization::view.tabs.work_experience.title') }}
-                </h3>
-                <p class="text-text-medium text-sm">
-                    {{ __('panel-organization::view.tabs.work_experience.subtitle') }}
-                </p>
-            </div>
-        </div>
-        @if ($hasExperience)
-            <div class="flex items-center gap-2">
-                @if ($currentJob)
-                    <x-he4rt::tag size="sm">
-                        {{ __('panel-organization::view.tabs.work_experience.currently_employed') }}
-                    </x-he4rt::tag>
-                @endif
-            </div>
-        @endif
-    </div>
+<x-filament::section icon="heroicon-o-briefcase" icon-color="info">
+    <x-slot name="heading">
+        {{ __('panel-organization::view.tabs.work_experience.title') }}
+    </x-slot>
+
+    <x-slot name="description">
+        {{ __('panel-organization::view.tabs.work_experience.subtitle') }}
+    </x-slot>
+
+    @if ($hasExperience && $currentJob)
+        <x-slot name="afterHeader">
+            <x-he4rt::tag size="sm">
+                {{ __('panel-organization::view.tabs.work_experience.currently_employed') }}
+            </x-he4rt::tag>
+        </x-slot>
+    @endif
 
     @if ($hasExperience)
         {{-- Experience Timeline --}}
@@ -117,44 +107,34 @@
                 @endphp
 
                 {{-- Experience Card --}}
-                <div
-                    class="{{ $isCurrent ? 'border-primary/30 bg-primary/5' : 'bg-surface-01dp border-outline-low' }} flex flex-col gap-6 rounded-xl border py-6 shadow-sm"
-                >
+                <x-filament::section :icon="\Filament\Support\Icons\Heroicon::BuildingOffice2" icon-color="info">
+                    <x-slot name="heading">
+                        {{ $jobTitle }}
+                    </x-slot>
+                    <x-slot name="description">
+                        {{ $experience->company_name }}
+                    </x-slot>
+                    @if ($isCurrent)
+                        <x-slot name="afterHeader">
+                            <x-he4rt::tag size="sm">
+                                <x-he4rt::icon
+                                    :icon="\Filament\Support\Icons\Heroicon::Clock"
+                                    size="xs"
+                                    class="mr-1"
+                                />
+                                {{ __('panel-organization::view.tabs.work_experience.currently_employed') }}
+                            </x-he4rt::tag>
+                        </x-slot>
+                    @endif
+
                     <div class="px-5">
                         <div class="flex items-start gap-4">
-                            {{-- Company Icon --}}
-                            <div
-                                class="{{ $isCurrent ? 'bg-primary/20' : 'bg-muted' }} flex h-12 w-12 shrink-0 items-center justify-center rounded-lg"
-                            >
-                                <x-he4rt::icon
-                                    :icon="\Filament\Support\Icons\Heroicon::BuildingOffice2"
-                                    size="sm"
-                                    class="h-6 w-6 {{ $isCurrent ? 'text-primary' : 'text-muted-foreground' }}"
-                                />
-                            </div>
-
                             {{-- Job Details --}}
                             <div class="min-w-0 flex-1">
-                                <div class="flex items-start justify-between gap-2">
-                                    <div>
-                                        <h3 class="text-text-high text-base font-semibold">{{ $jobTitle }}</h3>
-                                        <p class="text-text-medium text-sm">{{ $experience->company_name }}</p>
-                                    </div>
-
-                                    @if ($isCurrent)
-                                        <x-he4rt::tag size="sm">
-                                            <x-he4rt::icon
-                                                :icon="\Filament\Support\Icons\Heroicon::Clock"
-                                                size="xs"
-                                                class="mr-1"
-                                            />
-                                            {{ __('panel-organization::view.tabs.work_experience.currently_employed') }}
-                                        </x-he4rt::tag>
-                                    @endif
-                                </div>
+                                <div class="flex items-start justify-between gap-2"></div>
 
                                 {{-- Timeline and Duration --}}
-                                <div class="text-text-medium mt-2 flex items-center gap-4 text-xs">
+                                <div class="text-text-medium mt-2 flex items-center gap-4 text-base">
                                     <span class="flex items-center gap-1">
                                         <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::Calendar" size="xs" />
                                         {{ $startDate->format('M Y') }} -
@@ -165,7 +145,7 @@
 
                                 {{-- Description --}}
                                 @if (! empty(trim($formattedDescription)))
-                                    <div class="text-text-medium mt-4 text-sm leading-relaxed whitespace-pre-line">
+                                    <div class="text-text-medium mt-4 text-base leading-7">
                                         {{ $formattedDescription }}
                                     </div>
                                 @endif
@@ -174,13 +154,13 @@
                                 @if (! empty($skills))
                                     <div class="mt-4 flex flex-wrap gap-1.5">
                                         @foreach (array_slice($skills, 0, 8) as $skill)
-                                            <x-he4rt::tag variant="outline" size="sm" class="text-[10px]">
+                                            <x-he4rt::tag variant="outline" size="sm" class="text-xs">
                                                 {{ $skill }}
                                             </x-he4rt::tag>
                                         @endforeach
 
                                         @if (count($skills) > 8)
-                                            <x-he4rt::tag variant="outline" size="sm" class="text-[10px]">
+                                            <x-he4rt::tag variant="outline" size="sm" class="text-xs">
                                                 {{ trans_choice('panel-organization::view.tabs.work_experience.more', count($skills) - 8, ['count' => count($skills) - 8]) }}
                                             </x-he4rt::tag>
                                         @endif
@@ -189,22 +169,23 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </x-filament::section>
             @endforeach
         </div>
 
         {{-- Experience Summary --}}
-        <div class="bg-elevation-02dp border-outline-low rounded-lg border p-4">
-            <h4 class="text-text-high mb-3 text-sm font-semibold">
+        <x-filament::section class="mt-4">
+            <x-slot name="heading">
                 {{ __('panel-organization::view.tabs.work_experience.career_summary') }}
-            </h4>
+            </x-slot>
+            <x-slot name="description">
+                {{ __('panel-organization::view.tabs.work_experience.career_timeline') }}
+            </x-slot>
 
             <div class="space-y-3">
                 {{-- Career Timeline --}}
                 <div>
-                    <p class="text-text-medium mb-2 text-xs font-medium">
-                        {{ __('panel-organization::view.tabs.work_experience.career_timeline') }}
-                    </p>
+                    <p class="text-text-medium mb-2 text-xs font-medium"></p>
                     <div class="flex items-center gap-2 text-sm">
                         <span class="text-text-high font-semibold">
                             {{ $workExperiences->min('start_date')?->format('Y') ?? 'N/A' }}
@@ -231,21 +212,23 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </x-filament::section>
     @else
         {{-- No Experience State --}}
-        <div class="bg-surface-01dp border-outline-low rounded-lg border p-8 text-center">
-            <x-he4rt::icon
-                :icon="\Filament\Support\Icons\Heroicon::Briefcase"
-                size="md"
-                class="text-text-low mx-auto"
-            />
-            <h4 class="text-text-high mt-4 text-lg font-medium">
-                {{ __('panel-organization::view.tabs.work_experience.no_experience') }}
-            </h4>
-            <p class="text-text-medium mt-2 text-sm">
-                {{ __('panel-organization::view.tabs.work_experience.no_experience_text') }}
-            </p>
-        </div>
+        <x-filament::section :secondary="true">
+            <div class="py-4 text-center">
+                <x-he4rt::icon
+                    :icon="\Filament\Support\Icons\Heroicon::Briefcase"
+                    size="md"
+                    class="text-text-low mx-auto"
+                />
+                <h4 class="text-text-high mt-4 text-lg font-medium">
+                    {{ __('panel-organization::view.tabs.work_experience.no_experience') }}
+                </h4>
+                <p class="text-text-medium mt-2 text-sm">
+                    {{ __('panel-organization::view.tabs.work_experience.no_experience_text') }}
+                </p>
+            </div>
+        </x-filament::section>
     @endif
-</div>
+</x-filament::section>
