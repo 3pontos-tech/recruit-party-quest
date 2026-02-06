@@ -16,7 +16,7 @@ final readonly class CandidateEducationDTO implements JsonSerializable
         public string $degree,
         public string $fieldOfStudy,
         public bool $isEnrolled,
-        public CarbonImmutable|Carbon $startDate,
+        public CarbonImmutable|Carbon|null $startDate = null,
         public Carbon|CarbonImmutable|null $endDate = null,
     ) {}
 
@@ -30,7 +30,9 @@ final readonly class CandidateEducationDTO implements JsonSerializable
             degree: $data['degree'],
             fieldOfStudy: $data['field_of_study'],
             isEnrolled: $data['is_enrolled'],
-            startDate: Date::make($data['start_date']),
+            startDate: (filled($data['start_date']) && $data['start_date'] !== 'null')
+                ? Date::parse($data['start_date'])
+                : null,
             endDate: (filled($data['end_date']) && $data['end_date'] !== 'null')
                 ? Date::parse($data['end_date'])
                 : null,
@@ -47,7 +49,7 @@ final readonly class CandidateEducationDTO implements JsonSerializable
             'degree' => $this->degree,
             'field_of_study' => $this->fieldOfStudy,
             'is_enrolled' => $this->isEnrolled,
-            'start_date' => $this->startDate->format('Y-m-d'),
+            'start_date' => $this->startDate?->format('Y-m-d'),
             'end_date' => $this->endDate?->format('Y-m-d'),
         ];
     }

@@ -16,12 +16,4 @@ class OnboardingException extends Exception
             code: Response::HTTP_UNPROCESSABLE_ENTITY
         );
     }
-
-    public static function toExpensive(string $message = 'O arquivo é muito longo. Envie um currículo com no máximo 3 páginas.'): self
-    {
-        return new self(
-            message: $message,
-            code: Response::HTTP_UNPROCESSABLE_ENTITY
-        );
-    }
 }

@@ -29,18 +29,16 @@ class ResumeFileUpload extends FileUpload
 
     private function uploadHooks(Get $get, OnboardingWizard $livewire): void
     {
-        /** @var TemporaryUploadedFile $temporaryFile */
+        /** @var null|TemporaryUploadedFile $temporaryFile */
         $temporaryFile = $get('cv_file');
 
-        /** @phpstan-ignore-next-line identical.alwaysFalse */
-        if (is_null($temporaryFile) === null) {
+        if (is_null($temporaryFile)) {
             return;
         }
 
         $livewire->canSkipResumeAnalysis = false;
 
         dispatch(new AiAnalyzeResumeJob($temporaryFile->getFilename(), auth()->user()->getKey()));
-
         Notification::make()
             ->title(__('panel-app::pages/onboarding.steps.cv.fields.cv_file_uploading'))
             ->info()

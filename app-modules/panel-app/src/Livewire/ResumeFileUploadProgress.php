@@ -50,10 +50,13 @@ class ResumeFileUploadProgress extends Component
         $this->progress = 100;
     }
 
+    /**
+     * @param  array<string, mixed>  $event
+     */
     #[On('echo-private:candidate-onboarding.resume.{user.id},.error')]
     public function error(array $event): void
     {
-        $message = $event['fields']['message'];
+        $message = $event['message'];
         $this->status = 'finished';
         $this->progress = 100;
 
@@ -61,6 +64,12 @@ class ResumeFileUploadProgress extends Component
             ->danger()
             ->title($message)
             ->send();
+    }
+
+    #[On('close')]
+    public function close(): void
+    {
+        $this->visible = false;
     }
 
     public function render(): View
