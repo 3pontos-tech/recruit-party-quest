@@ -6,7 +6,7 @@
     variant="solid"
     density="normal"
     :interactive="false"
-    class="bg-elevation-01dp border-outline-light dark:border-outline-dark"
+    class="bg-elevation-01dp/64 border-outline-light dark:border-outline-dark backdrop-blur-md"
 >
     <div class="flex flex-col gap-4">
         {{-- Header Section --}}
@@ -25,7 +25,7 @@
 
         @if ($links->isNotEmpty())
             {{-- Divider --}}
-            <div class="border-outline-low my-2 w-full border-t"></div>
+            <div class="border-outline-light dark:border-outline-dark my-2 w-full border-t"></div>
 
             {{-- Links List --}}
             <div class="flex flex-col gap-1">
