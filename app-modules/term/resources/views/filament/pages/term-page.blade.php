@@ -24,11 +24,11 @@
             <div class="min-w-0 flex-1 space-y-8">
                 @foreach ($sections as $section)
                     <section id="{{ $section['id'] }}" class="scroll-mt-24">
-                        <h2 class="mb-4 text-xl font-semibold text-gray-950 dark:text-white">
+                        <x-he4rt::heading :level="2" class="font-family-secondary mb-6 font-normal">
                             {{ $section['title'] }}
-                        </h2>
-                        <div class="prose dark:prose-invert max-w-none">
-                            {!! $section['body'] !!}
+                        </x-he4rt::heading>
+                        <div class="fi-prose prose-h2:text-red-500 prose-p:text-green-500 max-w-none">
+                            {{ \Filament\Forms\Components\RichEditor\RichContentRenderer::make($section['body']) }}
                         </div>
                     </section>
                 @endforeach
@@ -37,10 +37,12 @@
             @if (count($this->getSidebarSections()) > 0)
                 <aside class="hidden w-64 shrink-0 lg:block">
                     <nav class="sticky top-24 space-y-1">
+                        <x-he4rt::text class="text-text-light mb-2 font-medium">Nessa página</x-he4rt::text>
+
                         @foreach ($this->getSidebarSections() as $sidebarSection)
                             <a
                                 href="#{{ $sidebarSection['id'] }}"
-                                class="block rounded-lg px-3 py-2 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white"
+                                class="text-text-medium hover:text-text-light block rounded-lg px-3 py-2 font-medium transition"
                             >
                                 {{ $sidebarSection['title'] }}
                             </a>
