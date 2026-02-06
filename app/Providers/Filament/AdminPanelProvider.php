@@ -18,6 +18,7 @@ use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
+use He4rt\Term\TermPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -71,6 +72,7 @@ final class AdminPanelProvider extends PanelProvider
                         userMenuLabel: 'My Profile', // Enables the avatar upload form component (default = false)
                     )
                     ->enableBrowserSessions(),
+                new TermPlugin,
             ])
             ->widgets([
                 AccountWidget::class,

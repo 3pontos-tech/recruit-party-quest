@@ -29,6 +29,7 @@
         "he4rt/recruitment": ">=1",
         "he4rt/screening": ">=1",
         "he4rt/teams": ">=1",
+        "he4rt/term": ">=1",
         "he4rt/users": ">=1",
         "internachi/modular": "dev-main#ad95fe9",
         "jeffgreco13/filament-breezy": "^3.1.1",

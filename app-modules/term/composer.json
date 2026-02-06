@@ -1,0 +1,27 @@
+{
+    "name": "he4rt/term",
+    "description": "",
+    "type": "library",
+    "version": "1.0.0",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "He4rt\\Term\\": "src/",
+            "He4rt\\Term\\Database\\Factories\\": "database/factories/",
+            "He4rt\\Term\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "He4rt\\Term\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "He4rt\\Term\\Providers\\TermServiceProvider"
+            ]
+        }
+    }
+}

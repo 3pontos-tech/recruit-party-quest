@@ -3,6 +3,11 @@
 ])
 
 @php
+    $terms = \He4rt\Term\Models\Term::query()
+        ->where('is_active', true)
+        ->orderBy('title')
+        ->get(['title', 'slug']);
+
     $socials = [
         [
             'icon' => 'fab-instagram',
@@ -47,26 +52,15 @@
             </div>
 
             <div class="col-span-1">
-                <x-he4rt::heading size="2xs" :level="3" class="mb-3 sm:mb-6">Links</x-he4rt::heading>
+                <x-he4rt::heading size="2xs" :level="3" class="mb-3 sm:mb-6">Termos</x-he4rt::heading>
                 <ul class="text-text-medium space-y-2 text-sm sm:space-y-4">
-                    <li>
-                        <a href="#hero" class="hover:text-secondary transition">Home</a>
-                    </li>
-                    <li>
-                        <a href="#foundations" class="hover:text-secondary transition">Nossos pilares</a>
-                    </li>
-                    <li>
-                        <a href="#projects" class="hover:text-secondary transition">Projetos</a>
-                    </li>
-                    <li>
-                        <a href="#community" class="hover:text-secondary transition">Comunidade</a>
-                    </li>
-                    <li>
-                        <a href="#events" class="hover:text-secondary transition">Eventos</a>
-                    </li>
-                    <li>
-                        <a href="#contact" class="hover:text-secondary transition">Contato</a>
-                    </li>
+                    @foreach ($terms as $term)
+                        <li>
+                            <a href="/terms/view/{{ $term->slug }}" class="hover:text-secondary transition">
+                                {{ $term->title }}
+                            </a>
+                        </li>
+                    @endforeach
                 </ul>
             </div>
 
