@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Term\Filament\Pages;
 
 use Filament\Pages\Page;
+use Filament\Support\Enums\Width;
 use He4rt\Term\Models\Term;
 use Illuminate\Contracts\Support\Htmlable;
 
@@ -19,9 +20,11 @@ class TermPage extends Page
 
     protected static bool $shouldRegisterNavigation = false;
 
-    protected static ?string $slug = 'terms/view/{slug}';
+    protected static ?string $slug = 'terms/{slug}';
 
     protected string $view = 'term::filament.pages.term-page';
+
+    protected Width|string|null $maxContentWidth = Width::ScreenLarge;
 
     public function mount(string $slug): void
     {
@@ -35,7 +38,7 @@ class TermPage extends Page
 
     public function getTitle(): string|Htmlable
     {
-        return $this->term->title ?? __('term::filament.page.title');
+        return '';
     }
 
     /**

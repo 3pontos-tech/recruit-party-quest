@@ -20,10 +20,6 @@ final class TermPlugin implements Plugin
             ->discoverResources(
                 in: __DIR__.'/Filament/Resources',
                 for: 'He4rt\\Term\\Filament\\Resources'
-            )
-            ->discoverPages(
-                in: __DIR__.'/Filament/Pages',
-                for: 'He4rt\\Term\\Filament\\Pages'
             );
     }
 
