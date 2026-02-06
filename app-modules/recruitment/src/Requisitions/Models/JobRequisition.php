@@ -10,6 +10,7 @@ use He4rt\Applications\Models\Application;
 use He4rt\Recruitment\Database\Factories\JobRequisitionFactory;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
+use He4rt\Recruitment\Requisitions\Enums\JobCategoryEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
@@ -173,6 +174,7 @@ class JobRequisition extends BaseModel implements HasActivityLogTitle
             'work_arrangement' => WorkArrangementEnum::class,
             'employment_type' => EmploymentTypeEnum::class,
             'experience_level' => ExperienceLevelEnum::class,
+            'category' => JobCategoryEnum::class,
         ];
     }
 }

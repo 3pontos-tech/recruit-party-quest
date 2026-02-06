@@ -106,4 +106,38 @@ return [
             'label' => 'On Site',
         ],
     ],
+    'job_category' => [
+        'finance' => [
+            'label' => 'Finance',
+            'description' => 'Accounting, financial analysis, banking, and investment management positions.',
+        ],
+        'technology' => [
+            'label' => 'Technology',
+            'description' => 'Software development, IT infrastructure, and technology management roles.',
+        ],
+        'marketing' => [
+            'label' => 'Marketing',
+            'description' => 'Brand management, digital marketing, and communications positions.',
+        ],
+        'human_resources' => [
+            'label' => 'Human Resources',
+            'description' => 'Talent acquisition, employee relations, and HR management roles.',
+        ],
+        'sales' => [
+            'label' => 'Sales',
+            'description' => 'Business development, account management, and sales positions.',
+        ],
+        'operations' => [
+            'label' => 'Operations',
+            'description' => 'Process optimization, logistics, and operational management roles.',
+        ],
+        'engineering' => [
+            'label' => 'Engineering',
+            'description' => 'Mechanical, electrical, civil, and other engineering disciplines.',
+        ],
+        'design' => [
+            'label' => 'Design',
+            'description' => 'UX/UI design, graphic design, and creative direction positions.',
+        ],
+    ],
 ];

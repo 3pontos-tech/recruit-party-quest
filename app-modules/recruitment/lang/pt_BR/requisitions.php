@@ -106,4 +106,38 @@ return [
             'label' => 'Presencial',
         ],
     ],
+    'job_category' => [
+        'finance' => [
+            'label' => 'Financeiro',
+            'description' => 'Contabilidade, análise financeira, bancos e gestão de investimentos.',
+        ],
+        'technology' => [
+            'label' => 'Tecnologia',
+            'description' => 'Desenvolvimento de software, infraestrutura de TI e gestão de tecnologia.',
+        ],
+        'marketing' => [
+            'label' => 'Marketing',
+            'description' => 'Gestão de marca, marketing digital e comunicação.',
+        ],
+        'human_resources' => [
+            'label' => 'Recursos Humanos',
+            'description' => 'Recrutamento, relações trabalhistas e gestão de RH.',
+        ],
+        'sales' => [
+            'label' => 'Vendas',
+            'description' => 'Desenvolvimento de negócios, gestão de contas e posições comerciais.',
+        ],
+        'operations' => [
+            'label' => 'Operações',
+            'description' => 'Otimização de processos, logística e gestão operacional.',
+        ],
+        'engineering' => [
+            'label' => 'Engenharia',
+            'description' => 'Engenharia mecânica, elétrica, civil e outras disciplinas.',
+        ],
+        'design' => [
+            'label' => 'Design',
+            'description' => 'Design UX/UI, design gráfico e direção criativa.',
+        ],
+    ],
 ];

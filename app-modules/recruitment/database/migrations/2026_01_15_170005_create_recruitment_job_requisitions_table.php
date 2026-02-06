@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
+use He4rt\Recruitment\Requisitions\Enums\JobCategoryEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->string('work_arrangement')->comment(WorkArrangementEnum::stringifyCases());
             $table->string('employment_type')->comment(EmploymentTypeEnum::stringifyCases());
             $table->string('experience_level')->comment(ExperienceLevelEnum::stringifyCases());
+            $table->string('category')->nullable()->comment(JobCategoryEnum::stringifyCases());
             $table->string('positions_available');
             $table->integer('salary_range_min')->nullable();
             $table->integer('salary_range_max')->nullable();

@@ -24,6 +24,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
+use He4rt\Recruitment\Requisitions\Enums\JobCategoryEnum;
 use He4rt\Recruitment\Requisitions\Enums\JobRequisitionItemTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
@@ -124,6 +125,13 @@ class JobRequisitionForm
                                             ->native(false)
                                             ->required(),
 
+                                        He4rtSelect::make('category')
+                                            ->label(__('recruitment::filament.requisition.fields.category'))
+                                            ->options(JobCategoryEnum::class)
+                                            ->iconColor('indigo')
+                                            ->description(__('recruitment::filament.requisition.fields.category_description'))
+                                            ->icon(Heroicon::RectangleStack)
+                                            ->native(false),
                                     ]),
                                 Section::make(__('recruitment::filament.requisition.sections.team_ownership'))
                                     ->icon(Heroicon::Cog)
