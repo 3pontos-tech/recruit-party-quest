@@ -24,7 +24,7 @@
             <div class="min-w-0 flex-1 space-y-8">
                 @foreach ($sections as $section)
                     <section id="{{ $section['id'] }}" class="scroll-mt-24">
-                        <x-he4rt::heading :level="2" class="font-family-secondary mb-6 font-normal">
+                        <x-he4rt::heading size="lg" class="font-family-secondary mb-6 font-normal">
                             {{ $section['title'] }}
                         </x-he4rt::heading>
                         <div class="fi-prose term-prose max-w-none">
