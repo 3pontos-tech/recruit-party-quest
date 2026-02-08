@@ -122,4 +122,9 @@ return [
         4 => 'Advanced',
         5 => 'Expert',
     ],
+
+    'job_generation' => [
+        'success_message' => 'Job created successfully',
+        'redirecting' => 'Redirecting, please wait…',
+    ],
 ];

@@ -94,8 +94,8 @@ return [
     ],
     'provider' => [
         'gemini' => [
-            'enum' => env('AI_PROVIDER', Provider::OpenAI->name),
-            'model' => env('AI_MODEL', 'gpt-5-nano'),
+            'enum' => env('AI_PROVIDER', Provider::Gemini->name),
+            'model' => env('AI_MODEL', 'gemini-2.5-flash'),
         ],
     ],
 ];
