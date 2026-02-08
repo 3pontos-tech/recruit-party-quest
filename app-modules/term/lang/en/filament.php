@@ -22,6 +22,7 @@ return [
         'title' => 'Title',
         'slug' => 'Slug',
         'is_active' => 'Active',
+        'description' => 'Description',
         'content' => 'Sections',
         'section_title' => 'Section Title',
         'section_id' => 'Section ID',

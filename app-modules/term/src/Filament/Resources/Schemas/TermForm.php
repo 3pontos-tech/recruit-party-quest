@@ -6,6 +6,7 @@ namespace He4rt\Term\Filament\Resources\Schemas;
 
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
@@ -42,6 +43,9 @@ class TermForm
                         Toggle::make('is_active')
                             ->label(__('term::filament.fields.is_active'))
                             ->default(true),
+                        Textarea::make('description')
+                            ->label(__('term::filament.fields.description'))
+                            ->columnSpanFull(),
                     ])
                     ->columnSpanFull(),
 

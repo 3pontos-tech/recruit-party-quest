@@ -22,6 +22,7 @@ return [
         'title' => 'Título',
         'slug' => 'Slug',
         'is_active' => 'Ativo',
+        'description' => 'Descrição',
         'content' => 'Seções',
         'section_title' => 'Título da Seção',
         'section_id' => 'ID da Seção',
