@@ -19,13 +19,20 @@
     h4:where(:not(.fi-not-prose, .fi-not-prose *)),
     h5:where(:not(.fi-not-prose, .fi-not-prose *)),
     h6:where(:not(.fi-not-prose, .fi-not-prose *)) {
-        font-size: var(--text-sm);
-        line-height: calc(28 / 14);
-        color: var(--prose-heading-color);
+        font-size: var(--text-base);
         font-weight: var(--font-weight-normal);
     }
 
     :is(h2, h3, h4, h5, h6):where(:not(.fi-not-prose, .fi-not-prose *)) {
         @apply font-family-secondary font-normal;
+    }
+
+    *:where(:not(.fi-not-prose, .fi-not-prose *, br)) + *:where(:not(.fi-not-prose, .fi-not-prose *, br)) {
+        margin-top: calc(var(--spacing) * 4);
+    }
+
+    h2,
+    h3 {
+        @apply mt-8;
     }
 }
