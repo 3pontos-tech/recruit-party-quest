@@ -42,7 +42,8 @@ class TermForm
                         Toggle::make('is_active')
                             ->label(__('term::filament.fields.is_active'))
                             ->default(true),
-                    ]),
+                    ])
+                    ->columnSpanFull(),
 
                 Section::make(__('term::filament.sections.sections'))
                     ->schema([
@@ -75,27 +76,10 @@ class TermForm
                                 RichEditor::make('body')
                                     ->label(__('term::filament.fields.body'))
                                     ->required()
-                                    ->columnSpanFull()
-                                    ->toolbarButtons([
-                                        'attachFiles',
-                                        'blockquote',
-                                        'bold',
-                                        'bulletList',
-                                        'codeBlock',
-                                        'h1',
-                                        'h2',
-                                        'h3',
-                                        'italic',
-                                        'link',
-                                        'orderedList',
-                                        'redo',
-                                        'strike',
-                                        'underline',
-                                        'undo',
-                                    ]),
+                                    ->columnSpanFull(),
                             ])
                             ->columnSpanFull(),
-                    ]),
+                    ])->columnSpanFull(),
             ]);
     }
 }
