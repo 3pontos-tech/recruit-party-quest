@@ -22,11 +22,19 @@
 
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_250px]">
             <div class="min-w-0 flex-1 space-y-8">
+                <div>
+                    <x-he4rt::heading size="lg" class="font-family-secondary mb-6 font-normal">
+                        {{ $term['title'] }}
+                    </x-he4rt::heading>
+                    <x-he4rt::text>
+                        {{ $term['description'] }}
+                    </x-he4rt::text>
+                </div>
+                <div class="mt-8">
+                    <hr class="border-outline-light dark:border-outline-dark" />
+                </div>
                 @foreach ($sections as $section)
                     <section id="{{ $section['id'] }}" class="scroll-mt-24">
-                        <x-he4rt::heading size="lg" class="font-family-secondary mb-6 font-normal">
-                            {{ $section['title'] }}
-                        </x-he4rt::heading>
                         <div class="fi-prose term-prose max-w-none">
                             {{ \Filament\Forms\Components\RichEditor\RichContentRenderer::make($section['body']) }}
                         </div>
@@ -42,7 +50,7 @@
                         @foreach ($this->getSidebarSections() as $sidebarSection)
                             <a
                                 href="#{{ $sidebarSection['id'] }}"
-                                class="text-text-medium hover:text-text-light block rounded-lg px-3 py-2 font-medium transition"
+                                class="text-text-medium hover:text-text-light block rounded-lg py-2 font-medium transition"
                             >
                                 {{ $sidebarSection['title'] }}
                             </a>

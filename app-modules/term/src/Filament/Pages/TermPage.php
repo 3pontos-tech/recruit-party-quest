@@ -24,7 +24,7 @@ class TermPage extends Page
 
     protected string $view = 'term::filament.pages.term-page';
 
-    protected Width|string|null $maxContentWidth = Width::ScreenLarge;
+    protected Width|string|null $maxContentWidth = Width::ScreenExtraLarge;
 
     public function mount(string $slug): void
     {
