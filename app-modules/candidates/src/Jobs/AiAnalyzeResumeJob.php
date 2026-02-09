@@ -33,7 +33,7 @@ final class AiAnalyzeResumeJob implements ShouldQueue
         $temporaryFile = TemporaryUploadedFile::createFromLivewire($this->temporaryFile);
 
         /** @var CandidateOnboardingDTO $fields */
-        $fields = resolve(AiAutocompleteInterface::class)->execute($temporaryFile);
+        $fields = resolve(AiAutocompleteInterface::class)->execute($temporaryFile, $this->userId);
 
         broadcast(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Finished, $fields, $this->userId));
 

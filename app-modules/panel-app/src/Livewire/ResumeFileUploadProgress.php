@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\App\Livewire;
 
+use Filament\Notifications\Notification;
 use He4rt\Users\User;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
@@ -49,11 +50,26 @@ class ResumeFileUploadProgress extends Component
         $this->progress = 100;
     }
 
+    /**
+     * @param  array<string, mixed>  $event
+     */
     #[On('echo-private:candidate-onboarding.resume.{user.id},.error')]
-    public function error(): void
+    public function error(array $event): void
     {
+        $message = $event['message'];
         $this->status = 'finished';
         $this->progress = 100;
+
+        Notification::make()
+            ->danger()
+            ->title($message)
+            ->send();
+    }
+
+    #[On('close')]
+    public function close(): void
+    {
+        $this->visible = false;
     }
 
     public function render(): View

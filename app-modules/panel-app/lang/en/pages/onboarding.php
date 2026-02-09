@@ -30,6 +30,12 @@ return [
             'title' => 'Onboarding Complete',
             'message' => 'Your profile has been set up successfully! You can now start applying for jobs.',
         ],
+        'something_went_wrong' => [
+            'message' => 'Something went wrong. Please try again.',
+        ],
+        'is_not_cv' => [
+            'message' => 'File sent is not a curriculum.',
+        ],
     ],
     'steps' => [
         'account' => [

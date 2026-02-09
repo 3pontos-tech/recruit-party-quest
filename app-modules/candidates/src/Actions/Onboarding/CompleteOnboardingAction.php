@@ -8,8 +8,14 @@ use He4rt\Candidates\AiAutocompleteInterface;
 use He4rt\Candidates\DTOs\CandidateEducationDTO;
 use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\DTOs\CandidateWorkExperienceDTO;
+use He4rt\Candidates\Enums\ResumeAnalyzeStatus;
+use He4rt\Candidates\Enums\ResumeErrorReasons;
+use He4rt\Candidates\Events\AnalyzeResumeEvent;
+use He4rt\Candidates\Exceptions\OnboardingException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Prism\Prism\Exceptions\PrismException;
+use Prism\Prism\Exceptions\PrismRateLimitedException;
 use Prism\Prism\Facades\Prism;
 use Prism\Prism\Schema\ArraySchema;
 use Prism\Prism\Schema\BooleanSchema;
@@ -18,48 +24,71 @@ use Prism\Prism\Schema\StringSchema;
 use Prism\Prism\Structured\Response;
 use Prism\Prism\ValueObjects\Media\Document;
 
-final class CompleteOnboardingAction implements AiAutocompleteInterface
+final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
 {
+    public function __construct(
+        private ResumeErrorReasons $notAnCv = ResumeErrorReasons::NotAnCV,
+    ) {}
+
     /**
      * @throws FileNotFoundException
+     * @throws OnboardingException
      */
-    public function execute(TemporaryUploadedFile $file): CandidateOnboardingDTO
+    public function execute(TemporaryUploadedFile $file, string $userId): CandidateOnboardingDTO
     {
-        /** @var Response $response */
-        $response = Prism::structured()
-            ->using(config('ai.provider.gemini.enum'), config('ai.provider.gemini.model'))
-            ->withSchema($this->structureSchema())
-            ->withPrompt(
-                'Extraia os dados do currículo anexado para preencher o formulário conforme o esquema.',
-                [
-                    Document::fromRawContent(
-                        rawContent: $file->get(),
-                        mimeType: $file->getMimeType()
-                    ),
-                ]
-            )
-            ->asStructured();
+        try {
+            /** @var Response $response */
+            $response = Prism::structured()
+                ->using(config('ai.provider.gemini.enum'), config('ai.provider.gemini.model'))
+                ->withSchema($this->structureSchema())
+                ->withPrompt(
+                    <<<PROMPT
+                           Você é um assistente de triagem de currículos. Analise o arquivo anexo:
 
-        $output = $response->structured;
-        $workExperiences = [];
-        $education = [];
+                            ### CRITÉRIOS DE REJEIÇÃO (is_cv: FALSE):
+                            1. **Tipo de Arquivo**: Se NÃO for um currículo, perfil profissional ou certificado.
+                            2. **Conteúdo**: Documentos fiscais, fotos pessoais ou textos sem nexo profissional.
 
-        foreach ($output['work_experiences'] as $item) {
-            $workExperiences[] = CandidateWorkExperienceDTO::make(
-                $item
-            );
+                            ### JUSTIFICATIVA (rejection_reason):
+                            - Se não for um currículo, escreva: "{$this->notAnCv->value}"
+
+                            ### EXTRAÇÃO (Se is_cv: TRUE):
+                            - Extraia até 5 experiências profissionais e a formação acadêmica.
+PROMPT,
+                    [
+                        Document::fromRawContent(
+                            rawContent: $file->get(),
+                            mimeType: $file->getMimeType()
+                        ),
+                    ]
+                )
+                ->asStructured();
+
+            $output = $response->structured;
+            $this->validate($output, $userId);
+            $workExperiences = [];
+            $education = [];
+
+            foreach ($output['work_experiences'] as $item) {
+                $workExperiences[] = CandidateWorkExperienceDTO::make(
+                    $item
+                );
+            }
+
+            foreach ($output['education'] as $item) {
+                $education[] = CandidateEducationDTO::make(
+                    $item
+                );
+            }
+
+            return CandidateOnboardingDTO::make([
+                'education' => $education,
+                'work_experiences' => $workExperiences,
+            ]);
+        } catch (PrismRateLimitedException|PrismException) {
+            broadcast(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Error, null, $userId, 'Something went wrong'));
+            throw OnboardingException::rateLimiting();
         }
-
-        foreach ($output['education'] as $item) {
-            $education[] = CandidateEducationDTO::make(
-                $item
-            );
-        }
-
-        return CandidateOnboardingDTO::make([
-            'education' => $education,
-            'work_experiences' => $workExperiences,
-        ]);
 
     }
 
@@ -70,6 +99,15 @@ final class CompleteOnboardingAction implements AiAutocompleteInterface
             'Dados extraídos do currículo',
             /** @phpstan-ignore-next-line argument.type */
             [
+                'is_cv' => new BooleanSchema(
+                    'is_cv',
+                    'Define se o arquivo é um currículo válido.'
+                ),
+
+                'rejection_reason' => new StringSchema(
+                    'rejection_reason',
+                    sprintf('Motivo da rejeição seguindo esses padrões (ex: {%s}).', $this->notAnCv->value)
+                ),
                 'work_experiences' => new ArraySchema(
                     'work_experiences',
                     'Lista de experiências profissionais',
@@ -99,5 +137,26 @@ final class CompleteOnboardingAction implements AiAutocompleteInterface
                 ),
             ]
         );
+    }
+
+    /**
+     * @param  array<string, mixed>  $output
+     *
+     * @throws OnboardingException
+     */
+    private function validate(array $output, string $userId): void
+    {
+        if ($output['is_cv'] === true) {
+            return;
+        }
+
+        $reason = $output['rejection_reason'] ?? '';
+
+        if (str_contains($reason, $this->notAnCv->value)) {
+            broadcast(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Error, null, $userId, $this->notAnCv->getLabel()));
+
+            throw OnboardingException::invalidCv();
+        }
+
     }
 }

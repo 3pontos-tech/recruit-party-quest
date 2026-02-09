@@ -15,7 +15,7 @@ final readonly class CandidateWorkExperienceDTO implements JsonSerializable
         public string $companyName,
         public string $description,
         public bool $isCurrentlyWorking,
-        public CarbonImmutable|Carbon $startDate,
+        public CarbonImmutable|Carbon|null $startDate = null,
         public Carbon|CarbonImmutable|null $endDate = null,
     ) {}
 
@@ -28,7 +28,9 @@ final readonly class CandidateWorkExperienceDTO implements JsonSerializable
             companyName: $data['company_name'],
             description: $data['description'],
             isCurrentlyWorking: $data['is_currently_working_here'] ?? false,
-            startDate: Date::make($data['start_date']),
+            startDate: (filled($data['start_date']) && $data['start_date'] !== 'null')
+                ? Date::parse($data['start_date'])
+                : null,
             endDate: (filled($data['end_date']) && $data['end_date'] !== 'null')
                 ? Date::parse($data['end_date'])
                 : null,
