@@ -6,6 +6,7 @@ namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Sche
 
 use App\Filament\Schemas\Components\He4rtInput;
 use App\Filament\Schemas\Components\He4rtSelect;
+use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
@@ -30,6 +31,7 @@ use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
+use He4rt\Teams\Department;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
@@ -94,6 +96,47 @@ class JobRequisitionForm
                                                     /** @phpstan-ignore-next-line */
                                                     fn (Builder $q) => $q->forTeam($get('team_id'))),
                                             )
+                                            ->createOptionAction(fn (Action $action): Action => $action
+                                                ->modalHeading(__('teams::filament.relation_managers.departments.title'))
+                                                ->authorize('create', Department::class))
+                                            ->createOptionForm([
+                                                TextInput::make('name')
+                                                    ->label(__('teams::filament.department.fields.name'))
+                                                    ->required()
+                                                    ->maxLength(255),
+                                                Textarea::make('description')
+                                                    ->label(__('teams::filament.department.fields.description'))
+                                                    ->required()
+                                                    ->maxLength(255)
+                                                    ->rows(4),
+                                                He4rtSelect::make('head_user_id')
+                                                    ->label(__('teams::filament.department.fields.head_user'))
+                                                    ->relationship(
+                                                        name: 'headUser',
+                                                        titleAttribute: 'name',
+                                                        modifyQueryUsing: fn (Builder $query, Get $get) => $query
+                                                            ->whereHas('teams', function (Builder $teamQuery) use ($get): void {
+                                                                $teamId = $get('team_id') ?? filament()->getTenant()?->getKey();
+                                                                if (! $teamId) {
+                                                                    return;
+                                                                }
+
+                                                                $teamQuery->whereKey($teamId);
+                                                            })
+                                                            ->orderBy('name'),
+                                                    )
+                                                    ->searchable()
+                                                    ->preload(),
+                                                Hidden::make('team_id')
+                                                    ->default(fn (Get $get) => $get('team_id') ?? filament()->getTenant()?->getKey())
+                                                    ->required(),
+                                            ])
+                                            ->createOptionUsing(function (array $data): string {
+                                                /** @var Department $department */
+                                                $department = Department::query()->create($data);
+
+                                                return (string) $department->getKey();
+                                            })
                                             ->description(__('recruitment::filament.requisition.fields.department_description'))
                                             ->icon(Heroicon::BuildingOffice)
                                             ->required()
