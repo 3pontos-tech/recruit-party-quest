@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\Providers\Tools;
 
-use Barryvdh\Debugbar\ServiceProvider;
+use Fruitcake\LaravelDebugbar\ServiceProvider;
+use Illuminate\Contracts\Events\Dispatcher;
 
 class DebugbarServiceProvider extends ServiceProvider
 {
-    public function boot(): void
+    public function boot(Dispatcher $events): void
     {
         if (! $this->canBoot()) {
             return;
         }
 
-        parent::boot();
+        parent::boot($events);
     }
 
     private function canBoot(): bool

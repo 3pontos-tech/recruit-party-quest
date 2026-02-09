@@ -28,6 +28,7 @@
 @import './components/filament/topbar.css' layer(overrides);
 @import './components/filament/wizard.css' layer(overrides);
 @import './components/filament/table.css' layer(overrides);
+@import './components/filament/utilities.css' layer(overrides);
 
 @source '../../../../resources/views/**/*.blade.php';
 @source '../../../../app-modules/**/resources/views/**/*.blade.php';

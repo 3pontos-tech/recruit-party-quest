@@ -23,6 +23,7 @@ use He4rt\App\Livewire\MyProfile\CandidateProfileInfo;
 use He4rt\App\Livewire\MyProfile\CandidateSkills;
 use He4rt\App\Livewire\MyProfile\CandidateWorkExperience;
 use He4rt\App\RedirectIfOnboardingIncomplete;
+use He4rt\Term\Filament\Pages\TermPage;
 use He4rt\Users\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -96,6 +97,7 @@ class AppPanelProvider extends PanelProvider
             ->discoverWidgets(in: base_path('app-modules/panel-app/src/Filament/Widgets'), for: 'He4rt\\App\\Filament\\Widgets')
             ->pages([
                 AppDashboard::class,
+                TermPage::class,
             ])
             ->plugins([
                 BreezyCore::make()
