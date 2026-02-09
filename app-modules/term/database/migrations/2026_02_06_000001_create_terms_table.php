@@ -17,8 +17,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->jsonb('content')->nullable();
             $table->boolean('is_active')->default(true);
-            $table->timestampsTz();
-            $table->softDeletesTz();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 };
