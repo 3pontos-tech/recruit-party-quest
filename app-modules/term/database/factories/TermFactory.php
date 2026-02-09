@@ -23,6 +23,7 @@ class TermFactory extends Factory
         return [
             'title' => $title,
             'slug' => Str::slug($title),
+            'description' => fake()->sentence(),
             'content' => [
                 [
                     'id' => 'introduction',

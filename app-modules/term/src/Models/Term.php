@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $title
  * @property string $slug
+ * @property string|null $description
  * @property array<int, array{id: string, title: string, body: string, show_in_sidebar: bool}>|null $content
  * @property bool $is_active
  * @property Carbon|null $created_at

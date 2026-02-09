@@ -27,6 +27,10 @@ class TermsTable
                 TextColumn::make('slug')
                     ->label(__('term::filament.fields.slug'))
                     ->copyable(),
+                TextColumn::make('description')
+                    ->label(__('term::filament.fields.description'))
+                    ->limit(50)
+                    ->toggleable(),
                 IconColumn::make('is_active')
                     ->label(__('term::filament.fields.is_active'))
                     ->boolean()
