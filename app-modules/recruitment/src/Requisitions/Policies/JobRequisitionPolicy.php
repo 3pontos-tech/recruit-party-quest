@@ -15,12 +15,12 @@ class JobRequisitionPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo(PermissionsEnum::ViewAny->buildPermissionFor(JobRequisition::class));
+        return true;
     }
 
     public function view(User $user, JobRequisition $jobRequisition): bool
     {
-        return $user->hasPermissionTo(PermissionsEnum::View->buildPermissionFor(JobRequisition::class));
+        return true;
     }
 
     public function create(User $user): bool
