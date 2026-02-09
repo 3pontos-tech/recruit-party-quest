@@ -48,6 +48,12 @@ return [
         'career_page' => [
             'label' => 'Career Page',
         ],
+        'community' => [
+            'label' => '3 Pontos Community',
+        ],
+        'three_dots' => [
+            'label' => '3 Pontos',
+        ],
         'other' => [
             'label' => 'Other',
         ],

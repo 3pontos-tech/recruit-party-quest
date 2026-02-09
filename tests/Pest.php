@@ -5,6 +5,8 @@ declare(strict_types=1);
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Tests\TestCase;
 
+use function Pest\Laravel\artisan;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -22,6 +24,7 @@ pest()->extend(TestCase::class)
 
 pest()->extend(TestCase::class)
     ->use(LazilyRefreshDatabase::class)
+    ->beforeEach(fn () => artisan('sync:permissions'))
     ->group('feature')
     ->in('Feature', '../app-modules/*/tests/Feature', '../app-modules/*/tests/Features');
 

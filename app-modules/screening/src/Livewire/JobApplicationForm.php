@@ -37,6 +37,7 @@ class JobApplicationForm extends Component
 
     public function mount(JobRequisition $requisition): void
     {
+        $this->authorize('create', Application::class);
         $this->requisition = $requisition;
 
         $this->initializeQuestions($requisition);

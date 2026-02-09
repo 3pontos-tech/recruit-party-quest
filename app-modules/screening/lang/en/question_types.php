@@ -20,6 +20,9 @@ return [
             'placeholder_example' => 'Enter placeholder text...',
         ],
     ],
+    'source-question' => [
+        'label' => 'Where did you find out this opportunity?',
+    ],
     'number' => [
         'label' => 'Number',
         'settings' => [

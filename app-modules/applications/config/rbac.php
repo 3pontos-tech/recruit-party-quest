@@ -13,5 +13,12 @@ return [
             Application::class => PermissionsEnum::cases(),
             ApplicationStageHistory::class => PermissionsEnum::cases(),
         ],
+        Roles::User->value => [
+            Application::class => [
+                PermissionsEnum::View,
+                PermissionsEnum::Create,
+                PermissionsEnum::Update,
+            ],
+        ],
     ],
 ];
