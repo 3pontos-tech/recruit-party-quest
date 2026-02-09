@@ -150,7 +150,7 @@ function instanceFakeClass(): void
 {
     app()->bind(AiAutocompleteInterface::class, fn () => new class implements AiAutocompleteInterface
     {
-        public function execute(TemporaryUploadedFile $file, string $userId): CandidateOnboardingDTO
+        public function execute(TemporaryUploadedFile $file): CandidateOnboardingDTO
         {
             return generateDto();
         }
