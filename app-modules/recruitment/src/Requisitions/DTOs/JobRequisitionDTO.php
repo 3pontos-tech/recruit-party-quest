@@ -38,9 +38,13 @@ final readonly class JobRequisitionDTO
      */
     public static function make(array $data): self
     {
+        $baseSlug = Str::slug($data['title']);
+
+        $slug = $baseSlug.'-'.Str::lower(Str::random(4));
+
         return new self(
             title: $data['title'],
-            slug: Str::slug($data['slug']),
+            slug: $slug,
             departmentId: $data['department_id'],
             teamId: $data['team_id'],
             recruiterId: $data['recruiter_id'],

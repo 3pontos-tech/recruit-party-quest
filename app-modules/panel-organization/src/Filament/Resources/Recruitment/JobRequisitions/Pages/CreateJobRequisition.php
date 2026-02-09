@@ -7,11 +7,19 @@ namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Page
 use Filament\Resources\Pages\CreateRecord;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Actions\GenerateJobRequisitionAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
 
 class CreateJobRequisition extends CreateRecord
 {
+    public string $jobGenerationState = 'idle';
+
     protected static string $resource = JobRequisitionResource::class;
+
+    public function getFooter(): ?View
+    {
+        return view('panel-organization::components.job-generation-overlay');
+    }
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {

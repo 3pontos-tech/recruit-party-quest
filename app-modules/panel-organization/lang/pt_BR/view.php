@@ -121,4 +121,9 @@ return [
         4 => 'Avançado',
         5 => 'Especialista',
     ],
+
+    'job_generation' => [
+        'success_message' => 'Vaga criada com sucesso',
+        'redirecting' => 'Redirecionando, aguarde…',
+    ],
 ];
