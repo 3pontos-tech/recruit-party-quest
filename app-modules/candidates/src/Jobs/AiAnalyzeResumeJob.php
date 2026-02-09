@@ -8,6 +8,7 @@ use He4rt\Candidates\AiAutocompleteInterface;
 use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\Enums\ResumeAnalyzeStatus;
 use He4rt\Candidates\Events\AnalyzeResumeEvent;
+use He4rt\Candidates\Exceptions\OnboardingException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -32,10 +33,13 @@ final class AiAnalyzeResumeJob implements ShouldQueue
 
         $temporaryFile = TemporaryUploadedFile::createFromLivewire($this->temporaryFile);
 
-        /** @var CandidateOnboardingDTO $fields */
-        $fields = resolve(AiAutocompleteInterface::class)->execute($temporaryFile, $this->userId);
-
-        broadcast(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Finished, $fields, $this->userId));
+        try {
+            /** @var CandidateOnboardingDTO $fields */
+            $fields = resolve(AiAutocompleteInterface::class)->execute($temporaryFile);
+            broadcast(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Finished, $fields, $this->userId));
+        } catch (OnboardingException $onboardingException) {
+            broadcast(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Error, null, $this->userId, $onboardingException->getMessage()));
+        }
 
     }
 }

@@ -249,7 +249,8 @@ class OnboardingWizard extends Page
         $this->wizardVisible = true;
 
         Notification::make()
-            ->title(__('panel-app::pages/onboarding.steps.cv.fields.cv_file'))
+            ->title('Currículo carregado com sucesso!')
+            ->body('Complete os campos restantes para concluir o processo de onboarding.')
             ->success()
             ->send();
     }

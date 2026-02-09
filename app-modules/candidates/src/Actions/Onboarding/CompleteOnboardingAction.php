@@ -8,9 +8,7 @@ use He4rt\Candidates\AiAutocompleteInterface;
 use He4rt\Candidates\DTOs\CandidateEducationDTO;
 use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\DTOs\CandidateWorkExperienceDTO;
-use He4rt\Candidates\Enums\ResumeAnalyzeStatus;
 use He4rt\Candidates\Enums\ResumeErrorReasons;
-use He4rt\Candidates\Events\AnalyzeResumeEvent;
 use He4rt\Candidates\Exceptions\OnboardingException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
@@ -34,7 +32,7 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
      * @throws FileNotFoundException
      * @throws OnboardingException
      */
-    public function execute(TemporaryUploadedFile $file, string $userId): CandidateOnboardingDTO
+    public function execute(TemporaryUploadedFile $file): CandidateOnboardingDTO
     {
         try {
             /** @var Response $response */
@@ -65,7 +63,7 @@ PROMPT,
                 ->asStructured();
 
             $output = $response->structured;
-            $this->validate($output, $userId);
+            $this->validate($output);
             $workExperiences = [];
             $education = [];
 
@@ -86,7 +84,7 @@ PROMPT,
                 'work_experiences' => $workExperiences,
             ]);
         } catch (PrismRateLimitedException|PrismException) {
-            broadcast(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Error, null, $userId, 'Something went wrong'));
+            // This is just a proxy to aggregate the Prism domain with Onboarding.
             throw OnboardingException::rateLimiting();
         }
 
@@ -144,7 +142,7 @@ PROMPT,
      *
      * @throws OnboardingException
      */
-    private function validate(array $output, string $userId): void
+    private function validate(array $output): void
     {
         if ($output['is_cv'] === true) {
             return;
@@ -153,8 +151,6 @@ PROMPT,
         $reason = $output['rejection_reason'] ?? '';
 
         if (str_contains($reason, $this->notAnCv->value)) {
-            broadcast(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Error, null, $userId, $this->notAnCv->getLabel()));
-
             throw OnboardingException::invalidCv();
         }
 
