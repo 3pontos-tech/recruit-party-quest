@@ -24,104 +24,96 @@
     ];
 @endphp
 
-<div class="bg-surface-01dp border-outline-low space-y-4 rounded-lg border p-4">
-    <div class="space-y-6">
-        {{-- Header --}}
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div
-                    class="bg-success-100 text-success-600 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
-                >
-                    <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::CodeBracket" size="sm" />
-                </div>
-                <div>
-                    <h3 class="text-text-high text-lg font-semibold">
-                        {{ __('panel-organization::view.tabs.skills_title') }}
-                    </h3>
-                    <p class="text-text-medium text-sm">{{ __('panel-organization::view.tabs.skills_subtitle') }}</p>
-                </div>
-            </div>
-            @if ($hasSkills)
-                <x-he4rt::tag size="sm">
-                    {{ trans_choice('panel-organization::view.tabs.skills_count', $skills_total, ['count' => $skills_total]) }}
-                </x-he4rt::tag>
-            @endif
-        </div>
+<x-filament::section icon="heroicon-o-code-bracket" icon-color="success">
+    <x-slot name="heading">
+        {{ __('panel-organization::view.tabs.skills_title') }}
+    </x-slot>
 
-        @if ($hasSkills)
-            {{-- Skills by Category --}}
-            <div class="space-y-6">
-                @forelse ($skillsByCategory as $category => $categorySkills)
-                    <div class="space-y-4">
-                        {{-- Category Header --}}
-                        <div class="flex items-center gap-2">
-                            <h4 class="text-text-high text-base font-semibold capitalize">
-                                {{ str_replace('_', ' ', strtolower($category)) }}
-                            </h4>
-                        </div>
+    <x-slot name="description">
+        {{ __('panel-organization::view.tabs.skills_subtitle') }}
+    </x-slot>
 
-                        {{-- Skills Grid --}}
-                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                            @foreach ($categorySkills as $skill)
-                                @php
-                                    $proficiencyLevel = (int) ($skill->pivot->proficiency_level ?? 1);
-                                    $proficiencyLevel = max(array_key_first($proficiencyLevels), min($proficiencyLevel, array_key_last($proficiencyLevels)));
-                                    $yearsOfExperience = $skill->pivot->years_of_experience ?? 0;
-                                    $proficiency = $proficiencyLevels[$proficiencyLevel];
-                                @endphp
+    @if ($hasSkills)
+        <x-slot name="afterHeader">
+            <x-he4rt::tag size="sm">
+                {{ trans_choice('panel-organization::view.tabs.skills_count', $skills_total, ['count' => $skills_total]) }}
+            </x-he4rt::tag>
+        </x-slot>
+    @endif
 
-                                <div class="bg-elevation-02dp border-outline-low rounded-lg border p-4">
-                                    {{-- Skill Name and Level --}}
-                                    <div class="mb-2 flex items-center justify-between">
-                                        <h5 class="text-text-high font-medium">{{ $skill->name }}</h5>
-                                        <x-he4rt::tag size="xs">
-                                            {{ __('panel-organization::view.proficiency.' . $proficiencyLevel) }}
-                                        </x-he4rt::tag>
-                                    </div>
+    @if ($hasSkills)
+        {{-- Skills by Category --}}
+        @forelse ($skillsByCategory as $category => $categorySkills)
+            <div class="mb-5">
+                {{-- Category Header --}}
+                <h4 class="text-text-high mb-4 text-base font-semibold capitalize">
+                    {{ str_replace('_', ' ', strtolower($category)) }}
+                </h4>
 
-                                    {{-- Proficiency Bar --}}
-                                    <div class="space-y-2">
-                                        <div class="bg-elevation-01dp h-2 w-full overflow-hidden rounded-full">
-                                            <div
-                                                class="{{ $proficiency['color'] }} h-full transition-all duration-500"
-                                                style="width: {{ $proficiency['width'] }}%"
-                                            ></div>
-                                        </div>
+                {{-- Skills Grid --}}
+                <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                    @foreach ($categorySkills as $skill)
+                        @php
+                            $proficiencyLevel = (int) ($skill->pivot->proficiency_level ?? 1);
+                            $proficiencyLevel = max(array_key_first($proficiencyLevels), min($proficiencyLevel, array_key_last($proficiencyLevels)));
+                            $yearsOfExperience = $skill->pivot->years_of_experience ?? 0;
+                            $proficiency = $proficiencyLevels[$proficiencyLevel];
+                        @endphp
 
-                                        {{-- Experience Info --}}
-                                        <div class="text-text-medium flex items-center justify-between text-xs">
-                                            <span>
-                                                {{ __('panel-organization::view.proficiency.' . $proficiencyLevel) }}
-                                            </span>
-                                            <span>
-                                                {{ trans_choice('panel-organization::view.time.year', $yearsOfExperience ?? 0, ['count' => $yearsOfExperience ?? 0]) }}
-                                                {{ __('panel-organization::view.tabs.experience_label') }}
-                                            </span>
-                                        </div>
-                                    </div>
+                        <div class="bg-elevation-02dp border-outline-low rounded-lg border p-4">
+                            {{-- Skill Name and Level --}}
+                            <div class="mb-2 flex items-center justify-between">
+                                <h5 class="text-text-high font-medium">{{ $skill->name }}</h5>
+                                <x-he4rt::tag size="xs">
+                                    {{ __('panel-organization::view.proficiency.' . $proficiencyLevel) }}
+                                </x-he4rt::tag>
+                            </div>
+
+                            {{-- Proficiency Bar --}}
+                            <div class="space-y-2">
+                                <div class="bg-elevation-01dp h-2 w-full overflow-hidden rounded-full">
+                                    <div
+                                        class="{{ $proficiency['color'] }} h-full transition-all duration-500"
+                                        style="width: {{ $proficiency['width'] }}%"
+                                    ></div>
                                 </div>
-                            @endforeach
+
+                                {{-- Experience Info --}}
+                                <div class="text-text-medium flex items-center justify-between text-xs leading-relaxed">
+                                    <span>
+                                        {{ __('panel-organization::view.proficiency.' . $proficiencyLevel) }}
+                                    </span>
+                                    <span>
+                                        {{ trans_choice('panel-organization::view.time.year', $yearsOfExperience ?? 0, ['count' => $yearsOfExperience ?? 0]) }}
+                                        {{ __('panel-organization::view.tabs.experience_label') }}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                @empty
-                    <div class="bg-elevation-02dp border-outline-low rounded-lg border p-6 text-center">
-                        <x-he4rt::icon
-                            :icon="\Filament\Support\Icons\Heroicon::CodeBracket"
-                            size="lg"
-                            class="text-text-low mx-auto"
-                        />
-                        <h4 class="text-text-high mt-2 text-sm font-medium">
-                            {{ __('panel-organization::view.tabs.no_skills_by_category') }}
-                        </h4>
-                        <p class="text-text-medium mt-1 text-sm">
-                            {{ __('panel-organization::view.tabs.no_skills_listed') }}
-                        </p>
-                    </div>
-                @endforelse
+                    @endforeach
+                </div>
             </div>
-        @else
-            {{-- No Skills State --}}
-            <div class="bg-surface-01dp border-outline-low rounded-lg border p-8 text-center">
+        @empty
+            <x-filament::section :secondary="true">
+                <div class="py-4 text-center">
+                    <x-he4rt::icon
+                        :icon="\Filament\Support\Icons\Heroicon::CodeBracket"
+                        size="lg"
+                        class="text-text-low mx-auto"
+                    />
+                    <h4 class="text-text-high mt-2 text-sm font-medium">
+                        {{ __('panel-organization::view.tabs.no_skills_by_category') }}
+                    </h4>
+                    <p class="text-text-medium mt-1 text-sm">
+                        {{ __('panel-organization::view.tabs.no_skills_listed') }}
+                    </p>
+                </div>
+            </x-filament::section>
+        @endforelse
+    @else
+        {{-- No Skills State --}}
+        <x-filament::section :secondary="true">
+            <div class="py-4 text-center">
                 <x-he4rt::icon
                     :icon="\Filament\Support\Icons\Heroicon::CodeBracket"
                     size="lg"
@@ -131,6 +123,6 @@
                     {{ __('panel-organization::view.tabs.no_skills_listed') }}
                 </h4>
             </div>
-        @endif
-    </div>
-</div>
+        </x-filament::section>
+    @endif
+</x-filament::section>

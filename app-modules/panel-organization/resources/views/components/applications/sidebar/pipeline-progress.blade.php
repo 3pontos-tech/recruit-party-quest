@@ -116,7 +116,7 @@
 
                         @if ($stage->description)
                             <p
-                                class="{{ $isCompleted || $isCurrent ? 'text-text-medium' : 'text-text-low/60' }} mt-1 text-xs transition-colors duration-300"
+                                class="{{ $isCompleted || $isCurrent ? 'text-text-medium' : 'text-text-low/60' }} mt-1 text-xs leading-relaxed transition-colors duration-300"
                             >
                                 {{ $stage->description }}
                             </p>

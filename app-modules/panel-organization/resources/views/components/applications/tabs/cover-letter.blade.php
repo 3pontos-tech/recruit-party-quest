@@ -9,33 +9,19 @@
 @endphp
 
 @if ($hasContent)
-    <div class="bg-surface-01dp border-outline-low space-y-4 rounded-lg border p-4">
-        <div class="space-y-4">
-            {{-- Header --}}
-            <div class="flex items-center gap-3">
-                <div
-                    class="bg-success-100 text-success-600 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
-                >
-                    <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::DocumentText" size="sm" />
-                </div>
-                <div>
-                    <h3 class="text-text-high text-lg font-semibold">
-                        {{ __('panel-organization::view.tabs.cover_letter.title') }}
-                    </h3>
-                    <p class="text-text-medium text-sm">
-                        {{ __('panel-organization::view.tabs.cover_letter.subtitle') }}
-                    </p>
+    <x-filament::section :icon="\Filament\Support\Icons\Heroicon::DocumentText" icon-color="success">
+        <x-slot name="heading">
+            {{ __('panel-organization::view.tabs.cover_letter.title') }}
+        </x-slot>
+        <x-slot name="description">
+            {{ __('panel-organization::view.tabs.cover_letter.subtitle') }}
+        </x-slot>
+        <x-filament::section :secondary="true">
+            <div class="prose prose-sm max-w-none">
+                <div class="text-text-high text-base leading-7">
+                    {{ $coverLetter }}
                 </div>
             </div>
-
-            {{-- Cover Letter Content --}}
-            <div class="bg-surface-01dp border-outline-low rounded-lg border p-6">
-                <div class="prose prose-sm max-w-none">
-                    <div class="text-text-high leading-relaxed">
-                        {{ $coverLetter }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        </x-filament::section>
+    </x-filament::section>
 @endif

@@ -5,45 +5,44 @@
 @php
     /** @var \He4rt\Applications\Models\Application $record */
     $comments = $record->comments;
+    $hasComments = $comments->isNotEmpty();
 @endphp
 
-{{-- Main Header --}}
-<div class="flex items-center gap-3">
-    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-700">
-        <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::ChatBubbleBottomCenterText" size="sm" />
-    </div>
-    <div>
-        <h3 class="text-text-high text-lg font-semibold">{{ __('panel-organization::view.tabs.comments.title') }}</h3>
-        <p class="text-text-medium text-sm">{{ __('panel-organization::view.tabs.comments.subtitle') }}</p>
-    </div>
-</div>
+<x-filament::section icon="heroicon-o-chat-bubble-bottom-center-text" icon-color="warning">
+    <x-slot name="heading">
+        {{ __('panel-organization::view.tabs.comments.title') }}
+    </x-slot>
 
-@forelse ($comments as $comment)
-    <div class="bg-surface-01dp border-outline-low mt-6 space-y-4 rounded-lg border p-4">
-        <div class="space-y-4">
-            {{-- Header --}}
-            <div class="flex items-center gap-3">
-                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-pink-50 text-pink-600">
-                    <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::ChatBubbleLeftEllipsis" size="sm" />
-                </div>
-                <div>
-                    <h3 class="text-text-high text-lg font-semibold">{{ $comment->author->name }}</h3>
-                    <p class="text-text-medium text-sm">
-                        {{ __('panel-organization::view.tabs.comments.published_at') . $comment->created_at }}
-                    </p>
-                </div>
-            </div>
+    <x-slot name="description">
+        {{ __('panel-organization::view.tabs.comments.subtitle') }}
+    </x-slot>
 
-            {{-- Cover Letter Content --}}
-            <div class="bg-surface-01dp border-outline-low rounded-lg p-2">
+    @if ($hasComments)
+        @foreach ($comments as $comment)
+            <x-filament::section
+                :icon="\Filament\Support\Icons\Heroicon::ChatBubbleLeftEllipsis"
+                icon-color="warning"
+                class="mb-5"
+            >
+                <x-slot name="heading">
+                    {{ $comment->author->name }}
+                </x-slot>
+                <x-slot name="afterHeader">
+                    {{ __('panel-organization::view.tabs.comments.published_at') . $comment->created_at }}
+                </x-slot>
+                {{-- Comment Content --}}
                 <div class="prose prose-sm max-w-none">
-                    <div class="text-text-high leading-relaxed">
+                    <div class="text-text-high text-base leading-7">
                         {{ $comment->content }}
                     </div>
                 </div>
+            </x-filament::section>
+        @endforeach
+    @else
+        <x-filament::section :secondary="true">
+            <div class="text-center">
+                <h3 class="text-text-high text-lg font-semibold">There are no comments yet.</h3>
             </div>
-        </div>
-    </div>
-@empty
-    <h3 class="text-text-high mt-6 text-lg font-semibold">There are no comments yet.</h3>
-@endforelse
+        </x-filament::section>
+    @endif
+</x-filament::section>
