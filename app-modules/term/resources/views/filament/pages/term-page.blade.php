@@ -45,12 +45,12 @@
             @if (count($this->getSidebarSections()) > 0)
                 <aside class="hidden w-64 shrink-0 lg:block">
                     <nav class="sticky top-24 space-y-1 justify-self-end">
-                        <x-he4rt::text class="text-text-light mb-2 font-medium">Nessa página</x-he4rt::text>
+                        <x-he4rt::text class="text-text-high mb-2 font-medium">Nessa página</x-he4rt::text>
 
                         @foreach ($this->getSidebarSections() as $sidebarSection)
                             <a
                                 href="#{{ $sidebarSection['id'] }}"
-                                class="text-text-medium hover:text-text-light block rounded-lg py-2 font-medium transition"
+                                class="text-text-medium hover:text-text-high block rounded-lg py-2 font-medium transition"
                             >
                                 {{ $sidebarSection['title'] }}
                             </a>

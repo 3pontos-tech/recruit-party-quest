@@ -56,7 +56,7 @@
                 <ul class="text-text-medium space-y-2 text-sm sm:space-y-4">
                     @foreach ($terms as $term)
                         <li>
-                            <a href="/terms/{{ $term->slug }}" class="hover:text-secondary transition">
+                            <a href="/terms/{{ $term->slug }}" class="hover:text-text-high transition">
                                 {{ $term->title }}
                             </a>
                         </li>
