@@ -15,6 +15,9 @@ use He4rt\Term\Filament\Resources\Pages\ListTerms;
 use He4rt\Term\Filament\Resources\Schemas\TermForm;
 use He4rt\Term\Filament\Resources\Tables\TermsTable;
 use He4rt\Term\Models\Term;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Override;
 use UnitEnum;
 
 class TermResource extends Resource
@@ -61,5 +64,17 @@ class TermResource extends Resource
     public static function getNavigationLabel(): string
     {
         return __('term::filament.resource.navigation_label');
+    }
+
+    /**
+     * @return Builder<Term>
+     */
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 }
