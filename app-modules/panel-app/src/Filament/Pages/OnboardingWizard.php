@@ -27,6 +27,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Concerns\EvaluatesClosures;
 use Filament\Support\Enums\Width;
 use He4rt\App\Filament\Schemas\ResumeFileUpload;
+use He4rt\App\Livewire\ResumeFileUploadProgress;
 use He4rt\Candidates\Actions\Onboarding\StoreCandidateEducation;
 use He4rt\Candidates\Actions\Onboarding\StoreCandidateWorkExperiences;
 use He4rt\Candidates\Actions\Onboarding\UpdateCandidateAction;
@@ -95,6 +96,13 @@ class OnboardingWizard extends Page
         $this->user = $user;
         $this->record = $user->candidate;
         $this->content->fill();
+    }
+
+    #[On('echo-private:candidate-onboarding.resume.{user.id},.error')]
+    public function again(): void
+    {
+        $this->canSkipResumeAnalysis = true;
+        $this->dispatch('close')->to(ResumeFileUploadProgress::class);
     }
 
     public function content(Schema $schema): Schema

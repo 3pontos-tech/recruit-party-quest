@@ -3,6 +3,8 @@
 @import './support/index.css';
 @import './base.css';
 
+@layer components, overrides;
+
 @import './components/card.css' layer(components);
 @import './components/section.css' layer(components);
 @import './components/headline.css' layer(components);
@@ -21,10 +23,11 @@
 @import './components/partials/author.css' layer(components);
 @import './components/partials/footer.css' layer(components);
 
-@import './components/filament/page.css' layer(components);
-@import './components/filament/sidebar.css' layer(components);
-@import './components/filament/topbar.css' layer(components);
-@import './components/filament/wizard.css' layer(components);
+@import './components/filament/page.css' layer(overrides);
+@import './components/filament/sidebar.css' layer(overrides);
+@import './components/filament/topbar.css' layer(overrides);
+@import './components/filament/wizard.css' layer(overrides);
+@import './components/filament/table.css' layer(overrides);
 
 @source '../../../../resources/views/**/*.blade.php';
 @source '../../../../app-modules/**/resources/views/**/*.blade.php';

@@ -52,6 +52,7 @@ class JobRequisitionsTable
                     ->badge(),
                 TextColumn::make('employment_type')
                     ->label(__('recruitment::filament.requisition.fields.employment_type'))
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->size(TextSize::Small)
                     ->color('gray'),
                 TextColumn::make('experience_level')
@@ -63,12 +64,13 @@ class JobRequisitionsTable
                     ->alignCenter(),
                 TextColumn::make('salary')
                     ->label(__('recruitment::filament.requisition.fields.salary_range'))
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->state(fn (JobRequisition $record): string => self::formatSalaryRange($record))
-                    ->toggleable()
                     ->icon(fn ($record) => $record->is_confidential ? Heroicon::LockClosed : null
                     ),
                 TextColumn::make('recruiter.user.name')
-                    ->label(__('recruitment::filament.requisition.fields.recruiter')),
+                    ->label(__('recruitment::filament.requisition.fields.recruiter'))
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('published_at')
                     ->label(__('recruitment::filament.requisition.fields.published_at'))
                     ->date(),
@@ -108,7 +110,7 @@ class JobRequisitionsTable
                     EditAction::make(),
                     Action::make('kanban')
                         ->label(__('panel-organization::filament.tables.kanban'))
-                        ->icon(Heroicon::ViewColumns)
+                        ->icon(Heroicon::OutlinedViewColumns)
                         ->url(fn (JobRequisition $record): string => JobRequisitionResource::getUrl('kanban', ['record' => $record->id])),
                 ]),
             ])

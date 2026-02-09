@@ -6,6 +6,12 @@ return [
     'recruitment' => [
         'navigation_group' => 'Recrutamento',
     ],
+    'categories' => [
+        'section_title' => 'Categorias',
+        'headline_title' => 'Buscar por Categorias',
+        'headline_description' => 'Explore oportunidades de emprego organizadas por setor e especialização. Encontre a vaga perfeita que combina com suas habilidades e objetivos de carreira.',
+        'average_salary' => 'Média Salarial',
+    ],
     'pages' => [
         'search_jobs' => [
             'header' => 'Buscar Vagas',
@@ -32,6 +38,8 @@ return [
         ],
         'filters' => [
             'heading' => 'Filtros',
+            'clear' => 'Limpar',
+            'apply' => 'Aplicar',
         ],
     ],
     'stage_timeline' => [

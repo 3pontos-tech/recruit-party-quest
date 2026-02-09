@@ -6,6 +6,9 @@
                 {{ __('panel-app::filament.pages.filters.heading') }}
             </x-he4rt::heading>
         </div>
+        <x-he4rt::button wire:click="clearFilters" variant="outline" size="sm">
+            {{ __('panel-app::filament.pages.filters.clear') }}
+        </x-he4rt::button>
     </div>
 
     {{ $slot }}

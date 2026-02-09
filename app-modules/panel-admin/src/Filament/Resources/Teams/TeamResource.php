@@ -13,6 +13,7 @@ use He4rt\Admin\Filament\Clusters\CoreManagementCluster;
 use He4rt\Admin\Filament\Resources\Teams\Pages\CreateTeam;
 use He4rt\Admin\Filament\Resources\Teams\Pages\EditTeam;
 use He4rt\Admin\Filament\Resources\Teams\Pages\ListTeams;
+use He4rt\Admin\Filament\Resources\Teams\RelationManagers\DepartmentsRelationManager;
 use He4rt\Admin\Filament\Resources\Teams\RelationManagers\MembersRelationManager;
 use He4rt\Admin\Filament\Resources\Teams\Schemas\TeamForm;
 use He4rt\Admin\Filament\Resources\Teams\Tables\TeamsTable;
@@ -62,6 +63,7 @@ class TeamResource extends Resource
     {
         return [
             MembersRelationManager::make(),
+            DepartmentsRelationManager::make(),
         ];
     }
 

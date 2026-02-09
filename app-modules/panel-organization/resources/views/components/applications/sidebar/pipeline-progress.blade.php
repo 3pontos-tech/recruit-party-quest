@@ -29,7 +29,9 @@
     }
 @endphp
 
-<div class="bg-elevation-01dp border-outline-low space-y-4 rounded-lg border p-4">
+<div
+    class="bg-elevation-01dp/64 border-outline-light dark:border-outline-dark space-y-4 rounded-lg border p-4 backdrop-blur-md"
+>
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
             <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::ChartBar" size="sm" class="text-icon-medium" />
@@ -50,7 +52,7 @@
             </div>
             <div class="border-outline-low h-3 w-full overflow-hidden rounded-full border">
                 <div
-                    class="h-full bg-gray-500 transition-all duration-500"
+                    class="bg-outline-medium h-full transition-all duration-500"
                     style="width: {{ round((($currentStageIndex + 1) / max($stages->count(), 1)) * 100) }}%"
                 ></div>
             </div>
@@ -69,14 +71,14 @@
                     {{-- Timeline Line Segment --}}
                     @if (! $loop->last)
                         <div
-                            class="{{ $isCompleted ? 'bg-primary' : 'bg-outline-low/30' }} absolute top-8 left-4 z-10 h-15 w-0.5"
+                            class="{{ $isCompleted ? 'bg-primary' : 'bg-outline-low/30' }} absolute top-8 left-4 z-10 h-15 w-0.5 -translate-x-1/2"
                             aria-hidden="true"
                         ></div>
                     @endif
 
                     {{-- Indicator Dot --}}
                     <div
-                        class="{{ $isCompleted || $isCurrent ? 'bg-primary border-primary' : 'bg-elevation-surface border-outline-low' }} relative z-20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 transition-colors duration-300"
+                        class="{{ $isCompleted || $isCurrent ? 'bg-outline-medium border-outline-medium' : 'bg-elevation-surface border-outline-low' }} relative z-20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 transition-colors duration-300"
                     >
                         @if ($isCompleted)
                             <x-he4rt::icon
@@ -92,7 +94,7 @@
                     </div>
 
                     {{-- Stage Content --}}
-                    <div class="flex-1 pb-3">
+                    <div class="flex-1 pb-6">
                         <div class="flex items-center justify-between">
                             <h4
                                 class="{{ $isCompleted || $isCurrent ? 'text-text-high' : 'text-text-low' }} text-sm font-medium transition-colors duration-300"
@@ -102,11 +104,11 @@
 
                             {{-- Stage Status Badge --}}
                             @if ($isCurrent)
-                                <x-he4rt::tag size="xs" class="p-1">
+                                <x-he4rt::tag size="xs">
                                     {{ __('panel-organization::view.pipeline.current') }}
                                 </x-he4rt::tag>
                             @elseif ($isCompleted)
-                                <x-he4rt::tag size="xs" class="p-1">
+                                <x-he4rt::tag size="xs">
                                     {{ __('panel-organization::view.pipeline.done') }}
                                 </x-he4rt::tag>
                             @endif
@@ -114,7 +116,7 @@
 
                         @if ($stage->description)
                             <p
-                                class="{{ $isCompleted || $isCurrent ? 'text-text-medium' : 'text-text-low/60' }} mt-1 text-xs transition-colors duration-300"
+                                class="{{ $isCompleted || $isCurrent ? 'text-text-medium' : 'text-text-low/60' }} mt-1 text-xs leading-relaxed transition-colors duration-300"
                             >
                                 {{ $stage->description }}
                             </p>
@@ -124,14 +126,13 @@
                         @if ($isCurrent)
                             <div class="mt-2 space-y-1">
                                 <div class="text-text-medium flex items-center gap-2 text-xs">
-                                    <x-he4rt::icon
+                                    <x-he4rt::tag
                                         :icon="\Filament\Support\Icons\Heroicon::Clock"
-                                        size="sm"
-                                        class="text-primary"
-                                    />
-                                    <span>
+                                        size="xs"
+                                        variant="ghost"
+                                    >
                                         {{ __('panel-organization::view.pipeline.active_since', ['date' => $record->updated_at->format('M j, Y')]) }}
-                                    </span>
+                                    </x-he4rt::tag>
                                 </div>
                             </div>
                         @endif

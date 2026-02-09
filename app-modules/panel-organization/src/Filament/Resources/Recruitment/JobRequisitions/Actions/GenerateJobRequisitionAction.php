@@ -7,7 +7,9 @@ namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Acti
 use App\Filament\Schemas\Components\He4rtSelect;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Field;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Grid;
@@ -24,6 +26,7 @@ use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
+use He4rt\Teams\Department;
 use He4rt\Teams\Team;
 use Illuminate\Database\Eloquent\Builder;
 use Throwable;

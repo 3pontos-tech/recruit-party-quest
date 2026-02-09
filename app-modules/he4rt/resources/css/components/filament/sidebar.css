@@ -1,10 +1,10 @@
 .fi-sidebar {
-    @apply bg-elevation-surface/32! backdrop-blur-lg;
+    @apply bg-elevation-surface/32 backdrop-blur-lg;
 }
 
 .fi-sidebar-item {
     & .fi-sidebar-item-btn {
-        @apply relative bg-transparent hover:bg-transparent!;
+        @apply relative bg-transparent hover:bg-transparent;
         @apply pl-4;
 
         & .fi-sidebar-item-label {

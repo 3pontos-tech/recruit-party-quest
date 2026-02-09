@@ -9,10 +9,20 @@ use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
+use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use Illuminate\Contracts\Support\Htmlable;
 
 class EditJobRequisition extends EditRecord
 {
     protected static string $resource = JobRequisitionResource::class;
+
+    public function getTitle(): string|Htmlable
+    {
+        /** @var JobRequisition $record */
+        $record = $this->getRecord();
+
+        return 'Edit: '.$record->post->title;
+    }
 
     protected function getHeaderActions(): array
     {

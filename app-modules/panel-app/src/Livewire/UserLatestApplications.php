@@ -82,28 +82,4 @@ class UserLatestApplications extends Component
             default => [],
         };
     }
-
-    protected function getStatusColor(ApplicationStatusEnum $status): string
-    {
-        return match ($status) {
-            ApplicationStatusEnum::New , ApplicationStatusEnum::InReview => 'bg-yellow-500/10 text-yellow-500',
-            ApplicationStatusEnum::InProgress => 'bg-purple-500/10 text-purple-500',
-            ApplicationStatusEnum::OfferExtended, ApplicationStatusEnum::OfferAccepted => 'bg-green-500/10 text-green-500',
-            ApplicationStatusEnum::OfferDeclined, ApplicationStatusEnum::Rejected => 'bg-red-500/10 text-red-500',
-            ApplicationStatusEnum::Hired => 'bg-blue-500/10 text-blue-500',
-            ApplicationStatusEnum::Withdrawn => 'bg-gray-500/10 text-gray-500',
-        };
-    }
-
-    protected function getStatusBarColor(ApplicationStatusEnum $status): string
-    {
-        return match ($status) {
-            ApplicationStatusEnum::New , ApplicationStatusEnum::InReview => 'bg-yellow-500',
-            ApplicationStatusEnum::InProgress => 'bg-purple-500',
-            ApplicationStatusEnum::OfferExtended, ApplicationStatusEnum::OfferAccepted => 'bg-green-500',
-            ApplicationStatusEnum::OfferDeclined, ApplicationStatusEnum::Rejected => 'bg-red-500',
-            ApplicationStatusEnum::Hired => 'bg-blue-500',
-            ApplicationStatusEnum::Withdrawn => 'bg-gray-500',
-        };
-    }
 }
