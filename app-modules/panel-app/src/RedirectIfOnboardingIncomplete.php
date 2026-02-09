@@ -17,6 +17,10 @@ class RedirectIfOnboardingIncomplete
             return $next($request);
         }
 
+        if ($request->routeIs('filament.app.auth.logout') || $request->routeIs('filament.app.auth.*')) {
+            return $next($request);
+        }
+
         /** @var ?Candidate $candidate */
         $candidate = $request->user()->candidate;
         $isOnboarding = $request->route()->uri === 'onboarding';
