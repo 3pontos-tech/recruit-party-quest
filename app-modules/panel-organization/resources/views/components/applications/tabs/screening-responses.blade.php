@@ -73,12 +73,12 @@
                                 />
                             </div>
                             <div>
-                                <h4 class="text-text-high text-sm font-medium">
+                                <x-he4rt::heading :level="4" class="text-sm font-medium">
                                     {{ $response->question->question_text }}
-                                </h4>
-                                <span class="text-text-low text-xs">
+                                </x-he4rt::heading>
+                                <x-he4rt::text class="text-text-low text-xs">
                                     {{ $presenter->typeLabel() }}
-                                </span>
+                                </x-he4rt::text>
                             </div>
                         </div>
 
@@ -162,9 +162,9 @@
                     size="lg"
                     class="text-text-low mx-auto"
                 />
-                <h4 class="text-text-high mt-4 text-lg font-medium">
+                <x-he4rt::heading :level="4" class="mt-4 text-lg font-medium">
                     {{ __('panel-organization::view.tabs.screening_responses.no_responses') }}
-                </h4>
+                </x-he4rt::heading>
                 <p class="text-text-medium mt-1 text-sm">
                     {{ __('panel-organization::view.tabs.screening_responses.no_responses_text') }}
                 </p>
