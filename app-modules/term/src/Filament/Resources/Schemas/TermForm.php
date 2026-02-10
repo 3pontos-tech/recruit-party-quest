@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Term\Filament\Resources\Schemas;
 
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
@@ -34,10 +35,9 @@ class TermForm
 
                                 $set('slug', Str::slug($state));
                             }),
-                        TextInput::make('slug')
+                        Hidden::make('slug')
                             ->label(__('term::filament.fields.slug'))
                             ->required()
-                            ->maxLength(255)
                             ->unique(table: 'terms', column: 'slug', ignoreRecord: true)
                             ->alphaDash(),
                         Toggle::make('is_active')
@@ -70,7 +70,7 @@ class TermForm
 
                                         $set('id', Str::slug($state));
                                     }),
-                                TextInput::make('id')
+                                Hidden::make('id')
                                     ->label(__('term::filament.fields.section_id'))
                                     ->required()
                                     ->alphaDash(),
