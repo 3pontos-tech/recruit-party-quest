@@ -28,6 +28,7 @@ class TermForm
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
+                            ->columnSpanFull()
                             ->afterStateUpdated(function (?string $state, callable $set, $record): void {
                                 if ($record !== null || $state === null) {
                                     return;
@@ -63,6 +64,7 @@ class TermForm
                                     ->label(__('term::filament.fields.section_title'))
                                     ->required()
                                     ->live(onBlur: true)
+                                    ->columnSpanFull()
                                     ->afterStateUpdated(function (?string $state, callable $set): void {
                                         if ($state === null) {
                                             return;
