@@ -79,12 +79,18 @@ class JobApplicationForm extends Component
                 continue;
             }
 
-            $value = is_array($value) ? $value : ['value' => $value];
+            // File uploads already come as ['files' => [...]] from handleFileUploaded
+            $responseValue = is_array($value) && array_key_exists('value', $value)
+                ? $value
+                : (is_array($value) && array_key_exists('files', $value)
+                    ? $value
+                    : ['value' => $value]);
+
             $screeningCollection->add(new ScreeningResponseDTO(
                 teamId: $this->requisition->team_id,
                 applicationId: $this->application->getKey(),
                 questionId: $questionId,
-                response_value: $value,
+                response_value: $responseValue,
             ));
         }
 

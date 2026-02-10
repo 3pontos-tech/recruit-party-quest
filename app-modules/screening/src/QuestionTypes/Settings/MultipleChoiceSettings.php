@@ -70,16 +70,10 @@ readonly class MultipleChoiceSettings implements HasValidations
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<int, string>
      */
     public function initialValue(): array
     {
-        $response = [];
-
-        foreach ($this->choices as $choice) {
-            $response[$choice['value']] = null;
-        }
-
-        return $response;
+        return [];
     }
 }

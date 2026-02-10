@@ -20,48 +20,33 @@
         selected: @entangle('responses.' . $question->id).live,
         max: @js($maxSelections),
         isDisabled: @js($disabled),
-        allOptions: @js(collect($choices)->pluck('value')),
 
         init() {
-            if (! this.selected) {
-                this.selected = this.allOptions.map(() => null)
+            if (! Array.isArray(this.selected)) {
+                this.selected = []
             }
         },
 
         toggle(value) {
-            let active = Array.isArray(this.selected)
-                ? this.selected.filter((i) => i !== null && i !== false)
-                : []
-
-            const index = active.indexOf(value)
+            const index = this.selected.indexOf(value)
 
             if (index === -1) {
-                if (this.max === null || active.length < this.max) {
-                    active.push(value)
+                if (this.max === null || this.selected.length < this.max) {
+                    this.selected = [...this.selected, value]
                 }
             } else {
-                active.splice(index, 1)
+                this.selected = this.selected.filter((v) => v !== value)
             }
-
-            this.selected = this.allOptions.map((option) => {
-                return active.includes(option) ? option : null
-            })
         },
 
         isChecked(value) {
-            return (
-                Array.isArray(this.selected) &&
-                this.selected.some((i) => i === value)
-            )
+            return Array.isArray(this.selected) && this.selected.includes(value)
         },
 
         shouldDisable(value) {
             if (this.isDisabled) return true
             if (this.max === null) return false
-            let activeCount = Array.isArray(this.selected)
-                ? this.selected.filter((i) => i !== null && i !== false).length
-                : 0
-            return activeCount >= this.max && ! this.isChecked(value)
+            return this.selected.length >= this.max && ! this.isChecked(value)
         },
     }"
 >

@@ -113,11 +113,13 @@
                                         @if ($item['selected'])
                                             <x-he4rt::icon
                                                 icon="heroicon-s-check-circle"
-                                                size="sm"
                                                 class="text-success-500 shrink-0"
                                             />
                                         @else
-                                            <div class="border-outline-low h-5 w-5 shrink-0 rounded-full border"></div>
+                                            <x-he4rt::icon
+                                                icon="heroicon-s-x-circle"
+                                                class="text-danger-500 shrink-0"
+                                            />
                                         @endif
                                         <span
                                             @class([
