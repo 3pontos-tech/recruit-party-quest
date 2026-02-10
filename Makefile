@@ -69,6 +69,64 @@ test-unit: ## Run unit tests
 test-feature: ## Run feature tests
 	@$(CURDIR)/vendor/bin/pest --parallel --compact --group=feature
 
+## Module Tests
+
+.PHONY: test-module-applications
+test-module-applications: ## Run applications module tests
+	@$(CURDIR)/vendor/bin/pest --parallel --compact app-modules/applications/tests/
+
+.PHONY: test-module-candidates
+test-module-candidates: ## Run candidates module tests
+	@$(CURDIR)/vendor/bin/pest --parallel --compact app-modules/candidates/tests/
+
+.PHONY: test-module-feedback
+test-module-feedback: ## Run feedback module tests
+	@$(CURDIR)/vendor/bin/pest --parallel --compact app-modules/feedback/tests/
+
+.PHONY: test-module-links
+test-module-links: ## Run links module tests
+	@$(CURDIR)/vendor/bin/pest --parallel --compact app-modules/links/tests/
+
+.PHONY: test-module-location
+test-module-location: ## Run location module tests
+	@$(CURDIR)/vendor/bin/pest --parallel --compact app-modules/location/tests/
+
+.PHONY: test-module-panel-admin
+test-module-panel-admin: ## Run panel-admin module tests
+	@$(CURDIR)/vendor/bin/pest --parallel --compact app-modules/panel-admin/tests/
+
+.PHONY: test-module-panel-app
+test-module-panel-app: ## Run panel-app module tests
+	@$(CURDIR)/vendor/bin/pest --parallel --compact app-modules/panel-app/tests/
+
+.PHONY: test-module-panel-organization
+test-module-panel-organization: ## Run panel-organization module tests
+	@$(CURDIR)/vendor/bin/pest --parallel --compact app-modules/panel-organization/tests/
+
+.PHONY: test-module-permissions
+test-module-permissions: ## Run permissions module tests
+	@$(CURDIR)/vendor/bin/pest --parallel --compact app-modules/permissions/tests/
+
+.PHONY: test-module-recruitment
+test-module-recruitment: ## Run recruitment module tests
+	@$(CURDIR)/vendor/bin/pest --parallel --compact app-modules/recruitment/tests/
+
+.PHONY: test-module-screening
+test-module-screening: ## Run screening module tests
+	@$(CURDIR)/vendor/bin/pest --parallel --compact app-modules/screening/tests/
+
+.PHONY: test-module-teams
+test-module-teams: ## Run teams module tests
+	@$(CURDIR)/vendor/bin/pest --parallel --compact app-modules/teams/tests/
+
+.PHONY: test-module-term
+test-module-term: ## Run term module tests
+	@$(CURDIR)/vendor/bin/pest --parallel --compact app-modules/term/tests/
+
+.PHONY: test-module-users
+test-module-users: ## Run users module tests
+	@$(CURDIR)/vendor/bin/pest --parallel --compact app-modules/users/tests/
+
 .PHONY: migrate-fresh
 migrate-fresh: ## Run migrations and seed the database
 	@php artisan migrate:fresh --seed
