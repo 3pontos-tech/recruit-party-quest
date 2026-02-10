@@ -56,7 +56,7 @@ class ApplicationInfolist
                         Tab::make('Screening Responses')
                             ->label(__('panel-organization::filament.tabs.screening-responses'))
                             ->schema([
-                                ViewEntry::make('comments')
+                                ViewEntry::make('screening_responses')
                                     ->view('panel-organization::components.applications.tabs.screening-responses'),
                             ]),
 
