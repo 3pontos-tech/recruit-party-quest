@@ -7,6 +7,7 @@ return [
         'overview' => 'Overview',
         'experience' => 'Experience',
         'comments' => 'Comments',
+        'screening-responses' => 'Screening Responses',
     ],
 
     'section' => [

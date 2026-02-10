@@ -7,6 +7,7 @@ return [
         'overview' => 'Visão Geral',
         'experience' => 'Experiência',
         'comments' => 'Comentários',
+        'screening-responses' => 'Respostas de Screening',
     ],
 
     'section' => [

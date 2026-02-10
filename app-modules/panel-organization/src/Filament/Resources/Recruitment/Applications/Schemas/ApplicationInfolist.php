@@ -53,6 +53,13 @@ class ApplicationInfolist
                                     ->view('panel-organization::components.applications.tabs.work-experience'),
                             ]),
 
+                        Tab::make('Screening Responses')
+                            ->label(__('panel-organization::filament.tabs.screening-responses'))
+                            ->schema([
+                                ViewEntry::make('comments')
+                                    ->view('panel-organization::components.applications.tabs.screening-responses'),
+                            ]),
+
                         Tab::make('Comments')
                             ->label(__('panel-organization::filament.tabs.comments'))
                             ->schema([
