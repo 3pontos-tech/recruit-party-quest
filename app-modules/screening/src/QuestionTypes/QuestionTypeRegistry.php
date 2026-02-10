@@ -24,7 +24,7 @@ final class QuestionTypeRegistry
         'number' => NumberType::class,
         'single_choice' => SingleChoiceType::class,
         'multiple_choice' => MultipleChoiceType::class,
-        'file_upload' => FileUploadType::class,
+        //        'file_upload' => FileUploadType::class,
     ];
 
     /**
