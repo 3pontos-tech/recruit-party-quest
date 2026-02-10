@@ -7,7 +7,6 @@ namespace He4rt\Screening\Enums;
 use App\Enums\Concerns\StringifyEnum;
 use Filament\Support\Contracts\HasLabel;
 use He4rt\Screening\Contracts\HasValidations;
-use He4rt\Screening\QuestionTypes\Settings\FileUploadSettings;
 use He4rt\Screening\QuestionTypes\Settings\MultipleChoiceSettings;
 use He4rt\Screening\QuestionTypes\Settings\NumberSettings;
 use He4rt\Screening\QuestionTypes\Settings\SingleChoiceSettings;
@@ -23,7 +22,6 @@ enum QuestionTypeEnum: string implements HasLabel
     case Number = 'number';
     case SingleChoice = 'single_choice';
     case MultipleChoice = 'multiple_choice';
-    case FileUpload = 'file_upload';
 
     public function getLabel(): string
     {
@@ -37,7 +35,6 @@ enum QuestionTypeEnum: string implements HasLabel
     {
         return match ($this) {
             self::MultipleChoice => MultipleChoiceSettings::fromArray($settings),
-            self::FileUpload => FileUploadSettings::fromArray($settings),
             self::Number => NumberSettings::fromArray($settings),
             self::SingleChoice => SingleChoiceSettings::fromArray($settings),
             self::Text => TextSettings::fromArray($settings),
