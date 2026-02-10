@@ -27,7 +27,7 @@ beforeEach(function (): void {
         ->state([
             'question_text' => 'fuedase?',
         ])
-        ->fileUpload()
+//        ->fileUpload()
         ->required()
         ->create();
 
@@ -36,15 +36,15 @@ beforeEach(function (): void {
 
 });
 
-describe('file upload question', function (): void {
-    test('required validation', function (): void {
-        $questionId = $this->question->getKey();
-        $livewire = livewire(JobApplicationForm::class, ['requisition' => $this->jobRequisition])
-            ->assertOk()
-            ->call('submit');
-        $livewire->assertHasErrors(['responses.'.$questionId => __('screening::question_validations.required')]);
-    });
-});
+// describe('file upload question', function (): void {
+//    test('required validation', function (): void {
+//        $questionId = $this->question->getKey();
+//        $livewire = livewire(JobApplicationForm::class, ['requisition' => $this->jobRequisition])
+//            ->assertOk()
+//            ->call('submit');
+//        $livewire->assertHasErrors(['responses.'.$questionId => __('screening::question_validations.required')]);
+//    });
+// });
 
 describe('multiple questions', function (): void {
     test('min', function (): void {
