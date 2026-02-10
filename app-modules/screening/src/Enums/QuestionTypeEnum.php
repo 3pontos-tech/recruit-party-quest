@@ -23,6 +23,8 @@ enum QuestionTypeEnum: string implements HasLabel
     case SingleChoice = 'single_choice';
     case MultipleChoice = 'multiple_choice';
 
+    //    case FileUpload = 'file_upload';
+
     public function getLabel(): string
     {
         return __('screening::enums.question_type.'.$this->value.'.label');
@@ -35,6 +37,7 @@ enum QuestionTypeEnum: string implements HasLabel
     {
         return match ($this) {
             self::MultipleChoice => MultipleChoiceSettings::fromArray($settings),
+            //            self::FileUpload => FileUploadSettings::fromArray($settings),
             self::Number => NumberSettings::fromArray($settings),
             self::SingleChoice => SingleChoiceSettings::fromArray($settings),
             self::Text => TextSettings::fromArray($settings),
