@@ -49,7 +49,7 @@ class ScreeningQuestionsRelationManager extends RelationManager
                     ->required()
                     ->live()
                     ->afterStateUpdated(function ($set): void {
-                        $set('settings', null);
+                        $set('settings', []);
                     }),
                 TextInput::make('display_order')
                     ->label(__('screening::filament.question.fields.display_order'))

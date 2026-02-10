@@ -44,7 +44,7 @@ final class ScreeningQuestionsFormSchema
                     ->required()
                     ->live()
                     ->afterStateUpdated(function ($set): void {
-                        $set('settings', null);
+                        $set('settings', []);
                     }),
 
                 TextInput::make('display_order')
