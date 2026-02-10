@@ -12,7 +12,6 @@ use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
-use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Teams\Department;
 use He4rt\Teams\Team;
 use He4rt\Users\User;
@@ -71,7 +70,6 @@ class JobRequisitionFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'status' => fake()->randomElement([RequisitionStatusEnum::Published, RequisitionStatusEnum::Approved]),
         ])->afterCreating(function (JobRequisition $jobRequisition): void {
-            Stage::factory()->for($jobRequisition, 'requisition')->create();
             JobPosting::factory()->for($jobRequisition, 'jobRequisition')->create();
         });
     }

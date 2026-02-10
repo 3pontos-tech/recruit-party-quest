@@ -10,6 +10,8 @@ use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
+use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
+use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Screening\Models\ScreeningQuestion;
 use He4rt\Teams\Department;
 use He4rt\Teams\Team;
@@ -111,4 +113,68 @@ it('uses soft deletes', function (): void {
 
     expect($requisition->deleted_at)->not->toBeNull()
         ->and(JobRequisition::withTrashed()->find($requisition->id))->not->toBeNull();
+});
+
+it('automatically creates 8 default stages when created', function (): void {
+    $requisition = JobRequisition::factory()->create();
+
+    expect($requisition->stages)->toHaveCount(8);
+});
+
+it('creates stages with correct stage types', function (): void {
+    $requisition = JobRequisition::factory()->create();
+
+    $stageTypes = $requisition->stages->pluck('stage_type')->toArray();
+
+    expect($stageTypes)->toContain(StageTypeEnum::New)
+        ->and($stageTypes)->toContain(StageTypeEnum::Screening)
+        ->and($stageTypes)->toContain(StageTypeEnum::Assessment)
+        ->and($stageTypes)->toContain(StageTypeEnum::Interview)
+        ->and($stageTypes)->toContain(StageTypeEnum::Offer)
+        ->and($stageTypes)->toContain(StageTypeEnum::Hired)
+        ->and($stageTypes)->toContain(StageTypeEnum::Declined)
+        ->and($stageTypes)->toContain(StageTypeEnum::Rejected);
+});
+
+it('creates stages with correct display order', function (): void {
+    $requisition = JobRequisition::factory()->create();
+
+    $displayOrders = $requisition->stages->pluck('display_order')->sort()->values()->toArray();
+
+    expect($displayOrders)->toBe([1, 2, 3, 4, 5, 6, 7, 8]);
+});
+
+it('creates stages with correct team_id', function (): void {
+    $requisition = JobRequisition::factory()->create();
+
+    $requisition->stages->each(function (Stage $stage) use ($requisition): void {
+        expect($stage->team_id)->toBe($requisition->team_id);
+    });
+});
+
+it('creates stages that are active and visible by default', function (): void {
+    $requisition = JobRequisition::factory()->create();
+
+    $requisition->stages->each(function (Stage $stage): void {
+        expect($stage->active)->toBeTrue()
+            ->and($stage->hidden)->toBeFalse();
+    });
+});
+
+it('creates stages with expected names and descriptions', function (): void {
+    $requisition = JobRequisition::factory()->create();
+
+    $newStage = $requisition->stages->firstWhere('stage_type', StageTypeEnum::New);
+    $screeningStage = $requisition->stages->firstWhere('stage_type', StageTypeEnum::Screening);
+    $offerStage = $requisition->stages->firstWhere('stage_type', StageTypeEnum::Offer);
+
+    expect($newStage->name)->toBe('New Applications')
+        ->and($newStage->description)->toBe('Initial application submission and registration')
+        ->and($newStage->expected_duration_days)->toBe(1)
+        ->and($screeningStage->name)->toBe('Resume Screening')
+        ->and($screeningStage->description)->toBe('Review of resume and basic qualifications')
+        ->and($screeningStage->expected_duration_days)->toBe(3)
+        ->and($offerStage->name)->toBe('Offer')
+        ->and($offerStage->description)->toBe('Job offer preparation and negotiation')
+        ->and($offerStage->expected_duration_days)->toBe(5);
 });
