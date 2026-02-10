@@ -72,7 +72,9 @@
                         }
                     @endphp
 
-                    <div class="flex items-center justify-between">
+                    <div
+                        class="flex flex-col items-start justify-start gap-4 lg:flex-row lg:items-center lg:justify-between"
+                    >
                         <div class="flex items-center gap-2">
                             <x-he4rt::icon
                                 icon="fas-spinner"
