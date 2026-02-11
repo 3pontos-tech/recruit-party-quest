@@ -1,4 +1,5 @@
 @php
+    use App\Enums\FilamentPanel;
     use He4rt\Applications\Models\Application;
     use He4rt\Recruitment\Stages\Models\Stage;
     use Illuminate\Support\Collection;
@@ -11,14 +12,25 @@
 @php
     /** @var Application $record */
     $currentStage = $record->currentStage;
-
+    $organizationPanel =
+        filament()
+            ->getCurrentPanel()
+            ?->getId() === FilamentPanel::Organization->value;
     /** @var Collection<int, Stage>  $stages */
-    $stages = $record->requisition
-        ->stages()
-        ->where('hidden', false)
-        ->where('active', true)
-        ->orderBy('display_order')
-        ->get();
+    if ($organizationPanel) {
+        $stages = $record->requisition
+            ->stages()
+            ->where('active', true)
+            ->orderBy('display_order')
+            ->get();
+    } else {
+        $stages = $record->requisition
+            ->stages()
+            ->where('hidden', false)
+            ->where('active', true)
+            ->orderBy('display_order')
+            ->get();
+    }
 
     $currentStageIndex = 0;
 
