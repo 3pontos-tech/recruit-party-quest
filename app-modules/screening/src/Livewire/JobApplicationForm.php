@@ -52,7 +52,6 @@ class JobApplicationForm extends Component
     #[On('file-uploaded')]
     public function handleFileUploaded(array $data): void
     {
-        // we got the name of the file that will be saved
         $this->responses[$data['questionId']] = ['files' => $data['files']];
     }
 
@@ -79,12 +78,12 @@ class JobApplicationForm extends Component
                 continue;
             }
 
-            // File uploads already come as ['files' => [...]] from handleFileUploaded
-            $responseValue = is_array($value) && array_key_exists('value', $value)
+            $isStructuredResponse = is_array($value)
+                && (array_key_exists('value', $value) || array_key_exists('files', $value));
+
+            $responseValue = $isStructuredResponse
                 ? $value
-                : (is_array($value) && array_key_exists('files', $value)
-                    ? $value
-                    : ['value' => $value]);
+                : ['value' => $value];
 
             $screeningCollection->add(new ScreeningResponseDTO(
                 teamId: $this->requisition->team_id,
