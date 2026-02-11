@@ -41,38 +41,41 @@ it('should render', function (): void {
         ->assertOk();
 });
 
-// it('should answer screening questions that are file upload', function (): void {
-//    $questionId = $this->question->getKey();
-//    $filePayload = ['questionId' => $questionId, 'files' => $this->file->getFilename()];
-//
-//    $livewire = livewire(JobApplicationForm::class, ['requisition' => $this->jobRequisition])
-//        ->assertOk()
-//        ->call('handleFileUploaded', $filePayload)
-//        ->assertSet(sprintf('responses.%s.files', $questionId), $this->file->getfilename())
-//        ->set('source', CandidateSourceEnum::LinkedIn)
-//        ->call('submit')
-//        ->assertSessionHasNoErrors()
-//        ->assertDontSeeText('This question is required.')
-//        ->assertNotified('Your application has been submitted');
-//
-//    $application = Application::query()->first();
-//    $livewire->assertRedirect(route('filament.app.resources.applications.view', ['record' => $application->getKey()]));
-//
-//    assertDatabaseCount(Application::class, 1);
-//    assertDatabaseHas(Application::class, [
-//        'requisition_id' => $this->jobRequisition->getKey(),
-//        'candidate_id' => auth()->user()->candidate->getKey(),
-//        'team_id' => $this->jobRequisition->team_id,
-//        'status' => ApplicationStatusEnum::New,
-//        'source' => CandidateSourceEnum::LinkedIn,
-//    ]);
-//    assertDatabaseHas(ScreeningResponse::class, [
-//        'team_id' => $this->jobRequisition->team_id,
-//        'application_id' => $application->getKey(),
-//        'question_id' => $this->question->getKey(),
-//        'response_value' => json_encode(['files' => $this->file->getFilename()]),
-//    ]);
-// });
+it('should answer screening questions that are file upload', function (): void {
+    $questionId = $this->question->getKey();
+    $filePayload = ['questionId' => $questionId, 'files' => $this->file->getFilename()];
+
+    $livewire = livewire(JobApplicationForm::class, ['requisition' => $this->jobRequisition])
+        ->assertOk()
+        ->call('handleFileUploaded', $filePayload)
+        ->assertSet(sprintf('responses.%s.files', $questionId), $this->file->getfilename())
+        ->set('source', CandidateSourceEnum::LinkedIn)
+        ->call('submit')
+        ->assertSessionHasNoErrors()
+        ->assertDontSeeText('This question is required.')
+        ->assertNotified('Your application has been submitted');
+
+    $application = Application::query()->first();
+    $livewire->assertRedirect(route('filament.app.resources.applications.view', ['record' => $application->getKey()]));
+
+    assertDatabaseCount(Application::class, 1);
+    assertDatabaseHas(Application::class, [
+        'requisition_id' => $this->jobRequisition->getKey(),
+        'candidate_id' => auth()->user()->candidate->getKey(),
+        'team_id' => $this->jobRequisition->team_id,
+        'status' => ApplicationStatusEnum::New,
+        'source' => CandidateSourceEnum::LinkedIn,
+    ]);
+    assertDatabaseHas(ScreeningResponse::class, [
+        'team_id' => $this->jobRequisition->team_id,
+        'application_id' => $application->getKey(),
+        'question_id' => $this->question->getKey(),
+        'response_value' => json_encode(['files' => $this->file->getFilename()]),
+    ]);
+})->todo(note: <<<'NOTE'
+        For now we disabled file upload question
+NOTE
+);
 
 test('source question are required', function (): void {
     livewire(JobApplicationForm::class, ['requisition' => $this->jobRequisition])

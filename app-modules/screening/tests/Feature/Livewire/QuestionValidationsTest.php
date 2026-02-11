@@ -36,15 +36,18 @@ beforeEach(function (): void {
 
 });
 
-// describe('file upload question', function (): void {
-//    test('required validation', function (): void {
-//        $questionId = $this->question->getKey();
-//        $livewire = livewire(JobApplicationForm::class, ['requisition' => $this->jobRequisition])
-//            ->assertOk()
-//            ->call('submit');
-//        $livewire->assertHasErrors(['responses.'.$questionId => __('screening::question_validations.required')]);
-//    });
-// });
+describe('file upload question', function (): void {
+    test('required validation', function (): void {
+        $questionId = $this->question->getKey();
+        $livewire = livewire(JobApplicationForm::class, ['requisition' => $this->jobRequisition])
+            ->assertOk()
+            ->call('submit');
+        $livewire->assertHasErrors(['responses.'.$questionId => __('screening::question_validations.required')]);
+    });
+})->todo(note: <<<'NOTE'
+        For now we disabled file upload question
+NOTE
+);
 
 describe('multiple questions', function (): void {
     test('min', function (): void {
