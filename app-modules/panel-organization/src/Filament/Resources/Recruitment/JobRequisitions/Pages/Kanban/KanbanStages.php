@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban;
 
-use Filament\Actions\Action;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Navigation\NavigationItem;
 use Filament\Schemas\Schema;
@@ -95,10 +94,10 @@ class KanbanStages extends BoardResourcePage
                 ])
             )
             ->columnActions([
-                Action::make('example_action')
-                    ->label('example_action'),
-                Action::make('example_action_2')
-                    ->label('example_action_2'),
+                //                Action::make('example_action')
+                //                    ->label('example_action'),
+                //                Action::make('example_action_2')
+                //                    ->label('example_action_2'),
             ])
             ->cardActions([
                 ViewCandidateAction::make()->model(Application::class),
