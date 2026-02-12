@@ -15,18 +15,17 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
-use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\EditJobRequisition;
-use He4rt\Recruitment\Requisitions\Actions\AiJobRequisition\GenerateJobRequisition;
 use He4rt\Recruitment\Requisitions\Actions\AiJobRequisition\GenerateJobRequisitionDTO;
-use He4rt\Recruitment\Requisitions\Actions\StoreJobRequisitionAction;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
+use He4rt\Recruitment\Requisitions\Enums\JobGenerationStatus;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Events\JobRequisitionGenerationEvent;
+use He4rt\Recruitment\Requisitions\Jobs\GeneratePostJob;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Teams\Team;
 use Illuminate\Database\Eloquent\Builder;
-use Throwable;
 
 class GenerateJobRequisitionAction extends Action
 {
@@ -66,40 +65,25 @@ class GenerateJobRequisitionAction extends Action
                     'team_id' => $team->getKey(),
                 ]);
 
-                try {
-                    $result = resolve(GenerateJobRequisition::class)->execute($dto);
-                    $jobRequisition = resolve(StoreJobRequisitionAction::class)->execute($result);
+                logger()->info('Job generation started', [
+                    'user_id' => auth()->user()->getKey(),
+                    'title' => $data['title'],
+                ]);
 
-                    $livewire = $action->getLivewire();
-                    if (property_exists($livewire, 'jobGenerationState')) {
-                        $livewire->jobGenerationState = 'success';
-                    }
+                broadcast(new JobRequisitionGenerationEvent(
+                    JobGenerationStatus::Queued,
+                    (string) auth()->user()->getKey()
+                ));
 
-                    Notification::make()
-                        ->success()
-                        ->title(__('panel-organization::filament.actions.generate_job_requisition.success_title'))
-                        ->send();
+                dispatch(new GeneratePostJob($dto));
 
-                    $action->success();
+                Notification::make()
+                    ->info()
+                    ->title(__('panel-organization::filament.actions.generate_job_requisition.queued_title'))
+                    ->body(__('panel-organization::filament.actions.generate_job_requisition.queued_body'))
+                    ->send();
 
-                    $this->redirect(EditJobRequisition::getUrl([
-                        'tenant' => $team,
-                        'record' => $jobRequisition,
-                    ]));
-                } catch (Throwable) {
-                    $livewire = $action->getLivewire();
-
-                    if (property_exists($livewire, 'jobGenerationState')) {
-                        $livewire->jobGenerationState = 'idle';
-                    }
-
-                    Notification::make()
-                        ->danger()
-                        ->title(__('recruitment::filament.requisition.job_posting.notifications.failed'))
-                        ->send();
-
-                    $action->halt();
-                }
+                $action->success();
             });
     }
 

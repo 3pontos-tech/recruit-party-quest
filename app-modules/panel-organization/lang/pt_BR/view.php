@@ -123,7 +123,10 @@ return [
     ],
 
     'job_generation' => [
+        'queued_message' => 'Sua solicitação foi adicionada à fila...',
+        'processing_message' => 'Aguarde enquanto geramos a vaga com inteligência artificial...',
         'success_message' => 'Vaga criada com sucesso',
         'redirecting' => 'Redirecionando, aguarde…',
+        'error_message' => 'Ocorreu um erro ao gerar a vaga.',
     ],
 ];
