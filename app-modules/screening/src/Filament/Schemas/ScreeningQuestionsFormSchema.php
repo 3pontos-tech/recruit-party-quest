@@ -43,8 +43,25 @@ final class ScreeningQuestionsFormSchema
                     ->options(QuestionTypeEnum::class)
                     ->required()
                     ->live()
-                    ->afterStateUpdated(function ($set): void {
-                        $set('settings', []);
+                    ->afterStateUpdated(function ($set, $state): void {
+                        if ($state === null) {
+                            $set('settings', null);
+
+                            return;
+                        }
+
+                        $type = $state instanceof QuestionTypeEnum
+                            ? $state
+                            : QuestionTypeEnum::tryFrom($state);
+
+                        if ($type === null) {
+                            $set('settings', null);
+
+                            return;
+                        }
+
+                        $typeClass = QuestionTypeRegistry::get($type);
+                        $set('settings', $typeClass::defaultSettings()->toArray());
                     }),
 
                 TextInput::make('display_order')
