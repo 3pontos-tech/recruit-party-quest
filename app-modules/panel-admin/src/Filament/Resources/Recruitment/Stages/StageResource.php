@@ -9,12 +9,12 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use He4rt\Admin\Filament\Resources\Recruitment\Screening\ScreeningQuestionsRelationManager;
 use He4rt\Admin\Filament\Resources\Recruitment\Stages\Pages\EditStage;
 use He4rt\Admin\Filament\Resources\Recruitment\Stages\Pages\ListStages;
 use He4rt\Admin\Filament\Resources\Recruitment\Stages\Schemas\StageForm;
 use He4rt\Admin\Filament\Resources\Recruitment\Stages\Tables\StagesTable;
 use He4rt\Recruitment\Stages\Models\Stage;
+use He4rt\Screening\Filament\RelationManagers\ScreeningQuestionsRelationManager;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 

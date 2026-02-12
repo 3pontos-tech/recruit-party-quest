@@ -16,10 +16,10 @@ use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Edit
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\KanbanStages;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\ListJobRequisitions;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\RelationManagers\PipelineStagesRelationManager;
-use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\RelationManagers\ScreeningQuestionsRelationManager;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Schemas\JobRequisitionForm;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Tables\JobRequisitionsTable;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use He4rt\Screening\Filament\RelationManagers\ScreeningQuestionsRelationManager;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Override;

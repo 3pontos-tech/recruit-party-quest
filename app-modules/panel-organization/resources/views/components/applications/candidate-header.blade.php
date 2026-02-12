@@ -92,7 +92,7 @@
                     </div>
                 @endif
 
-                <div class="flex">
+                <div class="flex gap-2">
                     {{-- LinkedIn --}}
                     @if ($candidate->linkedin_url)
                         <x-he4rt::tag

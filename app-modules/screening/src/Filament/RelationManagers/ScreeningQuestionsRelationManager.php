@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Admin\Filament\Resources\Recruitment\Screening;
+namespace He4rt\Screening\Filament\RelationManagers;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
@@ -48,8 +48,25 @@ class ScreeningQuestionsRelationManager extends RelationManager
                     ->options(QuestionTypeEnum::class)
                     ->required()
                     ->live()
-                    ->afterStateUpdated(function ($set): void {
-                        $set('settings', null);
+                    ->afterStateUpdated(function ($set, $state): void {
+                        if ($state === null) {
+                            $set('settings', null);
+
+                            return;
+                        }
+
+                        $type = $state instanceof QuestionTypeEnum
+                            ? $state
+                            : QuestionTypeEnum::tryFrom($state);
+
+                        if ($type === null) {
+                            $set('settings', null);
+
+                            return;
+                        }
+
+                        $typeClass = QuestionTypeRegistry::get($type);
+                        $set('settings', $typeClass::defaultSettings()->toArray());
                     }),
                 TextInput::make('display_order')
                     ->label(__('screening::filament.question.fields.display_order'))
