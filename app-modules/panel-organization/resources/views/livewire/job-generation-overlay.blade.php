@@ -161,13 +161,14 @@
                     {{ __('recruitment::enums.job_generation_status.error') }}
                 </h3>
 
-                <p
-                    class="text-sm text-gray-600 dark:text-gray-400"
-                    x-text="{{ __('panel-organization::view.job_generation.error_message') }}"
-                ></p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    {{ __('panel-organization::view.job_generation.error_message') }}
+                </p>
             </div>
 
-            <x-filament::button color="gray" wire:click="closeOverlay">fechar</x-filament::button>
+            <x-filament::button color="gray" wire:click="closeOverlay">
+                {{ __('panel-organization::view.job_generation.close_button') }}
+            </x-filament::button>
         </div>
     </div>
 </div>

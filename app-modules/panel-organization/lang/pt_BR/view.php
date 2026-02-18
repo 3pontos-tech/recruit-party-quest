@@ -128,5 +128,6 @@ return [
         'success_message' => 'Vaga criada com sucesso',
         'redirecting' => 'Redirecionando, aguarde…',
         'error_message' => 'Ocorreu um erro ao gerar a vaga.',
+        'close_button' => 'Fechar',
     ],
 ];

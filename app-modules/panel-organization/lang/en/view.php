@@ -124,7 +124,11 @@ return [
     ],
 
     'job_generation' => [
+        'queued_message' => 'Your request has been queued...',
+        'processing_message' => 'Please wait while we generate the job posting with artificial intelligence...',
         'success_message' => 'Job created successfully',
         'redirecting' => 'Redirecting, please wait…',
+        'error_message' => 'An error occurred while generating the job posting.',
+        'close_button' => 'Close',
     ],
 ];
