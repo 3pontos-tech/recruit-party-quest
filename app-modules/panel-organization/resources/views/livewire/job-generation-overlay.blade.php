@@ -2,17 +2,30 @@
     use He4rt\Recruitment\Requisitions\Enums\JobGenerationStatus;
 @endphp
 
+@script
+    <script>
+        const userId = '{{ auth()->id() }}';
+        const channelName = `job-requisition.generation.${userId}`;
+
+        window.Echo.private(channelName)
+            .listen('.queued', (event) => {
+                $wire.onQueued();
+            })
+            .listen('.processing', (event) => {
+                $wire.onProcessing();
+            })
+            .listen('.success', (event) => {
+                $wire.onSuccess(event);
+            })
+            .listen('.error', (event) => {
+                $wire.onError(event);
+            });
+    </script>
+@endscript
+
 <div
-    x-data="{
-        redirectAfterDelay() {
-            setTimeout(() => {
-                $wire.redirectToEdit()
-            }, 2000)
-        },
-    }"
     x-show="$wire.state !== 'idle'"
     x-cloak
-    @redirect-after-delay.window="redirectAfterDelay()"
     x-transition:enter="transition duration-300 ease-out"
     x-transition:enter-start="opacity-0"
     x-transition:enter-end="opacity-100"
@@ -150,16 +163,11 @@
 
                 <p
                     class="text-sm text-gray-600 dark:text-gray-400"
-                    x-text="
-                        $wire.errorMessage ||
-                            '{{ __('panel-organization::view.job_generation.error_message') }}'
-                    "
+                    x-text="{{ __('panel-organization::view.job_generation.error_message') }}"
                 ></p>
             </div>
 
-            <x-filament::button color="gray" wire:click="closeOverlay">
-                {{ __('filament-panels::pages/auth/password-reset/request-password-reset.form.actions.login.label') }}
-            </x-filament::button>
+            <x-filament::button color="gray" wire:click="closeOverlay">fechar</x-filament::button>
         </div>
     </div>
 </div>

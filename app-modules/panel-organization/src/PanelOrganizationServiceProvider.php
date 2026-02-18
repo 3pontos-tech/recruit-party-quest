@@ -24,10 +24,8 @@ class PanelOrganizationServiceProvider extends ServiceProvider
             'panel-organization'
         );
 
-        // Register Livewire component
         Livewire::component('job-generation-overlay', JobGenerationOverlay::class);
 
-        // Add overlay to all panel pages
         FilamentView::registerRenderHook(
             PanelsRenderHook::BODY_END,
             fn (): string => Blade::render("@livewire('job-generation-overlay')")

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace He4rt\Recruitment\Requisitions\Jobs;
 
 use Filament\Notifications\Notification;
+use He4rt\Recruitment\Requisitions\Actions\AiJobRequisition\GenerateJobRequisition;
 use He4rt\Recruitment\Requisitions\Actions\AiJobRequisition\GenerateJobRequisitionDTO;
+use He4rt\Recruitment\Requisitions\Actions\StoreJobRequisitionAction;
 use He4rt\Recruitment\Requisitions\DTOs\JobRequisitionDTO;
 use He4rt\Recruitment\Requisitions\Enums\JobGenerationStatus;
 use He4rt\Recruitment\Requisitions\Events\JobRequisitionGenerationEvent;
@@ -25,6 +27,16 @@ class GeneratePostJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
+    /**
+     * The number of times the job may be attempted.
+     */
+    public int $tries = 1;
+
+    /**
+     * The number of seconds the job can run before timing out.
+     */
+    public int $timeout = 120;
+
     public function __construct(
         public GenerateJobRequisitionDTO $dto
     ) {}
@@ -35,7 +47,6 @@ class GeneratePostJob implements ShouldQueue
      */
     public function handle(): void
     {
-        // Broadcast Processing status
         broadcast(new JobRequisitionGenerationEvent(
             JobGenerationStatus::Processing,
             $this->dto->createdBy
@@ -43,14 +54,13 @@ class GeneratePostJob implements ShouldQueue
 
         try {
             /** @var JobRequisitionDTO $result */
-            //            $result = resolve(GenerateJobRequisition::class)->execute($this->dto);
-            //            $jobRequisition = resolve(StoreJobRequisitionAction::class)->execute($result);
+            $result = resolve(GenerateJobRequisition::class)->execute($this->dto);
+            $jobRequisition = resolve(StoreJobRequisitionAction::class)->execute($result);
 
-            // Broadcast Success with job requisition data
             broadcast(new JobRequisitionGenerationEvent(
                 JobGenerationStatus::Success,
                 $this->dto->createdBy,
-                //                $jobRequisition->getKey()
+                $jobRequisition->getKey()
             ));
 
             $notifiable = User::whereId($this->dto->createdBy)->first();
@@ -60,15 +70,34 @@ class GeneratePostJob implements ShouldQueue
                 ->title(__('recruitment::filament.requisition.job_posting.notifications.successful'))
                 ->broadcast($notifiable);
         } catch (Throwable $throwable) {
-            // Broadcast Error with error message
+            logger()->error('Job generation failed during processing', [
+                'user_id' => $this->dto->createdBy,
+                'exception' => $throwable->getMessage(),
+                'trace' => $throwable->getTraceAsString(),
+            ]);
+
             broadcast(new JobRequisitionGenerationEvent(
                 JobGenerationStatus::Error,
                 $this->dto->createdBy,
-                errorMessage: $throwable->getMessage()
+                errorMessage: __('recruitment::filament.requisition.job_posting.notifications.failed')
             ));
 
-            // Re-throw to mark job as failed
             throw $throwable;
         }
+    }
+
+    public function failed(?Throwable $exception): void
+    {
+        logger()->error('Job generation failed - final handler', [
+            'user_id' => $this->dto->createdBy,
+            'exception' => $exception?->getMessage(),
+            'trace' => $exception?->getTraceAsString(),
+        ]);
+
+        broadcast(new JobRequisitionGenerationEvent(
+            JobGenerationStatus::Error,
+            $this->dto->createdBy,
+            errorMessage: __('recruitment::filament.requisition.job_posting.notifications.failed')
+        ));
     }
 }

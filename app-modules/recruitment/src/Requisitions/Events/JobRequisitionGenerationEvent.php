@@ -20,15 +20,13 @@ final class JobRequisitionGenerationEvent implements ShouldBroadcast
     public function __construct(
         public readonly JobGenerationStatus $status,
         public readonly string $userId,
-        //        public readonly ?int $jobRequisitionId = null,
+        public readonly ?string $jobRequisitionId = null,
         public readonly ?string $errorMessage = null,
     ) {}
 
-    public function broadcastOn(): array
+    public function broadcastOn(): PrivateChannel
     {
-        return [
-            new PrivateChannel('job-requisition.generation.'.$this->userId),
-        ];
+        return new PrivateChannel('job-requisition.generation.'.$this->userId);
     }
 
     public function broadcastAs(): string
@@ -40,7 +38,7 @@ final class JobRequisitionGenerationEvent implements ShouldBroadcast
     {
         return [
             'status' => $this->status->value,
-            //            'job_requisition_id' => $this->jobRequisitionId,
+            'job_requisition_id' => $this->jobRequisitionId,
             'error_message' => $this->errorMessage,
         ];
     }
