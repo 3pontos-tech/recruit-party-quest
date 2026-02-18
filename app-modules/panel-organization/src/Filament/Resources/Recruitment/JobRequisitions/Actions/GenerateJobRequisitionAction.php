@@ -65,11 +65,6 @@ class GenerateJobRequisitionAction extends Action
                     'team_id' => $team->getKey(),
                 ]);
 
-                logger()->info('Job generation started', [
-                    'user_id' => auth()->user()->getKey(),
-                    'title' => $data['title'],
-                ]);
-
                 broadcast(new JobRequisitionGenerationEvent(
                     JobGenerationStatus::Queued,
                     (string) auth()->user()->getKey()

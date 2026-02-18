@@ -70,12 +70,6 @@ class GeneratePostJob implements ShouldQueue
                 ->title(__('recruitment::filament.requisition.job_posting.notifications.successful'))
                 ->broadcast($notifiable);
         } catch (Throwable $throwable) {
-            logger()->error('Job generation failed during processing', [
-                'user_id' => $this->dto->createdBy,
-                'exception' => $throwable->getMessage(),
-                'trace' => $throwable->getTraceAsString(),
-            ]);
-
             broadcast(new JobRequisitionGenerationEvent(
                 JobGenerationStatus::Error,
                 $this->dto->createdBy,
@@ -88,12 +82,6 @@ class GeneratePostJob implements ShouldQueue
 
     public function failed(?Throwable $exception): void
     {
-        logger()->error('Job generation failed - final handler', [
-            'user_id' => $this->dto->createdBy,
-            'exception' => $exception?->getMessage(),
-            'trace' => $exception?->getTraceAsString(),
-        ]);
-
         broadcast(new JobRequisitionGenerationEvent(
             JobGenerationStatus::Error,
             $this->dto->createdBy,
