@@ -17,6 +17,12 @@
             .listen('.error', (event) => {
                 $wire.onError(event);
             });
+        Livewire.hook('component.init', ({ component, cleanup }) => {
+            if (component.el !== $wire.$el) return;
+            cleanup(() => {
+                window.Echo.leaveChannel(channelName);
+            });
+        });
     </script>
 @endscript
 
