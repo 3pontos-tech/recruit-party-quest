@@ -47,6 +47,8 @@
                 progress: 0,
                 message: '',
                 interval: null,
+                timeoutTimer: null,
+                isTimedOut: false,
 
                 init() {
                     this.$watch('$wire.state', (value) => {
@@ -54,12 +56,15 @@
                             this.startProgress()
                         } else if (value === '{{ JobGenerationStatus::Success->value }}') {
                             this.completeProgress()
+                        } else if (value === '{{ JobGenerationStatus::Error->value }}') {
+                            this.cleanup()
                         }
                     })
                 },
 
                 startProgress() {
                     this.progress = 0
+                    this.isTimedOut = false
                     this.message =
                         '{{ __('panel-organization::view.job_generation.phases.analyzing') }}'
 
@@ -68,9 +73,7 @@
                     const updateInterval = 100
                     const increment = (targetProgress / duration) * updateInterval
 
-                    if (this.interval) {
-                        clearInterval(this.interval)
-                    }
+                    this.cleanup()
 
                     this.interval = setInterval(() => {
                         if (this.progress < targetProgress) {
@@ -83,12 +86,14 @@
                             clearInterval(this.interval)
                         }
                     }, updateInterval)
+
+                    this.timeoutTimer = setTimeout(() => {
+                        this.handleTimeout()
+                    }, 120000)
                 },
 
                 completeProgress() {
-                    if (this.interval) {
-                        clearInterval(this.interval)
-                    }
+                    this.cleanup()
 
                     this.message =
                         '{{ __('panel-organization::view.job_generation.phases.completed') }}'
@@ -100,6 +105,24 @@
                             clearInterval(completeInterval)
                         }
                     }, 50)
+                },
+
+                handleTimeout() {
+                    this.isTimedOut = true
+                    this.cleanup()
+                    $wire.onTimeout()
+                },
+
+                cleanup() {
+                    if (this.interval) {
+                        clearInterval(this.interval)
+                        this.interval = null
+                    }
+
+                    if (this.timeoutTimer) {
+                        clearTimeout(this.timeoutTimer)
+                        this.timeoutTimer = null
+                    }
                 },
 
                 updateMessage() {
@@ -207,6 +230,18 @@
 
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                     {{ __('panel-organization::view.job_generation.redirecting') }}
+                    </p>
+                </div>
+            </div>
+
+            {{-- Cancel Button --}}
+            <div class="flex flex-col items-center gap-2">
+                <x-filament::button color="gray" outlined size="sm" wire:click="closeOverlay">
+                    {{ __('panel-organization::view.job_generation.cancel_button') }}
+                </x-filament::button>
+
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                    {{ __('panel-organization::view.job_generation.cancel_help') }}
                 </p>
             </div>
         </div>

@@ -8,12 +8,13 @@ use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Edit
 use He4rt\Recruitment\Requisitions\Enums\JobGenerationStatus;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class JobGenerationOverlay extends Component
 {
     public string $state = 'idle';
-
+    #[Locked]
     public ?string $jobRequisitionId = null;
 
     public function onProcessing(): void
@@ -27,7 +28,7 @@ class JobGenerationOverlay extends Component
     public function onSuccess(array $event): void
     {
         $this->state = JobGenerationStatus::Success->value;
-        $this->jobRequisitionId = $event['job_requisition_id'];
+        $this->jobRequisitionId = $event['job_requisition_id'] ?? null;
 
         $this->dispatch('redirect-after-delay');
     }
@@ -35,6 +36,18 @@ class JobGenerationOverlay extends Component
     public function onError(): void
     {
         $this->state = JobGenerationStatus::Error->value;
+    }
+
+    public function onTimeout(): void
+    {
+        $this->state = JobGenerationStatus::Error->value;
+
+        $this->dispatch('notify', [
+            'type' => 'warning',
+            'title' => __('panel-organization::view.job_generation.timeout_title'),
+            'message' => __('panel-organization::view.job_generation.timeout_message'),
+            'persistent' => true,
+        ]);
     }
 
     public function closeOverlay(): void
@@ -66,11 +79,7 @@ class JobGenerationOverlay extends Component
         $userId = auth()->id();
 
         return [
-            'job-generation-processing' => 'onProcessing',
-            'job-generation-success' => 'onSuccess',
-            'job-generation-error' => 'onError',
             'redirect-after-delay' => 'redirectToEdit',
-
             sprintf('echo-private:job-requisition.generation.%s,.processing', $userId) => 'onProcessing',
             sprintf('echo-private:job-requisition.generation.%s,.success', $userId) => 'onSuccess',
             sprintf('echo-private:job-requisition.generation.%s,.error', $userId) => 'onError',

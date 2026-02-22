@@ -42,37 +42,27 @@ class GeneratePostJob implements ShouldQueue
     ) {}
 
     /**
-     * @throws Throwable
      * @throws GenerateJobRequisitionException
      */
     public function handle(): void
     {
-        try {
-            /** @var JobRequisitionDTO $result */
-            $result = resolve(GenerateJobRequisition::class)->execute($this->dto);
-            $jobRequisition = resolve(StoreJobRequisitionAction::class)->execute($result);
+        /** @var JobRequisitionDTO $result */
+        $result = resolve(GenerateJobRequisition::class)->execute($this->dto);
+        $jobRequisition = resolve(StoreJobRequisitionAction::class)->execute($result);
 
-            broadcast(new JobRequisitionGenerationEvent(
-                JobGenerationStatus::Success,
-                $this->dto->createdBy,
-                $jobRequisition->getKey()
-            ));
+        broadcast(new JobRequisitionGenerationEvent(
+            JobGenerationStatus::Success,
+            $this->dto->createdBy,
+            (string) $jobRequisition->getKey()
+        ));
 
-            $notifiable = User::whereId($this->dto->createdBy)->first();
+        $notifiable = User::whereId($this->dto->createdBy)->first();
 
-            Notification::make()
-                ->success()
-                ->title(__('recruitment::filament.requisition.job_posting.notifications.successful'))
-                ->broadcast($notifiable);
-        } catch (Throwable $throwable) {
-            broadcast(new JobRequisitionGenerationEvent(
-                JobGenerationStatus::Error,
-                $this->dto->createdBy,
-                errorMessage: __('recruitment::filament.requisition.job_posting.notifications.failed')
-            ));
+        Notification::make()
+            ->success()
+            ->title(__('recruitment::filament.requisition.job_posting.notifications.successful'))
+            ->broadcast($notifiable);
 
-            throw $throwable;
-        }
     }
 
     public function failed(?Throwable $exception): void
