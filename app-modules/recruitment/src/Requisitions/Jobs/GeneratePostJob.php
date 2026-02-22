@@ -47,11 +47,6 @@ class GeneratePostJob implements ShouldQueue
      */
     public function handle(): void
     {
-        broadcast(new JobRequisitionGenerationEvent(
-            JobGenerationStatus::Processing,
-            $this->dto->createdBy
-        ));
-
         try {
             /** @var JobRequisitionDTO $result */
             $result = resolve(GenerateJobRequisition::class)->execute($this->dto);
