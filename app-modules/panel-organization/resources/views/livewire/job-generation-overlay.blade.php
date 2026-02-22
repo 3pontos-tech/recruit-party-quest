@@ -39,8 +39,16 @@
     style="display: none"
 >
     <div
-        class="mx-4 w-full max-w-md rounded-xl bg-white shadow-2xl ring-1 ring-gray-950/10 dark:bg-gray-800 dark:ring-white/10"
+        class="relative mx-4 w-full max-w-md rounded-xl bg-white shadow-2xl ring-1 ring-gray-950/10 dark:bg-gray-800 dark:ring-white/10"
     >
+        <button
+            x-show="$wire.state !== '{{ JobGenerationStatus::Error->value }}'"
+            type="button"
+            wire:click="closeOverlay"
+            class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+        >
+            <x-filament::icon icon="heroicon-m-x-mark" class="h-5 w-5" />
+        </button>
         {{-- PROCESSING STATE --}}
         <div
             x-data="{
@@ -89,7 +97,7 @@
 
                     this.timeoutTimer = setTimeout(() => {
                         this.handleTimeout()
-                    }, 120000)
+                    }, 180000)
                 },
 
                 completeProgress() {
@@ -230,18 +238,6 @@
 
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                     {{ __('panel-organization::view.job_generation.redirecting') }}
-                    </p>
-                </div>
-            </div>
-
-            {{-- Cancel Button --}}
-            <div class="flex flex-col items-center gap-2">
-                <x-filament::button color="gray" outlined size="sm" wire:click="closeOverlay">
-                    {{ __('panel-organization::view.job_generation.cancel_button') }}
-                </x-filament::button>
-
-                <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ __('panel-organization::view.job_generation.cancel_help') }}
                 </p>
             </div>
         </div>

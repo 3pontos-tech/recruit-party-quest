@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Organization\Livewire;
 
+use Filament\Notifications\Notification;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\EditJobRequisition;
 use He4rt\Recruitment\Requisitions\Enums\JobGenerationStatus;
 use Illuminate\Contracts\View\Factory;
@@ -13,9 +14,10 @@ use Livewire\Component;
 
 class JobGenerationOverlay extends Component
 {
-    public string $state = 'idle';
     #[Locked]
     public ?string $jobRequisitionId = null;
+
+    public string $state = 'idle';
 
     public function onProcessing(): void
     {
@@ -42,12 +44,12 @@ class JobGenerationOverlay extends Component
     {
         $this->state = JobGenerationStatus::Error->value;
 
-        $this->dispatch('notify', [
-            'type' => 'warning',
-            'title' => __('panel-organization::view.job_generation.timeout_title'),
-            'message' => __('panel-organization::view.job_generation.timeout_message'),
-            'persistent' => true,
-        ]);
+        Notification::make()
+            ->warning()
+            ->title(__('panel-organization::view.job_generation.timeout_title'))
+            ->body(__('panel-organization::view.job_generation.timeout_message'))
+            ->persistent()
+            ->send();
     }
 
     public function closeOverlay(): void
