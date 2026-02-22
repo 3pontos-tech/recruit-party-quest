@@ -16,11 +16,6 @@ class JobGenerationOverlay extends Component
 
     public ?string $jobRequisitionId = null;
 
-    public function onQueued(): void
-    {
-        $this->state = JobGenerationStatus::Queued->value;
-    }
-
     public function onProcessing(): void
     {
         $this->state = JobGenerationStatus::Processing->value;
@@ -65,13 +60,11 @@ class JobGenerationOverlay extends Component
         $userId = auth()->id();
 
         return [
-            'job-generation-queued' => 'onQueued',
             'job-generation-processing' => 'onProcessing',
             'job-generation-success' => 'onSuccess',
             'job-generation-error' => 'onError',
             'redirect-after-delay' => 'redirectToEdit',
 
-            sprintf('echo-private:job-requisition.generation.%s,.queued', $userId) => 'onQueued',
             sprintf('echo-private:job-requisition.generation.%s,.processing', $userId) => 'onProcessing',
             sprintf('echo-private:job-requisition.generation.%s,.success', $userId) => 'onSuccess',
             sprintf('echo-private:job-requisition.generation.%s,.error', $userId) => 'onError',

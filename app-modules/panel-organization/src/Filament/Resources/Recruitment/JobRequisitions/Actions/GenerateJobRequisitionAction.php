@@ -66,7 +66,7 @@ class GenerateJobRequisitionAction extends Action
                 ]);
 
                 broadcast(new JobRequisitionGenerationEvent(
-                    JobGenerationStatus::Queued,
+                    JobGenerationStatus::Processing,
                     (string) auth()->user()->getKey()
                 ));
 
@@ -74,8 +74,8 @@ class GenerateJobRequisitionAction extends Action
 
                 Notification::make()
                     ->info()
-                    ->title(__('panel-organization::filament.actions.generate_job_requisition.queued_title'))
-                    ->body(__('panel-organization::filament.actions.generate_job_requisition.queued_body'))
+                    ->title(__('panel-organization::filament.actions.generate_job_requisition.processing_title'))
+                    ->body(__('panel-organization::filament.actions.generate_job_requisition.processing_body'))
                     ->send();
 
                 $action->success();

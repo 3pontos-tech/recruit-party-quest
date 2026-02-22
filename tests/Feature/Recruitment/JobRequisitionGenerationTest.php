@@ -7,15 +7,15 @@ use He4rt\Recruitment\Requisitions\Events\JobRequisitionGenerationEvent;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use Illuminate\Support\Facades\Event;
 
-it('broadcasts queued event when job is dispatched', function (): void {
+it('broadcasts processing event when job is dispatched', function (): void {
     Event::fake();
 
     broadcast(new JobRequisitionGenerationEvent(
-        JobGenerationStatus::Queued,
+        JobGenerationStatus::Processing,
         '123'
     ));
 
-    Event::assertDispatched(fn (JobRequisitionGenerationEvent $event) => $event->status === JobGenerationStatus::Queued
+    Event::assertDispatched(fn (JobRequisitionGenerationEvent $event) => $event->status === JobGenerationStatus::Processing
         && $event->userId === '123');
 });
 
@@ -38,11 +38,11 @@ it('broadcasts success event with job requisition when completed', function (): 
     broadcast(new JobRequisitionGenerationEvent(
         JobGenerationStatus::Success,
         '789',
-        (int) $jobRequisition->id
+        (string) $jobRequisition->id
     ));
 
     Event::assertDispatched(fn (JobRequisitionGenerationEvent $event) => $event->status === JobGenerationStatus::Success
-        && $event->jobRequisitionId === (int) $jobRequisition->id);
+        && $event->jobRequisitionId === (string) $jobRequisition->id);
 });
 
 it('broadcasts error event when job fails', function (): void {
@@ -63,13 +63,13 @@ it('broadcasts error event when job fails', function (): void {
 
 it('event broadcasts to correct private channel', function (): void {
     $event = new JobRequisitionGenerationEvent(
-        JobGenerationStatus::Queued,
+        JobGenerationStatus::Processing,
         '123'
     );
 
-    $channels = $event->broadcastOn();
+    $channel = $event->broadcastOn();
 
-    expect($channels[0]->name)->toBe('private-job-requisition.generation.123');
+    expect($channel->name)->toBe('private-job-requisition.generation.123');
 });
 
 it('event broadcasts with correct event name', function (): void {
@@ -87,7 +87,7 @@ it('event broadcasts with correct payload structure', function (): void {
     $event = new JobRequisitionGenerationEvent(
         JobGenerationStatus::Success,
         '123',
-        (int) $jobRequisition->id,
+        (string) $jobRequisition->id,
         'Test error'
     );
 
@@ -95,13 +95,12 @@ it('event broadcasts with correct payload structure', function (): void {
 
     expect($payload)->toHaveKeys(['status', 'job_requisition_id', 'error_message'])
         ->and($payload['status'])->toBe('success')
-        ->and($payload['job_requisition_id'])->toBe((int) $jobRequisition->id)
+        ->and($payload['job_requisition_id'])->toBe((string) $jobRequisition->id)
         ->and($payload['error_message'])->toBe('Test error');
 });
 
 it('job generation status enum has correct values', function (): void {
-    expect(JobGenerationStatus::Queued->value)->toBe('queued')
-        ->and(JobGenerationStatus::Processing->value)->toBe('processing')
+    expect(JobGenerationStatus::Processing->value)->toBe('processing')
         ->and(JobGenerationStatus::Success->value)->toBe('success')
         ->and(JobGenerationStatus::Error->value)->toBe('error');
 });
