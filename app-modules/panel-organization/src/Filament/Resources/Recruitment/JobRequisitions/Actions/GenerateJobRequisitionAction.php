@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Actions;
 
 use App\Filament\Schemas\Components\He4rtSelect;
+use Exception;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\RichEditor;
@@ -26,6 +27,8 @@ use He4rt\Recruitment\Requisitions\Jobs\GeneratePostJob;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Teams\Team;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Queue;
 
 class GenerateJobRequisitionAction extends Action
 {
@@ -64,6 +67,27 @@ class GenerateJobRequisitionAction extends Action
                     'department_id' => $data['department_id'],
                     'team_id' => $team->getKey(),
                 ]);
+
+                $queueConnection = config('queue.default');
+
+                try {
+                    Queue::connection($queueConnection)->size('default');
+                } catch (Exception $exception) {
+                    Log::error('Queue health check failed before dispatching GeneratePostJob', [
+                        'user_id' => auth()->id(),
+                        'connection' => $queueConnection,
+                        'error' => $exception->getMessage(),
+                        'trace' => $exception->getTraceAsString(),
+                    ]);
+
+                    Notification::make()
+                        ->danger()
+                        ->title(__('panel-organization::view.job_generation.queue_unavailable_title'))
+                        ->body(__('panel-organization::view.job_generation.queue_unavailable_message'))
+                        ->send();
+
+                    return;
+                }
 
                 broadcast(new JobRequisitionGenerationEvent(
                     JobGenerationStatus::Processing,
