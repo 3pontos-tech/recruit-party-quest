@@ -21,6 +21,9 @@ class JobGenerationOverlay extends Component
         $this->state = JobGenerationStatus::Processing->value;
     }
 
+    /**
+     * @param  array{status: string, job_requisition_id: ?string, error_message: ?string}  $event
+     */
     public function onSuccess(array $event): void
     {
         $this->state = JobGenerationStatus::Success->value;
@@ -55,6 +58,9 @@ class JobGenerationOverlay extends Component
         return view('panel-organization::livewire.job-generation-overlay');
     }
 
+    /**
+     * @return array<string, string>
+     */
     protected function getListeners(): array
     {
         $userId = auth()->id();

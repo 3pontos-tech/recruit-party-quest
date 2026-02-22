@@ -34,6 +34,9 @@ final class JobRequisitionGenerationEvent implements ShouldBroadcast
         return $this->status->value;
     }
 
+    /**
+     * @return array{status: string, job_requisition_id: ?string, error_message: ?string}
+     */
     public function broadcastWith(): array
     {
         return [
