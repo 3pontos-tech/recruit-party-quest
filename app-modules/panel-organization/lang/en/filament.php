@@ -70,6 +70,8 @@ return [
                 'priority' => 'Priority',
                 'priority_description' => 'How fast we must close this position?',
             ],
+            'processing_title' => 'AI is Generating Your Job',
+            'processing_body' => 'The AI is generating your job requisition. You will be notified when it is ready.',
             'success_title' => 'Job created successfully!',
             'success_body' => 'The AI has generated your job requisition and posting. Review and edit as needed before publishing.',
             'error_title' => 'Generation Failed',

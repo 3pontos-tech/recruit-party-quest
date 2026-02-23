@@ -19,7 +19,7 @@ it('can create a job requisition', function (): void {
     $requisition = JobRequisition::factory()->create();
 
     expect($requisition)->toBeInstanceOf(JobRequisition::class)
-        ->and($requisition->id)->not->toBeNull()
+        ->and($requisition->getKey())->not->toBeNull()
         ->and($requisition->slug)->not->toBeNull()
         ->and($requisition->status)->toBeInstanceOf(RequisitionStatusEnum::class)
         ->and($requisition->priority)->toBeInstanceOf(RequisitionPriorityEnum::class);
@@ -27,40 +27,40 @@ it('can create a job requisition', function (): void {
 
 it('belongs to a team', function (): void {
     $team = Team::factory()->create();
-    $requisition = JobRequisition::factory()->create(['team_id' => $team->id]);
+    $requisition = JobRequisition::factory()->create(['team_id' => $team->getKey()]);
 
     expect($requisition->team)->toBeInstanceOf(Team::class)
-        ->and($requisition->team->id)->toBe($team->id);
+        ->and($requisition->team->getKey())->toBe($team->getKey());
 });
 
 it('belongs to a department', function (): void {
     $department = Department::factory()->create();
-    $requisition = JobRequisition::factory()->create(['department_id' => $department->id]);
+    $requisition = JobRequisition::factory()->create(['department_id' => $department->getKey()]);
 
     expect($requisition->department)->toBeInstanceOf(Department::class)
-        ->and($requisition->department->id)->toBe($department->id);
+        ->and($requisition->department->getKey())->toBe($department->getKey());
 });
 
 it('belongs to a recruiter', function (): void {
     $team = Team::factory()->create();
-    $recruiter = Recruiter::factory()->create(['team_id' => $team->id]);
-    $requisition = JobRequisition::factory()->create(['team_id' => $team->id, 'recruiter_id' => $recruiter->id]);
+    $recruiter = Recruiter::factory()->create(['team_id' => $team->getKey()]);
+    $requisition = JobRequisition::factory()->create(['team_id' => $team->getKey(), 'recruiter_id' => $recruiter->getKey()]);
 
     expect($requisition->recruiter)->toBeInstanceOf(Recruiter::class)
-        ->and($requisition->recruiter->id)->toBe($recruiter->id);
+        ->and($requisition->recruiter->getKey())->toBe($recruiter->getKey());
 });
 
 it('belongs to a created by user', function (): void {
     $user = User::factory()->create();
-    $requisition = JobRequisition::factory()->create(['created_by_id' => $user->id]);
+    $requisition = JobRequisition::factory()->create(['created_by_id' => $user->getKey()]);
 
     expect($requisition->createdBy)->toBeInstanceOf(User::class)
-        ->and($requisition->createdBy->id)->toBe($user->id);
+        ->and($requisition->createdBy->getKey())->toBe($user->getKey());
 });
 
 it('has one job posting', function (): void {
     $requisition = JobRequisition::factory()->create();
-    JobPosting::factory()->create(['job_requisition_id' => $requisition->id]);
+    JobPosting::factory()->create(['job_requisition_id' => $requisition->getKey()]);
 
     expect($requisition->post)->toBeInstanceOf(JobPosting::class);
 });
@@ -68,7 +68,7 @@ it('has one job posting', function (): void {
 it('has many screening questions', function (): void {
     $requisition = JobRequisition::factory()->create();
     ScreeningQuestion::factory()->count(3)->create([
-        'screenable_id' => $requisition->id,
+        'screenable_id' => $requisition->getKey(),
         'display_order' => fn () => fake()->unique()->numberBetween(1, 100),
     ]);
 
@@ -110,5 +110,5 @@ it('uses soft deletes', function (): void {
     $requisition->delete();
 
     expect($requisition->deleted_at)->not->toBeNull()
-        ->and(JobRequisition::withTrashed()->find($requisition->id))->not->toBeNull();
+        ->and(JobRequisition::withTrashed()->find($requisition->getKey()))->not->toBeNull();
 });

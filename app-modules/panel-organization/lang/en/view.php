@@ -137,7 +137,24 @@ return [
     ],
 
     'job_generation' => [
+        'processing_message' => 'Please wait while we generate the job posting with artificial intelligence...',
         'success_message' => 'Job created successfully',
         'redirecting' => 'Redirecting, please wait…',
+        'error_message' => 'An error occurred while generating the job posting.',
+        'close_button' => 'Close',
+        'cancel_button' => 'Cancel',
+        'cancel_help' => 'The job will continue in the background. Check notifications.',
+        'timeout_title' => 'Request Timed Out',
+        'timeout_message' => 'The job generation is taking longer than expected. Please try again or contact support if the problem persists.',
+        'queue_unavailable_title' => 'Service Temporarily Unavailable',
+        'queue_unavailable_message' => 'The job generation service is currently unavailable. Please try again in a few moments.',
+        'phases' => [
+            'analyzing' => 'Analyzing requirements...',
+            'generating' => 'Generating job description...',
+            'customizing' => 'Creating personalized content...',
+            'finalizing' => 'Finalizing details...',
+            'completed' => 'Completed!',
+            'timeout' => 'Request timed out',
+        ],
     ],
 ];

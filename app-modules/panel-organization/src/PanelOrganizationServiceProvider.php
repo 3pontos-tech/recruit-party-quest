@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace He4rt\Organization;
 
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
+use He4rt\Organization\Livewire\JobGenerationOverlay;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 class PanelOrganizationServiceProvider extends ServiceProvider
 {
@@ -18,6 +22,13 @@ class PanelOrganizationServiceProvider extends ServiceProvider
         Blade::anonymousComponentPath(
             __DIR__.'/../resources/views/components',
             'panel-organization'
+        );
+
+        Livewire::component('job-generation-overlay', JobGenerationOverlay::class);
+
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::BODY_END,
+            fn (): string => Blade::render("@livewire('job-generation-overlay')")
         );
     }
 }

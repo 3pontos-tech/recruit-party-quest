@@ -70,6 +70,8 @@ return [
                 'priority' => 'Prioridade',
                 'priority_description' => 'Qual a urgência para fechar esta posição?',
             ],
+            'processing_title' => 'IA Gerando sua Vaga',
+            'processing_body' => 'A IA está gerando sua requisição de vaga. Você será notificado quando estiver pronta.',
             'success_title' => 'Vaga criada com sucesso!',
             'success_body' => 'A IA gerou sua requisição e anúncio de vaga. Revise e edite conforme necessário antes de publicar.',
             'error_title' => 'Falha na Geração',
