@@ -35,6 +35,9 @@ it('synchronizes roles and permissions', function (): void {
     $superAdmin = Role::findByName(Roles::SuperAdmin->value);
     expect($superAdmin->permissions)->toHaveCount($permissionCount);
 
+    $admin = Role::findByName(Roles::Admin->value);
+    expect($admin->permissions)->toHaveCount($permissionCount);
+
     $user = User::query()->where('email', 'admin@admin.com')->first();
     expect($user->hasRole(Roles::SuperAdmin->value))->toBeTrue();
 });
