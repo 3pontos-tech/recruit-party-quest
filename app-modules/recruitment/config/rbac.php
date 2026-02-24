@@ -15,5 +15,15 @@ return [
             JobRequisition::class => PermissionsEnum::cases(),
             Stage::class => PermissionsEnum::cases(),
         ],
+        Roles::Owner->value => [
+            JobPosting::class => [
+                PermissionsEnum::ViewAny,
+                PermissionsEnum::View,
+            ],
+            JobRequisition::class => [
+                PermissionsEnum::ViewAny,
+                PermissionsEnum::View,
+            ],
+        ],
     ],
 ];
