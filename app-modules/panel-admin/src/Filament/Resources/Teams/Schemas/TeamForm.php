@@ -8,6 +8,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 use He4rt\Teams\TeamStatus;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class TeamForm
 {
@@ -17,8 +19,20 @@ class TeamForm
             ->components([
                 Select::make('owner_id')
                     ->label(__('teams::filament.fields.owner'))
-                    ->relationship('owner', 'name')
-                    ->required(),
+                    ->relationship(
+                        name: 'owner',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query, ?Model $record) => $query->where(
+                            function (Builder $q) use ($record): void {
+                                $q->whereDoesntHave('ownedTeam');
+                                if ($record?->getKey()) {
+                                    $q->orWhereHas('ownedTeam', fn (\Illuminate\Contracts\Database\Query\Builder $sub) => $sub->where('teams.id', $record->getKey()));
+                                }
+                            }
+                        ),
+                    )
+                    ->nullable()
+                    ->searchable(),
                 TextInput::make('name')
                     ->label(__('teams::filament.fields.name'))
                     ->required(),

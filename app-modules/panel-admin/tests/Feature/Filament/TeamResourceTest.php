@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace He4rt\Admin\Tests\Feature\Filament;
 
 use Filament\Facades\Filament;
+use He4rt\Admin\Filament\Resources\Teams\Pages\CreateTeam;
+use He4rt\Admin\Filament\Resources\Teams\Pages\EditTeam;
 use He4rt\Admin\Filament\Resources\Teams\Pages\ListTeams;
 use He4rt\Admin\Filament\Resources\Teams\TeamResource;
 use He4rt\Permissions\Roles;
@@ -50,4 +52,71 @@ it('can render edit team page', function (): void {
 
     $this->get(TeamResource::getUrl('edit', ['record' => $team]))
         ->assertSuccessful();
+});
+
+it('assigns Owner role to user when creating team with owner', function (): void {
+    $owner = User::factory()->create();
+
+    livewire(CreateTeam::class)
+        ->fillForm([
+            'owner_id' => $owner->id,
+            'name' => 'Test Team',
+            'description' => 'A test team',
+            'slug' => 'test-team',
+            'status' => 'active',
+            'contact_email' => 'team@example.com',
+        ])
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    expect($owner->refresh()->hasRole(Roles::Owner->value))->toBeTrue();
+});
+
+it('assigns Owner role to new owner and removes it from old owner when editing team owner', function (): void {
+    $oldOwner = User::factory()->create();
+    $oldOwner->assignRole(Roles::Owner->value);
+
+    $newOwner = User::factory()->create();
+
+    $team = Team::factory()->create(['owner_id' => $oldOwner->id]);
+
+    livewire(EditTeam::class, ['record' => $team->getRouteKey()])
+        ->fillForm(['owner_id' => $newOwner->id])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    expect($newOwner->refresh()->hasRole(Roles::Owner->value))->toBeTrue()
+        ->and($oldOwner->refresh()->hasRole(Roles::Owner->value))->toBeFalse();
+});
+
+it('does not remove Owner role from old owner when they still own another team', function (): void {
+    $owner = User::factory()->create();
+    $owner->assignRole(Roles::Owner->value);
+
+    $newOwner = User::factory()->create();
+
+    $team1 = Team::factory()->create(['owner_id' => $owner->id]);
+    Team::factory()->create(['owner_id' => $owner->id]);
+
+    livewire(EditTeam::class, ['record' => $team1->getRouteKey()])
+        ->fillForm(['owner_id' => $newOwner->id])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    expect($owner->refresh()->hasRole(Roles::Owner->value))->toBeTrue()
+        ->and($newOwner->refresh()->hasRole(Roles::Owner->value))->toBeTrue();
+});
+
+it('removes Owner role when owner is cleared from team', function (): void {
+    $owner = User::factory()->create();
+    $owner->assignRole(Roles::Owner->value);
+
+    $team = Team::factory()->create(['owner_id' => $owner->id]);
+
+    livewire(EditTeam::class, ['record' => $team->getRouteKey()])
+        ->fillForm(['owner_id' => null])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    expect($owner->refresh()->hasRole(Roles::Owner->value))->toBeFalse();
 });
