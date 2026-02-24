@@ -54,6 +54,7 @@ trait InteractsWithTenants
         if ($this->hasAnyRole([Roles::SuperAdmin, Roles::Admin])) {
             return true;
         }
+
         if ($this->teams()->whereKey($tenant)->exists()) {
             return true;
         }
