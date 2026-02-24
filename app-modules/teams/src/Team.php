@@ -10,6 +10,7 @@ use He4rt\Location\Concerns\HasAddresses;
 use He4rt\Teams\Database\Factories\TeamFactory;
 use He4rt\Teams\Policies\TeamPolicy;
 use He4rt\Users\User;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Collection;
@@ -42,6 +43,7 @@ use Illuminate\Support\Carbon;
  */
 #[UsePolicy(TeamPolicy::class)]
 #[UseFactory(TeamFactory::class)]
+#[ObservedBy(TeamObserver::class)]
 class Team extends BaseModel
 {
     use HasAddresses;
