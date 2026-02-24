@@ -9,6 +9,7 @@ use He4rt\Teams\Team;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Collection;
 
@@ -20,6 +21,14 @@ trait InteractsWithTenants
     public function ownedTenants(): HasMany
     {
         return $this->hasMany(Team::class, 'owner_id');
+    }
+
+    /**
+     * @return HasOne<Team, $this>
+     */
+    public function ownedTeam(): HasOne
+    {
+        return $this->hasOne(Team::class, 'owner_id');
     }
 
     /**
