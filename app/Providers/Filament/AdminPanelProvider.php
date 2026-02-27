@@ -7,6 +7,7 @@ namespace App\Providers\Filament;
 use AlizHarb\ActivityLog\ActivityLogPlugin;
 use App\Enums\FilamentPanel;
 use App\Filament\Shared\Pages\LoginPage;
+use Basement\BetterMails\Filament\FilamentBetterEmailPlugin;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -58,6 +59,7 @@ final class AdminPanelProvider extends PanelProvider
                 Dashboard::class,
             ])
             ->plugins([
+                FilamentBetterEmailPlugin::make(),
                 ActivityLogPlugin::make()
                     ->label('Log')
                     ->pluralLabel('Logs')
