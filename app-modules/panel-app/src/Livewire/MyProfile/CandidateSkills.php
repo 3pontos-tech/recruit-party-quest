@@ -58,7 +58,7 @@ class CandidateSkills extends MyProfileComponent
                             ->label(__('panel-app::pages/settings.skills.fields.years_of_experience'))
                             ->prefixIcon('heroicon-o-calendar-days')
                             ->suffix(__('panel-app::pages/settings.skills.placeholders.years_suffix'))
-                            ->numeric()
+                            ->integer()
                             ->minValue(0)
                             ->maxValue(50)
                             ->placeholder('0')

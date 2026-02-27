@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use He4rt\App\Livewire\SearchJobs;
+use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Users\User;
 
@@ -11,8 +12,13 @@ use function Pest\Livewire\livewire;
 
 it('should only render jobs that has stages and are available', function (): void {
     actingAs(User::factory()->createOne());
+
     $jobs = JobRequisition::factory(2)->available()->create();
-    $anotherJobs = JobRequisition::factory(2)->create();
+
+    $anotherJobs = JobRequisition::factory(2)->create([
+        'status' => RequisitionStatusEnum::Draft,
+    ]);
+
     $livewire = livewire(SearchJobs::class)
         ->assertOk();
 
