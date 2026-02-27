@@ -18,6 +18,7 @@ return new class extends Migration
     {
         Schema::create('recruitment_job_requisitions', function (Blueprint $table): void {
             $table->uuid('id')->primary();
+            $table->string('slug')->unique();
             $table->foreignUuid('team_id')->constrained('teams');
             $table->foreignUuid('department_id')->constrained('departments');
             $table->string('work_arrangement')->comment(WorkArrangementEnum::stringifyCases());
@@ -29,7 +30,7 @@ return new class extends Migration
             $table->integer('salary_range_max')->nullable();
             $table->boolean('show_salary_to_candidates')->default(false);
             $table->string('salary_currency');
-            $table->foreignUuid('hiring_manager_id')->constrained('users');
+            $table->foreignUuid('recruiter_id')->nullable()->constrained('recruiters');
             $table->foreignUuid('created_by_id')->constrained('users');
             $table->string('status')->comment(RequisitionStatusEnum::stringifyCases());
             $table->string('priority')->comment(RequisitionPriorityEnum::stringifyCases());

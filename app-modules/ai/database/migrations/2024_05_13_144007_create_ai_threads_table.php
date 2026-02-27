@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('emailed_count')->default(0);
             $table->dateTime('saved_at')->nullable();
             $table->dateTime('locked_at')->nullable();
+            $table->json('session')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
