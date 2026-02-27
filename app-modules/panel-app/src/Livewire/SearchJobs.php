@@ -67,7 +67,7 @@ class SearchJobs extends Component
     {
         return JobRequisition::query()
             ->withCount('applications')
-            ->whereIn('status', [RequisitionStatusEnum::Approved->value, RequisitionStatusEnum::Published->value])
+            ->where('status', RequisitionStatusEnum::Published->value)
             ->hasStages()
             ->when($this->search, function ($query): void {
                 $query->whereHas('post', function (Builder $q): void {
