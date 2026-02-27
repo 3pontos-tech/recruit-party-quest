@@ -10,7 +10,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Group;
-use Guava\IconPicker\Forms\Components\IconPicker;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use He4rt\Links\LinkTypeEnum;
 
 class LinkRepeater
@@ -56,13 +57,25 @@ class LinkRepeater
                 Select::make('type')
                     ->label('Type')
                     ->options(LinkTypeEnum::class)
+                    ->live()
+                    ->afterStateUpdated(fn (Set $set) => $set('icon', null))
                     ->nullable(),
             ])->columns(),
 
-            IconPicker::make('icon')
+            He4rtIconPicker::make('icon')
                 ->label('Icon')
                 ->listSearchResults()
                 ->placeholder('heroicon-o-link')
+                ->visible(fn (Get $get): bool => $get('type') instanceof LinkTypeEnum)
+                ->allowedIcons(function (Get $get): array {
+                    $value = $get('type');
+                    $type = $value instanceof LinkTypeEnum ? $value : LinkTypeEnum::tryFrom($value ?? '');
+
+                    return $type?->icons() ?? LinkTypeEnum::allIcons();
+                })
+                ->extraAttributes(fn (Get $get): array => [
+                    'wire:key' => 'icon-picker-'.($get('type') instanceof LinkTypeEnum ? $get('type')->value : ($get('type') ?? 'all')),
+                ])
                 ->nullable(),
 
             Hidden::make('order_column'),
