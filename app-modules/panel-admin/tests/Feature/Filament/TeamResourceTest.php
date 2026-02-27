@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace He4rt\Admin\Tests\Feature\Filament;
 
+use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
+use Filament\Pages\Dashboard;
 use He4rt\Admin\Filament\Resources\Teams\Pages\CreateTeam;
 use He4rt\Admin\Filament\Resources\Teams\Pages\EditTeam;
 use He4rt\Admin\Filament\Resources\Teams\Pages\ListTeams;
@@ -119,4 +121,20 @@ it('removes Owner role when owner is cleared from team', function (): void {
         ->assertHasNoFormErrors();
 
     expect($owner->refresh()->hasRole(Roles::Owner->value))->toBeFalse();
+});
+
+it('has a manage action in the teams table', function (): void {
+    $team = Team::factory()->create();
+
+    livewire(ListTeams::class)
+        ->assertActionExists(TestAction::make('manage')->table($team));
+});
+
+it('manage action redirects to the organization panel dashboard for the given team', function (): void {
+    $team = Team::factory()->create();
+
+    $expectedUrl = Dashboard::getUrl(panel: 'organization', tenant: $team);
+
+    livewire(ListTeams::class)
+        ->assertActionHasUrl(TestAction::make('manage')->table($team), $expectedUrl);
 });
