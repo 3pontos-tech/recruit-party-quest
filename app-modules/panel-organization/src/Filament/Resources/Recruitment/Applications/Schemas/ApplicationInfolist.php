@@ -74,7 +74,7 @@ class ApplicationInfolist
                         // Quick Actions
                         Section::make(__('panel-organization::filament.section.quick_actions'))
                             ->icon('heroicon-o-bolt')
-                            ->visible(fn (): bool => auth()->user()?->hasAnyRole([Roles::SuperAdmin, Roles::Admin]))
+                            ->visible(fn (): bool => (bool) auth()->user()?->hasAnyRole([Roles::SuperAdmin, Roles::Admin]))
                             ->schema([
                                 Actions::make([
                                     StateTransitionAction::make(),
