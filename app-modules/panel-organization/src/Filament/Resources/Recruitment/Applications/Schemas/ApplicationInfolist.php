@@ -14,6 +14,7 @@ use Filament\Schemas\Schema;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\CommentApplicationAction;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\RejectApplicationAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
+use He4rt\Permissions\Roles;
 
 class ApplicationInfolist
 {
@@ -53,6 +54,13 @@ class ApplicationInfolist
                                     ->view('panel-organization::components.applications.tabs.work-experience'),
                             ]),
 
+                        Tab::make('Screening Responses')
+                            ->label(__('panel-organization::filament.tabs.screening-responses'))
+                            ->schema([
+                                ViewEntry::make('screening_responses')
+                                    ->view('panel-organization::components.applications.tabs.screening-responses'),
+                            ]),
+
                         Tab::make('Comments')
                             ->label(__('panel-organization::filament.tabs.comments'))
                             ->schema([
@@ -66,6 +74,7 @@ class ApplicationInfolist
                         // Quick Actions
                         Section::make(__('panel-organization::filament.section.quick_actions'))
                             ->icon('heroicon-o-bolt')
+                            ->visible(fn (): bool => (bool) auth()->user()?->hasAnyRole([Roles::SuperAdmin, Roles::Admin]))
                             ->schema([
                                 Actions::make([
                                     StateTransitionAction::make(),

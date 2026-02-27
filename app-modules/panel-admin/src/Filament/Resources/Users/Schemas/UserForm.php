@@ -28,7 +28,7 @@ class UserForm
                 TextInput::make('password')
                     ->label(__('users::labels.password'))
                     ->password()
-                    ->required(),
+                    ->required(fn (string $operation): bool => $operation === 'create'),
             ]);
     }
 }

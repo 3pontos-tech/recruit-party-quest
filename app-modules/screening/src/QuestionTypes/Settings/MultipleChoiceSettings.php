@@ -49,16 +49,14 @@ readonly class MultipleChoiceSettings implements HasValidations
 
     public function rules(string $attribute, bool $required): array
     {
-        $rules = [
+        return [
+            'present',
             'array',
-            new MultipleChoiceRule(min: $this->minSelections, max: $this->maxSelections),
+            new MultipleChoiceRule(
+                min: $required ? max($this->minSelections, 1) : $this->minSelections,
+                max: $this->maxSelections,
+            ),
         ];
-
-        if ($required) {
-            array_unshift($rules, 'required');
-        }
-
-        return $rules;
     }
 
     public function messages(string $attribute): array
@@ -70,16 +68,10 @@ readonly class MultipleChoiceSettings implements HasValidations
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<int, string>
      */
     public function initialValue(): array
     {
-        $response = [];
-
-        foreach ($this->choices as $choice) {
-            $response[$choice['value']] = null;
-        }
-
-        return $response;
+        return [];
     }
 }

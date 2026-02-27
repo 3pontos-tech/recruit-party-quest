@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Actions;
 
 use App\Filament\Schemas\Components\He4rtSelect;
+use Exception;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\RichEditor;
@@ -12,21 +13,21 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
-use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\EditJobRequisition;
-use He4rt\Recruitment\Requisitions\Actions\AiJobRequisition\GenerateJobRequisition;
 use He4rt\Recruitment\Requisitions\Actions\AiJobRequisition\GenerateJobRequisitionDTO;
-use He4rt\Recruitment\Requisitions\Actions\StoreJobRequisitionAction;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
+use He4rt\Recruitment\Requisitions\Enums\JobGenerationStatus;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Events\JobRequisitionGenerationEvent;
+use He4rt\Recruitment\Requisitions\Jobs\GeneratePostJob;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Teams\Team;
 use Illuminate\Database\Eloquent\Builder;
-use Throwable;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Queue;
 
 class GenerateJobRequisitionAction extends Action
 {
@@ -66,40 +67,41 @@ class GenerateJobRequisitionAction extends Action
                     'team_id' => $team->getKey(),
                 ]);
 
+                $queueConnection = config('queue.default');
+
                 try {
-                    $result = resolve(GenerateJobRequisition::class)->execute($dto);
-                    $jobRequisition = resolve(StoreJobRequisitionAction::class)->execute($result);
-
-                    $livewire = $action->getLivewire();
-                    if (property_exists($livewire, 'jobGenerationState')) {
-                        $livewire->jobGenerationState = 'success';
-                    }
-
-                    Notification::make()
-                        ->success()
-                        ->title(__('panel-organization::filament.actions.generate_job_requisition.success_title'))
-                        ->send();
-
-                    $action->success();
-
-                    $this->redirect(EditJobRequisition::getUrl([
-                        'tenant' => $team,
-                        'record' => $jobRequisition,
-                    ]));
-                } catch (Throwable) {
-                    $livewire = $action->getLivewire();
-
-                    if (property_exists($livewire, 'jobGenerationState')) {
-                        $livewire->jobGenerationState = 'idle';
-                    }
+                    Queue::connection($queueConnection)->size('default');
+                } catch (Exception $exception) {
+                    Log::error('Queue health check failed before dispatching GeneratePostJob', [
+                        'user_id' => auth()->id(),
+                        'connection' => $queueConnection,
+                        'error' => $exception->getMessage(),
+                        'trace' => $exception->getTraceAsString(),
+                    ]);
 
                     Notification::make()
                         ->danger()
-                        ->title(__('recruitment::filament.requisition.job_posting.notifications.failed'))
+                        ->title(__('panel-organization::view.job_generation.queue_unavailable_title'))
+                        ->body(__('panel-organization::view.job_generation.queue_unavailable_message'))
                         ->send();
 
-                    $action->halt();
+                    return;
                 }
+
+                broadcast(new JobRequisitionGenerationEvent(
+                    JobGenerationStatus::Processing,
+                    (string) auth()->user()->getKey()
+                ));
+
+                dispatch(new GeneratePostJob($dto));
+
+                Notification::make()
+                    ->info()
+                    ->title(__('panel-organization::filament.actions.generate_job_requisition.processing_title'))
+                    ->body(__('panel-organization::filament.actions.generate_job_requisition.processing_body'))
+                    ->send();
+
+                $action->success();
             });
     }
 
@@ -137,15 +139,8 @@ class GenerateJobRequisitionAction extends Action
                                 ->relationship(
                                     name: 'department',
                                     titleAttribute: 'name',
-                                    modifyQueryUsing: fn (
-                                        Builder $query,
-                                        Get $get
-                                        /** @phpstan-ignore-next-line */
-                                    ) => $query->when(
-                                        $get('team_id'),
-                                        /** @phpstan-ignore-next-line */
-                                        fn (Builder $q) => $q->forTeam($get('team_id'))
-                                    ),
+                                    /** @phpstan-ignore-next-line */
+                                    modifyQueryUsing: fn (Builder $query) => $query->forCurrentTeam(),
                                 )
                                 ->description(__('recruitment::filament.requisition.fields.department_description'))
                                 ->icon(Heroicon::BuildingOffice)
@@ -158,19 +153,10 @@ class GenerateJobRequisitionAction extends Action
                                 ->label(__('recruitment::filament.requisition.fields.hiring_manager'))
                                 ->relationship(
                                     name: 'recruiter',
-                                    modifyQueryUsing: fn (
-                                        Builder $query,
-                                        Get $get
-                                        /** @phpstan-ignore-next-line */
-                                    ) => $query->when(
-                                        $get('team_id'),
-                                        /** @phpstan-ignore-next-line */
-                                        fn (Builder $q) => $q->forTeam($get('team_id'))
-                                    ),
+                                    /** @phpstan-ignore-next-line */
+                                    modifyQueryUsing: fn (Builder $query) => $query->forCurrentTeam(),
                                 )
-                                ->getOptionLabelFromRecordUsing(
-                                    fn (Recruiter $record) => $record->user->name
-                                )
+                                ->getOptionLabelFromRecordUsing(fn (Recruiter $record) => $record->user->name)
                                 ->description(__('recruitment::filament.requisition.fields.hiring_manager_description'))
                                 ->icon(Heroicon::Users)
                                 ->iconColor('red')

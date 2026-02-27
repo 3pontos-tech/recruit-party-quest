@@ -10,5 +10,4 @@ use He4rt\Admin\Filament\Resources\Users\UserResource;
 class CreateUser extends CreateRecord
 {
     protected static string $resource = UserResource::class;
-
 }

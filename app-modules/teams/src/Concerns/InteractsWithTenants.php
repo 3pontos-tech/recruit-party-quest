@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Teams\Concerns;
 
 use Filament\Panel;
+use He4rt\Permissions\Roles;
 use He4rt\Teams\Team;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -41,11 +42,23 @@ trait InteractsWithTenants
      */
     public function getTenants(Panel $panel): Collection
     {
-        return $this->teams;
+        if ($this->hasAnyRole([Roles::SuperAdmin, Roles::Admin])) {
+            return Team::all();
+        }
+
+        return $this->teams->merge($this->ownedTenants)->unique('id');
     }
 
     public function canAccessTenant(Model $tenant): bool
     {
-        return $this->teams()->whereKey($tenant)->exists();
+        if ($this->hasAnyRole([Roles::SuperAdmin, Roles::Admin])) {
+            return true;
+        }
+
+        if ($this->teams()->whereKey($tenant)->exists()) {
+            return true;
+        }
+
+        return (bool) $this->ownedTenants()->whereKey($tenant)->exists();
     }
 }

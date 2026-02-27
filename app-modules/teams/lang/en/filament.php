@@ -26,6 +26,9 @@ return [
     'table' => [
         'slug_description' => 'slug: :slug',
     ],
+    'actions' => [
+        'manage' => 'Manage',
+    ],
     'relation_managers' => [
         'members' => [
             'title' => 'Members',

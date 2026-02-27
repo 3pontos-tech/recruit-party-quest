@@ -12,12 +12,16 @@ return new class extends Migration
     {
         Schema::create('teams', function (Blueprint $table): void {
             $table->uuid('id')->primary();
-            $table->foreignUuid('owner_id')->constrained('users');
+            $table->foreignUuid('owner_id')->nullable()->constrained('users');
             $table->string('name');
             $table->string('description');
             $table->string('slug');
             $table->string('status');
             $table->string('contact_email');
+            $table->text('about')->nullable();
+            $table->text('work_schedule')->nullable();
+            $table->text('accessibility_accommodations')->nullable();
+            $table->boolean('is_disability_confident')->default(false);
             $table->timestampsTz();
             $table->softDeletesTz();
         });

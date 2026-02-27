@@ -8,5 +8,9 @@ enum Roles: string
 {
     case SuperAdmin = 'super_admin';
 
+    case Admin = 'admin';
+
+    case Owner = 'owner';
+
     case User = 'user';
 }

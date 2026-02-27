@@ -3,11 +3,9 @@
     use He4rt\Applications\Models\Application;
 
     $stages = $record->getPipelineStages();
-    $statusLabel = $record->currentStage->stage_type->getLabel();
 
-    if ($stages->isEmpty()) {
-        $stages = collect([]);
-    }
+    // Safe access with fallback to Application status
+    $statusLabel = $record->currentStage?->stage_type?->getLabel() ?? 'N/A';
 @endphp
 
 <div class="flex w-full flex-col gap-1.5 px-5">
@@ -25,7 +23,7 @@
                         $colorClass = $stage->stage_type->getTailwindColorClass();
                         $extraClasses = 'opacity-100';
                     } else {
-                        $colorClass = 'bg-gray-200';
+                        $colorClass = 'bg-gray-200 dark:bg-gray-700';
                         $extraClasses = 'opacity-10';
                     }
                 @endphp
@@ -37,8 +35,9 @@
             @endforeach
         </div>
     @else
-        <div class="flex items-center gap-1">
-            <div class="bg-black-300 h-1.5 flex-1 rounded-full opacity-60"></div>
+        <div class="flex items-center gap-1.5">
+            <div class="h-1.5 flex-1 rounded-full bg-gray-300 opacity-40 dark:bg-gray-600"></div>
+            <span class="text-xs text-gray-400 dark:text-gray-500">No stages</span>
         </div>
     @endif
 </div>

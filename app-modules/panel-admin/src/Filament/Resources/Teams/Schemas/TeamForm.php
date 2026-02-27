@@ -18,7 +18,8 @@ class TeamForm
                 Select::make('owner_id')
                     ->label(__('teams::filament.fields.owner'))
                     ->relationship('owner', 'name')
-                    ->required(),
+                    ->nullable()
+                    ->searchable(),
                 TextInput::make('name')
                     ->label(__('teams::filament.fields.name'))
                     ->required(),

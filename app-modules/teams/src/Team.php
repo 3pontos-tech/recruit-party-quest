@@ -10,6 +10,7 @@ use He4rt\Location\Concerns\HasAddresses;
 use He4rt\Teams\Database\Factories\TeamFactory;
 use He4rt\Teams\Policies\TeamPolicy;
 use He4rt\Users\User;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Collection;
@@ -24,14 +25,14 @@ use Illuminate\Support\Carbon;
  * @property string $name
  * @property string $description
  * @property string $slug
- * @property string $owner_id
+ * @property string|null $owner_id
  * @property TeamStatus $status
  * @property string $contact_email
  * @property string|null $about
  * @property string|null $work_schedule
  * @property string|null $accessibility_accommodations
  * @property bool $is_disability_confident
- * @property-read User $owner
+ * @property-read User|null $owner
  * @property-read Collection|User[] $members
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
@@ -42,6 +43,7 @@ use Illuminate\Support\Carbon;
  */
 #[UsePolicy(TeamPolicy::class)]
 #[UseFactory(TeamFactory::class)]
+#[ObservedBy(TeamObserver::class)]
 class Team extends BaseModel
 {
     use HasAddresses;
