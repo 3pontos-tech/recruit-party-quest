@@ -123,18 +123,18 @@ class ScreeningQuestionFactory extends Factory
         ]);
     }
 
-    public function fileUpload(): static
-    {
-        $questions = $this->getQuestionsByType('file_upload');
-        $question = fake()->randomElement($questions);
-
-        return $this->state(fn (array $attributes) => [
-            'question_text' => $question['text'],
-            'question_type' => QuestionTypeEnum::FileUpload,
-            'settings' => $question['settings'],
-            'is_required' => $question['is_required'] ?? true,
-        ]);
-    }
+    //    public function fileUpload(): static
+    //    {
+    //        $questions = $this->getQuestionsByType('file_upload');
+    //        $question = fake()->randomElement($questions);
+    //
+    //        return $this->state(fn (array $attributes) => [
+    //            'question_text' => $question['text'],
+    //            'question_type' => QuestionTypeEnum::FileUpload,
+    //            'settings' => $question['settings'],
+    //            'is_required' => $question['is_required'] ?? true,
+    //        ]);
+    //    }
 
     public function required(): static
     {

@@ -17,59 +17,64 @@
 
     $totalExperienceTimeString = $candidate->totalExperienceFormatted;
 
-    function extractJobTitle($description, $metadata = null): string
-    {
-        if ($metadata && isset($metadata['position'])) {
-            return $metadata['position'];
+    if (! function_exists('extractJobTitle')) {
+        function extractJobTitle($description, $metadata = null): string
+        {
+            if ($metadata && isset($metadata['position'])) {
+                return $metadata['position'];
+            }
+
+            $lines = explode("\n", trim($description));
+            $firstLine = trim($lines[0]);
+
+            if (strlen($firstLine) <= 60 && ! preg_match('/^[•\-\*]/', $firstLine)) {
+                return $firstLine;
+            }
+
+            return 'Professional Role';
         }
-
-        $lines = explode("\n", trim($description));
-        $firstLine = trim($lines[0]);
-
-        if (strlen($firstLine) <= 60 && ! preg_match('/^[•\-\*]/', $firstLine)) {
-            return $firstLine;
-        }
-
-        return 'Professional Role';
     }
 
-    function extractSkills($metadata, $description): array
-    {
-        $skills = [];
+    if (! function_exists('extractSkills')) {
+        function extractSkills($metadata, $description): array
+        {
+            $skills = [];
 
-        if ($metadata) {
-            if (isset($metadata['skills']) && is_array($metadata['skills'])) {
-                $skills = array_merge($skills, $metadata['skills']);
-            }
-            if (isset($metadata['technologies']) && is_array($metadata['technologies'])) {
-                $skills = array_merge($skills, $metadata['technologies']);
-            }
-        }
-
-        if (empty($skills)) {
-            $commonTech = ['PHP', 'Laravel', 'JavaScript', 'React', 'Vue', 'Node.js', 'Python', 'Java', 'MySQL', 'PostgreSQL', 'MongoDB', 'AWS', 'Docker', 'Kubernetes', 'Git'];
-            foreach ($commonTech as $tech) {
-                if (stripos($description, $tech) !== false) {
-                    $skills[] = $tech;
+            if ($metadata) {
+                if (isset($metadata['skills']) && is_array($metadata['skills'])) {
+                    $skills = array_merge($skills, $metadata['skills']);
+                }
+                if (isset($metadata['technologies']) && is_array($metadata['technologies'])) {
+                    $skills = array_merge($skills, $metadata['technologies']);
                 }
             }
-        }
 
-        return array_unique($skills);
-    }
-
-    function formatJobDescription($description): string
-    {
-        $lines = explode("\n", trim($description));
-
-        if (count($lines) > 1) {
-            $firstLine = trim($lines[0]);
-            if (strlen($firstLine) <= 60 && ! preg_match('/^[•\-\*]/', $firstLine)) {
-                array_shift($lines);
+            if (empty($skills)) {
+                $commonTech = ['PHP', 'Laravel', 'JavaScript', 'React', 'Vue', 'Node.js', 'Python', 'Java', 'MySQL', 'PostgreSQL', 'MongoDB', 'AWS', 'Docker', 'Kubernetes', 'Git'];
+                foreach ($commonTech as $tech) {
+                    if (stripos($description, $tech) !== false) {
+                        $skills[] = $tech;
+                    }
+                }
             }
-        }
 
-        return implode("\n", $lines);
+            return array_unique($skills);
+        }
+    }
+    if (! function_exists('formatJobDescription')) {
+        function formatJobDescription($description): string
+        {
+            $lines = explode("\n", trim($description));
+
+            if (count($lines) > 1) {
+                $firstLine = trim($lines[0]);
+                if (strlen($firstLine) <= 60 && ! preg_match('/^[•\-\*]/', $firstLine)) {
+                    array_shift($lines);
+                }
+            }
+
+            return implode("\n", $lines);
+        }
     }
 @endphp
 

@@ -27,7 +27,7 @@ beforeEach(function (): void {
         ->state([
             'question_text' => 'fuedase?',
         ])
-        ->fileUpload()
+//        ->fileUpload()
         ->required()
         ->create();
 
@@ -44,7 +44,10 @@ describe('file upload question', function (): void {
             ->call('submit');
         $livewire->assertHasErrors(['responses.'.$questionId => __('screening::question_validations.required')]);
     });
-});
+})->todo(note: <<<'NOTE'
+        For now we disabled file upload question
+NOTE
+);
 
 describe('multiple questions', function (): void {
     test('min', function (): void {

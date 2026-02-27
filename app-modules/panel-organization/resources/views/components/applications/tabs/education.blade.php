@@ -17,23 +17,25 @@
     $currentEnrolled = $degrees->where('is_enrolled', true)->count();
     $completedDegrees = $degrees->where('is_enrolled', false)->count();
 
-    function categorizeDegree(string $degreeTitle): string
-    {
-        $degreeTypes = [
-            'PhD' => ['PhD', 'Doctorate', 'Doctoral'],
-            'Masters' => ['Masters', 'Master', 'MBA', 'MS', 'MA', 'MSc'],
-            'Bachelors' => ['Bachelors', 'Bachelor', 'BS', 'BA', 'BSc'],
-            'Associates' => ['Associates', 'Associate', 'AS', 'AA'],
-            'Certificate' => ['Certificate', 'Certification', 'Diploma'],
-        ];
-        foreach ($degreeTypes as $category => $patterns) {
-            foreach ($patterns as $pattern) {
-                if (stripos($degreeTitle, $pattern) !== false) {
-                    return $category;
+    if (! function_exists('categorizeDegree')) {
+        function categorizeDegree(string $degreeTitle): string
+        {
+            $degreeTypes = [
+                'PhD' => ['PhD', 'Doctorate', 'Doctoral'],
+                'Masters' => ['Masters', 'Master', 'MBA', 'MS', 'MA', 'MSc'],
+                'Bachelors' => ['Bachelors', 'Bachelor', 'BS', 'BA', 'BSc'],
+                'Associates' => ['Associates', 'Associate', 'AS', 'AA'],
+                'Certificate' => ['Certificate', 'Certification', 'Diploma'],
+            ];
+            foreach ($degreeTypes as $category => $patterns) {
+                foreach ($patterns as $pattern) {
+                    if (stripos($degreeTitle, $pattern) !== false) {
+                        return $category;
+                    }
                 }
             }
+            return 'Other';
         }
-        return 'Other';
     }
 @endphp
 
