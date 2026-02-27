@@ -15,6 +15,7 @@ use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Crea
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\EditJobRequisition;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\KanbanStages;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\ListJobRequisitions;
+use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\ViewJobRequisition;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\RelationManagers\PipelineStagesRelationManager;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Schemas\JobRequisitionForm;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Tables\JobRequisitionsTable;
@@ -56,6 +57,7 @@ class JobRequisitionResource extends Resource
         return [
             'index' => ListJobRequisitions::route('/'),
             'create' => CreateJobRequisition::route('/create'),
+            'view' => ViewJobRequisition::route('/{record}/view'),
             'edit' => EditJobRequisition::route('/{record}/edit'),
             'kanban' => KanbanStages::route('/{record}/kanban'),
         ];
@@ -64,6 +66,7 @@ class JobRequisitionResource extends Resource
     public static function getRecordSubNavigation(Page $page): array
     {
         return $page->generateNavigationItems([
+            ViewJobRequisition::class,
             EditJobRequisition::class,
             KanbanStages::class,
         ]);

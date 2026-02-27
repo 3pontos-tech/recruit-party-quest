@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban;
 
-use Filament\Actions\Action;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Navigation\NavigationItem;
 use Filament\Schemas\Schema;
@@ -14,6 +13,7 @@ use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\Rejec
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\ViewCandidateAction;
+use He4rt\Permissions\Roles;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Filament\Schema\KanbanColumn;
 use He4rt\Recruitment\Stages\Models\Stage;
@@ -35,6 +35,7 @@ class KanbanStages extends BoardResourcePage
     {
         return [
             NavigationItem::make(__('recruitment::filament.requisition.kanban.nav.edit_stages'))
+                ->visible(fn () => (bool) auth()->user()?->hasAnyRole([Roles::SuperAdmin, Roles::Admin]))
                 ->icon(Heroicon::OutlinedPencilSquare)
                 ->url(JobRequisitionResource::getUrl('edit', ['record' => $this->requisitionId]))
                 ->label(__('recruitment::filament.requisition.kanban.nav.edit_label')),
@@ -94,16 +95,12 @@ class KanbanStages extends BoardResourcePage
                     TextEntry::make('tracking_code'),
                 ])
             )
-            ->columnActions([
-                Action::make('example_action')
-                    ->label('example_action'),
-                Action::make('example_action_2')
-                    ->label('example_action_2'),
-            ])
             ->cardActions([
                 ViewCandidateAction::make()->model(Application::class),
-                StateTransitionAction::make(),
-                RejectApplicationAction::make(),
+                StateTransitionAction::make()
+                    ->visible(fn (): bool => (bool) auth()->user()?->hasAnyRole([Roles::SuperAdmin, Roles::Admin])),
+                RejectApplicationAction::make()
+                    ->visible(fn (): bool => (bool) auth()->user()?->hasAnyRole([Roles::SuperAdmin, Roles::Admin])),
             ])
             ->query(
                 Application::query()

@@ -16,6 +16,8 @@ use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ListApp
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ViewApplication;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Schemas\ApplicationForm;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Tables\ApplicationsTable;
+use He4rt\Permissions\Roles;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class ApplicationResource extends Resource
@@ -31,6 +33,16 @@ class ApplicationResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::DocumentText;
 
     protected static ?int $navigationSort = 3;
+
+    public static function canCreate(): bool
+    {
+        return (bool) auth()->user()?->hasAnyRole([Roles::SuperAdmin, Roles::Admin]);
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return (bool) auth()->user()?->hasAnyRole([Roles::SuperAdmin, Roles::Admin]);
+    }
 
     public static function form(Schema $schema): Schema
     {

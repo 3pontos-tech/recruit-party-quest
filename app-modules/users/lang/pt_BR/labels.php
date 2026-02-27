@@ -12,4 +12,5 @@ return [
     'updated_at' => 'Atualizado em',
     'singular' => 'Usuário',
     'plural' => 'Usuários',
+    'owned_team' => 'Organização Proprietária',
 ];
