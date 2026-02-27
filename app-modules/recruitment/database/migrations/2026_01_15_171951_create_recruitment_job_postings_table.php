@@ -17,16 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug');
             $table->longText('summary');
-            $table->jsonb('description');
-            $table->jsonb('responsibilities');
-            $table->jsonb('required_qualifications');
-            $table->jsonb('preferred_qualifications');
-            $table->jsonb('benefits');
-            $table->text('about_company');
-            $table->text('about_team');
-            $table->text('work_schedule');
-            $table->text('accessibility_accommodations');
-            $table->boolean('is_disability_confident');
+            $table->text('description');
             $table->string('external_post_url');
             $table->timestamps();
             $table->softDeletes();
