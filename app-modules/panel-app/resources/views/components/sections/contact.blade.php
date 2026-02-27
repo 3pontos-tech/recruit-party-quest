@@ -2,12 +2,12 @@
     $contacts = [
         [
             'label' => 'Telefone',
-            'value' => '+55 90000-0000',
+            'value' => '+55 (11) 95398-1486',
             'icon' => 'heroicon-o-phone',
         ],
         [
             'label' => 'Email',
-            'value' => 'contato@3pontos.com',
+            'value' => 'recrutamento@3pontos.com',
             'icon' => 'heroicon-o-envelope',
         ],
         [
@@ -65,7 +65,7 @@
             </div>
 
             <form
-                action="mailto:contato@3pontos.com"
+                action="mailto:recrutamento@3pontos.com"
                 method="POST"
                 enctype="text/plain"
                 class="bg-elevation-surface/20 border-outline-light dark:border-outline-dark order-2 flex flex-1 flex-col gap-8 rounded-lg border p-4 lg:order-1 lg:p-6"
