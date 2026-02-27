@@ -88,13 +88,8 @@ class JobRequisitionForm
                                             ->relationship(
                                                 name: 'department',
                                                 titleAttribute: 'name',
-                                                modifyQueryUsing: fn (
-                                                    Builder $query,
-                                                    Get $get
-                                                    /** @phpstan-ignore-next-line */
-                                                ) => $query->when($get('team_id'),
-                                                    /** @phpstan-ignore-next-line */
-                                                    fn (Builder $q) => $q->forTeam($get('team_id'))),
+                                                /** @phpstan-ignore-next-line */
+                                                modifyQueryUsing: fn (Builder $query) => $query->forCurrentTeam(),
                                             )
                                             ->createOptionAction(fn (Action $action): Action => $action
                                                 ->modalHeading(__('teams::filament.relation_managers.departments.title'))
@@ -192,13 +187,8 @@ class JobRequisitionForm
                                             ->label(__('recruitment::filament.requisition.fields.hiring_manager'))
                                             ->relationship(
                                                 name: 'recruiter',
-                                                modifyQueryUsing: fn (
-                                                    Builder $query,
-                                                    Get $get
-                                                    /** @phpstan-ignore-next-line */
-                                                ) => $query->when($get('team_id'),
-                                                    /** @phpstan-ignore-next-line */
-                                                    fn (Builder $q) => $q->forTeam($get('team_id'))),
+                                                /** @phpstan-ignore-next-line */
+                                                modifyQueryUsing: fn (Builder $query) => $query->forCurrentTeam(),
                                             )
                                             ->getOptionLabelFromRecordUsing(fn (Recruiter $record
                                             ) => $record->user->name)

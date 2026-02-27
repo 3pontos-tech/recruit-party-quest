@@ -14,6 +14,7 @@ use He4rt\Recruitment\Requisitions\Enums\JobCategoryEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Observers\JobRequisitionObserver;
 use He4rt\Recruitment\Requisitions\Policies\JobRequisitionPolicy;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Recruitment\Stages\Models\Stage;
@@ -22,6 +23,7 @@ use He4rt\Teams\Concerns\BelongsToTeam;
 use He4rt\Teams\Department;
 use He4rt\Teams\Team;
 use He4rt\Users\User;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
@@ -73,6 +75,7 @@ use Illuminate\Support\Carbon;
  */
 #[UseFactory(JobRequisitionFactory::class)]
 #[UsePolicy(JobRequisitionPolicy::class)]
+#[ObservedBy(JobRequisitionObserver::class)]
 class JobRequisition extends BaseModel implements HasActivityLogTitle
 {
     use BelongsToTeam;

@@ -218,36 +218,12 @@ final class DevelopmentSeeder extends Seeder
                 ]);
 
             $this->seedRequisitionItems($requisition);
-            $this->createRequisitionStages($requisition);
             $this->createScreeningQuestions($requisition);
 
             $requisitions->push($requisition);
         }
 
         return $requisitions;
-    }
-
-    private function createRequisitionStages(JobRequisition $requisition): void
-    {
-        $stages = [
-            ['type' => StageTypeEnum::New, 'name' => 'New Applications'],
-            ['type' => StageTypeEnum::Screening, 'name' => 'Initial Screening'],
-            ['type' => StageTypeEnum::Assessment, 'name' => 'Technical Assessment'],
-            ['type' => StageTypeEnum::Interview, 'name' => 'Technical Interview'],
-            ['type' => StageTypeEnum::Interview, 'name' => 'Cultural Interview'],
-            ['type' => StageTypeEnum::Offer, 'name' => 'Job Offer'],
-        ];
-
-        foreach ($stages as $index => $stageData) {
-            Stage::factory()
-                ->create([
-                    'job_requisition_id' => $requisition->getKey(),
-                    'team_id' => $requisition->team_id,
-                    'stage_type' => $stageData['type'],
-                    'name' => $stageData['name'],
-                    'display_order' => $index + 1,
-                ]);
-        }
     }
 
     private function createScreeningQuestions(JobRequisition $requisition): void
