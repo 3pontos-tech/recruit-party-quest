@@ -20,6 +20,7 @@ use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
+use He4rt\Permissions\Roles;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
@@ -120,7 +121,7 @@ class JobRequisitionsTable
                     DeleteBulkAction::make(),
                     ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
-                ]),
+                ])->visible(fn (): bool => auth()->user()->hasAnyRole([Roles::Admin, Roles::SuperAdmin])),
             ]);
     }
 
