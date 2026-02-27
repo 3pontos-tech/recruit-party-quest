@@ -66,6 +66,7 @@ class LinkRepeater
                 ->label('Icon')
                 ->listSearchResults()
                 ->placeholder('heroicon-o-link')
+                ->visible(fn (Get $get): bool => $get('type') instanceof LinkTypeEnum)
                 ->allowedIcons(function (Get $get): array {
                     $value = $get('type');
                     $type = $value instanceof LinkTypeEnum ? $value : LinkTypeEnum::tryFrom($value ?? '');
