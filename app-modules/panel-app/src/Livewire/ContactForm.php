@@ -46,7 +46,7 @@ class ContactForm extends Component
     {
         $this->validate();
 
-        if ($this->honeypot !== '') {
+        if (filled($this->honeypot)) {
             $this->isSent = true;
 
             return;
@@ -82,7 +82,7 @@ class ContactForm extends Component
                 ->send(new ContactFormMail(
                     senderName: $this->name,
                     senderEmail: $this->email,
-                    senderPhone: $this->phone !== '' ? $this->phone : null,
+                    senderPhone: filled($this->phone) ? $this->phone : 'Não informado',
                     messageBody: $this->message,
                     sentAt: now()->setTimezone('America/Sao_Paulo')->format('d/m/Y \à\s H:i:s'),
                 ));

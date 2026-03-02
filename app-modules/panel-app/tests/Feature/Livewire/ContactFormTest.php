@@ -49,7 +49,7 @@ it('sends the email without phone when phone is empty', function (): void {
         ->call('submit')
         ->assertSet('isSent', true);
 
-    Mail::assertSent(ContactFormMail::class, fn (ContactFormMail $mail): bool => $mail->senderPhone === null);
+    Mail::assertSent(ContactFormMail::class, fn (ContactFormMail $mail): bool => $mail->senderPhone === 'Não informado');
 });
 
 it('fails validation when required fields are missing', function (): void {
