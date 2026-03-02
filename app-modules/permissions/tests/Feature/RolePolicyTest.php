@@ -9,12 +9,6 @@ use He4rt\Permissions\Roles;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\Gate;
 
-use function Pest\Laravel\artisan;
-
-beforeEach(function (): void {
-    artisan('sync:permissions');
-});
-
 it('allows super admin to perform all actions', function (): void {
     $user = User::factory()->create();
     $user->assignRole(Roles::SuperAdmin->value);
