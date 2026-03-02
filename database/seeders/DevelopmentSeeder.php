@@ -307,7 +307,7 @@ final class DevelopmentSeeder extends Seeder
             ]);
 
             if ($currentStageIndex > 0) {
-                $this->addApplicationFeedback($application);
+                $this->addApplicationFeedback($application, $stages, $currentStageIndex);
             }
         });
     }
@@ -337,23 +337,23 @@ final class DevelopmentSeeder extends Seeder
         };
     }
 
-    private function addApplicationFeedback(Application $application): void
+    private function addApplicationFeedback(Application $application, Collection $stages, int $currentStageIndex): void
     {
         ApplicationComment::factory()
-            ->count(fake()->numberBetween(1, 3))
+            ->count(fake()->numberBetween(1, 2))
             ->create([
                 'application_id' => $application->getKey(),
                 'team_id' => $application->team_id,
                 'author_id' => $this->adminUser->getKey(),
             ]);
 
-        if ($application->status === ApplicationStatusEnum::InProgress) {
+        foreach ($stages->values()->slice(1, $currentStageIndex) as $stage) {
             Evaluation::factory()
-                ->count(fake()->numberBetween(1, 2))
+                ->submitted()
                 ->create([
                     'application_id' => $application->getKey(),
                     'team_id' => $application->team_id,
-                    'stage_id' => $application->current_stage_id,
+                    'stage_id' => $stage->getKey(),
                     'evaluator_id' => $this->adminUser->getKey(),
                 ]);
         }
