@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8e14890aa0be6ede5106b529c9ccd829",
+    "content-hash": "850350663a2e5a36dd13c1a504f93261",
     "packages": [
         {
             "name": "alizharb/filament-activity-log",
@@ -213,6 +213,83 @@
                 "source": "https://github.com/Bacon/BaconQrCode/tree/v3.0.3"
             },
             "time": "2025-11-19T17:15:36+00:00"
+        },
+        {
+            "name": "basementdevs/filament-better-mails",
+            "version": "5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/basementdevs/filament-better-mail.git",
+                "reference": "512f1d3fdb3b4c4084333e3b49533235570482a7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/basementdevs/filament-better-mail/zipball/512f1d3fdb3b4c4084333e3b49533235570482a7",
+                "reference": "512f1d3fdb3b4c4084333e3b49533235570482a7",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^5.0",
+                "illuminate/contracts": "^12.0",
+                "php": "^8.3",
+                "resend/resend-laravel": "^0.22.0",
+                "spatie/laravel-package-tools": "^1.16"
+            },
+            "require-dev": {
+                "driftingly/rector-laravel": "^2.0.4",
+                "larastan/larastan": "^3.0",
+                "laravel/pint": "^1.14",
+                "nunomaduro/collision": "^8.8",
+                "orchestra/testbench": "^10.0.0||^9.0.0",
+                "pestphp/pest": "^4.0",
+                "pestphp/pest-plugin-arch": "^4.0",
+                "pestphp/pest-plugin-laravel": "^4.0",
+                "pestphp/pest-plugin-livewire": "^4.0",
+                "rector/rector": "^2.0.15"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Basement\\BetterMails\\FilamentBetterMailsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Basement\\BetterMails\\": "src/",
+                    "Basement\\BetterMails\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Reis",
+                    "email": "danielhe4rt@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "This is my package filament-better-mails",
+            "homepage": "https://github.com/basementdevs/filament-better-mails",
+            "keywords": [
+                "Basement Developers",
+                "filament-better-mails",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/basementdevs/filament-better-mail/issues",
+                "source": "https://github.com/basementdevs/filament-better-mail/tree/5.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Basement Developers",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-02-27T21:37:13+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",
@@ -9173,6 +9250,132 @@
                 }
             ],
             "time": "2026-01-29T10:47:06+00:00"
+        },
+        {
+            "name": "resend/resend-laravel",
+            "version": "v0.22.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/resend/resend-laravel.git",
+                "reference": "bbd8692f679fbf4ad6ea540ebf8be1559566efea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/resend/resend-laravel/zipball/bbd8692f679fbf4ad6ea540ebf8be1559566efea",
+                "reference": "bbd8692f679fbf4ad6ea540ebf8be1559566efea",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/http": "^10.0|^11.0|^12.0",
+                "illuminate/support": "^10.0|^11.0|^12.0",
+                "php": "^8.1",
+                "resend/resend-php": "^0.20.0",
+                "symfony/mailer": "^6.2|^7.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.14",
+                "mockery/mockery": "^1.5",
+                "orchestra/testbench": "^8.17|^9.0|^10.0",
+                "pestphp/pest": "^2.0|^3.7"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Resend\\Laravel\\ResendServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Resend\\Laravel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Resend and contributors",
+                    "homepage": "https://github.com/resend/resend-laravel/contributors"
+                }
+            ],
+            "description": "Resend for Laravel",
+            "homepage": "https://resend.com/",
+            "keywords": [
+                "api",
+                "client",
+                "laravel",
+                "php",
+                "resend",
+                "sdk"
+            ],
+            "support": {
+                "issues": "https://github.com/resend/resend-laravel/issues",
+                "source": "https://github.com/resend/resend-laravel/tree/v0.22.0"
+            },
+            "time": "2025-09-18T06:58:18+00:00"
+        },
+        {
+            "name": "resend/resend-php",
+            "version": "v0.20.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/resend/resend-php.git",
+                "reference": "25391cb93382601e3b2678c4c57d34d3a84210e8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/resend/resend-php/zipball/25391cb93382601e3b2678c4c57d34d3a84210e8",
+                "reference": "25391cb93382601e3b2678c4c57d34d3a84210e8",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.5",
+                "php": "^8.1.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.13",
+                "mockery/mockery": "^1.6",
+                "pestphp/pest": "^2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Resend.php"
+                ],
+                "psr-4": {
+                    "Resend\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Resend and contributors",
+                    "homepage": "https://github.com/resend/resend-php/contributors"
+                }
+            ],
+            "description": "Resend PHP library.",
+            "homepage": "https://resend.com/",
+            "keywords": [
+                "api",
+                "client",
+                "php",
+                "resend",
+                "sdk"
+            ],
+            "support": {
+                "issues": "https://github.com/resend/resend-php/issues",
+                "source": "https://github.com/resend/resend-php/tree/v0.20.0"
+            },
+            "time": "2025-09-18T05:31:42+00:00"
         },
         {
             "name": "ryangjchandler/blade-capture-directive",
