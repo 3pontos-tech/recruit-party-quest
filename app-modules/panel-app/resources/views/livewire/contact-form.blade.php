@@ -100,7 +100,7 @@
                 </div>
             @endif
 
-            <x-he4rt::button type="submit" :loading="$isLoading" wire:loading.attr="disabled">
+            <x-he4rt::button type="submit" wire:loading.attr="disabled">
                 <span wire:loading.remove wire:target="submit">Enviar mensagem</span>
                 <span wire:loading wire:target="submit">Enviando...</span>
             </x-he4rt::button>

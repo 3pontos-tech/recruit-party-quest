@@ -34,8 +34,6 @@ class ContactForm extends Component
     #[Validate('max:0')]
     public string $honeypot = '';
 
-    public bool $isLoading = false;
-
     public bool $isSent = false;
 
     public bool $hasError = false;
@@ -72,8 +70,6 @@ class ContactForm extends Component
             return;
         }
 
-        $this->isLoading = true;
-
         try {
             $recipientEmail = config('services.contact.recipient_email', 'recrutamento@3pontos.com');
 
@@ -96,8 +92,6 @@ class ContactForm extends Component
             ]);
 
             $this->hasError = true;
-        } finally {
-            $this->isLoading = false;
         }
     }
 
