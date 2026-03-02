@@ -20,7 +20,7 @@ class TeamPolicy
 
     public function view(User $user, Team $team): bool
     {
-        if ($user->hasRole(Roles::SuperAdmin)) {
+        if ($user->hasAnyRole([Roles::SuperAdmin, Roles::Admin])) {
             return true;
         }
 
@@ -29,12 +29,12 @@ class TeamPolicy
 
     public function create(User $user): bool
     {
-        return true;
+        return $user->hasAnyRole([Roles::SuperAdmin, Roles::Admin]);
     }
 
     public function update(User $user, Team $team): bool
     {
-        if ($user->hasRole(Roles::SuperAdmin) || $user->id === $team->owner_id) {
+        if ($user->hasAnyRole([Roles::SuperAdmin, Roles::Admin]) || $user->id === $team->owner_id) {
             return true;
         }
 
@@ -43,7 +43,7 @@ class TeamPolicy
 
     public function delete(User $user, Team $team): bool
     {
-        if ($user->hasRole(Roles::SuperAdmin)) {
+        if ($user->hasAnyRole([Roles::SuperAdmin, Roles::Admin])) {
             return true;
         }
 
