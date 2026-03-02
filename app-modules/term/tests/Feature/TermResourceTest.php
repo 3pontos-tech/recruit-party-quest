@@ -12,15 +12,12 @@ use He4rt\Term\Models\Term;
 use He4rt\Users\User;
 
 use function Pest\Laravel\actingAs;
-use function Pest\Laravel\artisan;
 use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
     Filament::setCurrentPanel(Filament::getPanel('admin'));
 
     actingAs(User::factory()->create());
-
-    artisan('sync:permissions');
 
     auth()->user()->assignRole(Roles::SuperAdmin->value);
 });

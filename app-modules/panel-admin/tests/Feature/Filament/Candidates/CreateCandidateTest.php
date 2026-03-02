@@ -10,7 +10,6 @@ use He4rt\Teams\Team;
 use He4rt\Users\User;
 
 use function Pest\Laravel\actingAs;
-use function Pest\Laravel\artisan;
 use function Pest\Laravel\assertDatabaseCount;
 use function Pest\Livewire\livewire;
 
@@ -19,8 +18,6 @@ beforeEach(function (): void {
 
     $this->authUser = User::factory()->createQuietly();
     actingAs($this->authUser);
-
-    artisan('sync:permissions');
 
     $this->authUser->assignRole(Roles::SuperAdmin->value);
 

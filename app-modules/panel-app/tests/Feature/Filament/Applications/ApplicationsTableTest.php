@@ -8,7 +8,6 @@ use He4rt\Candidates\Models\Candidate;
 use He4rt\Users\User;
 
 use function Pest\Laravel\actingAs;
-use function Pest\Laravel\artisan;
 use function Pest\Livewire\livewire;
 
 /** @var User $user */
@@ -22,8 +21,6 @@ beforeEach(function (): void {
     $this->candidate->refresh();
 
     actingAs($this->user);
-
-    artisan('sync:permissions');
 
     $this->user->givePermissionTo('view_applications');
 

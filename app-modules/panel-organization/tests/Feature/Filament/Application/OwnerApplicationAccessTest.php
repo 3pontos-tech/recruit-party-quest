@@ -15,12 +15,9 @@ use He4rt\Teams\Team;
 use He4rt\Users\User;
 
 use function Pest\Laravel\actingAs;
-use function Pest\Laravel\artisan;
 use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
-    artisan('sync:permissions');
-
     filament()->setCurrentPanel(FilamentPanel::Organization->value);
 
     $this->owner = User::factory()->create();

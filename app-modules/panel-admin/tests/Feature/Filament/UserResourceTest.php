@@ -13,7 +13,6 @@ use He4rt\Permissions\Roles;
 use He4rt\Users\User;
 
 use function Pest\Laravel\actingAs;
-use function Pest\Laravel\artisan;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
@@ -22,9 +21,6 @@ beforeEach(function (): void {
     Filament::setCurrentPanel(Filament::getPanel('admin'));
 
     actingAs(User::factory()->create());
-
-    // Sync permissions so we have some to work with
-    artisan('sync:permissions');
 
     // Give the user SuperAdmin role to bypass all policies
     auth()->user()->assignRole(Roles::SuperAdmin->value);
