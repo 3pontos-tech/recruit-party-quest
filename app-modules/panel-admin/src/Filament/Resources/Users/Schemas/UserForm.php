@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace He4rt\Admin\Filament\Resources\Users\Schemas;
 
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use He4rt\Permissions\Roles;
 
 class UserForm
 {
@@ -29,6 +31,10 @@ class UserForm
                     ->label(__('users::labels.password'))
                     ->password()
                     ->required(fn (string $operation): bool => $operation === 'create'),
+
+                Select::make('roles')
+                    ->multiple()
+                    ->relationship('roles', 'name', fn ($query) => $query->where('name', Roles::Admin->value)),
             ]);
     }
 }
