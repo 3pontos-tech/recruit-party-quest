@@ -175,6 +175,17 @@ class JobRequisition extends BaseModel implements HasActivityLogTitle
         return $query->has('stages');
     }
 
+    /**
+     * @param  Builder<self>  $query
+     * @return Builder<self>
+     */
+    #[Scope]
+    protected function publicJobs(Builder $query): Builder
+    {
+        return $query->where('is_internal_only', false)
+            ->where('is_confidential', false);
+    }
+
     protected function casts(): array
     {
         return [

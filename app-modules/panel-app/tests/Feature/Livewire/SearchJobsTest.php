@@ -38,3 +38,41 @@ it('should only render jobs that has stages and are available', function (): voi
         $livewire->assertDontSee($job->getKey());
     });
 });
+
+it('should not render internal only jobs', function (): void {
+    actingAs(User::factory()->createOne());
+
+    $publicJob = JobRequisition::factory()->available()->create();
+
+    $internalJob = JobRequisition::factory()->available()->create([
+        'is_internal_only' => true,
+    ]);
+
+    $livewire = livewire(SearchJobs::class)
+        ->assertOk();
+
+    $livewire->assertSee($publicJob->team->name);
+    $livewire->assertSee($publicJob->getKey());
+
+    $livewire->assertDontSee($internalJob->team->name);
+    $livewire->assertDontSee($internalJob->getKey());
+});
+
+it('should not render confidential jobs', function (): void {
+    actingAs(User::factory()->createOne());
+
+    $publicJob = JobRequisition::factory()->available()->create();
+
+    $confidentialJob = JobRequisition::factory()->available()->create([
+        'is_confidential' => true,
+    ]);
+
+    $livewire = livewire(SearchJobs::class)
+        ->assertOk();
+
+    $livewire->assertSee($publicJob->team->name);
+    $livewire->assertSee($publicJob->getKey());
+
+    $livewire->assertDontSee($confidentialJob->team->name);
+    $livewire->assertDontSee($confidentialJob->getKey());
+});

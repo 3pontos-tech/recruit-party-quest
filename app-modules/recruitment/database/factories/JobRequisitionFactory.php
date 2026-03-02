@@ -69,7 +69,9 @@ class JobRequisitionFactory extends Factory
     public function available(): self
     {
         return $this->state(fn (array $attributes) => [
-            'status' => fake()->randomElement([RequisitionStatusEnum::Published, RequisitionStatusEnum::Approved]),
+            'status' => RequisitionStatusEnum::Published,
+            'is_internal_only' => false,
+            'is_confidential' => false,
         ])->afterCreating(function (JobRequisition $jobRequisition): void {
             JobPosting::factory()->for($jobRequisition, 'jobRequisition')->create();
 
