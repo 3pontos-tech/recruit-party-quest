@@ -102,6 +102,27 @@ return [
             'subtitle' => 'Internal comments',
             'published_at' => 'Published at: ',
         ],
+        'feedbacks' => [
+            'title' => 'Stage Feedbacks',
+            'subtitle' => 'Evaluations registered during the selection process',
+            'count' => '{1} :count feedback|[2,*] :count feedbacks',
+            'unknown_stage' => 'Unknown Stage',
+            'unknown_evaluator' => 'Unknown Evaluator',
+            'empty_title' => 'No Feedbacks Yet',
+            'empty_text' => 'Feedbacks will appear here as the candidate advances through stages.',
+            'criteria' => [
+                'technical_skills' => 'Technical Skills',
+                'communication' => 'Communication',
+                'problem_solving' => 'Problem Solving',
+                'culture_fit' => 'Culture Fit',
+            ],
+            'fields' => [
+                'strengths' => 'Strengths',
+                'concerns' => 'Concerns',
+                'recommendation' => 'Recommendation',
+                'notes' => 'Notes',
+            ],
+        ],
         'screening_responses' => [
             'title' => 'Screening Responses',
             'subtitle' => 'Candidate answers to screening questions',
