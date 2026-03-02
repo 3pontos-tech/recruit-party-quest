@@ -101,6 +101,27 @@ return [
             'subtitle' => 'Comentários internos',
             'published_at' => 'Publicado em: ',
         ],
+        'feedbacks' => [
+            'title' => 'Feedbacks por Etapa',
+            'subtitle' => 'Avaliações registradas durante o processo seletivo',
+            'count' => '{1} :count feedback|[2,*] :count feedbacks',
+            'unknown_stage' => 'Etapa Desconhecida',
+            'unknown_evaluator' => 'Avaliador Desconhecido',
+            'empty_title' => 'Nenhum Feedback Ainda',
+            'empty_text' => 'Os feedbacks aparecerão aqui conforme o candidato avança nas etapas.',
+            'criteria' => [
+                'technical_skills' => 'Habilidades Técnicas',
+                'communication' => 'Comunicação',
+                'problem_solving' => 'Resolução de Problemas',
+                'culture_fit' => 'Fit Cultural',
+            ],
+            'fields' => [
+                'strengths' => 'Pontos Fortes',
+                'concerns' => 'Preocupações',
+                'recommendation' => 'Recomendação',
+                'notes' => 'Notas',
+            ],
+        ],
         'screening_responses' => [
             'title' => 'Respostas do Screening',
             'subtitle' => 'Respostas do candidato às perguntas de triagem',
