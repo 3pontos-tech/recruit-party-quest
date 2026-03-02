@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\App;
 
+use He4rt\App\Livewire\ContactForm;
 use He4rt\App\Livewire\JobRecommendations;
 use He4rt\App\Livewire\MyProfile\CandidateEducation;
 use He4rt\App\Livewire\MyProfile\CandidateLinks;
@@ -24,6 +25,7 @@ class PanelAppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        Livewire::component('contact-form', ContactForm::class);
         Livewire::component('user-latest-applications', UserLatestApplications::class);
         Livewire::component('resume-file-upload-progress', ResumeFileUploadProgress::class);
         Livewire::component('search-jobs', SearchJobs::class);
