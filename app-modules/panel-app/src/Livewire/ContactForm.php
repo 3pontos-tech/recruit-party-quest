@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Throwable;
@@ -27,6 +28,9 @@ class ContactForm extends Component
     #[Validate('required|string|min:10|max:2000')]
     public string $message = '';
 
+    /**
+     * Honeypot field — must remain empty; bots fill it.
+     */
     #[Validate('max:0')]
     public string $honeypot = '';
 
@@ -36,12 +40,34 @@ class ContactForm extends Component
 
     public bool $hasError = false;
 
+    public ?string $rateLimitedUntil = null;
+
     public function submit(): void
     {
         $this->validate();
 
         if ($this->honeypot !== '') {
             $this->isSent = true;
+
+            return;
+        }
+
+        $key = 'contact-form:'.request()->ip();
+
+        $executed = RateLimiter::attempt(
+            key: $key,
+            maxAttempts: 3,
+            callback: static function (): void {},
+            decaySeconds: 600,
+        );
+
+        if (! $executed) {
+            $seconds = RateLimiter::availableIn($key);
+            $minutes = (int) ceil($seconds / 60);
+
+            $this->rateLimitedUntil = $minutes === 1
+                ? 'Tente novamente em 1 minuto.'
+                : sprintf('Tente novamente em %s minutos.', $minutes);
 
             return;
         }
@@ -77,7 +103,7 @@ class ContactForm extends Component
 
     public function resetForm(): void
     {
-        $this->reset(['name', 'email', 'phone', 'message', 'honeypot', 'isSent', 'hasError']);
+        $this->reset(['name', 'email', 'phone', 'message', 'honeypot', 'isSent', 'hasError', 'rateLimitedUntil']);
         $this->resetValidation();
     }
 

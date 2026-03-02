@@ -90,6 +90,16 @@
                 </div>
             @endif
 
+            @if ($rateLimitedUntil)
+                <div
+                    class="bg-warning-50 dark:bg-warning-950/20 border-warning-200 dark:border-warning-800 rounded-md border p-4"
+                >
+                    <x-he4rt::text size="sm" class="text-warning-700 dark:text-warning-400">
+                        Muitas tentativas em pouco tempo. {{ $rateLimitedUntil }}
+                    </x-he4rt::text>
+                </div>
+            @endif
+
             <x-he4rt::button type="submit" :loading="$isLoading" wire:loading.attr="disabled">
                 <span wire:loading.remove wire:target="submit">Enviar mensagem</span>
                 <span wire:loading wire:target="submit">Enviando...</span>

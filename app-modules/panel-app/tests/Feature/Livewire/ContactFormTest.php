@@ -5,6 +5,7 @@ declare(strict_types=1);
 use He4rt\App\Livewire\ContactForm;
 use He4rt\App\Mail\ContactFormMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
 
 use function Pest\Livewire\livewire;
 
@@ -132,4 +133,68 @@ it('sets hasError flag when mail sending fails', function (): void {
         ->call('submit')
         ->assertSet('isSent', false)
         ->assertSet('hasError', true);
+});
+
+it('blocks submissions after 3 attempts in 10 minutes', function (): void {
+    Mail::fake();
+    RateLimiter::clear('contact-form:127.0.0.1');
+
+    $validPayload = [
+        'name' => 'Teste Rate Limit',
+        'email' => 'rate@example.com',
+        'message' => 'Mensagem de teste para verificar o rate limit do formulário.',
+    ];
+
+    foreach (range(1, 3) as $attempt) {
+        livewire(ContactForm::class)
+            ->set('name', $validPayload['name'])
+            ->set('email', $validPayload['email'])
+            ->set('message', $validPayload['message'])
+            ->call('submit')
+            ->assertSet('isSent', true)
+            ->assertSet('rateLimitedUntil', null)
+            ->call('resetForm');
+    }
+
+    livewire(ContactForm::class)
+        ->set('name', $validPayload['name'])
+        ->set('email', $validPayload['email'])
+        ->set('message', $validPayload['message'])
+        ->call('submit')
+        ->assertSet('isSent', false)
+        ->assertSet('rateLimitedUntil', fn (mixed $value): bool => filled($value));
+
+    Mail::assertSentCount(3);
+});
+
+it('clears rate limit message when resetForm is called', function (): void {
+    Mail::fake();
+    RateLimiter::clear('contact-form:127.0.0.1');
+
+    $validPayload = [
+        'name' => 'Teste Reset',
+        'email' => 'reset-limit@example.com',
+        'message' => 'Mensagem de teste para verificar o reset do rate limit.',
+    ];
+
+    foreach (range(1, 3) as $attempt) {
+        livewire(ContactForm::class)
+            ->set('name', $validPayload['name'])
+            ->set('email', $validPayload['email'])
+            ->set('message', $validPayload['message'])
+            ->call('submit')
+            ->assertSet('isSent', true)
+            ->call('resetForm');
+    }
+
+    livewire(ContactForm::class)
+        ->set('name', $validPayload['name'])
+        ->set('email', $validPayload['email'])
+        ->set('message', $validPayload['message'])
+        ->call('submit')
+        ->assertSet('rateLimitedUntil', fn (mixed $value): bool => filled($value))
+        ->call('resetForm')
+        ->assertSet('rateLimitedUntil', null)
+        ->assertSet('isSent', false)
+        ->assertSet('hasError', false);
 });
