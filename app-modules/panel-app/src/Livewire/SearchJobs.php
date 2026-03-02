@@ -67,6 +67,7 @@ class SearchJobs extends Component
     {
         return JobRequisition::query()
             ->withCount('applications')
+            ->publicJobs()
             ->where('status', RequisitionStatusEnum::Published->value)
             ->hasStages()
             ->when($this->search, function ($query): void {

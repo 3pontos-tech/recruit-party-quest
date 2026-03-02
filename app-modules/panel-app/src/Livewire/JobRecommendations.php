@@ -38,6 +38,7 @@ class JobRecommendations extends Component
     public function jobs(): LengthAwarePaginator
     {
         return JobRequisition::query()
+            ->publicJobs()
             ->with('post')
             ->withCount('applications')
             ->where('status', RequisitionStatusEnum::Published->value)
