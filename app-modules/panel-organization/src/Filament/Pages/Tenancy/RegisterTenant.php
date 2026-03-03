@@ -27,6 +27,8 @@ class RegisterTenant extends BaseRegisterTenant
 
     protected function handleRegistration(array $data): Team
     {
+        $data['owner_id'] = auth()->id();
+
         $team = Team::query()->create($data);
 
         $team->members()->attach(auth()->user());

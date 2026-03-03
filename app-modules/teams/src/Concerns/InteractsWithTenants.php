@@ -7,10 +7,10 @@ namespace He4rt\Teams\Concerns;
 use Filament\Panel;
 use He4rt\Permissions\Roles;
 use He4rt\Teams\Team;
+use He4rt\Teams\TeamMember;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Collection;
 
 trait InteractsWithTenants
@@ -24,7 +24,7 @@ trait InteractsWithTenants
     }
 
     /**
-     * @return BelongsToMany<Team, $this, Pivot>
+     * @return BelongsToMany<Team, $this, TeamMember>
      */
     public function teams(): BelongsToMany
     {
@@ -34,7 +34,7 @@ trait InteractsWithTenants
                 'team_user',
                 'user_id',
                 'team_id'
-            )->withTimestamps();
+            )->using(TeamMember::class)->withTimestamps();
     }
 
     /**
