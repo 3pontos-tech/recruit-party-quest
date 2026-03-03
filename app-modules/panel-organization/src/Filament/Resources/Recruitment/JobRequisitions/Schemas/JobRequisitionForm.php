@@ -304,7 +304,6 @@ class JobRequisitionForm
                                         Hidden::make('team_id')
                                             ->default(filament()->getTenant()?->getKey()),
                                         TextInput::make('external_post_url')
-                                            ->required()
                                             ->label(__('recruitment::filament.requisition.job_posting.fields.external_post_url'))
                                             ->url()
                                             ->columnSpanFull(),
