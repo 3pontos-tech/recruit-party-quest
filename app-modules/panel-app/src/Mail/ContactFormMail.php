@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\App\Mail;
 
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
@@ -21,7 +22,9 @@ class ContactFormMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            replyTo: [$this->senderEmail],
+            replyTo: $this->senderEmail !== '' && $this->senderEmail !== '0' ? [
+                new Address($this->senderEmail, $this->senderName),
+            ] : [],
             subject: 'Novo contato via site – Fale Conosco',
         );
     }

@@ -73,8 +73,7 @@ class ContactForm extends Component
         try {
             $recipientEmail = config('services.contact.recipient_email', 'recrutamento@3pontos.com');
 
-            Mail::mailer('resend')
-                ->to($recipientEmail)
+            Mail::to($recipientEmail)
                 ->send(new ContactFormMail(
                     senderName: $this->name,
                     senderEmail: $this->email,
