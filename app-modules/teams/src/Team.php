@@ -59,7 +59,7 @@ class Team extends BaseModel
     }
 
     /**
-     * @return BelongsToMany<User, $this>
+     * @return BelongsToMany<User, $this, TeamMember>
      */
     public function members(): BelongsToMany
     {
@@ -68,7 +68,7 @@ class Team extends BaseModel
             'team_user',
             'team_id',
             'user_id'
-        )->withTimestamps();
+        )->using(TeamMember::class)->withTimestamps();
     }
 
     /**

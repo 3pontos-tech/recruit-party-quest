@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Teams;
 
 use He4rt\Permissions\Roles;
+use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Users\User;
 
 class TeamObserver
@@ -13,6 +14,11 @@ class TeamObserver
     {
         if ($team->owner_id) {
             User::query()->find($team->owner_id)?->assignRole(Roles::Owner->value);
+
+            Recruiter::query()->firstOrCreate(
+                ['user_id' => $team->owner_id, 'team_id' => $team->id],
+                ['is_active' => true]
+            );
         }
     }
 
@@ -34,6 +40,11 @@ class TeamObserver
 
         if ($newOwnerId) {
             User::query()->find($newOwnerId)?->assignRole(Roles::Owner->value);
+
+            Recruiter::query()->firstOrCreate(
+                ['user_id' => $newOwnerId, 'team_id' => $team->id],
+                ['is_active' => true]
+            );
         }
     }
 
