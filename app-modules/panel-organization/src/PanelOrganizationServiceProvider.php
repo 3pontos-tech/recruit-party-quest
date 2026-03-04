@@ -28,7 +28,16 @@ class PanelOrganizationServiceProvider extends ServiceProvider
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::BODY_END,
-            fn (): string => Blade::render("@livewire('job-generation-overlay')")
+            function (): string {
+                if (! auth()->check()) {
+                    return '';
+                }
+
+                return Blade::render(
+                    "@livewire('job-generation-overlay', ['userId' => \$userId])",
+                    ['userId' => auth()->id()]
+                );
+            }
         );
     }
 }
