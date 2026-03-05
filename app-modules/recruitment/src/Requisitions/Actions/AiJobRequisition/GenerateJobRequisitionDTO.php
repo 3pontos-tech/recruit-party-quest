@@ -23,7 +23,7 @@ final readonly class GenerateJobRequisitionDTO implements JsonSerializable
         public RequisitionStatusEnum $status,
         public int $positions,
         public string $recruiterId,
-        public string $companyDescription,
+        public ?string $companyDescription,
         public string $departmentId,
         public string $teamId,
         public string $createdBy,
@@ -45,7 +45,7 @@ final readonly class GenerateJobRequisitionDTO implements JsonSerializable
             status: RequisitionStatusEnum::PendingApproval,
             positions: 1,
             recruiterId: $data['recruiter_id'],
-            companyDescription: $data['company_description'],
+            companyDescription: $data['company_description'] ?? null,
             departmentId: $data['department_id'],
             teamId: $data['team_id'],
             createdBy: $data['created_by']
