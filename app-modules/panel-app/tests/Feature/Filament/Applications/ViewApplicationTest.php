@@ -1,0 +1,124 @@
+<?php
+
+declare(strict_types=1);
+
+use He4rt\App\Filament\Resources\Applications\Pages\ViewApplication;
+use He4rt\Applications\Enums\ApplicationStatusEnum;
+use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
+use He4rt\Applications\Models\Application;
+use He4rt\Candidates\Models\Candidate;
+use He4rt\Recruitment\Stages\Models\Stage;
+
+use function Pest\Laravel\actingAs;
+use function Pest\Livewire\livewire;
+
+beforeEach(function (): void {
+    $this->candidate = Candidate::factory()->create();
+    actingAs($this->candidate->user);
+    $this->application = Application::factory()
+        ->for($this->candidate, 'candidate')
+        ->create();
+    $this->candidate->user->givePermissionTo('view_applications');
+});
+
+it('renders pipeline progress sidebar for active application', function (): void {
+    $this->application->update(['status' => ApplicationStatusEnum::InReview]);
+
+    $stage = Stage::factory()->create([
+        'job_requisition_id' => $this->application->requisition_id,
+        'hidden' => false,
+        'active' => true,
+        'display_order' => 1,
+    ]);
+    $this->application->update(['current_stage_id' => $stage->id]);
+
+    $this->application->requisition->stages()->whereNot('id', $stage->id)->update(['hidden' => true]);
+
+    livewire(ViewApplication::class, ['record' => $this->application->getKey()])
+        ->assertOk()
+        ->assertSee('Pipeline Progress')
+        ->assertSee('Overall Progress')
+        ->assertSee($stage->name)
+        ->assertSee('Current');
+});
+
+it('shows stage counter badge with correct position', function (): void {
+    $this->application->update(['status' => ApplicationStatusEnum::InReview]);
+
+    $stage1 = Stage::factory()->create(['job_requisition_id' => $this->application->requisition_id, 'hidden' => false, 'active' => true, 'display_order' => 1]);
+    $stage2 = Stage::factory()->create(['job_requisition_id' => $this->application->requisition_id, 'hidden' => false, 'active' => true, 'display_order' => 2]);
+    $stage3 = Stage::factory()->create(['job_requisition_id' => $this->application->requisition_id, 'hidden' => false, 'active' => true, 'display_order' => 3]);
+
+    $this->application->update(['current_stage_id' => $stage2->id]);
+
+    $this->application->requisition->stages()
+        ->whereNotIn('id', [$stage1->id, $stage2->id, $stage3->id])
+        ->update(['hidden' => true]);
+
+    livewire(ViewApplication::class, ['record' => $this->application->getKey()])
+        ->assertOk()
+        ->assertSee('2 / 3');
+});
+
+it('shows submission date and last updated in footer', function (): void {
+    $this->application->update(['status' => ApplicationStatusEnum::InReview]);
+
+    livewire(ViewApplication::class, ['record' => $this->application->getKey()])
+        ->assertOk()
+        ->assertSee('Application submitted')
+        ->assertSee('Last updated')
+        ->assertSee($this->application->created_at->format('M j, Y'));
+});
+
+it('shows rejection card instead of pipeline for rejected application', function (): void {
+    $application = Application::factory()
+        ->rejected()
+        ->for($this->candidate, 'candidate')
+        ->create();
+
+    livewire(ViewApplication::class, ['record' => $application->getKey()])
+        ->assertOk()
+        ->assertSee('Application Not Progressed')
+        ->assertDontSee('Overall Progress');
+});
+
+it('shows rejection reason category when present', function (): void {
+    $application = Application::factory()
+        ->for($this->candidate, 'candidate')
+        ->create([
+            'status' => ApplicationStatusEnum::Rejected,
+            'rejection_reason_category' => RejectionReasonCategoryEnum::Qualifications,
+            'rejection_reason_details' => null,
+        ]);
+
+    livewire(ViewApplication::class, ['record' => $application->getKey()])
+        ->assertOk()
+        ->assertSee('Rejection Reason')
+        ->assertSee(RejectionReasonCategoryEnum::Qualifications->getLabel());
+});
+
+it('shows rejection reason details when present', function (): void {
+    $application = Application::factory()
+        ->for($this->candidate, 'candidate')
+        ->create([
+            'status' => ApplicationStatusEnum::Rejected,
+            'rejection_reason_details' => 'Did not meet the technical requirements.',
+        ]);
+
+    livewire(ViewApplication::class, ['record' => $application->getKey()])
+        ->assertOk()
+        ->assertSee('Did not meet the technical requirements.');
+});
+
+it('does not show details section when rejection details are absent', function (): void {
+    $application = Application::factory()
+        ->for($this->candidate, 'candidate')
+        ->create([
+            'status' => ApplicationStatusEnum::Rejected,
+            'rejection_reason_details' => null,
+        ]);
+
+    livewire(ViewApplication::class, ['record' => $application->getKey()])
+        ->assertOk()
+        ->assertDontSee('Feedback');
+});

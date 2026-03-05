@@ -28,6 +28,8 @@ class StagesTable
                     ->sortable(),
                 TextColumn::make('display_order')
                     ->label(__('recruitment::filament.stage.fields.display_order'))
+                    ->numeric()
+                    ->default(0)
                     ->sortable(),
                 TextColumn::make('expected_duration_days')
                     ->label(__('recruitment::filament.stage.fields.expected_duration_days'))

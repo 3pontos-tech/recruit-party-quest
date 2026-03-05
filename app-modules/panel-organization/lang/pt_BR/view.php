@@ -50,6 +50,10 @@ return [
         'current' => 'Atual',
         'done' => 'Concluído',
         'active_since' => 'Ativo desde :date',
+        'rejected_title' => 'Candidatura Não Aprovada',
+        'rejected_reason' => 'Motivo da Reprovação',
+        'rejected_details' => 'Feedback',
+        'rejected_on' => 'Reprovado em :date',
     ],
     'tabs' => [
         'skills_title' => 'Habilidades e Proficiência',

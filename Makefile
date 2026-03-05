@@ -33,14 +33,14 @@ test-rector: ## Run Rector in test mode
 
 .PHONY: phpstan
 phpstan: ## Run PHPStan
-	@$(CURDIR)/vendor/bin/phpstan analyse --ansi
+	@$(CURDIR)/vendor/bin/phpstan analyse --ansi --memory-limit=2G
 
 .PHONY: p
 p: phpstan ## Alias for phpstan
 
 .PHONY: test-phpstan
 test-phpstan: ## Run PHPStan in test mode
-	@$(CURDIR)/vendor/bin/phpstan analyse --ansi
+	@$(CURDIR)/vendor/bin/phpstan analyse --ansi --memory-limit=2G
 
 .PHONY: format
 format: rector pint ## Run Pint and Rector and try to fixes the source code

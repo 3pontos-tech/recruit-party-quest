@@ -50,6 +50,10 @@ return [
         'current' => 'Current',
         'done' => 'Done',
         'active_since' => 'Active since :date',
+        'rejected_title' => 'Application Not Progressed',
+        'rejected_reason' => 'Rejection Reason',
+        'rejected_details' => 'Feedback',
+        'rejected_on' => 'Rejected on :date',
     ],
     'tabs' => [
         'skills_title' => 'Skills & Proficiency',

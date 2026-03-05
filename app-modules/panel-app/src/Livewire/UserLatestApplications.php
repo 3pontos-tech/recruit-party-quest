@@ -45,7 +45,7 @@ class UserLatestApplications extends Component
     {
         return Application::query()
             ->whereHas('candidate', fn (Builder $q) => $q->where('user_id', auth()->id()))
-            ->with(['requisition.post', 'requisition.team', 'currentStage', 'stageHistory' => fn ($q) => $q->latest()->limit(1)])
+            ->with(['requisition.post', 'requisition.team', 'requisition.stages', 'currentStage', 'stageHistory' => fn ($q) => $q->latest()->limit(1)])
             ->when($this->search, fn ($q) => $q->whereHas(
                 'requisition.post',
                 fn (Builder $sub) => $sub->where('title', 'like', sprintf('%%%s%%', $this->search))
