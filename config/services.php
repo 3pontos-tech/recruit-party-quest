@@ -21,7 +21,11 @@ return [
     ],
 
     'resend' => [
-        'key' => env('RESEND_KEY'),
+        'key' => env('RESEND_API_KEY'),
+    ],
+
+    'contact' => [
+        'recipient_email' => env('CONTACT_RECIPIENT_EMAIL', 'recrutamento@3pontos.com'),
     ],
 
     'ses' => [
