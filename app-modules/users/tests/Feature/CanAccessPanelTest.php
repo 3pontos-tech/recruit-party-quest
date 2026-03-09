@@ -11,12 +11,6 @@ use He4rt\Teams\Team;
 use He4rt\Users\User;
 use Mockery;
 
-use function Pest\Laravel\artisan;
-
-beforeEach(function (): void {
-    artisan('sync:permissions');
-});
-
 function panelFor(FilamentPanel $panel): Panel
 {
     $mock = Mockery::mock(Panel::class);

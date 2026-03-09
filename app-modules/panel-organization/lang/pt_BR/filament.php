@@ -8,6 +8,7 @@ return [
         'experience' => 'Experiência',
         'comments' => 'Comentários',
         'screening-responses' => 'Respostas de Screening',
+        'feedbacks' => 'Feedbacks',
     ],
 
     'section' => [

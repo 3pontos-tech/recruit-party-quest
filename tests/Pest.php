@@ -3,9 +3,8 @@
 declare(strict_types=1);
 
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
-
-use function Pest\Laravel\artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +23,9 @@ pest()->extend(TestCase::class)
 
 pest()->extend(TestCase::class)
     ->use(LazilyRefreshDatabase::class)
-    ->beforeEach(fn () => artisan('sync:permissions'))
+    ->beforeEach(function (): void {
+        resolve(PermissionRegistrar::class)->forgetCachedPermissions();
+    })
     ->group('feature')
     ->in('Feature', '../app-modules/*/tests/Feature', '../app-modules/*/tests/Features');
 

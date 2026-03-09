@@ -16,6 +16,7 @@ class ApplicationsServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'applications');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'applications');
 
         Relation::morphMap([
             'applications' => Application::class,

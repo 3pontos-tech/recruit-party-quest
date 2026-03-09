@@ -67,6 +67,13 @@ class ApplicationInfolist
                                 ViewEntry::make('comments')
                                     ->view('panel-organization::components.applications.tabs.comments'),
                             ]),
+
+                        Tab::make('Feedbacks')
+                            ->label(__('panel-organization::filament.tabs.feedbacks'))
+                            ->schema([
+                                ViewEntry::make('feedbacks')
+                                    ->view('panel-organization::components.applications.tabs.feedbacks'),
+                            ]),
                     ]),
                 Grid::make(1)
                     ->columnSpan(1)
@@ -84,7 +91,7 @@ class ApplicationInfolist
                             ]),
                         // Pipeline Progress
                         ViewEntry::make('pipeline_progress')
-                            ->view('panel-organization::components.applications.sidebar.pipeline-progress'),
+                            ->view('applications::components.sidebar.pipeline-progress'),
 
                         // AI Match Score
                         //                        ViewEntry::make('ai_match_score')

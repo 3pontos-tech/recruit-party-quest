@@ -1,3 +1,7 @@
+@php
+    use He4rt\Applications\Enums\ApplicationStatusEnum;
+@endphp
+
 <div>
     <div class="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div class="flex flex-col gap-2">
@@ -51,59 +55,95 @@
 
     <div class="flex flex-col gap-8" wire:transition>
         @forelse ($this->applications as $application)
-            <x-panel-app::jobs.job-card :job="$application->requisition">
-                <x-slot:footer>
-                    @php
-                        $visibleStages = $application->requisition->stages
-                            ->where('hidden', false)
-                            ->sortBy('display_order')
-                            ->values();
-                        $totalStages = $visibleStages->count();
-                        $currentStage = $application->currentStage;
-                        $currentStageIndex = $visibleStages->search(fn ($s) => $s->id === $application->current_stage_id);
-                        $currentPosition = $currentStageIndex !== false ? $currentStageIndex + 1 : 1;
+            @php
+                $isRejected = $application->status === ApplicationStatusEnum::Rejected;
+                $isWithdrawn = $application->status === ApplicationStatusEnum::Withdrawn;
 
-                        if ($currentStage && ! $currentStage->hidden) {
-                            $stageName = $currentStage->name;
+                $visibleStages = $application->requisition->stages
+                    ->where('hidden', false)
+                    ->sortBy('display_order')
+                    ->values();
+                $totalStages = $visibleStages->count();
+                $currentStage = $application->currentStage;
+
+                if ($totalStages > 0 && ! $isRejected && ! $isWithdrawn) {
+                    if ($currentStage && ! $currentStage->hidden) {
+                        $idx = $visibleStages->search(fn ($s) => $s->id === $currentStage->id);
+                        $currentPosition = $idx + 1;
+                        $stageName = $currentStage->name;
+                        $stageColor = $currentStage;
+                    } else {
+                        $currentDisplayOrder = $currentStage?->display_order ?? 0;
+                        $lastVisibleStage = $visibleStages->filter(fn ($s) => $s->display_order <= $currentDisplayOrder)->last();
+                        if ($lastVisibleStage) {
+                            $idx = $visibleStages->search(fn ($s) => $s->id === $lastVisibleStage->id);
+                            $currentPosition = $idx + 1;
+                            $stageName = $lastVisibleStage->name;
+                            $stageColor = $lastVisibleStage;
                         } else {
-                            $currentDisplayOrder = $currentStage?->display_order ?? 0;
-                            $lastVisibleStage = $visibleStages->filter(fn ($s) => $s->display_order <= $currentDisplayOrder)->last();
-                            $stageName = $lastVisibleStage?->name ?? ($visibleStages->first()?->name ?? '-');
+                            $currentPosition = 0;
+                            $stageName = $visibleStages->first()->name;
+                            $stageColor = null;
                         }
-                    @endphp
+                    }
+                } else {
+                    $currentPosition = 0;
+                    $stageName = null;
+                    $stageColor = null;
+                }
+            @endphp
 
-                    <div
-                        class="flex flex-col items-start justify-start gap-4 lg:flex-row lg:items-center lg:justify-between"
-                    >
-                        <div class="flex items-center gap-2">
-                            <x-he4rt::icon
-                                icon="fas-spinner"
-                                @class(['bg-transparent! group-hover:scale-110 group-hover:rotate-360 transition duration-1000', $currentStage?->stage_type->getBadgeClasses() ?? 'bg-gray-500/10 text-gray-500'])
-                            />
-                            <x-he4rt::text
-                                size="sm"
-                                @class(['bg-transparent! font-semibold', $currentStage?->stage_type->getBadgeClasses() ?? 'bg-gray-500/10 text-gray-500'])
-                            >
-                                {{ __('panel-app::livewire/user-latest-applications.application_card.stage', ['current' => $currentPosition, 'total' => $totalStages]) }}
-                                {{ $stageName }}
-                            </x-he4rt::text>
-                        </div>
+            <div @class(['opacity-60' => $isRejected || $isWithdrawn])>
+                <x-panel-app::jobs.job-card :job="$application->requisition">
+                    <x-slot:footer>
+                        <div
+                            class="flex flex-col items-start justify-start gap-4 lg:flex-row lg:items-center lg:justify-between"
+                        >
+                            @if ($isRejected || $isWithdrawn || $totalStages === 0)
+                                <div class="flex items-center gap-2">
+                                    <x-he4rt::icon
+                                        :icon="$application->status->getIcon()"
+                                        @class([$application->status->getTailwindBadgeClass()])
+                                    />
+                                    <x-he4rt::text
+                                        size="sm"
+                                        @class(['font-semibold', $application->status->getTailwindBadgeClass()])
+                                    >
+                                        {{ $application->status->getLabel() }}
+                                    </x-he4rt::text>
+                                </div>
+                            @else
+                                <div class="flex items-center gap-2">
+                                    <x-he4rt::icon
+                                        icon="fas-spinner"
+                                        @class(['bg-transparent! group-hover:scale-110 group-hover:rotate-360 transition duration-1000', $stageColor?->stage_type->getBadgeClasses() ?? 'bg-gray-500/10 text-gray-500'])
+                                    />
+                                    <x-he4rt::text
+                                        size="sm"
+                                        @class(['bg-transparent! font-semibold', $stageColor?->stage_type->getBadgeClasses() ?? 'bg-gray-500/10 text-gray-500'])
+                                    >
+                                        {{ __('panel-app::livewire/user-latest-applications.application_card.stage', ['current' => $currentPosition, 'total' => $totalStages]) }}
+                                        {{ $stageName }}
+                                    </x-he4rt::text>
+                                </div>
 
-                        <div class="flex items-center gap-2">
-                            @foreach ($visibleStages as $index => $stage)
-                                <div
-                                    @class([
-                                        'h-1 w-12 rounded-full',
-                                        'group-hover:animate-pulse' => $index < $currentPosition,
-                                        $currentStage?->stage_type->getTailwindColorClass() ?? 'bg-gray-500' => $index < $currentPosition,
-                                        'border-outline-light dark:border-outline-dark bg-elevation-02dp border' => $index >= $currentPosition,
-                                    ])
-                                ></div>
-                            @endforeach
+                                <div class="flex items-center gap-2">
+                                    @foreach ($visibleStages as $index => $stage)
+                                        <div
+                                            @class([
+                                                'h-1 w-12 rounded-full',
+                                                'group-hover:animate-pulse' => $index < $currentPosition,
+                                                $stageColor?->stage_type->getTailwindColorClass() ?? 'bg-gray-500' => $index < $currentPosition,
+                                                'border-outline-light dark:border-outline-dark bg-elevation-02dp border' => $index >= $currentPosition,
+                                            ])
+                                        ></div>
+                                    @endforeach
+                                </div>
+                            @endif
                         </div>
-                    </div>
-                </x-slot>
-            </x-panel-app::jobs.job-card>
+                    </x-slot>
+                </x-panel-app::jobs.job-card>
+            </div>
         @empty
             <div class="py-8 text-center">
                 <x-he4rt::text size="sm" class="text-text-medium">

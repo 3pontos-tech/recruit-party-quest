@@ -64,21 +64,7 @@
                 </x-he4rt::headline>
             </div>
 
-            <form
-                action="mailto:recrutamento@3pontos.com"
-                method="POST"
-                enctype="text/plain"
-                class="bg-elevation-surface/20 border-outline-light dark:border-outline-dark order-2 flex flex-1 flex-col gap-8 rounded-lg border p-4 lg:order-1 lg:p-6"
-            >
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <x-he4rt::input label="Nome completo" placeholder="Digite seu nome completo" name="name" />
-                    <x-he4rt::input label="Email" placeholder="Digite seu email" name="email" />
-                </div>
-                <x-he4rt::input label="Telefone" placeholder="(99) 99999-9999" name="phone" />
-                <x-he4rt::textarea label="Mensagem" placeholder="Digite sua mensagem..." name="message" />
-
-                <x-he4rt::button type="submit">Enviar mensagem</x-he4rt::button>
-            </form>
+            <livewire:contact-form />
 
             <div
                 x-data="{ visible: false }"
