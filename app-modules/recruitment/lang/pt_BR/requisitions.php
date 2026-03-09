@@ -57,6 +57,9 @@ return [
         'c_level' => [
             'label' => 'C-Level',
         ],
+        'talent_pool' => [
+            'label' => 'Banco de Talentos',
+        ],
     ],
     'requisition_priority' => [
         'low' => [
