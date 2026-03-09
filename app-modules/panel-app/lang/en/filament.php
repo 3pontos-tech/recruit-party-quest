@@ -42,6 +42,12 @@ return [
             'apply' => 'Apply',
         ],
     ],
+    'team' => [
+        'about' => [
+            'heading' => 'Get to know :name',
+            'access' => 'Access',
+        ],
+    ],
     'stage_timeline' => [
         'application' => 'Application',
         'stage' => 'Stage',

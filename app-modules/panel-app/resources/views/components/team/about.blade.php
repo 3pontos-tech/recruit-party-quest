@@ -12,7 +12,7 @@
         {{-- Header Section --}}
         <div class="flex flex-col gap-2">
             <x-he4rt::heading level="3" size="md" class="text-text-high">
-                Get to know {{ $team->name }}
+                {{ __('panel-app::filament.team.about.heading', ['name' => $team->name]) }}
             </x-he4rt::heading>
             <x-he4rt::text size="sm" class="text-text-medium leading-relaxed">
                 {{ $team->about }}
@@ -49,7 +49,7 @@
                             <span
                                 class="text-text-low group-hover:text-text-medium text-xs font-semibold transition-colors"
                             >
-                                Access
+                                {{ __('panel-app::filament.team.about.access') }}
                             </span>
                             <x-he4rt::icon icon="heroicon-m-chevron-right" size="sm" class="text-icon-low" />
                         </div>
