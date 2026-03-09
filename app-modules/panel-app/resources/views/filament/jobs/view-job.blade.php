@@ -7,7 +7,9 @@
 
             <aside class="h-full pb-20 lg:pb-32">
                 <div class="sticky top-24 flex flex-col gap-6">
-                    <x-panel-app::team.about :team="$this->getRecord()->team" />
+                    @if ($this->getRecord()->team?->about)
+                        <x-panel-app::team.about :team="$this->getRecord()->team" />
+                    @endif
                 </div>
             </aside>
         </div>
