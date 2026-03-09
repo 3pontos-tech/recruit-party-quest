@@ -57,6 +57,9 @@ return [
         'c_level' => [
             'label' => 'C-Level',
         ],
+        'talent_pool' => [
+            'label' => 'Talent Pool',
+        ],
     ],
     'requisition_priority' => [
         'low' => [
