@@ -8,7 +8,6 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use He4rt\App\Filament\Resources\Applications\Pages\CreateApplication;
 use He4rt\App\Filament\Resources\Applications\Pages\ListApplications;
 use He4rt\App\Filament\Resources\Applications\Pages\ViewApplication;
 use He4rt\App\Filament\Resources\Applications\Tables\ApplicationsTable;
@@ -45,7 +44,6 @@ class ApplicationResource extends Resource
     {
         return [
             'index' => ListApplications::route('/'),
-            'create' => CreateApplication::route('/create'),
             'view' => ViewApplication::route('/{record}'),
         ];
     }
