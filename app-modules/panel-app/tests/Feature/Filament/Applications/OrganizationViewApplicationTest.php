@@ -41,4 +41,4 @@ test('should see only stages that are not hidden', function (): void {
         ->assertOk()
         ->assertDontSee($hiddenStages->pluck('id')->toArray())
         ->assertSee($visibleStages->pluck('name')->toArray());
-})->repeat(100);
+})->repeat(200);

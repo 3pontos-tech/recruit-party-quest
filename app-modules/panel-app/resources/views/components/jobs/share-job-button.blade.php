@@ -6,7 +6,7 @@
 @props([
     'job',
     'variant' => 'icon-only',
-    //'icon-only'|'icon-text''size' => 'sm',
+    'size' => 'sm',
 ])
 
 @php
