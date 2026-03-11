@@ -105,6 +105,23 @@ return [
         'skill_name' => 'Nome da Habilidade',
     ],
 
+    'widgets' => [
+        'recruitment_overview' => [
+            'open_requisitions' => 'Vagas Abertas',
+            'open_requisitions_description' => 'Aprovadas e publicadas',
+            'total_applications' => 'Total de Candidaturas',
+            'total_applications_description' => 'Todas as candidaturas',
+            'offers_extended' => 'Ofertas Enviadas',
+            'offers_extended_description' => 'Ofertas enviadas a candidatos',
+            'positions_available' => 'Posições Disponíveis',
+            'positions_available_description' => 'Vagas em aberto',
+        ],
+        'applications_per_day' => [
+            'heading' => 'Candidaturas por Dia (Últimos 30 dias)',
+            'dataset_label' => 'Candidaturas',
+        ],
+    ],
+
     'forms' => [
         'overall_rating' => 'Avaliação Geral',
         'scores' => 'Pontuações',

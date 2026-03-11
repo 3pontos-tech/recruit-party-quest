@@ -105,6 +105,23 @@ return [
         'skill_name' => 'Skill Name',
     ],
 
+    'widgets' => [
+        'recruitment_overview' => [
+            'open_requisitions' => 'Open Requisitions',
+            'open_requisitions_description' => 'Approved & published',
+            'total_applications' => 'Total Applications',
+            'total_applications_description' => 'All time applications',
+            'offers_extended' => 'Offers Extended',
+            'offers_extended_description' => 'Offers sent to candidates',
+            'positions_available' => 'Positions Available',
+            'positions_available_description' => 'Open headcount',
+        ],
+        'applications_per_day' => [
+            'heading' => 'Daily Applications (Last 30 Days)',
+            'dataset_label' => 'Applications',
+        ],
+    ],
+
     'forms' => [
         'overall_rating' => 'Overall Rating',
         'scores' => 'Scores',
