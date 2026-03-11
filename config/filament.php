@@ -2,6 +2,20 @@
 
 declare(strict_types=1);
 
+$isLocal = env('APP_ENV') === 'local';
+
+$echoConfig = $isLocal
+    ? [
+        'broadcaster' => 'reverb',
+        'key' => env('VITE_REVERB_APP_KEY'),
+        'cluster' => env('VITE_REVERB_APP_CLUSTER'),
+    ]
+    : [
+        'broadcaster' => 'pusher',
+        'key' => env('VITE_PUSHER_APP_KEY'),
+        'cluster' => env('VITE_PUSHER_APP_CLUSTER'),
+    ];
+
 return [
 
     /*
@@ -19,9 +33,7 @@ return [
     'broadcasting' => [
 
         'echo' => [
-            'broadcaster' => 'pusher',
-            'key' => env('VITE_PUSHER_APP_KEY'),
-            'cluster' => env('VITE_PUSHER_APP_CLUSTER'),
+            ...$echoConfig,
             'authEndpoint' => '/broadcasting/auth',
             'disableStats' => true,
             'forceTLS' => true,
