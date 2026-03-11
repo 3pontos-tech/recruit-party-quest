@@ -222,7 +222,6 @@ class Candidate extends BaseModel
                 'weight' => 25,
                 'label' => 'professional',
                 'fields' => [
-                    $this->summary !== null,
                     $this->experience_level !== null,
                     $this->workExperiences()->count() >= 1,
                 ],
