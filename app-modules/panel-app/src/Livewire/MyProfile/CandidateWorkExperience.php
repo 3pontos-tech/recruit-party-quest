@@ -111,7 +111,7 @@ class CandidateWorkExperience extends MyProfileComponent
                     'company_name' => $entry['company_name'],
                     'description' => $entry['description'],
                     'start_date' => $entry['start_date'],
-                    'end_date' => $entry['end_date'],
+                    'end_date' => $entry['end_date'] ?? null,
                     'is_currently_working_here' => $entry['is_currently_working_here'] ?? false,
                 ]);
                 $existingIds[] = $entry['id'];
