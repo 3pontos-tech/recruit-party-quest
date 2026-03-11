@@ -90,6 +90,7 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
         $query = http_build_query([
             'name' => str($this->name)
                 ->explode(' ')
+                ->filter(fn (string $item) => $item !== '')
                 ->map(fn (string $item) => $item[0])
                 ->implode(''),
             'color' => 'FFFFFF',
