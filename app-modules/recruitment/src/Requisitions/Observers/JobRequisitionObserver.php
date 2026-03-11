@@ -75,4 +75,14 @@ final class JobRequisitionObserver
             ]);
         }
     }
+
+    public function deleted(JobRequisition $jobRequisition): void
+    {
+        $jobRequisition->applications()->delete();
+    }
+
+    public function restored(JobRequisition $jobRequisition): void
+    {
+        $jobRequisition->applications()->withTrashed()->restore();
+    }
 }

@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
@@ -63,6 +64,7 @@ class Application extends BaseModel
 {
     use BelongsToTeam;
     use InteractsWithStages;
+    use SoftDeletes;
 
     /**
      * @return BelongsTo<JobRequisition, $this>
@@ -138,11 +140,10 @@ class Application extends BaseModel
 
     public function getNextStage(): ?Stage
     {
-        $currentDisplayOrder = $this->currentStage->display_order ?? -1;
+        $currentDisplayOrder = $this->currentStage?->display_order ?? -1;
 
-        $availableStages = $this
-            ->requisition
-            ->stages
+        $stages = $this->requisition?->stages ?? collect();
+        $availableStages = $stages
             ->filter(fn (Stage $stage) => $stage->display_order > $currentDisplayOrder)
             ->sortBy('display_order');
 
@@ -154,6 +155,10 @@ class Application extends BaseModel
      */
     public function getPipelineStages(): Collection
     {
+        if (! $this->requisition) {
+            return new Collection();
+        }
+
         return $this->requisition
             ->stages()
             ->orderBy('display_order')
@@ -174,7 +179,7 @@ class Application extends BaseModel
             return false;
         }
 
-        $currentStageOrder = $this->currentStage->display_order ?? 0;
+        $currentStageOrder = $this->currentStage?->display_order ?? 0;
 
         return $stage->display_order < $currentStageOrder;
     }
