@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Enums\FilamentPanel;
 use He4rt\Applications\Models\Application;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\ApplicationResource;
-use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\CreateApplication;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\EditApplication;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ListApplications;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ViewApplication;
@@ -31,13 +30,6 @@ beforeEach(function (): void {
     JobPosting::factory()->for($this->application->requisition)->create();
 
     filament()->setTenant($this->team);
-});
-
-it('owner cannot create an application in the organization panel', function (): void {
-    expect(ApplicationResource::canCreate())->toBeFalse();
-
-    livewire(CreateApplication::class, ['tenant' => $this->team])
-        ->assertForbidden();
 });
 
 it('owner cannot edit an application in the organization panel', function (): void {

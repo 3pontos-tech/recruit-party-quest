@@ -190,7 +190,7 @@ it('calculates 100% completion with full profile', function (): void {
     }
 
     $links = Link::factory()->count(2)->create([
-        'type' => LinkTypeEnum::Social,
+        'type' => LinkTypeEnum::LinkedIn,
     ]);
     foreach ($links as $link) {
         $this->user->links()->attach($link);
@@ -244,7 +244,7 @@ it('does not display missing sections when profile is complete', function (): vo
     }
 
     $links = Link::factory()->count(2)->create([
-        'type' => LinkTypeEnum::Social,
+        'type' => LinkTypeEnum::LinkedIn,
     ]);
     foreach ($links as $link) {
         $this->user->links()->attach($link);
