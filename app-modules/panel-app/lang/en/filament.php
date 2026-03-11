@@ -71,4 +71,27 @@ return [
             'rejected' => 'Rejected',
         ],
     ],
+    'components' => [
+        'saved_jobs_widget' => [
+            'title' => 'Saved Jobs',
+            'aria_label' => 'Saved jobs',
+            'close' => 'Close',
+            'empty_title' => 'No saved jobs yet',
+            'empty_description' => 'Click the bookmark icon on a job to save it',
+            'applications' => 'applications',
+            'view' => 'View',
+            'remove' => 'Remove',
+        ],
+        'bookmark_button' => [
+            'save' => 'Save',
+            'saved' => 'Saved',
+            'save_job' => 'Save job',
+            'remove_saved' => 'Remove saved job',
+        ],
+        'share_button' => [
+            'share' => 'Share',
+            'copied' => 'Copied!',
+            'share_job' => 'Share job',
+        ],
+    ],
 ];

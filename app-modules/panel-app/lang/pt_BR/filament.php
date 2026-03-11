@@ -71,4 +71,27 @@ return [
             'rejected' => 'Rejeitadas',
         ],
     ],
+    'components' => [
+        'saved_jobs_widget' => [
+            'title' => 'Vagas Salvas',
+            'aria_label' => 'Vagas salvas',
+            'close' => 'Fechar',
+            'empty_title' => 'Nenhuma vaga salva ainda',
+            'empty_description' => 'Clique no ícone de bookmark em uma vaga para salvá-la',
+            'applications' => 'aplicações',
+            'view' => 'Visualizar',
+            'remove' => 'Remover',
+        ],
+        'bookmark_button' => [
+            'save' => 'Salvar',
+            'saved' => 'Salvo',
+            'save_job' => 'Salvar vaga',
+            'remove_saved' => 'Remover vaga salva',
+        ],
+        'share_button' => [
+            'share' => 'Compartilhar',
+            'copied' => 'Copiado!',
+            'share_job' => 'Compartilhar vaga',
+        ],
+    ],
 ];
