@@ -95,12 +95,12 @@
                 <div class="flex gap-2">
                     @foreach ($user->links as $link)
                         <x-he4rt::tag
-                            :icon="$link->type?->icon() ?? $link->icon"
+                            :icon="$link->icon"
                             :href="$link->url"
                             target="_blank"
                             class="hover:text-blue-400"
                         >
-                            {{ $link->type?->label() ?? $link->name }}
+                            {{ $link->name }}
                         </x-he4rt::tag>
                     @endforeach
                 </div>
