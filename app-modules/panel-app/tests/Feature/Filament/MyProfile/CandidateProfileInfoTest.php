@@ -15,8 +15,6 @@ beforeEach(function (): void {
         'headline' => 'Test Headline',
         'summary' => 'Test Summary',
         'phone_number' => '+5511999999999',
-        'linkedin_url' => 'https://linkedin.com/in/original',
-        'portfolio_url' => 'https://original.dev',
     ]);
 
     $this->user->refresh();
@@ -34,31 +32,11 @@ it('displays form fields', function (): void {
     Livewire::test(CandidateProfileInfo::class)
         ->assertFormFieldExists('headline')
         ->assertFormFieldExists('summary')
-        ->assertFormFieldExists('phone_number')
-        ->assertFormFieldExists('linkedin_url')
-        ->assertFormFieldExists('portfolio_url');
+        ->assertFormFieldExists('phone_number');
 });
 
 it('can call submit without errors', function (): void {
     Livewire::test(CandidateProfileInfo::class)
         ->call('submit')
         ->assertHasNoFormErrors();
-});
-
-it('validates url fields', function (): void {
-    Livewire::test(CandidateProfileInfo::class)
-        ->fillForm([
-            'linkedin_url' => 'not-a-valid-url',
-        ])
-        ->call('submit')
-        ->assertHasFormErrors(['linkedin_url' => 'url']);
-});
-
-it('validates portfolio url field', function (): void {
-    Livewire::test(CandidateProfileInfo::class)
-        ->fillForm([
-            'portfolio_url' => 'not-a-valid-url',
-        ])
-        ->call('submit')
-        ->assertHasFormErrors(['portfolio_url' => 'url']);
 });

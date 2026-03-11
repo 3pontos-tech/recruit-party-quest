@@ -12,15 +12,11 @@ return [
             'headline' => 'Headline',
             'summary' => 'Summary',
             'phone_number' => 'Phone Number',
-            'linkedin_url' => 'LinkedIn URL',
-            'portfolio_url' => 'Portfolio URL',
         ],
         'placeholders' => [
             'headline' => 'e.g., Senior Software Engineer | Full-Stack Developer',
             'summary' => 'Write a brief professional summary highlighting your expertise, experience, and career goals...',
             'phone_number' => 'e.g., +1 (555) 123-4567',
-            'linkedin_url' => 'your-profile-name',
-            'portfolio_url' => 'www.yourportfolio.com',
         ],
     ],
 
@@ -141,13 +137,10 @@ return [
         'fields' => [
             'links' => 'Links',
             'url' => 'URL',
-            'name' => 'Label',
-            'type' => 'Type',
-            'icon' => 'Icon',
+            'other_label' => 'Custom Label',
         ],
         'placeholders' => [
             'url' => 'https://...',
-            'name' => 'e.g., My Portfolio',
         ],
     ],
 ];

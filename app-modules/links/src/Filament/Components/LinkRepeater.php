@@ -9,7 +9,6 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Component;
-use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use He4rt\Links\LinkTypeEnum;
@@ -42,42 +41,29 @@ class LinkRepeater
     protected static function schema(): array
     {
         return [
+            Select::make('type')
+                ->label('Platform')
+                ->options(LinkTypeEnum::class)
+                ->required()
+                ->live()
+                ->afterStateUpdated(function (Set $set, ?LinkTypeEnum $state): void {
+                    if (! $state instanceof LinkTypeEnum) {
+                        return;
+                    }
+
+                    $set('name', $state->label());
+                    $set('icon', $state->icon());
+                }),
+
             TextInput::make('url')
                 ->label('URL')
                 ->required()
                 ->url()
+                ->placeholder(fn (Get $get): string => $get('type')?->urlPlaceholder() ?? 'https://')
                 ->maxLength(2048),
 
-            Group::make()->schema([
-                TextInput::make('name')
-                    ->label('Label')
-                    ->required()
-                    ->maxLength(255),
-
-                Select::make('type')
-                    ->label('Type')
-                    ->options(LinkTypeEnum::class)
-                    ->live()
-                    ->afterStateUpdated(fn (Set $set) => $set('icon', null))
-                    ->nullable(),
-            ])->columns(),
-
-            He4rtIconPicker::make('icon')
-                ->label('Icon')
-                ->listSearchResults()
-                ->placeholder('heroicon-o-link')
-                ->visible(fn (Get $get): bool => $get('type') instanceof LinkTypeEnum)
-                ->allowedIcons(function (Get $get): array {
-                    $value = $get('type');
-                    $type = $value instanceof LinkTypeEnum ? $value : LinkTypeEnum::tryFrom($value ?? '');
-
-                    return $type?->icons() ?? LinkTypeEnum::allIcons();
-                })
-                ->extraAttributes(fn (Get $get): array => [
-                    'wire:key' => 'icon-picker-'.($get('type') instanceof LinkTypeEnum ? $get('type')->value : ($get('type') ?? 'all')),
-                ])
-                ->nullable(),
-
+            Hidden::make('name'),
+            Hidden::make('icon'),
             Hidden::make('order_column'),
         ];
     }

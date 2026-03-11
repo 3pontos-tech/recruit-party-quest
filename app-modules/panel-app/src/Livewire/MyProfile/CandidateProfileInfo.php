@@ -31,8 +31,6 @@ class CandidateProfileInfo extends MyProfileComponent
             'headline' => $candidate->headline,
             'summary' => $candidate->summary,
             'phone_number' => $candidate->phone_number,
-            'linkedin_url' => $candidate->linkedin_url,
-            'portfolio_url' => $candidate->portfolio_url,
         ]);
     }
 
@@ -59,19 +57,6 @@ class CandidateProfileInfo extends MyProfileComponent
                     ->mask('(99) 99999-9999')
                     ->placeholder(__('panel-app::pages/settings.profile_info.placeholders.phone_number'))
                     ->maxLength(20),
-                TextInput::make('linkedin_url')
-                    ->label(__('panel-app::pages/settings.profile_info.fields.linkedin_url'))
-                    ->prefixIcon('fab-linkedin')
-                    ->placeholder('Ex: https://linkedin.com/in/danielhe4rt')
-                    ->url()
-                    ->maxLength(255),
-                TextInput::make('portfolio_url')
-                    ->label(__('panel-app::pages/settings.profile_info.fields.portfolio_url'))
-                    ->prefixIcon('heroicon-o-link')
-                    ->hint('Behance, GitHub, Site Pessoal etc.')
-                    ->placeholder('Ex: https://github.com/danielhe4rt')
-                    ->url()
-                    ->maxLength(255),
             ])
             ->columns(2)
             ->statePath('data');

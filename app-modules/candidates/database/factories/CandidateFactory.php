@@ -25,13 +25,7 @@ class CandidateFactory extends Factory
             'is_open_to_remote' => fake()->boolean(),
             'expected_salary' => fake()->randomFloat(2, 30000, 150000),
             'expected_salary_currency' => 'USD',
-            'linkedin_url' => fake()->url(),
-            'portfolio_url' => fake()->url(),
             'experience_level' => fake()->randomElement(['junior', 'mid', 'senior', 'lead']),
-            'contact_links' => [
-                'email' => fake()->safeEmail(),
-                'twitter' => 'https://twitter.com/'.fake()->userName(),
-            ],
             'self_identified_gender' => fake()->randomElement(['male', 'female', 'non-binary', 'prefer not to say']),
             'has_disability' => fake()->boolean(),
             'source' => fake()->randomElement(['linkedin', 'referral', 'website']),

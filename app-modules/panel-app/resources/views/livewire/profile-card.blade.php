@@ -88,25 +88,9 @@
         <div class="flex flex-col gap-8">
             <div class="flex flex-col gap-4">
                 <x-he4rt::text class="text-text-high">
-                    {{ __('panel-app::livewire/profile-card.contact.title') }}
-                </x-he4rt::text>
-                @forelse ($contactLinks as $link)
-                    <x-he4rt::tag :icon="$link->icon" variant="ghost" :href="$link->url">
-                        {{ $link->name }}
-                    </x-he4rt::tag>
-                @empty
-                    <x-he4rt::text size="sm">
-                        {{ __('panel-app::livewire/profile-card.contact.empty') }}
-                    </x-he4rt::text>
-                @endforelse
-                <hr class="border-outline-light dark:border-outline-dark" />
-            </div>
-
-            <div class="flex flex-col gap-4">
-                <x-he4rt::text class="text-text-high">
                     {{ __('panel-app::livewire/profile-card.social.title') }}
                 </x-he4rt::text>
-                @forelse ($socialLinks as $link)
+                @forelse ($links as $link)
                     <x-he4rt::tag :icon="$link->icon" variant="ghost" :href="$link->url">
                         {{ $link->name }}
                     </x-he4rt::tag>

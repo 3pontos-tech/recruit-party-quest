@@ -13,12 +13,12 @@ use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Tags\HasTags;
 
@@ -33,10 +33,7 @@ use Spatie\Tags\HasTags;
  * @property bool $is_open_to_remote
  * @property float|null $expected_salary
  * @property string $expected_salary_currency
- * @property string|null $linkedin_url
- * @property string|null $portfolio_url
  * @property string|null $experience_level
- * @property Collection<int,string>|null $contact_links
  * @property string|null $self_identified_gender
  * @property bool $has_disability
  * @property string|null $source
@@ -52,7 +49,7 @@ use Spatie\Tags\HasTags;
  * @property string $total_experience_formatted
  * @property int $profile_completion_percentage
  * @property-read User $user
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Application> $applications
+ * @property-read Collection<int, Application> $applications
  *
  * @extends BaseModel<CandidateFactory>
  */
@@ -196,7 +193,6 @@ class Candidate extends BaseModel
         return [
             'willing_to_relocate' => 'boolean',
             'is_open_to_remote' => 'boolean',
-            'contact_links' => 'array',
             'has_disability' => 'boolean',
             'availability_date' => 'date',
             'expected_salary' => 'decimal:2',

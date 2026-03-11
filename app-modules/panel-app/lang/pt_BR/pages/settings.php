@@ -12,15 +12,11 @@ return [
             'headline' => 'Título Profissional',
             'summary' => 'Resumo',
             'phone_number' => 'Telefone',
-            'linkedin_url' => 'URL do LinkedIn',
-            'portfolio_url' => 'URL do Portfólio',
         ],
         'placeholders' => [
             'headline' => 'ex: Engenheiro de Software Sênior | Desenvolvedor Full-Stack',
             'summary' => 'Escreva um breve resumo profissional destacando sua expertise, experiência e objetivos de carreira...',
             'phone_number' => 'ex: +55 (11) 98765-4321',
-            'linkedin_url' => 'seu-nome-perfil',
-            'portfolio_url' => 'www.seuportfolio.com.br',
         ],
     ],
 
@@ -141,13 +137,10 @@ return [
         'fields' => [
             'links' => 'Links',
             'url' => 'URL',
-            'name' => 'Rótulo',
-            'type' => 'Tipo',
-            'icon' => 'Ícone',
+            'other_label' => 'Rótulo Personalizado',
         ],
         'placeholders' => [
             'url' => 'https://...',
-            'name' => 'ex: Meu Portfólio',
         ],
     ],
 ];

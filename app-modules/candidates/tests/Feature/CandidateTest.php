@@ -53,14 +53,6 @@ it('has many skills through candidate skills', function (): void {
     expect($candidate->skills)->toHaveCount(3);
 });
 
-it('casts contact_links to array', function (): void {
-    $candidate = Candidate::factory()->create([
-        'contact_links' => ['linkedin' => 'https://linkedin.com/in/test'],
-    ]);
-
-    expect($candidate->contact_links)->toBeArray();
-});
-
 it('casts willing_to_relocate to boolean', function (): void {
     $candidate = Candidate::factory()->create(['willing_to_relocate' => true]);
 

@@ -49,8 +49,6 @@ it('should be able to create a candidate', function (): void {
             'is_open_to_remote' => true,
             'expected_salary' => 10000,
             'expected_salary_currency' => 'BRL',
-            'linkedin_url' => 'https://linkedin.com/in/joao',
-            'portfolio_url' => 'https://joao.dev',
         ])
         ->call('create')
         ->assertHasNoFormErrors();
@@ -82,8 +80,6 @@ it('should redirect after successful creation', function (): void {
             'is_open_to_remote' => true,
             'expected_salary' => 10000,
             'expected_salary_currency' => 'BRL',
-            'linkedin_url' => 'https://linkedin.com/in/joao',
-            'portfolio_url' => 'https://joao.dev',
         ])
         ->call('create')
         ->assertRedirect();

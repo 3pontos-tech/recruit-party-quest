@@ -56,24 +56,28 @@ class CandidateLinks extends MyProfileComponent
         $existingIds = [];
 
         foreach ($data['links'] ?? [] as $index => $entry) {
+            $type = $entry['type'];
+            $name = $type?->label();
+            $icon = $type?->icon();
+
             if (filled($entry['id'] ?? null)) {
                 $link = $user->links()->find($entry['id']);
                 if ($link) {
                     $link->update([
-                        'name' => $entry['name'],
+                        'name' => $name,
                         'url' => $entry['url'],
                         'type' => $entry['type'] ?? null,
-                        'icon' => $entry['icon'] ?? null,
+                        'icon' => $icon,
                         'order_column' => $index,
                     ]);
                     $existingIds[] = $entry['id'];
                 }
             } else {
                 $link = Link::query()->create([
-                    'name' => $entry['name'],
+                    'name' => $name,
                     'url' => $entry['url'],
                     'type' => $entry['type'] ?? null,
-                    'icon' => $entry['icon'] ?? null,
+                    'icon' => $icon,
                     'order_column' => $index,
                 ]);
                 $user->attachLink($link);

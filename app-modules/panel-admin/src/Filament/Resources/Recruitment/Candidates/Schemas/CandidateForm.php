@@ -89,18 +89,6 @@ class CandidateForm
                             ->maxLength(3),
                     ]),
 
-                Section::make(__('candidates::filament.sections.links'))
-                    ->columns(2)
-                    ->schema([
-                        TextInput::make('linkedin_url')
-                            ->label(__('candidates::filament.fields.linkedin_url'))
-                            ->url()
-                            ->maxLength(255),
-                        TextInput::make('portfolio_url')
-                            ->label(__('candidates::filament.fields.portfolio_url'))
-                            ->url()
-                            ->maxLength(255),
-                    ]),
             ]);
     }
 }

@@ -93,29 +93,16 @@
                 @endif
 
                 <div class="flex gap-2">
-                    {{-- LinkedIn --}}
-                    @if ($candidate->linkedin_url)
+                    @foreach ($user->links as $link)
                         <x-he4rt::tag
-                            :icon="Heroicon::Link"
-                            href="{{ $candidate->linkedin_url }}"
+                            :icon="$link->type?->icon() ?? $link->icon"
+                            :href="$link->url"
                             target="_blank"
                             class="hover:text-blue-400"
                         >
-                            {{ __('panel-organization::view.candidate_header.linkedin') }}
+                            {{ $link->type?->label() ?? $link->name }}
                         </x-he4rt::tag>
-                    @endif
-
-                    {{-- Portfolio --}}
-                    @if ($candidate->portfolio_url)
-                        <x-he4rt::tag
-                            :icon="Heroicon::GlobeAlt"
-                            href="{{ $candidate->portfolio_url }}"
-                            target="_blank"
-                            class="hover:text-blue-400"
-                        >
-                            {{ __('panel-organization::view.candidate_header.portfolio') }}
-                        </x-he4rt::tag>
-                    @endif
+                    @endforeach
                 </div>
             </div>
         </div>
