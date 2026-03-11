@@ -1,5 +1,6 @@
 @php
     use He4rt\Recruitment\Requisitions\Enums\JobRequisitionItemTypeEnum;
+    use Illuminate\Support\Js;
 @endphp
 
 @props([
@@ -26,7 +27,10 @@
     </div>
 @else
     <div
-        x-data="{ showApplicationModal: false, hasApplied: @js($hasApplied) }"
+        x-data="{
+            showApplicationModal: false,
+            hasApplied: @js($hasApplied),
+        }"
         x-on:application-submitted.window="hasApplied = true; showApplicationModal = false"
         {{ $attributes->merge(['mx-auto w-full max-w-7xl space-y-8 py-8 lg:py-12']) }}
     >
@@ -90,7 +94,7 @@
                 </div>
             </div>
 
-            <div class="flex w-full flex-col items-center gap-3 sm:flex-row md:w-auto">
+            <div class="flex w-full flex-col items-center gap-3">
                 @if ($hasAction)
                     @guest
                         <x-he4rt::button variant="solid" class="w-full sm:w-auto" href="/login">
@@ -115,10 +119,11 @@
                             </span>
                         </x-he4rt::button>
                     @endguest
-                    <div class="flex w-full justify-center gap-3 sm:w-auto">
-                        <x-he4rt::button variant="outline" icon="heroicon-o-bookmark" class="flex-1" />
-                        <x-he4rt::button variant="outline" icon="heroicon-o-share" class="flex-1" />
-                    </div>
+                    {{-- Share Button --}}
+                    <x-panel-app::jobs.share-job-button :job="$jobRequisition" variant="icon-text" />
+
+                    {{-- Bookmark Button --}}
+                    <x-panel-app::jobs.bookmark-job-button :job="$jobRequisition" variant="icon-text" />
                 @endif
             </div>
         </header>
