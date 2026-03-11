@@ -15,6 +15,7 @@ use He4rt\Feedback\Models\ApplicationComment;
 use He4rt\Feedback\Models\Evaluation;
 use He4rt\Location\Address;
 use He4rt\Recruitment\Requisitions\Enums\JobRequisitionItemTypeEnum;
+use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Requisitions\Models\JobRequisitionItem;
@@ -215,6 +216,9 @@ final class DevelopmentSeeder extends Seeder
                     'team_id' => $this->adminTeam->getKey(),
                     'department_id' => $this->departments->random()->getKey(),
                     'created_by_id' => $this->adminUser->getKey(),
+                    'is_internal_only' => false,
+                    'is_confidential' => false,
+                    'status' => RequisitionStatusEnum::Published,
                 ]);
 
             $this->seedRequisitionItems($requisition);
