@@ -129,7 +129,7 @@ return [
     ],
 
     'links' => [
-        'heading' => 'Links',
+        'heading' => 'Links Sociais',
         'description' => 'Gerencie seus links sociais e profissionais.',
         'submit' => 'Salvar Links',
         'notify' => 'Links atualizados com sucesso.',

@@ -129,7 +129,7 @@ return [
     ],
 
     'links' => [
-        'heading' => 'Links',
+        'heading' => 'Social Links',
         'description' => 'Manage your social and professional links.',
         'submit' => 'Save Links',
         'notify' => 'Links updated successfully.',
