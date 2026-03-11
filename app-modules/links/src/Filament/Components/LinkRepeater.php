@@ -44,6 +44,7 @@ class LinkRepeater
         return [
             Select::make('type')
                 ->label('Platform')
+                ->disableOptionsWhenSelectedInSiblingRepeaterItems()
                 ->options(LinkTypeEnum::class)
                 ->required()
                 ->live()
