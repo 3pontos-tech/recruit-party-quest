@@ -40,7 +40,7 @@ class ViewApplication extends ViewRecord
         return [
             'jobRequisition' => $this->getRecord()->requisition,
             'currentStage' => $this->getRecord()->currentStage,
-            'stages' => $this->getRecord()->requisition->stages,
+            'stages' => $this->getRecord()->requisition?->stages ?? collect(),
         ];
     }
 }

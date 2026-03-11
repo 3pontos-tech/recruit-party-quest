@@ -16,11 +16,10 @@ trait InteractsWithStages
 {
     public function getNextStage(): ?Stage
     {
-        $currentDisplayOrder = $this->currentStage->display_order ?? -1;
+        $currentDisplayOrder = $this->currentStage?->display_order ?? -1;
 
-        $availableStages = $this
-            ->requisition
-            ->stages
+        $stages = $this->requisition?->stages ?? collect();
+        $availableStages = $stages
             ->filter(fn (Stage $stage) => $stage->display_order > $currentDisplayOrder)
             ->sortBy('display_order');
 
@@ -32,7 +31,7 @@ trait InteractsWithStages
      */
     protected function firstStage(): Attribute
     {
-        return Attribute::make(get: fn () => $this->requisition->stages->sortBy('display_order')->first());
+        return Attribute::make(get: fn () => ($this->requisition?->stages ?? collect())->sortBy('display_order')->first());
     }
 
     /**
@@ -40,7 +39,7 @@ trait InteractsWithStages
      */
     protected function lastStage(): Attribute
     {
-        return Attribute::make(get: fn () => $this->requisition->stages->sortBy('display_order')->last());
+        return Attribute::make(get: fn () => ($this->requisition?->stages ?? collect())->sortBy('display_order')->last());
     }
 
     /**
@@ -48,6 +47,6 @@ trait InteractsWithStages
      */
     protected function isLastStage(): Attribute
     {
-        return Attribute::make(get: fn () => $this->last_stage->getKey() === $this->current_stage_id);
+        return Attribute::make(get: fn () => $this->last_stage?->getKey() === $this->current_stage_id);
     }
 }

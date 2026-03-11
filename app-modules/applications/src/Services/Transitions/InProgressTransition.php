@@ -92,7 +92,7 @@ final class InProgressTransition extends AbstractApplicationTransition
     {
         return match (true) {
             $data->toStageId !== null => $data->toStageId,
-            $data->advanceStage === true => $this->application->getNextStage()->getKey(),
+            $data->advanceStage === true => $this->application->getNextStage()?->getKey(),
             default => null,
         };
     }
