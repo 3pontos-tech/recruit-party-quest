@@ -216,6 +216,7 @@ class Candidate extends BaseModel
                     filled($this->user->email),
                     $this->phone_number !== null,
                     $this->headline !== null,
+                    $this->summary !== null,
                 ],
             ],
             'professional' => [

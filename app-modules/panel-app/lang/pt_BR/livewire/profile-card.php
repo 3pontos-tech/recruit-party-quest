@@ -10,7 +10,7 @@ return [
         'description' => 'Complete o seu cadastro para aumentar sua visibilidade para os recrutadores',
         'missing_sections' => 'O que está faltando:',
         'sections' => [
-            'basic_info' => 'Informações básicas (telefone, headline)',
+            'basic_info' => 'Informações básicas (telefone, headline, sumário)',
             'professional' => 'Experiência profissional',
             'education' => 'Histórico educacional',
             'skills' => 'Habilidades (pelo menos 3)',

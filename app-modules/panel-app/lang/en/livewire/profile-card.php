@@ -10,7 +10,7 @@ return [
         'description' => 'Complete your profile to increase your visibility to recruiters',
         'missing_sections' => "What's missing:",
         'sections' => [
-            'basic_info' => 'Basic information (phone, headline)',
+            'basic_info' => 'Basic information (phone, headline, summary)',
             'professional' => 'Professional experience',
             'education' => 'Education history',
             'skills' => 'Skills (at least 3)',
