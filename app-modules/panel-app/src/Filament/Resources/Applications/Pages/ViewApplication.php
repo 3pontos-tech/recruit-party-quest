@@ -40,7 +40,7 @@ class ViewApplication extends ViewRecord
         return [
             'jobRequisition' => $this->getRecord()->requisition,
             'currentStage' => $this->getRecord()->currentStage,
-            'stages' => $this->getRecord()->requisition?->stages ?? collect(),
+            'stages' => $this->getRecord()->requisition?->stages ?? collect(), // @phpstan-ignore nullsafe.neverNull
         ];
     }
 }

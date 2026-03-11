@@ -92,9 +92,9 @@ class StateTransitionAction extends Action
 
             Select::make('to_stage_id')
                 ->label(__('applications::filament.fields.current_stage'))
-                ->options(fn () => ($record->requisition?->stages ?? collect())
+                ->options(fn () => ($record->requisition?->stages ?? collect()) // @phpstan-ignore nullsafe.neverNull
                     ->where('active', true)
-                    ->where('display_order', '>', $record->currentStage?->display_order ?? 0)
+                    ->where('display_order', '>', $record->currentStage?->display_order ?? 0) // @phpstan-ignore nullsafe.neverNull
                     ->pluck('name', 'id'))
                 ->default($record->getNextStage()?->id)
                 ->visible(fn (Get $get) => in_array($get('to_status'), [ApplicationStatusEnum::InProgress, ApplicationStatusEnum::OfferExtended])),

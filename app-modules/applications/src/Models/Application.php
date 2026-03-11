@@ -53,8 +53,8 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, ScreeningResponse> $screeningResponses
  * @property-read Collection<int, Evaluation> $evaluations
  * @property-read Collection<int, ApplicationComment> $comments
- * @property-read JobRequisition $requisition
- * @property Stage $currentStage
+ * @property-read JobRequisition|null $requisition
+ * @property-read Stage|null $currentStage
  *
  * @extends BaseModel<ApplicationFactory>
  */
@@ -140,9 +140,9 @@ class Application extends BaseModel
 
     public function getNextStage(): ?Stage
     {
-        $currentDisplayOrder = $this->currentStage?->display_order ?? -1;
+        $currentDisplayOrder = $this->currentStage?->display_order ?? -1; // @phpstan-ignore nullsafe.neverNull
 
-        $stages = $this->requisition?->stages ?? collect();
+        $stages = $this->requisition?->stages ?? collect(); // @phpstan-ignore nullsafe.neverNull
         $availableStages = $stages
             ->filter(fn (Stage $stage) => $stage->display_order > $currentDisplayOrder)
             ->sortBy('display_order');
@@ -179,7 +179,7 @@ class Application extends BaseModel
             return false;
         }
 
-        $currentStageOrder = $this->currentStage?->display_order ?? 0;
+        $currentStageOrder = $this->currentStage?->display_order ?? 0; // @phpstan-ignore nullsafe.neverNull
 
         return $stage->display_order < $currentStageOrder;
     }
