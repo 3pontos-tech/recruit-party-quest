@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Links\Filament\Components;
 
+use Closure;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -60,6 +61,26 @@ class LinkRepeater
                 ->required()
                 ->url()
                 ->placeholder(fn (Get $get): string => $get('type')?->urlPlaceholder() ?? 'https://')
+                ->rules([
+                    fn (Get $get): Closure => function (string $attribute, mixed $value, Closure $fail) use ($get): void {
+                        $type = $get('type');
+                        $domains = $type?->allowedDomains();
+
+                        if ($domains === null) {
+                            return;
+                        }
+
+                        $host = parse_url((string) $value, PHP_URL_HOST) ?? '';
+
+                        foreach ($domains as $domain) {
+                            if (str_contains($host, $domain)) {
+                                return;
+                            }
+                        }
+
+                        $fail(sprintf('The URL must belong to %s.', $type->label()));
+                    },
+                ])
                 ->maxLength(2048),
 
             Hidden::make('name'),

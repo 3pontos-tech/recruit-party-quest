@@ -53,6 +53,23 @@ enum LinkTypeEnum: string implements HasLabel
         };
     }
 
+    /**
+     * @return string[]|null
+     */
+    public function allowedDomains(): ?array
+    {
+        return match ($this) {
+            self::LinkedIn => ['linkedin.com'],
+            self::GitHub => ['github.com'],
+            self::Instagram => ['instagram.com'],
+            self::Twitter => ['x.com', 'twitter.com'],
+            self::YouTube => ['youtube.com'],
+            self::Behance => ['behance.net'],
+            self::Dribbble => ['dribbble.com'],
+            self::Website, self::Other => null,
+        };
+    }
+
     public function urlPlaceholder(): string
     {
         return match ($this) {

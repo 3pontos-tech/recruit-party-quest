@@ -41,3 +41,28 @@ it('other case uses generic link icon', function (): void {
 it('website case uses globe icon', function (): void {
     expect(LinkTypeEnum::Website->icon())->toBe('heroicon-o-globe-alt');
 });
+
+it('platform cases have allowed domains', function (): void {
+    $restricted = [
+        LinkTypeEnum::LinkedIn,
+        LinkTypeEnum::GitHub,
+        LinkTypeEnum::Instagram,
+        LinkTypeEnum::Twitter,
+        LinkTypeEnum::YouTube,
+        LinkTypeEnum::Behance,
+        LinkTypeEnum::Dribbble,
+    ];
+
+    foreach ($restricted as $case) {
+        expect($case->allowedDomains())->toBeArray()->not->toBeEmpty();
+    }
+});
+
+it('website and other have no domain restriction', function (): void {
+    expect(LinkTypeEnum::Website->allowedDomains())->toBeNull();
+    expect(LinkTypeEnum::Other->allowedDomains())->toBeNull();
+});
+
+it('twitter allows both x.com and twitter.com', function (): void {
+    expect(LinkTypeEnum::Twitter->allowedDomains())->toContain('x.com', 'twitter.com');
+});
