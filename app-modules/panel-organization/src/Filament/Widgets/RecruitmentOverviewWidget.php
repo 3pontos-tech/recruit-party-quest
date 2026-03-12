@@ -26,7 +26,7 @@ class RecruitmentOverviewWidget extends StatsOverviewWidget
         $stats = Cache::remember(
             'widget.recruitment_overview.'.$teamId,
             now()->addMinutes(5),
-            fn (): array => [
+            static fn (): array => [
                 'open_requisitions' => JobRequisition::query()
                     ->forCurrentTeam()
                     ->whereIn('status', [RequisitionStatusEnum::Approved, RequisitionStatusEnum::Published])
