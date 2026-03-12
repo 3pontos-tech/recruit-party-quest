@@ -28,8 +28,8 @@ it('displays saved jobs for the authenticated candidate', function (): void {
     $jobs = JobRequisition::factory()->available()->count(2)->create();
 
     $jobs->each(fn (JobRequisition $job) => SavedJob::factory()->create([
-        'candidate_id' => $this->candidate->id,
-        'job_requisition_id' => $job->id,
+        'candidate_id' => $this->candidate->getKey(),
+        'job_requisition_id' => $job->getKey(),
     ]));
 
     $component = livewire(SavedJobsWidget::class);
@@ -41,16 +41,16 @@ it('removes a saved job when remove is called', function (): void {
     $job = JobRequisition::factory()->available()->create();
 
     SavedJob::factory()->create([
-        'candidate_id' => $this->candidate->id,
-        'job_requisition_id' => $job->id,
+        'candidate_id' => $this->candidate->getKey(),
+        'job_requisition_id' => $job->getKey(),
     ]);
 
     livewire(SavedJobsWidget::class)
-        ->call('remove', $job->id);
+        ->call('remove', $job->getKey());
 
     $this->assertDatabaseMissing('candidate_saved_jobs', [
-        'candidate_id' => $this->candidate->id,
-        'job_requisition_id' => $job->id,
+        'candidate_id' => $this->candidate->getKey(),
+        'job_requisition_id' => $job->getKey(),
     ]);
 });
 
@@ -62,8 +62,8 @@ it('refreshes saved jobs list when saved-job-toggled event is dispatched', funct
     $job = JobRequisition::factory()->available()->create();
 
     SavedJob::factory()->create([
-        'candidate_id' => $this->candidate->id,
-        'job_requisition_id' => $job->id,
+        'candidate_id' => $this->candidate->getKey(),
+        'job_requisition_id' => $job->getKey(),
     ]);
 
     $component->dispatch('saved-job-toggled');

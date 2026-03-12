@@ -81,13 +81,13 @@ class SavedJobsWidget extends Component
 
         return [
             'id' => (string) $job->getKey(),
-            'title' => $job->post?->title ?? 'Sem título',
+            'title' => $job->post->title,
             'company' => $job->team->name,
             'url' => JobRequisitionResource::getUrl('view', ['record' => $job]),
             'workArrangement' => $job->work_arrangement->getLabel(),
-            'employmentType' => $job->employment_type?->getLabel(),
-            'experienceLevel' => $job->experience_level?->getLabel(),
-            'department' => $job->department?->name,
+            'employmentType' => $job->employment_type->getLabel(),
+            'experienceLevel' => $job->experience_level->getLabel(),
+            'department' => $job->department->name,
             'category' => $job->category?->getLabel(),
             'salaryRange' => $salaryRange,
             'publishedAt' => $job->published_at instanceof DateTimeInterface ? $job->published_at->format('d/m/Y') : null,
