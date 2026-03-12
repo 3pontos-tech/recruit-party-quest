@@ -94,7 +94,7 @@
                 </div>
             </div>
 
-            <div class="flex w-full flex-col items-center gap-3">
+            <div class="flex w-full items-center gap-3">
                 @if ($hasAction)
                     @guest
                         <x-he4rt::button variant="solid" class="w-full sm:w-auto" href="/login">
@@ -104,6 +104,11 @@
                         @php
                             $hasScreeningQuestions = $jobRequisition->screeningQuestions->isNotEmpty();
                         @endphp
+
+                        {{-- Share Button --}}
+                        <x-panel-app::jobs.share-job-button :job="$jobRequisition" size="md" />
+                        {{-- Bookmark Button --}}
+                        <livewire:panel-app.jobs.bookmark-job-button :job="$jobRequisition" size="md" />
 
                         <x-he4rt::button
                             variant="solid"
@@ -119,11 +124,6 @@
                             </span>
                         </x-he4rt::button>
                     @endguest
-                    {{-- Share Button --}}
-                    <x-panel-app::jobs.share-job-button :job="$jobRequisition" variant="icon-text" />
-
-                    {{-- Bookmark Button --}}
-                    <livewire:panel-app.jobs.bookmark-job-button :job="$jobRequisition" variant="icon-text" />
                 @endif
             </div>
         </header>

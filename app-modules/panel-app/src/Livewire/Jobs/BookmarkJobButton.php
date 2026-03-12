@@ -16,8 +16,6 @@ class BookmarkJobButton extends Component
 
     public bool $isSaved = false;
 
-    public string $variant = 'icon-only';
-
     public function mount(): void
     {
         if (auth()->check() && auth()->user()->candidate) {

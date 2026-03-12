@@ -34,7 +34,7 @@
             <x-panel-app::jobs.share-job-button :job="$job" />
 
             {{-- Bookmark Button --}}
-            <livewire:panel-app.jobs.bookmark-job-button :job="$job" />
+            <livewire:panel-app.jobs.bookmark-job-button :job="$job" :key="'bookmark-job-'.$job->id" />
         </div>
     </x-slot>
 

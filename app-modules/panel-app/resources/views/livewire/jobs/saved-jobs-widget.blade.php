@@ -165,19 +165,17 @@
 
                             {{-- Actions --}}
                             <div class="flex gap-2 pt-0.5">
-                                <a
-                                    href="{{ $job['url'] }}"
-                                    class="hp-button hp-button-solid hp-button-size-xs hp-button-rounded-md w-auto flex-1 md:w-full"
-                                >
+                                <x-he4rt::button href="{{ $job['url'] }}" size="xs" class="flex-1 md:w-full">
                                     {{ __('panel-app::filament.components.saved_jobs_widget.view') }}
-                                </a>
-                                <button
-                                    type="button"
+                                </x-he4rt::button>
+                                <x-he4rt::button
+                                    variant="outline"
+                                    size="xs"
                                     wire:click.stop="remove('{{ $job['id'] }}')"
-                                    class="hp-button hp-button-outline hp-button-size-xs hp-button-rounded-md w-auto flex-1 md:w-full"
+                                    class="flex-1 md:w-full"
                                 >
                                     {{ __('panel-app::filament.components.saved_jobs_widget.remove') }}
-                                </button>
+                                </x-he4rt::button>
                             </div>
                         </div>
                     </div>
@@ -225,21 +223,15 @@
                         <span class="text-text-medium text-sm font-medium">({{ count($savedJobs) }})</span>
                     @endif
                 </div>
-                <button
-                    type="button"
+                <x-he4rt::button
+                    variant="outline"
+                    size="xs"
                     x-on:click="close()"
-                    class="text-text-medium hover:text-text-high -mr-2 rounded-lg p-2 transition duration-200"
+                    class="text-text-medium hover:text-text-high -mr-2"
                     aria-label="{{ __('panel-app::filament.components.saved_jobs_widget.close') }}"
                 >
-                    <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"
-                        />
-                    </svg>
-                </button>
+                    <x-he4rt::icon icon="heroicon-o-x-mark" class="size-5" />
+                </x-he4rt::button>
             </div>
 
             {{-- Content --}}
@@ -332,20 +324,22 @@
 
                                     {{-- Actions --}}
                                     <div class="flex gap-2 pt-0.5">
-                                        <a
+                                        <x-he4rt::button
                                             href="{{ $job['url'] }}"
+                                            size="xs"
                                             x-on:click="close()"
-                                            class="hp-button hp-button-solid hp-button-size-xs hp-button-rounded-md w-auto flex-1"
+                                            class="flex-1"
                                         >
                                             {{ __('panel-app::filament.components.saved_jobs_widget.view') }}
-                                        </a>
-                                        <button
-                                            type="button"
+                                        </x-he4rt::button>
+                                        <x-he4rt::button
+                                            variant="outline"
+                                            size="xs"
                                             wire:click.stop="remove('{{ $job['id'] }}')"
-                                            class="hp-button hp-button-outline hp-button-size-xs hp-button-rounded-md w-auto flex-1"
+                                            class="flex-1"
                                         >
                                             {{ __('panel-app::filament.components.saved_jobs_widget.remove') }}
-                                        </button>
+                                        </x-he4rt::button>
                                     </div>
                                 </div>
                             </div>
