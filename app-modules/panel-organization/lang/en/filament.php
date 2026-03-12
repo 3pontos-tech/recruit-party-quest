@@ -119,6 +119,15 @@ return [
         'applications_per_day' => [
             'heading' => 'Daily Applications (Last 30 Days)',
             'dataset_label' => 'Applications',
+            'filter_7' => 'Last 7 days',
+            'filter_30' => 'Last 30 days',
+            'filter_90' => 'Last 90 days',
+        ],
+        'latest_applications' => [
+            'title' => 'Latest Applications',
+            'empty' => 'No applications yet.',
+            'no_position' => 'No position',
+            'no_stage' => '—',
         ],
     ],
 

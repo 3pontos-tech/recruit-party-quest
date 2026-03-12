@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class ApplicationsPerDayWidget extends ChartWidget
 {
+    public ?string $filter = '30';
     protected static ?int $sort = 2;
 
     protected ?string $pollingInterval = null;
@@ -25,16 +26,26 @@ class ApplicationsPerDayWidget extends ChartWidget
         return 'line';
     }
 
+    protected function getFilters(): ?array
+    {
+        return [
+            7 => __('panel-organization::filament.widgets.applications_per_day.filter_7'),
+            30 => __('panel-organization::filament.widgets.applications_per_day.filter_30'),
+            90 => __('panel-organization::filament.widgets.applications_per_day.filter_90'),
+        ];
+    }
+
     /**
      * @return array<string, mixed>
      */
     protected function getData(): array
     {
-        $days = collect(range(29, 0))->map(fn (int $i) => Date::today()->subDays($i)->format('Y-m-d'));
+        $range = $this->filter;
+        $days = collect(range($range, 0))->map(fn (int $i) => Date::today()->subDays($i)->format('Y-m-d'));
 
         $counts = Application::query()
             ->forCurrentTeam()
-            ->where('created_at', '>=', Date::today()->subDays(29))
+            ->where('created_at', '>=', Date::today()->subDays($range))
             ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
             ->groupBy('date')
             ->pluck('count', 'date');

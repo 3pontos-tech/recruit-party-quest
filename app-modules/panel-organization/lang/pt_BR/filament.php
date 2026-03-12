@@ -119,6 +119,15 @@ return [
         'applications_per_day' => [
             'heading' => 'Candidaturas por Dia (Últimos 30 dias)',
             'dataset_label' => 'Candidaturas',
+            'filter_7' => 'Últimos 7 dias',
+            'filter_30' => 'Últimos 30 dias',
+            'filter_90' => 'Últimos 90 dias',
+        ],
+        'latest_applications' => [
+            'title' => 'Candidaturas Recentes',
+            'empty' => 'Nenhuma candidatura ainda.',
+            'no_position' => 'Sem vaga',
+            'no_stage' => '—',
         ],
     ],
 
