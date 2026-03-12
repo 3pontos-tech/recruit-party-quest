@@ -26,12 +26,17 @@ class AppPanelScripts
                            jobs: [],
 
                            init() {
-                               const stored = localStorage.getItem('rpq_saved_jobs');
-                               if (stored) {
-                                   this.jobs = JSON.parse(stored);
-                                   // Migrate old format if needed
-                                   this.migrateOldFormat();
-                               }
+                                  try {
+                                        const stored = localStorage.getItem('rpq_saved_jobs');
+                                        if (!stored) {
+                                            return;
+                                        }
+                                        const parsed = JSON.parse(stored);
+                                        this.jobs = Array.isArray(parsed) ? parsed : [];
+                                        this.migrateOldFormat();
+                                    } catch {
+                                        this.jobs = [];
+                                    }
                            },
 
                            migrateOldFormat() {
@@ -50,15 +55,12 @@ class AppPanelScripts
                                    this.persist();
                                }
                            },
-
                            persist() {
                                localStorage.setItem('rpq_saved_jobs', JSON.stringify(this.jobs));
                            },
-
                            isSaved(id) {
                                return this.jobs.some(j => j.id === id);
                            },
-
                            save(job) {
                                if (!this.isSaved(job.id)) {
                                    // Add savedAt timestamp
@@ -67,20 +69,17 @@ class AppPanelScripts
                                    this.persist();
                                }
                            },
-
                            remove(id) {
                                this.jobs = this.jobs.filter(j => j.id !== id);
                                this.persist();
                            },
-
                            toggle(job) {
                                this.isSaved(job.id) ? this.remove(job.id) : this.save(job);
                            },
-
                            // Get jobs sorted by savedAt (newest first)
                            getSortedJobs() {
-                               return [...this.jobs].sort((a, b) => 
-                                   new Date(b.savedAt || 0) - new Date(a.savedAt || 0)
+                               return [...this.jobs].sort((a, b) =>
+                                   new Date(b.savedAt || 0) - new Date(a.savedAt || 0),
                                );
                            },
                        });
