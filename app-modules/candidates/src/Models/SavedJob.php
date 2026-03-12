@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace He4rt\Candidates\Models;
 
 use App\Models\BaseModel;
+use He4rt\Candidates\Database\Factories\SavedJobFactory;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -22,6 +24,7 @@ use Illuminate\Support\Carbon;
  *
  * @extends BaseModel<Factory>
  */
+#[UseFactory(SavedJobFactory::class)]
 class SavedJob extends BaseModel
 {
     protected $table = 'candidate_saved_jobs';
