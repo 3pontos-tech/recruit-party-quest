@@ -27,7 +27,7 @@ class AppPanelHooks
                @guest
                     <div class="flex flex-col md:hidden mt-auto items-center space-y-4">
                         <x-he4rt::button rel="no-opener no-referrer" href="/login" icon="heroicon-s-arrow-top-right-on-square" variant="outline">
-                            Acessar Plataforma
+                            {{ __('panel-app::filament.navigation.access_platform') }}
                         </x-he4rt::button>
                     </div>
                @endguest
@@ -44,7 +44,7 @@ class AppPanelHooks
                @guest
                     <div class="hidden md:flex items-center space-x-4">
                         <x-he4rt::button rel="no-opener no-referrer" href="/login" icon="heroicon-s-arrow-top-right-on-square" variant="outline">
-                            Acessar Plataforma
+                            {{ __('panel-app::filament.navigation.access_platform') }}
                         </x-he4rt::button>
                     </div>
                @endguest

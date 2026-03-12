@@ -6,6 +6,9 @@ return [
     'recruitment' => [
         'navigation_group' => 'Recruitment',
     ],
+    'navigation' => [
+        'access_platform' => 'Access Platform',
+    ],
     'categories' => [
         'section_title' => 'Categories',
         'headline_title' => 'Browse by Categories',

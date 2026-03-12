@@ -6,6 +6,9 @@ return [
     'recruitment' => [
         'navigation_group' => 'Recrutamento',
     ],
+    'navigation' => [
+        'access_platform' => 'Acessar Plataforma',
+    ],
     'categories' => [
         'section_title' => 'Categorias',
         'headline_title' => 'Buscar por Categorias',
@@ -78,7 +81,7 @@ return [
             'close' => 'Fechar',
             'empty_title' => 'Nenhuma vaga salva ainda',
             'empty_description' => 'Clique no ícone de bookmark em uma vaga para salvá-la',
-            'applications' => 'aplicações',
+            'applications' => 'candidaturas',
             'view' => 'Visualizar',
             'remove' => 'Remover',
         ],
