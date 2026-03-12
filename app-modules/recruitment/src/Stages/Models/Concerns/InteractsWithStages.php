@@ -47,6 +47,14 @@ trait InteractsWithStages
      */
     protected function isLastStage(): Attribute
     {
-        return Attribute::make(get: fn () => $this->last_stage?->getKey() === $this->current_stage_id);
+        return Attribute::make(
+            get: function (): bool {
+                $lastStageId = $this->last_stage?->getKey();
+
+                return $lastStageId !== null
+                    && $this->current_stage_id !== null
+                    && $lastStageId === $this->current_stage_id;
+            },
+        );
     }
 }

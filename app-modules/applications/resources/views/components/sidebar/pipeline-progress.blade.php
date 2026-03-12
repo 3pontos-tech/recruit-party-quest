@@ -20,18 +20,16 @@
             ?->getId() === FilamentPanel::Organization->value;
     /** @var Collection<int, Stage>  $stages */
     if ($organizationPanel) {
-        $stages = $record->requisition
-            ->stages()
+        $stages = $record
+            ->getPipelineStages()
             ->where('active', true)
-            ->orderBy('display_order')
-            ->get();
+            ->values();
     } else {
-        $stages = $record->requisition
-            ->stages()
+        $stages = $record
+            ->getPipelineStages()
             ->where('hidden', false)
             ->where('active', true)
-            ->orderBy('display_order')
-            ->get();
+            ->values();
     }
 
     $isRejected = ! $organizationPanel && $record->status === ApplicationStatusEnum::Rejected;

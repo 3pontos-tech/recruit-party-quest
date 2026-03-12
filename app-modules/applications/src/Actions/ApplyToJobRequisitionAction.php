@@ -31,7 +31,7 @@ class ApplyToJobRequisitionAction
         ]);
 
         $application->update([
-            'current_stage_id' => $application->first_stage->getKey(),
+            'current_stage_id' => $application->first_stage?->getKey(),
         ]);
 
         return $application;
