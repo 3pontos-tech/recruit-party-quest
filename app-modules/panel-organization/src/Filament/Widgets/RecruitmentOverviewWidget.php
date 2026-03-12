@@ -11,7 +11,6 @@ use He4rt\Applications\Models\Application;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class RecruitmentOverviewWidget extends StatsOverviewWidget
 {
@@ -41,7 +40,7 @@ class RecruitmentOverviewWidget extends StatsOverviewWidget
                 'positions_available' => JobRequisition::query()
                     ->forCurrentTeam()
                     ->whereIn('status', [RequisitionStatusEnum::Approved, RequisitionStatusEnum::Published])
-                    ->sum(DB::raw('CAST(positions_available AS INTEGER)')),
+                    ->sum('positions_available'),
             ]
         );
 

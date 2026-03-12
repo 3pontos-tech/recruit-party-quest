@@ -77,16 +77,16 @@ it('counts offers extended correctly', function (): void {
 it('sums positions available correctly', function (): void {
     $teamId = $this->recruiter->team->getKey();
 
-    JobRequisition::factory()->for($this->recruiter->team, 'team')->create(['status' => RequisitionStatusEnum::Approved, 'positions_available' => '3']);
-    JobRequisition::factory()->for($this->recruiter->team, 'team')->create(['status' => RequisitionStatusEnum::Published, 'positions_available' => '2']);
-    JobRequisition::factory()->for($this->recruiter->team, 'team')->create(['status' => RequisitionStatusEnum::Closed, 'positions_available' => '5']);
+    JobRequisition::factory()->for($this->recruiter->team, 'team')->create(['status' => RequisitionStatusEnum::Approved, 'positions_available' => 3]);
+    JobRequisition::factory()->for($this->recruiter->team, 'team')->create(['status' => RequisitionStatusEnum::Published, 'positions_available' => 2]);
+    JobRequisition::factory()->for($this->recruiter->team, 'team')->create(['status' => RequisitionStatusEnum::Closed, 'positions_available' => 5]);
 
     Cache::forget('widget.recruitment_overview.'.$teamId);
 
     livewire(RecruitmentOverviewWidget::class)->assertOk();
 
     $stats = Cache::get('widget.recruitment_overview.'.$teamId);
-    expect((int) $stats['positions_available'])->toBe(5);
+    expect($stats['positions_available'])->toBe(5);
 });
 
 it('only counts data from the current team', function (): void {
