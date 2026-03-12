@@ -7,6 +7,7 @@ namespace He4rt\App\Livewire\Jobs;
 use DateTimeInterface;
 use He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource;
 use He4rt\Candidates\Models\SavedJob;
+use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
@@ -67,6 +68,7 @@ class SavedJobsWidget extends Component
      */
     private function formatJobData(SavedJob $saved): array
     {
+        /** @var JobRequisition $job */
         $job = $saved->jobRequisition;
 
         $salaryRange = null;
