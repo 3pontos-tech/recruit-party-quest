@@ -56,7 +56,7 @@ class AppPanelHooks
             PanelsRenderHook::USER_MENU_BEFORE,
             fn () => Blade::render(<<<'BLADE'
                @auth
-                    <x-panel-app::jobs.saved-jobs-widget />
+                    <livewire:panel-app.jobs.saved-jobs-widget />
                @endauth
             BLADE)
         );

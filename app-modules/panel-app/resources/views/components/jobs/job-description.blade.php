@@ -123,7 +123,7 @@
                     <x-panel-app::jobs.share-job-button :job="$jobRequisition" variant="icon-text" />
 
                     {{-- Bookmark Button --}}
-                    <x-panel-app::jobs.bookmark-job-button :job="$jobRequisition" variant="icon-text" />
+                    <livewire:panel-app.jobs.bookmark-job-button :job="$jobRequisition" variant="icon-text" />
                 @endif
             </div>
         </header>
