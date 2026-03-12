@@ -6,12 +6,14 @@ namespace He4rt\Organization\Filament\Widgets;
 
 use Filament\Widgets\ChartWidget;
 use He4rt\Applications\Models\Application;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 
 class ApplicationsPerDayWidget extends ChartWidget
 {
     public ?string $filter = '30';
+
     protected static ?int $sort = 2;
 
     protected ?string $pollingInterval = null;
@@ -40,15 +42,21 @@ class ApplicationsPerDayWidget extends ChartWidget
      */
     protected function getData(): array
     {
-        $range = $this->filter;
-        $days = collect(range($range, 0))->map(fn (int $i) => Date::today()->subDays($i)->format('Y-m-d'));
+        $range = (int) ($this->filter ?? 30);
+        $teamId = filament()->getTenant()?->getKey();
 
-        $counts = Application::query()
-            ->forCurrentTeam()
-            ->where('created_at', '>=', Date::today()->subDays($range))
-            ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
-            ->groupBy('date')
-            ->pluck('count', 'date');
+        $counts = Cache::remember(
+            sprintf('widget.applications_per_day.%s.%d', $teamId, $range),
+            now()->addMinutes(5),
+            static fn () => Application::query()
+                ->forCurrentTeam()
+                ->where('created_at', '>=', Date::today()->subDays($range - 1))
+                ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
+                ->groupBy('date')
+                ->pluck('count', 'date')
+        );
+
+        $days = collect(range($range - 1, 0))->map(fn (int $i) => Date::today()->subDays($i)->format('Y-m-d'));
 
         return [
             'datasets' => [
