@@ -184,7 +184,7 @@
                                     <div class="mt-2 space-y-1">
                                         <div class="text-text-medium flex items-center gap-2 text-xs">
                                             <x-he4rt::tag :icon="Heroicon::Clock" size="xs" variant="ghost">
-                                                {{ __('panel-organization::view.pipeline.active_since', ['date' => $record->updated_at->format('M j, Y')]) }}
+                                                {{ __('panel-organization::view.pipeline.active_since', ['date' => $record->updated_at->translatedFormat('M j, Y')]) }}
                                             </x-he4rt::tag>
                                         </div>
                                     </div>
@@ -200,7 +200,9 @@
                         <span class="text-text-medium">
                             {{ __('panel-organization::view.pipeline.application_submitted') }}
                         </span>
-                        <span class="text-text-high font-medium">{{ $record->created_at->format('M j, Y') }}</span>
+                        <span class="text-text-high font-medium">
+                            {{ $record->created_at->translatedFormat('M j, Y') }}
+                        </span>
                     </div>
                     <div class="mt-1 flex items-center justify-between text-xs">
                         <span class="text-text-medium">
