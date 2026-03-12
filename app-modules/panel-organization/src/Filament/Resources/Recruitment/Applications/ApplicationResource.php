@@ -38,10 +38,6 @@ class ApplicationResource extends Resource
         return (bool) auth()->user()?->hasAnyRole([Roles::SuperAdmin, Roles::Admin]);
     }
 
-    // Explicit override required: without this, Filament delegates to ApplicationPolicy
-    // via the Gate, where the Spatie Gate::before() callback can interfere with the
-    // permission check chain, causing canCreate() to return true for unauthorized roles.
-    // Applications in the Organization panel are created externally (via App panel).
     public static function canCreate(): bool
     {
         return false;
@@ -63,13 +59,6 @@ class ApplicationResource extends Resource
             'index' => ListApplications::route('/'),
             'edit' => EditApplication::route('/{record}/edit'),
             'view' => ViewApplication::route('/{record}/view'),
-        ];
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //            EvaluationsRelationManager::class,
         ];
     }
 

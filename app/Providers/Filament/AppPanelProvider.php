@@ -6,7 +6,6 @@ namespace App\Providers\Filament;
 
 use App\Enums\FilamentPanel;
 use App\Providers\Filament\Hooks\AppPanelHooks;
-use App\Providers\Filament\Scripts\AppPanelScripts;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\Provider;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -58,7 +57,6 @@ class AppPanelProvider extends PanelProvider
                 'gray' => Color::Gray,
             ])
             ->tap(fn (Panel $panel) => AppPanelHooks::register($panel))
-            ->tap(fn (Panel $panel) => AppPanelScripts::register($panel))
             ->viteTheme('app-modules/he4rt/resources/css/themes/3pontos/theme.css')
             ->discoverClusters(in: base_path('app-modules/panel-app/src/Filament/Clusters'), for: 'He4rt\\App\\Filament\\Clusters')
             ->discoverPages(in: base_path('app-modules/panel-app/src/Filament/Pages'), for: 'He4rt\\App\\Filament\\Pages')
