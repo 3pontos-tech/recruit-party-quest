@@ -10,21 +10,74 @@ use He4rt\Candidates\Models\SavedJob;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
+#[Lazy]
 class SavedJobsWidget extends Component
 {
     /** @var array<int, array<string, mixed>> */
     public array $savedJobs = [];
 
+    public int $savedJobsCount = 0;
+
+    public bool $loaded = false;
+
     public function mount(): void
     {
+        $this->loadCount();
+    }
+
+    public function loadJobs(): void
+    {
         $this->loadSavedJobs();
+        $this->loadCount();
+        $this->loaded = true;
     }
 
     #[On('saved-job-toggled')]
-    public function loadSavedJobs(): void
+    public function handleJobToggled(): void
+    {
+        $this->loadCount();
+        if ($this->loaded) {
+            $this->loadSavedJobs();
+        }
+    }
+
+    public function remove(string $jobRequisitionId): void
+    {
+        $candidate = auth()->user()?->candidate;
+
+        if (! $candidate) {
+            return;
+        }
+
+        SavedJob::query()->where('candidate_id', $candidate->id)
+            ->where('job_requisition_id', $jobRequisitionId)
+            ->delete();
+
+        $this->loadCount();
+        $this->loadSavedJobs();
+    }
+
+    public function render(): Factory|View
+    {
+        return view('panel-app::livewire.jobs.saved-jobs-widget');
+    }
+
+    private function loadCount(): void
+    {
+        if (! auth()->check() || ! auth()->user()->candidate) {
+            $this->savedJobsCount = 0;
+
+            return;
+        }
+
+        $this->savedJobsCount = auth()->user()->candidate->savedJobs()->count();
+    }
+
+    private function loadSavedJobs(): void
     {
         if (! auth()->check() || ! auth()->user()->candidate) {
             $this->savedJobs = [];
@@ -41,26 +94,6 @@ class SavedJobsWidget extends Component
             ->map(fn (SavedJob $saved) => $this->formatJobData($saved))
             ->values()
             ->all();
-    }
-
-    public function remove(string $jobRequisitionId): void
-    {
-        $candidate = auth()->user()?->candidate;
-
-        if (! $candidate) {
-            return;
-        }
-
-        SavedJob::query()->where('candidate_id', $candidate->id)
-            ->where('job_requisition_id', $jobRequisitionId)
-            ->delete();
-
-        $this->loadSavedJobs();
-    }
-
-    public function render(): Factory|View
-    {
-        return view('panel-app::livewire.jobs.saved-jobs-widget');
     }
 
     /**
