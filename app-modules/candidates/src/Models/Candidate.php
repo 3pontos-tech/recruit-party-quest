@@ -95,6 +95,14 @@ class Candidate extends BaseModel
     }
 
     /**
+     * @return HasMany<SavedJob, $this>
+     */
+    public function savedJobs(): HasMany
+    {
+        return $this->hasMany(SavedJob::class)->latest('saved_at');
+    }
+
+    /**
      * @return BelongsToMany<Skill, $this, CandidateSkill>
      */
     public function skills(): BelongsToMany
