@@ -60,6 +60,9 @@ return [
         'talent_pool' => [
             'label' => 'Talent Pool',
         ],
+        'assistant' => [
+            'label' => 'Assistant',
+        ],
     ],
     'requisition_priority' => [
         'low' => [
