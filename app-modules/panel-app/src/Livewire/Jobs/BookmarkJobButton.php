@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\App\Livewire\Jobs;
 
-use He4rt\Candidates\Models\SavedJob;
+use He4rt\Candidates\Models\CandidateJobSaved;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -19,7 +19,7 @@ class BookmarkJobButton extends Component
     public function mount(): void
     {
         if (auth()->check() && auth()->user()->candidate) {
-            $this->isSaved = SavedJob::query()->where('candidate_id', auth()->user()->candidate->id)
+            $this->isSaved = CandidateJobSaved::query()->where('candidate_id', auth()->user()->candidate->id)
                 ->where('job_requisition_id', $this->job->id)
                 ->exists();
         }
@@ -39,7 +39,7 @@ class BookmarkJobButton extends Component
             return;
         }
 
-        $existing = SavedJob::query()->where('candidate_id', $candidate->id)
+        $existing = CandidateJobSaved::query()->where('candidate_id', $candidate->id)
             ->where('job_requisition_id', $this->job->id)
             ->first();
 
@@ -47,10 +47,9 @@ class BookmarkJobButton extends Component
             $existing->delete();
             $this->isSaved = false;
         } else {
-            SavedJob::query()->create([
+            CandidateJobSaved::query()->create([
                 'candidate_id' => $candidate->id,
                 'job_requisition_id' => $this->job->id,
-                'saved_at' => now(),
             ]);
             $this->isSaved = true;
         }

@@ -6,7 +6,7 @@ namespace He4rt\App\Livewire\Jobs;
 
 use DateTimeInterface;
 use He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource;
-use He4rt\Candidates\Models\SavedJob;
+use He4rt\Candidates\Models\CandidateJobSaved;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -53,7 +53,7 @@ class SavedJobsWidget extends Component
             return;
         }
 
-        SavedJob::query()->where('candidate_id', $candidate->id)
+        CandidateJobSaved::query()->where('candidate_id', $candidate->id)
             ->where('job_requisition_id', $jobRequisitionId)
             ->delete();
 
@@ -74,7 +74,7 @@ class SavedJobsWidget extends Component
             return;
         }
 
-        $this->savedJobsCount = auth()->user()->candidate->savedJobs()->count();
+        $this->savedJobsCount = auth()->user()->candidate->bookmarkedJobs()->count();
     }
 
     private function loadSavedJobs(): void
@@ -86,12 +86,12 @@ class SavedJobsWidget extends Component
         }
 
         $this->savedJobs = auth()->user()->candidate
-            ->savedJobs()
+            ->bookmarkedJobs()
             ->with([
                 'jobRequisition' => fn ($q) => $q->withCount('applications')->with(['post', 'team', 'department']),
             ])
             ->get()
-            ->map(fn (SavedJob $saved) => $this->formatJobData($saved))
+            ->map(fn (CandidateJobSaved $saved) => $this->formatJobData($saved))
             ->values()
             ->all();
     }
@@ -99,7 +99,7 @@ class SavedJobsWidget extends Component
     /**
      * @return array<string, mixed>
      */
-    private function formatJobData(SavedJob $saved): array
+    private function formatJobData(CandidateJobSaved $saved): array
     {
         /** @var JobRequisition $job */
         $job = $saved->jobRequisition;
@@ -125,7 +125,7 @@ class SavedJobsWidget extends Component
             'salaryRange' => $salaryRange,
             'publishedAt' => $job->published_at instanceof DateTimeInterface ? $job->published_at->format('d/m/Y') : null,
             'applicationsCount' => $job->applications_count ?? 0,
-            'savedAt' => $saved->saved_at->format('d/m/Y'),
+            'savedAt' => $saved->created_at->format('d/m/Y'),
         ];
     }
 }
