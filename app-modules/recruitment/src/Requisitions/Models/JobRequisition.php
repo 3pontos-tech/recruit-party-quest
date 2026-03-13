@@ -41,9 +41,10 @@ use Illuminate\Support\Carbon;
  * @property string $slug
  * @property string $team_id
  * @property string $department_id
- * @property string $work_arrangement
- * @property string $employment_type
- * @property string $experience_level
+ * @property WorkArrangementEnum $work_arrangement
+ * @property EmploymentTypeEnum $employment_type
+ * @property ExperienceLevelEnum $experience_level
+ * @property JobCategoryEnum|null $category
  * @property string $positions_available
  * @property int|null $salary_range_min
  * @property int|null $salary_range_max

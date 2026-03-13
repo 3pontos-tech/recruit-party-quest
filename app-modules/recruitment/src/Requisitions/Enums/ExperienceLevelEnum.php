@@ -25,6 +25,7 @@ enum ExperienceLevelEnum: string implements HasColor, HasIcon, HasLabel
     case Head = 'head';
     case CLevel = 'c_level';
     case TalentPool = 'talent_pool';
+    case Assistant = 'assistant';
 
     public function getColor(): array
     {
@@ -37,6 +38,7 @@ enum ExperienceLevelEnum: string implements HasColor, HasIcon, HasLabel
             self::Coordinator, self::Manager => Color::Indigo,
             self::Head, self::CLevel => Color::Gray,
             self::TalentPool => Color::Purple,
+            self::Assistant => Color::Pink,
         };
     }
 
@@ -53,6 +55,7 @@ enum ExperienceLevelEnum: string implements HasColor, HasIcon, HasLabel
             self::Head => Heroicon::CommandLine,
             self::CLevel => Heroicon::Trophy,
             self::TalentPool => Heroicon::Users,
+            self::Assistant => Heroicon::UserCircle,
         };
     }
 

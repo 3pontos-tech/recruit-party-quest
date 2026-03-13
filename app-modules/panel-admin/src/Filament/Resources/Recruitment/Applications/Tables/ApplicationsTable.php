@@ -7,8 +7,11 @@ namespace He4rt\Admin\Filament\Resources\Recruitment\Applications\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\CandidateSourceEnum;
@@ -89,13 +92,16 @@ class ApplicationsTable
                     ->label(__('applications::filament.filters.current_stage'))
                     ->relationship('currentStage', 'name')
                     ->preload(),
+                TrashedFilter::make(),
             ])
             ->recordActions([
                 EditAction::make(),
+                RestoreAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }

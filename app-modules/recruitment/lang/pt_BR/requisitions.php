@@ -60,6 +60,9 @@ return [
         'talent_pool' => [
             'label' => 'Banco de Talentos',
         ],
+        'assistant' => [
+            'label' => 'Assistente',
+        ],
     ],
     'requisition_priority' => [
         'low' => [

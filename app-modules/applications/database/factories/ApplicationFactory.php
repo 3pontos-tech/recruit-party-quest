@@ -65,6 +65,13 @@ class ApplicationFactory extends Factory
         ]);
     }
 
+    public function withoutCurrentStage(): static
+    {
+        return $this->afterCreating(function (Application $application): void {
+            $application->update(['current_stage_id' => null]);
+        });
+    }
+
     public function configure(): static
     {
         return $this->afterCreating(function (Application $application): void {

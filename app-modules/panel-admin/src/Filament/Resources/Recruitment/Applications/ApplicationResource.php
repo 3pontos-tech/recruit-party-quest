@@ -16,6 +16,9 @@ use He4rt\Admin\Filament\Resources\Recruitment\Applications\RelationManagers\Eva
 use He4rt\Admin\Filament\Resources\Recruitment\Applications\Schemas\ApplicationForm;
 use He4rt\Admin\Filament\Resources\Recruitment\Applications\Tables\ApplicationsTable;
 use He4rt\Applications\Models\Application;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Override;
 use UnitEnum;
 
 class ApplicationResource extends Resource
@@ -76,5 +79,17 @@ class ApplicationResource extends Resource
     public static function getNavigationLabel(): string
     {
         return __('panel-admin::filament.resources.recruitment.applications.navigation_label');
+    }
+
+    /**
+     * @return Builder<Application>
+     */
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 }

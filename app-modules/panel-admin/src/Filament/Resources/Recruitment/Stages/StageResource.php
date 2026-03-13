@@ -17,6 +17,7 @@ use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Screening\Filament\RelationManagers\ScreeningQuestionsRelationManager;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Override;
 
 class StageResource extends Resource
 {
@@ -56,6 +57,19 @@ class StageResource extends Resource
     /**
      * @return Builder<Stage>
      */
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
+    }
+
+    /**
+     * @return Builder<Stage>
+     */
+    #[Override]
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
         return parent::getRecordRouteBindingEloquentQuery()

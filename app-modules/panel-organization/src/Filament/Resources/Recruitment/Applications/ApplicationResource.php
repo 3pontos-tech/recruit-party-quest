@@ -38,6 +38,11 @@ class ApplicationResource extends Resource
         return (bool) auth()->user()?->hasAnyRole([Roles::SuperAdmin, Roles::Admin]);
     }
 
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return ApplicationForm::configure($schema);
@@ -54,13 +59,6 @@ class ApplicationResource extends Resource
             'index' => ListApplications::route('/'),
             'edit' => EditApplication::route('/{record}/edit'),
             'view' => ViewApplication::route('/{record}/view'),
-        ];
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //            EvaluationsRelationManager::class,
         ];
     }
 

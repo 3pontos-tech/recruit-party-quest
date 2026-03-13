@@ -99,6 +99,14 @@ class Candidate extends BaseModel implements HasMedia
     }
 
     /**
+     * @return HasMany<CandidateJobSaved, $this>
+     */
+    public function bookmarkedJobs(): HasMany
+    {
+        return $this->hasMany(CandidateJobSaved::class)->latest();
+    }
+
+    /**
      * @return BelongsToMany<Skill, $this, CandidateSkill>
      */
     public function skills(): BelongsToMany
