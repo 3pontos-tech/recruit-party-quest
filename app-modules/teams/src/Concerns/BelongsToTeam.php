@@ -7,6 +7,7 @@ namespace He4rt\Teams\Concerns;
 use He4rt\Teams\Team;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use RuntimeException;
 
 /**
  * Trait for models that belong to a Team (tenant-aware).
@@ -47,10 +48,8 @@ trait BelongsToTeam
     {
         $currentTeam = filament()->getTenant();
 
-        if ($currentTeam instanceof Team) {
-            return $query->where($this->getTable().'.team_id', $currentTeam->id);
-        }
+        throw_unless($currentTeam instanceof Team, RuntimeException::class, 'scopeForCurrentTeam() called outside a tenant context.');
 
-        return $query;
+        return $query->where($this->getTable().'.team_id', $currentTeam->id);
     }
 }
