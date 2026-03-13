@@ -45,25 +45,6 @@
                     <x-slot:description>
                         {{ $category->getDescription() }}
                     </x-slot>
-
-                    <x-slot:footer class="mt-auto border-t-0 pt-0">
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-col gap-1">
-                                <x-he4rt::text>
-                                    {{ __('panel-app::filament.categories.average_salary') }}
-                                </x-he4rt::text>
-                                <x-he4rt::heading :level="4" size="2xl">
-                                    R$ {{ number_format($category->getAverageSalary(), 0, ',', '.') }}
-                                </x-he4rt::heading>
-                            </div>
-                            <div>
-                                <x-he4rt::icon
-                                    icon="heroicon-o-chevron-right"
-                                    class="transition-transform group-hover:translate-x-1"
-                                />
-                            </div>
-                        </div>
-                    </x-slot>
                 </x-he4rt::card>
             @endforeach
         </div>

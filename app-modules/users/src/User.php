@@ -85,7 +85,13 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
 
     public function getFilamentAvatarUrl(): string
     {
-        // $avatar = $this->getFirstMedia('profile-pictures');
+        $media = $this->candidate?->getFirstMedia('avatar');
+
+        if ($media !== null) {
+            return $media->hasGeneratedConversion('thumb')
+                ? $media->getUrl('thumb')
+                : $media->getUrl();
+        }
 
         $query = http_build_query([
             'name' => str($this->name)

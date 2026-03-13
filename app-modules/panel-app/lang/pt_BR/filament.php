@@ -57,6 +57,14 @@ return [
         'by' => 'por',
         'empty' => 'Nenhum histórico de fases disponível.',
     ],
+    'profile' => [
+        'tabs' => [
+            'profile' => 'Perfil',
+            'career' => 'Carreira',
+            'links' => 'Links',
+            'account' => 'Conta',
+        ],
+    ],
     'widgets' => [
         'user_stats' => [
             'total_applications' => 'Total de Candidaturas',

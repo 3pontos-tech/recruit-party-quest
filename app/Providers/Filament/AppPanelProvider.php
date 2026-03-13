@@ -16,10 +16,12 @@ use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Width;
 use He4rt\App\Filament\Pages\AppDashboard;
 use He4rt\App\Filament\Pages\AppLoginPage;
+use He4rt\App\Filament\Pages\CandidateMyProfilePage;
 use He4rt\App\Livewire\MyProfile\CandidateEducation;
 use He4rt\App\Livewire\MyProfile\CandidateLinks;
 use He4rt\App\Livewire\MyProfile\CandidatePreferences;
 use He4rt\App\Livewire\MyProfile\CandidateProfileInfo;
+use He4rt\App\Livewire\MyProfile\CandidateResumeUpload;
 use He4rt\App\Livewire\MyProfile\CandidateSkills;
 use He4rt\App\Livewire\MyProfile\CandidateWorkExperience;
 use He4rt\App\RedirectIfOnboardingIncomplete;
@@ -69,7 +71,9 @@ class AppPanelProvider extends PanelProvider
             ->plugins([
                 BreezyCore::make()
                     ->myProfile()
+                    ->customMyProfilePage(CandidateMyProfilePage::class)
                     ->myProfileComponents([
+                        'candidate_resume_upload' => CandidateResumeUpload::class,
                         'candidate_profile_info' => CandidateProfileInfo::class,
                         'candidate_preferences' => CandidatePreferences::class,
                         'candidate_education' => CandidateEducation::class,

@@ -57,6 +57,14 @@ return [
         'by' => 'by',
         'empty' => 'No stage history available.',
     ],
+    'profile' => [
+        'tabs' => [
+            'profile' => 'Profile',
+            'career' => 'Career',
+            'links' => 'Links',
+            'account' => 'Account',
+        ],
+    ],
     'widgets' => [
         'user_stats' => [
             'total_applications' => 'Total Applications',

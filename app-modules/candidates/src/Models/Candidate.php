@@ -19,7 +19,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\File;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Tags\HasTags;
 
 /**
@@ -39,6 +42,7 @@ use Spatie\Tags\HasTags;
  * @property string|null $source
  * @property bool $is_onboarded
  * @property Carbon|null $onboarding_completed_at
+ * @property Carbon|null $cv_last_uploaded_at
  * @property string|null $timezone
  * @property string $preferred_language
  * @property bool $data_consent_given
@@ -55,7 +59,7 @@ use Spatie\Tags\HasTags;
  */
 #[UsePolicy(CandidatePolicy::class)]
 #[UseFactory(CandidateFactory::class)]
-class Candidate extends BaseModel
+class Candidate extends BaseModel implements HasMedia
 {
     use HasAddress;
     use HasTags;
@@ -168,6 +172,42 @@ class Candidate extends BaseModel
         return $missing;
     }
 
+    public function isCvUploadOnCooldown(): bool
+    {
+        if ($this->cv_last_uploaded_at === null) {
+            return false;
+        }
+
+        return $this->cv_last_uploaded_at->diffInDays(now()) < 3;
+    }
+
+    public function cvCooldownDaysRemaining(): int
+    {
+        if ($this->cv_last_uploaded_at === null) {
+            return 0;
+        }
+
+        return max(0, 3 - (int) $this->cv_last_uploaded_at->diffInDays(now()));
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('avatar')
+            ->singleFile()
+            ->acceptsFile(fn (File $file): bool => in_array(
+                $file->mimeType,
+                ['image/jpeg', 'image/png', 'image/webp']
+            ));
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->performOnCollections('avatar')
+            ->width(200)
+            ->height(200);
+    }
+
     /** @return Attribute<int, void> */
     protected function totalExperienceMonths(): Attribute
     {
@@ -207,6 +247,7 @@ class Candidate extends BaseModel
             'is_onboarded' => 'boolean',
             'data_consent_given' => 'boolean',
             'onboarding_completed_at' => 'datetime',
+            'cv_last_uploaded_at' => 'datetime',
         ];
     }
 
