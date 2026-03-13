@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use He4rt\App\Livewire\Jobs\BookmarkJobButton;
-use He4rt\Candidates\Models\SavedJob;
+use He4rt\Candidates\Models\CandidateJobSaved;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Users\User;
 
@@ -31,7 +31,7 @@ it('starts with isSaved false when job is not bookmarked', function (): void {
 });
 
 it('starts with isSaved true when job is already bookmarked', function (): void {
-    SavedJob::factory()->create([
+    CandidateJobSaved::factory()->create([
         'candidate_id' => $this->candidate->id,
         'job_requisition_id' => $this->job->id,
     ]);
@@ -45,14 +45,14 @@ it('saves the job when toggled and not yet bookmarked', function (): void {
         ->call('toggle')
         ->assertSet('isSaved', true);
 
-    $this->assertDatabaseHas('candidate_saved_jobs', [
+    $this->assertDatabaseHas('job_requisition_bookmarks', [
         'candidate_id' => $this->candidate->id,
         'job_requisition_id' => $this->job->id,
     ]);
 });
 
 it('removes the bookmark when toggled and already saved', function (): void {
-    SavedJob::factory()->create([
+    CandidateJobSaved::factory()->create([
         'candidate_id' => $this->candidate->id,
         'job_requisition_id' => $this->job->id,
     ]);
@@ -61,7 +61,7 @@ it('removes the bookmark when toggled and already saved', function (): void {
         ->call('toggle')
         ->assertSet('isSaved', false);
 
-    $this->assertDatabaseMissing('candidate_saved_jobs', [
+    $this->assertDatabaseMissing('job_requisition_bookmarks', [
         'candidate_id' => $this->candidate->id,
         'job_requisition_id' => $this->job->id,
     ]);

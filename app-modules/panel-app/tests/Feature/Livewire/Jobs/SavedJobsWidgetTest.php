@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use He4rt\App\Livewire\Jobs\SavedJobsWidget;
-use He4rt\Candidates\Models\SavedJob;
+use He4rt\Candidates\Models\CandidateJobSaved;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Users\User;
 
@@ -27,7 +27,7 @@ it('renders successfully', function (): void {
 it('loads only the count without fetching the full list when event is received', function (): void {
     $jobs = JobRequisition::factory()->available()->count(3)->create();
 
-    $jobs->each(fn (JobRequisition $job) => SavedJob::factory()->create([
+    $jobs->each(fn (JobRequisition $job) => CandidateJobSaved::factory()->create([
         'candidate_id' => $this->candidate->getKey(),
         'job_requisition_id' => $job->getKey(),
     ]));
@@ -43,7 +43,7 @@ it('loads only the count without fetching the full list when event is received',
 it('loads the full list and sets loaded to true when loadJobs is called', function (): void {
     $jobs = JobRequisition::factory()->available()->count(2)->create();
 
-    $jobs->each(fn (JobRequisition $job) => SavedJob::factory()->create([
+    $jobs->each(fn (JobRequisition $job) => CandidateJobSaved::factory()->create([
         'candidate_id' => $this->candidate->getKey(),
         'job_requisition_id' => $job->getKey(),
     ]));
@@ -58,7 +58,7 @@ it('loads the full list and sets loaded to true when loadJobs is called', functi
 it('removes a saved job when remove is called', function (): void {
     $job = JobRequisition::factory()->available()->create();
 
-    SavedJob::factory()->create([
+    CandidateJobSaved::factory()->create([
         'candidate_id' => $this->candidate->getKey(),
         'job_requisition_id' => $job->getKey(),
     ]);
@@ -67,7 +67,7 @@ it('removes a saved job when remove is called', function (): void {
         ->call('loadJobs')
         ->call('remove', $job->getKey());
 
-    $this->assertDatabaseMissing('candidate_saved_jobs', [
+    $this->assertDatabaseMissing('job_requisition_bookmarks', [
         'candidate_id' => $this->candidate->getKey(),
         'job_requisition_id' => $job->getKey(),
     ]);
@@ -76,7 +76,7 @@ it('removes a saved job when remove is called', function (): void {
 it('updates the count after removing a saved job', function (): void {
     $job = JobRequisition::factory()->available()->create();
 
-    SavedJob::factory()->create([
+    CandidateJobSaved::factory()->create([
         'candidate_id' => $this->candidate->getKey(),
         'job_requisition_id' => $job->getKey(),
     ]);
@@ -99,7 +99,7 @@ it('updates the count when saved-job-toggled event is dispatched', function (): 
 
     $job = JobRequisition::factory()->available()->create();
 
-    SavedJob::factory()->create([
+    CandidateJobSaved::factory()->create([
         'candidate_id' => $this->candidate->getKey(),
         'job_requisition_id' => $job->getKey(),
     ]);
@@ -118,7 +118,7 @@ it('refreshes the full list when saved-job-toggled is dispatched and the widget 
 
     $job = JobRequisition::factory()->available()->create();
 
-    SavedJob::factory()->create([
+    CandidateJobSaved::factory()->create([
         'candidate_id' => $this->candidate->getKey(),
         'job_requisition_id' => $job->getKey(),
     ]);
