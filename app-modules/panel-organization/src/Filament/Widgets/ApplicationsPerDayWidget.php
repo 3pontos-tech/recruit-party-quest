@@ -9,6 +9,7 @@ use He4rt\Applications\Models\Application;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class ApplicationsPerDayWidget extends ChartWidget
 {
@@ -43,7 +44,7 @@ class ApplicationsPerDayWidget extends ChartWidget
     protected function getData(): array
     {
         $range = (int) ($this->filter ?? 30);
-        $teamId = filament()->getTenant()?->getKey();
+        $teamId = filament()->getTenant()?->getKey() ?? throw new RuntimeException('No tenant context.');
 
         $counts = Cache::remember(
             sprintf('widget.applications_per_day.%s.%d', $teamId, $range),

@@ -11,6 +11,7 @@ use He4rt\Applications\Models\Application;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use Illuminate\Support\Facades\Cache;
+use RuntimeException;
 
 class RecruitmentOverviewWidget extends StatsOverviewWidget
 {
@@ -20,7 +21,7 @@ class RecruitmentOverviewWidget extends StatsOverviewWidget
 
     protected function getStats(): array
     {
-        $teamId = filament()->getTenant()?->getKey();
+        $teamId = filament()->getTenant()?->getKey() ?? throw new RuntimeException('No tenant context.');
 
         $stats = Cache::remember(
             'widget.recruitment_overview.'.$teamId,

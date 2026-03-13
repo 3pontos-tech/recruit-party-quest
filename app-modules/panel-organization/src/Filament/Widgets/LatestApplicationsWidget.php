@@ -8,6 +8,7 @@ use Filament\Widgets\Widget;
 use He4rt\Applications\Models\Application;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use RuntimeException;
 
 class LatestApplicationsWidget extends Widget
 {
@@ -24,7 +25,7 @@ class LatestApplicationsWidget extends Widget
      */
     protected function getViewData(): array
     {
-        $teamId = filament()->getTenant()?->getKey();
+        $teamId = filament()->getTenant()?->getKey() ?? throw new RuntimeException('No tenant context.');
 
         /** @var Collection<int, Application> $applications */
         $applications = Cache::remember(
