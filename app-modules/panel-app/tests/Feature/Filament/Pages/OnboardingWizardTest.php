@@ -110,7 +110,7 @@ describe('Complete Registration Flow', function (): void {
             ->call('handleRegistration')
             ->assertOk()
             ->assertHasNoFormErrors()
-            ->assertRedirectToRoute('filament.app.pages.app-dashboard');
+            ->assertRedirectToRoute('filament.app.pages.dashboard');
 
         assertDatabaseHas(Candidate::class, [
             'user_id' => $this->user->id,

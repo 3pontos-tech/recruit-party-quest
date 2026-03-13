@@ -23,9 +23,10 @@ class RedirectIfOnboardingIncomplete
 
         /** @var ?Candidate $candidate */
         $candidate = $request->user()->candidate;
+        $isLandingPage = $request->routeIs('filament.app.pages.landing-page');
         $isOnboarding = $request->route()->uri === 'onboarding';
 
-        if ((! $candidate || ! $candidate->hasCompletedOnboarding()) && ! $isOnboarding) {
+        if ((! $candidate || ! $candidate->hasCompletedOnboarding()) && ! $isOnboarding && ! $isLandingPage) {
             return redirect(route('filament.app.pages.onboarding'));
         }
 

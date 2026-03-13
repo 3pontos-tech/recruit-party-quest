@@ -46,8 +46,10 @@ it('render', function (): void {
 test('candidate can not see other pages until onboarding was made ', function (): void {
     $this->candidate->update(['is_onboarded' => false]);
     get('/')
-        ->assertRedirectToRoute('filament.app.pages.onboarding');
+        ->assertSuccessful();
 
+    get('/dashboard')
+        ->assertRedirectToRoute('filament.app.pages.onboarding');
 });
 
 describe('wizard steps', function (): void {
@@ -101,7 +103,7 @@ it('should be able to onboard', function (): void {
         ->call('handleRegistration')
         ->assertOk()
         ->assertHasNoFormErrors()
-        ->assertRedirectToRoute('filament.app.pages.app-dashboard');
+        ->assertRedirectToRoute('filament.app.pages.dashboard');
 
     assertDatabaseHas(Candidate::class, [
         'experience_level' => 'intern',

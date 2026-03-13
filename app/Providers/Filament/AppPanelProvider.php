@@ -17,6 +17,7 @@ use Filament\Support\Enums\Width;
 use He4rt\App\Filament\Pages\AppDashboard;
 use He4rt\App\Filament\Pages\AppLoginPage;
 use He4rt\App\Filament\Pages\CandidateMyProfilePage;
+use He4rt\App\Filament\Pages\LandingPage;
 use He4rt\App\Livewire\MyProfile\CandidateEducation;
 use He4rt\App\Livewire\MyProfile\CandidateLinks;
 use He4rt\App\Livewire\MyProfile\CandidatePreferences;
@@ -65,6 +66,7 @@ class AppPanelProvider extends PanelProvider
             ->discoverResources(in: base_path('app-modules/panel-app/src/Filament/Resources'), for: 'He4rt\\App\\Filament\\Resources')
             ->discoverWidgets(in: base_path('app-modules/panel-app/src/Filament/Widgets'), for: 'He4rt\\App\\Filament\\Widgets')
             ->pages([
+                LandingPage::class,
                 AppDashboard::class,
                 TermPage::class,
             ])
