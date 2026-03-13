@@ -17,6 +17,8 @@ class ProfileResumeFileUpload extends FileUpload
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->label(__('panel-app::pages/settings.resume_upload.cv_file_label'))
             ->acceptedFileTypes(['application/pdf'])
             ->maxSize(10240)
