@@ -9,6 +9,7 @@ return [
         'submit' => 'Salvar Perfil',
         'notify' => 'Informações do perfil atualizadas com sucesso.',
         'fields' => [
+            'avatar' => 'Foto de Perfil',
             'headline' => 'Título Profissional',
             'summary' => 'Resumo',
             'phone_number' => 'Telefone',

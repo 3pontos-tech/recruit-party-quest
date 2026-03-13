@@ -9,6 +9,7 @@ return [
         'submit' => 'Save Profile',
         'notify' => 'Profile information updated successfully.',
         'fields' => [
+            'avatar' => 'Profile Picture',
             'headline' => 'Headline',
             'summary' => 'Summary',
             'phone_number' => 'Phone Number',

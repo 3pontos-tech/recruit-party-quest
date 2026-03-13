@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace He4rt\App\Livewire\MyProfile;
 
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Arr;
 use Jeffgreco13\FilamentBreezy\Livewire\MyProfileComponent;
 
 /**
@@ -37,7 +39,18 @@ class CandidateProfileInfo extends MyProfileComponent
     public function form(Schema $schema): Schema
     {
         return $schema
+            ->model(fn () => auth()->user()->candidate->loadMissing('media'))
             ->components([
+                SpatieMediaLibraryFileUpload::make('avatar')
+                    ->label(__('panel-app::pages/settings.profile_info.fields.avatar'))
+                    ->disk('public')
+                    ->collection('avatar')
+                    ->visibility('public')
+                    ->avatar()
+                    ->image()
+                    ->maxSize(2048)
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                    ->columnSpanFull(),
                 TextInput::make('headline')
                     ->label(__('panel-app::pages/settings.profile_info.fields.headline'))
                     ->prefixIcon('heroicon-o-user-circle')
@@ -66,7 +79,18 @@ class CandidateProfileInfo extends MyProfileComponent
     {
         $data = $this->form->getState();
 
-        auth()->user()->candidate->update($data);
+        $candidate = auth()->user()->candidate;
+        $candidate->update(Arr::except($data, ['avatar']));
+
+        $this->form->model($candidate)->saveRelationships();
+
+        $candidate->refresh();
+
+        $this->form->fill([
+            'headline' => $candidate->headline,
+            'summary' => $candidate->summary,
+            'phone_number' => $candidate->phone_number,
+        ]);
 
         Notification::make()
             ->success()
