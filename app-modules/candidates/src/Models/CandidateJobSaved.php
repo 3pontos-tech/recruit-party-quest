@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Candidates\Models;
 
 use App\Models\BaseModel;
-use He4rt\Candidates\Database\Factories\SavedJobFactory;
+use He4rt\Candidates\Database\Factories\CandidateJobSavedFactory;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -16,7 +16,6 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $candidate_id
  * @property string $job_requisition_id
- * @property Carbon $saved_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Candidate $candidate
@@ -24,15 +23,14 @@ use Illuminate\Support\Carbon;
  *
  * @extends BaseModel<Factory>
  */
-#[UseFactory(SavedJobFactory::class)]
-class SavedJob extends BaseModel
+#[UseFactory(CandidateJobSavedFactory::class)]
+class CandidateJobSaved extends BaseModel
 {
-    protected $table = 'candidate_saved_jobs';
+    protected $table = 'job_requisition_bookmarks';
 
     protected $fillable = [
         'candidate_id',
         'job_requisition_id',
-        'saved_at',
     ];
 
     /**
@@ -49,12 +47,5 @@ class SavedJob extends BaseModel
     public function jobRequisition(): BelongsTo
     {
         return $this->belongsTo(JobRequisition::class);
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'saved_at' => 'datetime',
-        ];
     }
 }

@@ -95,11 +95,11 @@ class Candidate extends BaseModel
     }
 
     /**
-     * @return HasMany<SavedJob, $this>
+     * @return HasMany<CandidateJobSaved, $this>
      */
-    public function savedJobs(): HasMany
+    public function bookmarkedJobs(): HasMany
     {
-        return $this->hasMany(SavedJob::class)->latest('saved_at');
+        return $this->hasMany(CandidateJobSaved::class)->latest();
     }
 
     /**
