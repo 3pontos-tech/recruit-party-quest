@@ -13,12 +13,12 @@ class RedirectIfOnboardingIncomplete
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (! auth()->check()) {
+        if ($request->routeIs('filament.app.auth.logout') || $request->routeIs('filament.app.auth.*')) {
             return $next($request);
         }
 
-        if ($request->routeIs('filament.app.auth.logout') || $request->routeIs('filament.app.auth.*')) {
-            return $next($request);
+        if (! auth()->check()) {
+            return redirect(route('filament.app.auth.login'));
         }
 
         /** @var ?Candidate $candidate */

@@ -39,6 +39,7 @@ use Spatie\Tags\HasTags;
  * @property string|null $source
  * @property bool $is_onboarded
  * @property Carbon|null $onboarding_completed_at
+ * @property Carbon|null $cv_last_uploaded_at
  * @property string|null $timezone
  * @property string $preferred_language
  * @property bool $data_consent_given
@@ -160,6 +161,24 @@ class Candidate extends BaseModel
         return $missing;
     }
 
+    public function isCvUploadOnCooldown(): bool
+    {
+        if ($this->cv_last_uploaded_at === null) {
+            return false;
+        }
+
+        return $this->cv_last_uploaded_at->diffInDays(now()) < 3;
+    }
+
+    public function cvCooldownDaysRemaining(): int
+    {
+        if ($this->cv_last_uploaded_at === null) {
+            return 0;
+        }
+
+        return max(0, 3 - (int) $this->cv_last_uploaded_at->diffInDays(now()));
+    }
+
     /** @return Attribute<int, void> */
     protected function totalExperienceMonths(): Attribute
     {
@@ -199,6 +218,7 @@ class Candidate extends BaseModel
             'is_onboarded' => 'boolean',
             'data_consent_given' => 'boolean',
             'onboarding_completed_at' => 'datetime',
+            'cv_last_uploaded_at' => 'datetime',
         ];
     }
 

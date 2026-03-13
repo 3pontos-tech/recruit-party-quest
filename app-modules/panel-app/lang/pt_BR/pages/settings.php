@@ -128,6 +128,24 @@ return [
         ],
     ],
 
+    'resume_upload' => [
+        'heading' => 'CV / Currículo',
+        'description' => 'Faça upload do seu CV para adicionar automaticamente experiências e formações ao seu perfil. Um cooldown de 3 dias é aplicado entre uploads.',
+        'upload_button' => 'Enviar CV',
+        'cv_file_label' => 'Arquivo de CV',
+        'cv_file_helper' => 'Envie seu currículo em formato PDF (máx. 10 MB).',
+        'notify_uploading' => 'Seu CV está sendo processado pela IA...',
+        'notify_success' => 'Seu perfil foi atualizado com base no seu CV.',
+        'notify_error' => 'Ocorreu um erro ao processar seu CV. Tente novamente mais tarde.',
+        'cooldown_message' => 'Você poderá enviar um novo CV em :days dia(s).',
+        'modal_title' => 'Antes de enviar',
+        'modal_body' => 'Os dados extraídos do seu CV serão adicionados às seguintes seções do seu perfil:',
+        'modal_adds_experiences' => 'Experiências profissionais',
+        'modal_adds_education' => 'Formações acadêmicas',
+        'modal_cancel' => 'Cancelar',
+        'modal_confirm' => 'Entendido, enviar CV',
+    ],
+
     'links' => [
         'heading' => 'Links Sociais',
         'description' => 'Gerencie seus links sociais e profissionais.',
