@@ -48,7 +48,7 @@ it('redirects non-onboarding pages to onboarding when candidate has not complete
 
     actingAs($user);
 
-    get(route('filament.app.pages.app-dashboard'))
+    get(route('filament.app.pages.dashboard'))
         ->assertRedirect(route('filament.app.pages.onboarding'));
 });
 
@@ -57,6 +57,6 @@ it('redirects non-onboarding pages to onboarding when user has no candidate', fu
 
     actingAs($user);
 
-    get(route('filament.app.pages.app-dashboard'))
+    get(route('filament.app.pages.dashboard'))
         ->assertRedirect(route('filament.app.pages.onboarding'));
 });

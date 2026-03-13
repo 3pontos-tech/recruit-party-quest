@@ -29,6 +29,11 @@ final class AppLoginPage extends Login
         }
     }
 
+    protected function getRedirectUrl(): string
+    {
+        return route('filament.app.pages.dashboard');
+    }
+
     protected function getAuthenticateFormAction(): He4rtAction
     {
         return He4rtAction::make('authenticate')
