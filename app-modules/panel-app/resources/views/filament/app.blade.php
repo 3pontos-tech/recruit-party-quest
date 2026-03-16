@@ -1,4 +1,4 @@
-<filament::page full-height="true">
+<div>
     <div class="pointer-events-none absolute top-0 left-0 -z-10 h-screen overflow-hidden">
         <div class="text-outline-light dark:text-outline-dark h-auto w-full -translate-x-1/3 -translate-y-1/3">
             @include('partials.hourglass')
@@ -61,4 +61,5 @@
             </div>
         </div>
     </section>
-</filament::page>
+    <x-filament-actions::modals />
+</div>
