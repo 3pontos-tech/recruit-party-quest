@@ -117,7 +117,7 @@ class CandidateEducation extends MyProfileComponent
                     'degree' => $entry['degree'],
                     'field_of_study' => $entry['field_of_study'],
                     'start_date' => $entry['start_date'],
-                    'end_date' => $entry['end_date'],
+                    'end_date' => $entry['end_date'] ?? null,
                     'is_enrolled' => $entry['is_enrolled'] ?? false,
                 ]);
                 $existingIds[] = $entry['id'];
@@ -127,7 +127,7 @@ class CandidateEducation extends MyProfileComponent
                     'degree' => $entry['degree'],
                     'field_of_study' => $entry['field_of_study'],
                     'start_date' => $entry['start_date'],
-                    'end_date' => $entry['end_date'],
+                    'end_date' => $entry['end_date'] ?? null,
                     'is_enrolled' => $entry['is_enrolled'] ?? false,
                 ]);
                 $existingIds[] = $education->id;
