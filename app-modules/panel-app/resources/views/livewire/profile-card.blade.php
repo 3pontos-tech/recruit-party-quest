@@ -122,7 +122,7 @@
                     @if ($candidate->expected_salary)
                         <x-he4rt::tag icon="heroicon-o-currency-dollar" variant="ghost">
                             {{ $candidate->expected_salary_currency }}
-                            {{ number_format($candidate->expected_salary, 2) }}
+                            {{ number_format($candidate->expected_salary, 2, ',', '.') }}
                         </x-he4rt::tag>
                     @endif
                 @else

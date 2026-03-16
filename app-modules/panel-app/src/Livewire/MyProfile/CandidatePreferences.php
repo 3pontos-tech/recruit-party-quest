@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\App\Livewire\MyProfile;
 
+use Closure;
 use DateTimeZone;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -49,10 +50,30 @@ class CandidatePreferences extends MyProfileComponent
                 TextInput::make('expected_salary')
                     ->label(__('panel-app::pages/settings.preferences.fields.expected_salary'))
                     ->prefixIcon('heroicon-o-currency-dollar')
-                    ->numeric()
                     ->placeholder(__('panel-app::pages/settings.preferences.placeholders.expected_salary'))
-                    ->minValue(0)
-                    ->maxValue(9999999),
+                    ->extraInputAttributes([
+                        'x-mask:dynamic' => "
+                                \$input.includes('.')
+                                    ? \$money(\$input, '.', ',', 2)
+                                    : \$money(\$input, '.', ',', 0)
+                            ",
+                    ])
+                    ->dehydrateStateUsing(fn ($state) => $state ? (float) str_replace(',', '', $state) : null
+                    )
+                    ->formatStateUsing(fn ($state) => $state ? number_format((float) $state, 0, '.', ',') : null
+                    )
+                    ->rules([
+                        fn () => function (string $attribute, $value, Closure $fail): void {
+                            $numericValue = (float) str_replace(',', '', $value);
+                            if ($numericValue < 0) {
+                                $fail(__('panel-app::pages/settings.preferences.validation.expected_salary_min', ['min' => '0']));
+                            }
+
+                            if ($numericValue > 9999999) {
+                                $fail(__('panel-app::pages/settings.preferences.validation.expected_salary_max', ['max' => '9,999,999']));
+                            }
+                        },
+                    ]),
                 Select::make('expected_salary_currency')
                     ->label(__('panel-app::pages/settings.preferences.fields.expected_salary_currency'))
                     ->prefixIcon('heroicon-o-banknotes')
