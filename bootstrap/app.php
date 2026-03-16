@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
+use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\TrustProxies;
 use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Log;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -24,5 +26,15 @@ return Application::configure(basePath: dirname(__DIR__))
             Monicahq\Cloudflare\Http\Middleware\TrustProxies::class
         );
     })
-    ->withExceptions(function (Exceptions $exceptions): void {})
+    ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->report(function (ProviderNotConfigured $e): void {
+            Log::warning('Unknown OAuth provider accessed.', [
+                'message' => $e->getMessage(),
+            ]);
+        })->stop();
+
+        $exceptions->render(function (ProviderNotConfigured $e): void {
+            abort(404);
+        });
+    })
     ->create();
