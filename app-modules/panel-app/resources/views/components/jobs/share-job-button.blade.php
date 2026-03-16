@@ -27,7 +27,7 @@
         icon="heroicon-o-clipboard-document-check"
         :size="$size"
         class="flex-1 px-4 py-2"
-        x-on:click.stop.prevent="async () => {
+        x-on:click.stop.prevent="
                 const url = {{ Js::from($jobUrl) }};
                 const title = {{ Js::from($jobTitle) }};
                 if (navigator.share) {
@@ -36,7 +36,7 @@
                     await navigator.clipboard.writeText(url);
                     $dispatch('link-copied');
                 }
-            }"
+            "
         aria-label="{{ __('panel-app::filament.components.share_button.share_job') }}"
     />
 
