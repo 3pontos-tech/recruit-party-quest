@@ -73,7 +73,8 @@ final class AiAssistant extends BaseModel implements HasMedia
                     'image/png',
                     'image/jpeg',
                     'image/gif',
-                ]);
+                ],
+                    true);
             });
     }
 
