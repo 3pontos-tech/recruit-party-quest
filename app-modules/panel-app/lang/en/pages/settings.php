@@ -57,6 +57,10 @@ return [
                 'en_US' => 'English (United States)',
             ],
         ],
+        'validation' => [
+            'expected_salary_min' => 'Expected Salary must be at least :min',
+            'expected_salary_max' => 'Expected Salary must not be greater than :max',
+        ],
     ],
 
     'education' => [
