@@ -39,6 +39,7 @@
         "laravel/reverb": "^1.7.1",
         "laravel/socialite": "^5.24.2",
         "laravel/tinker": "^2.11.0",
+        "league/flysystem-aws-s3-v3": "^3.32",
         "monicahq/laravel-cloudflare": "^4.0.0",
         "owenvoke/blade-fontawesome": "^3.0.0",
         "prism-php/prism": "^0.99.19",
