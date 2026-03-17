@@ -196,7 +196,8 @@ class Candidate extends BaseModel implements HasMedia
             ->singleFile()
             ->acceptsFile(fn (File $file): bool => in_array(
                 $file->mimeType,
-                ['image/jpeg', 'image/png', 'image/webp']
+                ['image/jpeg', 'image/png', 'image/webp'],
+                true
             ));
     }
 

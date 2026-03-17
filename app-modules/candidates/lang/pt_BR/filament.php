@@ -35,6 +35,7 @@ return [
         'created_at' => 'Criado em',
         'updated_at' => 'Atualizado em',
         'deleted_at' => 'Excluído em',
+        'work_preferences' => 'Preferências de Trabalho',
     ],
     'filters' => [
         'is_willing_to_relocate' => 'Aceita Relocação',

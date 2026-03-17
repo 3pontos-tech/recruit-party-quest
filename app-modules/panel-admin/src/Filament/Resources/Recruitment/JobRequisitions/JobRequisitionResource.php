@@ -87,6 +87,7 @@ class JobRequisitionResource extends Resource
     #[Override]
     public static function getEloquentQuery(): Builder
     {
+        /** @var Builder<JobRequisition> */
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
