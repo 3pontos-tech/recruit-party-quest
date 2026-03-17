@@ -60,6 +60,7 @@ class StageResource extends Resource
     #[Override]
     public static function getEloquentQuery(): Builder
     {
+        /** @var Builder<Stage> */
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
@@ -72,6 +73,7 @@ class StageResource extends Resource
     #[Override]
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
+        /** @var Builder<Stage> */
         return parent::getRecordRouteBindingEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,

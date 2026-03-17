@@ -87,6 +87,7 @@ class ApplicationResource extends Resource
     #[Override]
     public static function getEloquentQuery(): Builder
     {
+        /** @var Builder<Application> */
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,

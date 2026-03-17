@@ -81,6 +81,7 @@ class CandidateResource extends Resource
     #[Override]
     public static function getEloquentQuery(): Builder
     {
+        /** @var Builder<Candidate> */
         return parent::getEloquentQuery()
             ->with(['user'])
             ->withoutGlobalScopes([

@@ -185,6 +185,7 @@ final class AiThreadsResource extends Resource
      */
     public static function getEloquentQuery(): Builder
     {
+        /** @var Builder<AiThread> */
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
@@ -196,6 +197,7 @@ final class AiThreadsResource extends Resource
      */
     public static function getGlobalSearchEloquentQuery(): Builder
     {
+        /** @var Builder<AiThread> */
         return parent::getGlobalSearchEloquentQuery()->with(['assistant', 'folder', 'user']);
     }
 
