@@ -63,9 +63,35 @@ services:
       timeout: 10s
       start_period: 10s
 
+  sycorax-minio:
+    image: minio/minio:latest
+    container_name: sycorax-minio
+    restart: no
+    hostname: dev
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+      TZ: America/Sao_Paulo
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    command: server /data --console-address ":9001"
+    volumes:
+      - sycorax-minio:/data
+    networks:
+      - dev-sycorax
+    healthcheck:
+      test: ['CMD', 'mc', 'ready', 'local']
+      interval: 10s
+      retries: 5
+      timeout: 10s
+      start_period: 10s
+
 volumes:
   sycorax-db:
     name: sycorax-db
+  sycorax-minio:
+    name: sycorax-minio
 
 networks:
   dev-sycorax:

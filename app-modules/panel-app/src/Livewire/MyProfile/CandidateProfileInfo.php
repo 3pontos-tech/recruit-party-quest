@@ -43,7 +43,6 @@ class CandidateProfileInfo extends MyProfileComponent
             ->components([
                 SpatieMediaLibraryFileUpload::make('avatar')
                     ->label(__('panel-app::pages/settings.profile_info.fields.avatar'))
-                    ->disk('public')
                     ->collection('avatar')
                     ->visibility('public')
                     ->avatar()
