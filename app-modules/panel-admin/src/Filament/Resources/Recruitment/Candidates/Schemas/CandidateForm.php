@@ -80,7 +80,7 @@ class CandidateForm
                             ->label(__('candidates::filament.fields.availability_date'))
                             ->prefixIcon(Heroicon::Calendar)
                             ->native(false)
-                            ->placeholder('dd-mm-yyyy')
+                            ->placeholder('dd/mm/yyyy')
                             ->displayFormat('d/m/Y'),
                         Fieldset::make('preferences')
                             ->label(__('candidates::filament.fields.work_preferences'))
@@ -100,7 +100,9 @@ class CandidateForm
                         TextInput::make('expected_salary')
                             ->label(__('candidates::filament.fields.expected_salary'))
                             ->mask(RawJs::make('$money($input, ",", ".")'))
-                            ->dehydrateStateUsing(fn ($state) => str_replace(['.', ','], ['', '.'], $state)
+                            ->dehydrateStateUsing(fn ($state) => blank($state)
+                                ? null
+                                : str_replace(['.', ','], ['', '.'], (string) $state)
                             )
                             ->prefix('$')
                             ->placeholder('00.000,00'),
