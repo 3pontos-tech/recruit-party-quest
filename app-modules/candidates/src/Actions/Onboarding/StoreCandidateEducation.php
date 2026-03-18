@@ -15,7 +15,15 @@ final class StoreCandidateEducation
         $candidate = auth()->user()->candidate;
 
         foreach ($degree->jsonSerialize() as $education) {
-            $candidate->degrees()->create($education->jsonSerialize());
+            $exists = $candidate->degrees()
+                ->where('institution', $education->institution)
+                ->where('degree', $education->degree)
+                ->where('field_of_study', $education->fieldOfStudy)
+                ->exists();
+
+            if (! $exists) {
+                $candidate->degrees()->create($education->jsonSerialize());
+            }
         }
 
     }
