@@ -66,7 +66,7 @@ class EvaluationsRelationManager extends RelationManager
                             ->required()
                             ->preload()
                             ->searchable(),
-                    ]),
+                    ])->columnSpanFull(),
 
                 Section::make(__('feedback::filament.evaluation.sections.rating'))
                     ->schema([
@@ -74,7 +74,7 @@ class EvaluationsRelationManager extends RelationManager
                             ->label(__('feedback::filament.evaluation.fields.overall_rating'))
                             ->options(EvaluationRatingEnum::class)
                             ->required(),
-                    ]),
+                    ])->columnSpanFull(),
 
                 Section::make(__('feedback::filament.evaluation.sections.detailed_feedback'))
                     ->schema([
@@ -90,7 +90,7 @@ class EvaluationsRelationManager extends RelationManager
                         RichEditor::make('notes')
                             ->label(__('feedback::filament.evaluation.fields.notes'))
                             ->columnSpanFull(),
-                    ]),
+                    ])->columnSpanFull(),
 
                 Section::make(__('feedback::filament.evaluation.sections.criteria_scores'))
                     ->schema([
@@ -98,13 +98,14 @@ class EvaluationsRelationManager extends RelationManager
                             ->label(__('feedback::filament.evaluation.fields.criteria_scores'))
                             ->columnSpanFull(),
                     ])
+                    ->columnSpanFull()
                     ->collapsible(),
 
                 Section::make(__('feedback::filament.evaluation.sections.submission'))
                     ->schema([
                         DateTimePicker::make('submitted_at')
                             ->label(__('feedback::filament.evaluation.fields.submitted_at')),
-                    ]),
+                    ])->columnSpanFull(),
             ]);
     }
 
