@@ -83,6 +83,23 @@ return [
         ],
         'create_action' => 'Criar Departamento',
     ],
+    'profile' => [
+        'label' => 'Perfil da Empresa',
+        'sections' => [
+            'about' => 'Sobre a Sua Empresa',
+            'about_description' => 'Conte aos candidatos sobre sua empresa, cultura e o que torna vocês únicos.',
+            'work_environment' => 'Ambiente de Trabalho',
+            'work_environment_description' => 'Descreva seu horário de trabalho e acomodações de acessibilidade.',
+            'team_links' => 'Links da Empresa',
+            'team_links_description' => 'Adicione links para os perfis de mídia social da sua empresa.',
+        ],
+        'fields' => [
+            'about' => 'Sobre',
+            'work_schedule' => 'Horário de Trabalho',
+            'accessibility_accommodations' => 'Acomodações de Acessibilidade',
+            'is_disability_confident' => 'Empregador Confiante na Inclusão de PcD',
+        ],
+    ],
     'emails' => [
         'team_invitation' => [
             'subject' => 'Bem-vindo ao time :team_name!',
