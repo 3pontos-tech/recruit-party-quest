@@ -7,7 +7,6 @@ namespace He4rt\App\Livewire\MyProfile;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
 use He4rt\App\Filament\Schemas\ProfileResumeFileUpload;
-use He4rt\App\Livewire\ResumeFileUploadProgress;
 use He4rt\Candidates\Actions\Onboarding\StoreCandidateEducation;
 use He4rt\Candidates\Actions\Onboarding\StoreCandidateWorkExperiences;
 use He4rt\Candidates\DTOs\Collections\CandidateEducationCollection;
@@ -70,12 +69,12 @@ class CandidateResumeUpload extends MyProfileComponent
         $this->isOnCooldown = true;
         $this->cooldownDaysRemaining = 3;
 
-        $this->dispatch('close')->to(ResumeFileUploadProgress::class);
-
         Notification::make()
             ->success()
             ->title(__('panel-app::pages/settings.resume_upload.notify_success'))
             ->send();
+
+        $this->redirect(url()->current());
     }
 
     /**

@@ -62,7 +62,7 @@ class CandidateWorkExperience extends MyProfileComponent
                             ->label(__('panel-app::pages/settings.work_experience.fields.description'))
                             ->placeholder(__('panel-app::pages/settings.work_experience.placeholders.description'))
                             ->rows(4)
-                            ->maxLength(1000)
+                            ->maxLength(2000)
                             ->required()
                             ->columnSpanFull(),
                         DatePicker::make('start_date')
@@ -71,6 +71,7 @@ class CandidateWorkExperience extends MyProfileComponent
                             ->native(false)
                             ->displayFormat('M Y')
                             ->format('Y-m-d')
+                            ->default(now()->startOfMonth())
                             ->maxDate(now())
                             ->required(),
                         DatePicker::make('end_date')
