@@ -178,7 +178,7 @@ it('finished() redirects to the current page', function (): void {
 
     Livewire::test(CandidateResumeUpload::class)
         ->call('finished', $payload)
-        ->assertRedirect();
+        ->assertRedirect(url()->current());
 });
 
 it('error() sends danger notification with message from payload', function (): void {
@@ -188,5 +188,5 @@ it('error() sends danger notification with message from payload', function (): v
 
     Livewire::test(CandidateResumeUpload::class)
         ->call('error', $payload)
-        ->assertNotified();
+        ->assertNotified('Something went wrong processing the CV.');
 });
