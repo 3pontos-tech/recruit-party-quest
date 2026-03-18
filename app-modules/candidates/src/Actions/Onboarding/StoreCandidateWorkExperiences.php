@@ -15,14 +15,15 @@ final class StoreCandidateWorkExperiences
         $candidate = auth()->user()->candidate;
 
         foreach ($experiences->jsonSerialize() as $experience) {
-            $exists = $candidate->workExperiences()
-                ->where('company_name', $experience->companyName)
-                ->whereDate('start_date', $experience->startDate ?? now())
-                ->exists();
+            $payload = $experience->jsonSerialize();
 
-            if (! $exists) {
-                $candidate->workExperiences()->create($experience->jsonSerialize());
-            }
+            $candidate->workExperiences()->firstOrCreate(
+                [
+                    'company_name' => $experience->companyName,
+                    'start_date' => ($experience->startDate ?? now())->startOfDay(),
+                ],
+                $payload,
+            );
         }
 
     }

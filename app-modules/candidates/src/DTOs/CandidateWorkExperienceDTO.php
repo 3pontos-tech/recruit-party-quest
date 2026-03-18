@@ -38,7 +38,7 @@ final readonly class CandidateWorkExperienceDTO implements JsonSerializable
     }
 
     /**
-     * @return array{company_name: string, description: string, start_date: null|string, end_date: null|string, is_currently_working_here: bool}
+     * @return array{company_name: string, description: string, start_date: string, end_date: null|string, is_currently_working_here: bool}
      */
     public function jsonSerialize(): array
     {
