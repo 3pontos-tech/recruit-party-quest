@@ -38,13 +38,12 @@
 
         {{-- Step: Processing --}}
         <div class="flex flex-col items-center gap-2">
-            <span class="inline-flex" x-bind:class="status === 'processing' ? 'animate-spin' : ''">
-                <x-filament::icon
-                    :icon="\Filament\Support\Icons\Heroicon::ArrowPath"
-                    class="h-5 w-5"
-                    x-bind:class="['processing', 'finished'].includes(status) ? 'text-white' : 'text-zinc-500'"
-                />
-            </span>
+            <x-filament::icon
+                :icon="\Filament\Support\Icons\Heroicon::ArrowPath"
+                class="h-5 w-5"
+                x-bind:class="['processing', 'finished'].includes(status) ? 'text-white' : 'text-zinc-500'"
+                x-bind:class="status === 'processing' ? 'animate-spin' : ''"
+            />
             <span
                 class="text-[10px] font-bold tracking-widest uppercase"
                 x-bind:class="['processing', 'finished'].includes(status) ? 'text-white' : 'text-zinc-500'"

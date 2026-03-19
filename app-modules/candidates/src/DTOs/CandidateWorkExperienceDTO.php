@@ -38,14 +38,14 @@ final readonly class CandidateWorkExperienceDTO implements JsonSerializable
     }
 
     /**
-     * @return array{company_name: string, description: string, start_date: string, end_date: null|string, is_currently_working_here: bool}
+     * @return array{company_name: string, description: string, start_date: null|string, end_date: null|string, is_currently_working_here: bool}
      */
     public function jsonSerialize(): array
     {
         return [
             'company_name' => $this->companyName,
             'description' => $this->description,
-            'start_date' => ($this->startDate ?? now())->format('Y-m-d'),
+            'start_date' => $this->startDate->format('Y-m-d'),
             'end_date' => $this->endDate?->format('Y-m-d'),
             'is_currently_working_here' => $this->isCurrentlyWorking,
         ];

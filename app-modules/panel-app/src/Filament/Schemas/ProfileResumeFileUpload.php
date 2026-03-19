@@ -40,8 +40,6 @@ class ProfileResumeFileUpload extends FileUpload
 
         dispatch(new AiAnalyzeResumeJob($temporaryFile->getFilename(), auth()->user()->getKey()));
 
-        $livewire->dispatch('queued');
-
         Notification::make()
             ->title(__('panel-app::pages/settings.resume_upload.notify_uploading'))
             ->info()
