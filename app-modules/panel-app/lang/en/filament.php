@@ -16,6 +16,9 @@ return [
         'average_salary' => 'Average Salary',
     ],
     'pages' => [
+        'repo_analysis_result' => [
+            'heading' => 'Analysis Result',
+        ],
         'search_jobs' => [
             'header' => 'Search Jobs',
             'description' => 'Find your next opportunity from :count open positions',

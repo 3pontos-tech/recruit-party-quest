@@ -18,6 +18,8 @@ use He4rt\App\Filament\Pages\AppDashboard;
 use He4rt\App\Filament\Pages\AppLoginPage;
 use He4rt\App\Filament\Pages\CandidateMyProfilePage;
 use He4rt\App\Filament\Pages\LandingPage;
+use He4rt\App\Filament\Pages\RepoAnalysis\RepoAnalysisListPage;
+use He4rt\App\Filament\Pages\RepoAnalysis\RepoAnalysisResultPage;
 use He4rt\App\Livewire\MyProfile\CandidateEducation;
 use He4rt\App\Livewire\MyProfile\CandidateLinks;
 use He4rt\App\Livewire\MyProfile\CandidatePreferences;
@@ -61,14 +63,20 @@ class AppPanelProvider extends PanelProvider
             ])
             ->tap(fn (Panel $panel) => AppPanelHooks::register($panel))
             ->viteTheme('app-modules/he4rt/resources/css/themes/3pontos/theme.css')
-            ->discoverClusters(in: base_path('app-modules/panel-app/src/Filament/Clusters'), for: 'He4rt\\App\\Filament\\Clusters')
-            ->discoverPages(in: base_path('app-modules/panel-app/src/Filament/Pages'), for: 'He4rt\\App\\Filament\\Pages')
-            ->discoverResources(in: base_path('app-modules/panel-app/src/Filament/Resources'), for: 'He4rt\\App\\Filament\\Resources')
-            ->discoverWidgets(in: base_path('app-modules/panel-app/src/Filament/Widgets'), for: 'He4rt\\App\\Filament\\Widgets')
+            ->discoverClusters(in: base_path('app-modules/panel-app/src/Filament/Clusters'),
+                for: 'He4rt\\App\\Filament\\Clusters')
+            ->discoverPages(in: base_path('app-modules/panel-app/src/Filament/Pages'),
+                for: 'He4rt\\App\\Filament\\Pages')
+            ->discoverResources(in: base_path('app-modules/panel-app/src/Filament/Resources'),
+                for: 'He4rt\\App\\Filament\\Resources')
+            ->discoverWidgets(in: base_path('app-modules/panel-app/src/Filament/Widgets'),
+                for: 'He4rt\\App\\Filament\\Widgets')
             ->pages([
                 LandingPage::class,
                 AppDashboard::class,
                 TermPage::class,
+                RepoAnalysisListPage::class,
+                RepoAnalysisResultPage::class,
             ])
             ->plugins([
                 BreezyCore::make()

@@ -16,6 +16,9 @@ return [
         'average_salary' => 'Média Salarial',
     ],
     'pages' => [
+        'repo_analysis_result' => [
+            'heading' => 'Resultado da análise',
+        ],
         'search_jobs' => [
             'header' => 'Buscar Vagas',
             'description' => 'Encontre sua próxima oportunidade entre :count posições abertas',
