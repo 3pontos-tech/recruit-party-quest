@@ -10,6 +10,7 @@ return [
         'screening-responses' => 'Screening Responses',
         'feedbacks' => 'Feedbacks',
     ],
+
     'section' => [
         'quick_actions' => 'Quick Actions',
     ],
@@ -90,7 +91,6 @@ return [
     ],
 
     'group' => [
-        'recruitment' => 'Recruitment',
         'job' => 'Job',
         'job_no_title' => 'Untitled job',
         'job_description' => 'Company: :team • Department: :department',

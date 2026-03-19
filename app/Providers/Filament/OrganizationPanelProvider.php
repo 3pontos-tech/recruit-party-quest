@@ -38,7 +38,6 @@ class OrganizationPanelProvider extends PanelProvider
             ->tenantMenuItems([
                 Action::make('Team Profile')
                     ->url(fn (): string => TeamProfile::getUrl())
-                    ->label(fn () => __('teams::filament.profile.label'))
                     ->icon(Heroicon::BuildingOffice2),
             ])
             ->login(LoginPage::class)

@@ -7,7 +7,7 @@ return [
         'overview' => 'Visão Geral',
         'experience' => 'Experiência',
         'comments' => 'Comentários',
-        'screening-responses' => 'Respostas das Questões',
+        'screening-responses' => 'Respostas de Screening',
         'feedbacks' => 'Feedbacks',
     ],
 
@@ -91,7 +91,6 @@ return [
     ],
 
     'group' => [
-        'recruitment' => 'Recrutamento',
         'job' => 'Vaga',
         'job_no_title' => 'Vaga sem título',
         'job_description' => 'Empresa: :team • Departamento: :department',
