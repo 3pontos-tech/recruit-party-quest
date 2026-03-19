@@ -28,6 +28,7 @@
         "he4rt/panel-organization": ">=1",
         "he4rt/permissions": ">=1",
         "he4rt/recruitment": ">=1",
+        "he4rt/repo-analysis": ">=1",
         "he4rt/screening": ">=1",
         "he4rt/teams": ">=1",
         "he4rt/term": ">=1",

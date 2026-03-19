@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3ab7b38589e979ef44eb7004d00d8007",
+    "content-hash": "3ad77c4d6d7668d397fef8a0c8fd1830",
     "packages": [
         {
             "name": "alizharb/filament-activity-log",
@@ -4111,6 +4111,38 @@
             "autoload-dev": {
                 "psr-4": {
                     "He4rt\\Recruitment\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "he4rt/repo-analysis",
+            "version": "1.0",
+            "dist": {
+                "type": "path",
+                "url": "app-modules/repo-analysis",
+                "reference": "b916c6c7096369b2b702d91bf0cbcd9a415335f5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "He4rt\\RepoAnalysis\\Providers\\RepoAnalysisServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "He4rt\\RepoAnalysis\\": "src/",
+                    "He4rt\\RepoAnalysis\\Tests\\": "tests/",
+                    "He4rt\\RepoAnalysis\\Database\\Factories\\": "database/factories/",
+                    "He4rt\\RepoAnalysis\\Database\\Seeders\\": "database/seeders/"
                 }
             },
             "license": [
