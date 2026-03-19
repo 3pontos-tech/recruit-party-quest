@@ -30,7 +30,7 @@ class JobRequisitionResource extends Resource
 {
     protected static ?string $model = JobRequisition::class;
 
-    protected static string|null|UnitEnum $navigationGroup = 'Recruitment';
+    protected static string|null|UnitEnum $navigationGroup = null;
 
     protected static ?string $slug = 'job-requisitions';
 
@@ -41,6 +41,11 @@ class JobRequisitionResource extends Resource
     protected static ?int $navigationSort = 10;
 
     protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('panel-organization::filament.group.recruitment');
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -106,6 +111,7 @@ class JobRequisitionResource extends Resource
     #[Override]
     public static function getEloquentQuery(): Builder
     {
+        /** @var Builder<JobRequisition> */
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,

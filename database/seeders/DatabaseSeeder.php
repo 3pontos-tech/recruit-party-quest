@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use Aws\S3\Exception\S3Exception;
+use Aws\S3\S3Client;
+use Exception;
 use He4rt\Permissions\Roles;
 use He4rt\Teams\Team;
 use He4rt\Users\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
+
+use function Laravel\Prompts\note;
+use function Laravel\Prompts\warning;
 
 final class DatabaseSeeder extends Seeder
 {
@@ -18,6 +24,7 @@ final class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->syncPermissions();
+        $this->appendBuckets();
 
         if (! app()->isProduction()) {
             $adminData = $this->spawnAdminUser();
@@ -64,5 +71,45 @@ final class DatabaseSeeder extends Seeder
         $this->command->warn('Syncing permissions...');
         Artisan::call('sync:permissions');
         $this->command->info('Permissions synced successfully.');
+    }
+
+    private function appendBuckets(): void
+    {
+        if (config('filesystems.default') !== 'r2') {
+            return;
+        }
+
+        try {
+            $client = new S3Client([
+                'version' => 'latest',
+                'region' => 'us-east-1',
+                'endpoint' => config('filesystems.disks.r2.endpoint'),
+                'use_path_style_endpoint' => true,
+                'credentials' => [
+                    'key' => config('filesystems.disks.r2.key'),
+                    'secret' => config('filesystems.disks.r2.secret'),
+                ],
+            ]);
+
+            $bucket = config('filesystems.disks.r2.bucket');
+            if (! $client->doesBucketExist($bucket)) {
+                $client->createBucket(['Bucket' => $bucket]);
+                note(sprintf("Created S3 bucket '%s'", $bucket));
+            } else {
+                note(sprintf("S3 bucket '%s' already exists", $bucket));
+            }
+
+            $testBucket = $bucket.'-test';
+            if (! $client->doesBucketExist($testBucket)) {
+                $client->createBucket(['Bucket' => $testBucket]);
+                note(sprintf("Created S3 bucket '%s'", $testBucket));
+            } else {
+                note(sprintf("S3 bucket '%s' already exists", $testBucket));
+            }
+        } catch (S3Exception $e) {
+            warning('Could not create S3 buckets: '.$e->getMessage());
+        } catch (Exception $e) {
+            warning('Could not connect to S3: '.$e->getMessage());
+        }
     }
 }

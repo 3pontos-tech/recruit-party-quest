@@ -43,7 +43,7 @@ class JobRequisitionFactory extends Factory
             'work_arrangement' => $this->getRealisticWorkArrangement(),
             'employment_type' => $this->getRealisticEmploymentType(),
             'experience_level' => $experienceLevel,
-            'positions_available' => (string) $this->getRealisticPositionsCount(),
+            'positions_available' => $this->getRealisticPositionsCount(),
             'salary_range_min' => $salaryRange['min'],
             'salary_range_max' => $salaryRange['max'],
             'salary_currency' => 'USD',

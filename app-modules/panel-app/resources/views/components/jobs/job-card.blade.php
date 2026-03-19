@@ -29,13 +29,12 @@
             </x-he4rt::text>
         </div>
 
-        <div class="flex shrink-0">
-            <x-he4rt::button
-                variant="outline"
-                size="sm"
-                class="size-8"
-                :icon="\Filament\Support\Icons\Heroicon::Share"
-            />
+        <div class="flex shrink-0 gap-1.5">
+            {{-- Share Button --}}
+            <x-panel-app::jobs.share-job-button :job="$job" />
+
+            {{-- Bookmark Button --}}
+            <livewire:panel-app.jobs.bookmark-job-button :job="$job" :key="'bookmark-job-'.$job->id" />
         </div>
     </x-slot>
 

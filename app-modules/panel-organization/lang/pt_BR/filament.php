@@ -7,7 +7,7 @@ return [
         'overview' => 'Visão Geral',
         'experience' => 'Experiência',
         'comments' => 'Comentários',
-        'screening-responses' => 'Respostas de Screening',
+        'screening-responses' => 'Respostas das Questões',
         'feedbacks' => 'Feedbacks',
     ],
 
@@ -91,6 +91,7 @@ return [
     ],
 
     'group' => [
+        'recruitment' => 'Recrutamento',
         'job' => 'Vaga',
         'job_no_title' => 'Vaga sem título',
         'job_description' => 'Empresa: :team • Departamento: :department',
@@ -103,6 +104,32 @@ return [
             'skills' => 'Habilidades',
         ],
         'skill_name' => 'Nome da Habilidade',
+    ],
+
+    'widgets' => [
+        'recruitment_overview' => [
+            'open_requisitions' => 'Vagas Abertas',
+            'open_requisitions_description' => 'Aprovadas e publicadas',
+            'total_applications' => 'Total de Candidaturas',
+            'total_applications_description' => 'Todas as candidaturas',
+            'offers_extended' => 'Ofertas Enviadas',
+            'offers_extended_description' => 'Ofertas enviadas a candidatos',
+            'positions_available' => 'Posições Disponíveis',
+            'positions_available_description' => 'Vagas em aberto',
+        ],
+        'applications_per_day' => [
+            'heading' => 'Candidaturas por Dia (Últimos 30 dias)',
+            'dataset_label' => 'Candidaturas',
+            'filter_7' => 'Últimos 7 dias',
+            'filter_30' => 'Últimos 30 dias',
+            'filter_90' => 'Últimos 90 dias',
+        ],
+        'latest_applications' => [
+            'title' => 'Candidaturas Recentes',
+            'empty' => 'Nenhuma candidatura ainda.',
+            'no_position' => 'Sem vaga',
+            'no_stage' => '—',
+        ],
     ],
 
     'forms' => [

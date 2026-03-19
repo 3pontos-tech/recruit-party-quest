@@ -6,6 +6,9 @@ return [
     'recruitment' => [
         'navigation_group' => 'Recrutamento',
     ],
+    'navigation' => [
+        'access_platform' => 'Acessar Plataforma',
+    ],
     'categories' => [
         'section_title' => 'Categorias',
         'headline_title' => 'Buscar por Categorias',
@@ -54,6 +57,14 @@ return [
         'by' => 'por',
         'empty' => 'Nenhum histórico de fases disponível.',
     ],
+    'profile' => [
+        'tabs' => [
+            'profile' => 'Perfil',
+            'career' => 'Carreira',
+            'links' => 'Links',
+            'account' => 'Conta',
+        ],
+    ],
     'widgets' => [
         'user_stats' => [
             'total_applications' => 'Total de Candidaturas',
@@ -69,6 +80,29 @@ return [
             'interview' => 'Entrevista',
             'offer' => 'Proposta',
             'rejected' => 'Rejeitadas',
+        ],
+    ],
+    'components' => [
+        'saved_jobs_widget' => [
+            'title' => 'Vagas Salvas',
+            'aria_label' => 'Vagas salvas',
+            'close' => 'Fechar',
+            'empty_title' => 'Nenhuma vaga salva ainda',
+            'empty_description' => 'Clique no ícone de bookmark em uma vaga para salvá-la',
+            'applications' => 'candidaturas',
+            'view' => 'Visualizar',
+            'remove' => 'Remover',
+        ],
+        'bookmark_button' => [
+            'save' => 'Salvar',
+            'saved' => 'Salvo',
+            'save_job' => 'Salvar vaga',
+            'remove_saved' => 'Remover vaga salva',
+        ],
+        'share_button' => [
+            'share' => 'Compartilhar',
+            'copied' => 'Copiado!',
+            'share_job' => 'Compartilhar vaga',
         ],
     ],
 ];

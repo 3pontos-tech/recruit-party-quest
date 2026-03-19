@@ -62,7 +62,7 @@ class CandidateWorkExperience extends MyProfileComponent
                             ->label(__('panel-app::pages/settings.work_experience.fields.description'))
                             ->placeholder(__('panel-app::pages/settings.work_experience.placeholders.description'))
                             ->rows(4)
-                            ->maxLength(1000)
+                            ->maxLength(2000)
                             ->required()
                             ->columnSpanFull(),
                         DatePicker::make('start_date')
@@ -71,6 +71,7 @@ class CandidateWorkExperience extends MyProfileComponent
                             ->native(false)
                             ->displayFormat('M Y')
                             ->format('Y-m-d')
+                            ->default(now()->startOfMonth())
                             ->maxDate(now())
                             ->required(),
                         DatePicker::make('end_date')
@@ -120,7 +121,7 @@ class CandidateWorkExperience extends MyProfileComponent
                     'company_name' => $entry['company_name'],
                     'description' => $entry['description'],
                     'start_date' => $entry['start_date'],
-                    'end_date' => $entry['end_date'],
+                    'end_date' => $entry['end_date'] ?? null,
                     'is_currently_working_here' => $entry['is_currently_working_here'] ?? false,
                 ]);
                 $existingIds[] = $experience->id;

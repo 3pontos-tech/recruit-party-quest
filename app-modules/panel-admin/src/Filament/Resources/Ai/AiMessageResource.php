@@ -144,6 +144,7 @@ final class AiMessageResource extends Resource
      */
     public static function getEloquentQuery(): Builder
     {
+        /** @var Builder<AiMessage> */
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
@@ -155,6 +156,7 @@ final class AiMessageResource extends Resource
      */
     public static function getGlobalSearchEloquentQuery(): Builder
     {
+        /** @var Builder<AiMessage> */
         return parent::getGlobalSearchEloquentQuery()->with(['prompt', 'thread', 'user']);
     }
 

@@ -80,8 +80,22 @@ class TeamResource extends Resource
      * @return Builder<Team>
      */
     #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        /** @var Builder<Team> */
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
+    }
+
+    /**
+     * @return Builder<Team>
+     */
+    #[Override]
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
+        /** @var Builder<Team> */
         return parent::getRecordRouteBindingEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,

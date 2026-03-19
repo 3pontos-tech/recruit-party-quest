@@ -9,6 +9,7 @@ return [
         'submit' => 'Save Profile',
         'notify' => 'Profile information updated successfully.',
         'fields' => [
+            'avatar' => 'Profile Picture',
             'headline' => 'Headline',
             'summary' => 'Summary',
             'phone_number' => 'Phone Number',
@@ -55,6 +56,10 @@ return [
                 'pt_BR' => 'Portuguese (Brazil)',
                 'en_US' => 'English (United States)',
             ],
+        ],
+        'validation' => [
+            'expected_salary_min' => 'Expected Salary must be at least :min',
+            'expected_salary_max' => 'Expected Salary must not be greater than :max',
         ],
     ],
 
@@ -126,6 +131,24 @@ return [
                 5 => 'Expert',
             ],
         ],
+    ],
+
+    'resume_upload' => [
+        'heading' => 'CV / Resume',
+        'description' => 'Upload your CV to automatically add work experiences and education to your profile. A 3-day cooldown applies between uploads.',
+        'upload_button' => 'Upload CV',
+        'cv_file_label' => 'CV File',
+        'cv_file_helper' => 'Upload your resume in PDF format (max 10 MB).',
+        'notify_uploading' => 'Your CV is being processed by AI...',
+        'notify_success' => 'Your profile has been updated from your CV.',
+        'notify_error' => 'Something went wrong while processing your CV. Please try again later.',
+        'cooldown_message' => 'You can upload a new CV in :days day(s).',
+        'modal_title' => 'Before you upload',
+        'modal_body' => 'The data extracted from your CV will be added to the following sections of your profile:',
+        'modal_adds_experiences' => 'Work experiences',
+        'modal_adds_education' => 'Education records',
+        'modal_cancel' => 'Cancel',
+        'modal_confirm' => 'Understood, upload CV',
     ],
 
     'links' => [

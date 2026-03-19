@@ -23,8 +23,6 @@ class ApplicationResource extends Resource
 {
     protected static ?string $model = Application::class;
 
-    protected static string|null|UnitEnum $navigationGroup = 'Recruitment';
-
     protected static ?string $slug = 'recruitment/applications';
 
     protected static ?string $recordTitleAttribute = 'tracking_code';
@@ -33,9 +31,19 @@ class ApplicationResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('panel-organization::filament.group.recruitment');
+    }
+
     public static function canEdit(Model $record): bool
     {
         return (bool) auth()->user()?->hasAnyRole([Roles::SuperAdmin, Roles::Admin]);
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
     }
 
     public static function form(Schema $schema): Schema
@@ -54,13 +62,6 @@ class ApplicationResource extends Resource
             'index' => ListApplications::route('/'),
             'edit' => EditApplication::route('/{record}/edit'),
             'view' => ViewApplication::route('/{record}/view'),
-        ];
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //            EvaluationsRelationManager::class,
         ];
     }
 

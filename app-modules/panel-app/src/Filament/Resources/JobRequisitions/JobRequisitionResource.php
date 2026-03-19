@@ -67,6 +67,7 @@ class JobRequisitionResource extends Resource
      */
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
+        /** @var Builder<JobRequisition> */
         return parent::getRecordRouteBindingEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,

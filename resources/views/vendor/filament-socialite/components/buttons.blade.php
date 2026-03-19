@@ -11,7 +11,15 @@
         @if (count($visibleProviders))
             <x-he4rt::text class="text-center">{{ __('filament-socialite::auth.login-via') }}:</x-he4rt::text>
 
-            <div class="hidden md:grid @if(count($visibleProviders) > 1) grid-cols-3 @endif gap-4">
+            @php
+                $cols = match(count($visibleProviders)) {
+                    1 => 'grid-cols-1',
+                    2 => 'grid-cols-2',
+                    3 => 'grid-cols-3',
+                    default => 'grid-cols-4',
+                };
+            @endphp
+            <div class="hidden md:grid {{ $cols }} gap-4">
                 @foreach($visibleProviders as $key => $provider)
                     <x-he4rt::button
                         variant="outline"

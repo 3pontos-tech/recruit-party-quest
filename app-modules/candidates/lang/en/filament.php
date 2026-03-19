@@ -35,6 +35,7 @@ return [
         'created_at' => 'Created At',
         'updated_at' => 'Updated At',
         'deleted_at' => 'Deleted At',
+        'work_preferences' => 'Work Preferences',
     ],
     'filters' => [
         'is_willing_to_relocate' => 'Willing to Relocate',
