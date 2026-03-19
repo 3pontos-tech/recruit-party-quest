@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
+use He4rt\App\Filament\Pages\CandidateMyProfilePage;
 use He4rt\App\Livewire\MyProfile\CandidateResumeUpload;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Candidates\Models\Education;
@@ -168,7 +169,7 @@ it('finished() sets isOnCooldown and cooldownDaysRemaining after processing', fu
     expect($component->get('cooldownDaysRemaining'))->toBe(3);
 });
 
-it('finished() redirects to the current page', function (): void {
+it('finished() redirects to the my-profile page', function (): void {
     $payload = [
         'fields' => [
             'work_experiences' => [],
@@ -178,7 +179,7 @@ it('finished() redirects to the current page', function (): void {
 
     Livewire::test(CandidateResumeUpload::class)
         ->call('finished', $payload)
-        ->assertRedirect(url()->current());
+        ->assertRedirect(CandidateMyProfilePage::getUrl());
 });
 
 it('error() sends danger notification with message from payload', function (): void {
