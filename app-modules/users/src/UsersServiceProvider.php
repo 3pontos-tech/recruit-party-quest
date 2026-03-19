@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace He4rt\Users;
 
 use App\Enums\FilamentPanel;
+use DutchCodingCompany\FilamentSocialite\Events\Login;
+use DutchCodingCompany\FilamentSocialite\Events\Registered;
 use Filament\Panel;
 use He4rt\Admin\Filament\Resources\Users\UserResource;
+use He4rt\Users\Listeners\SaveGitHubTokenListener;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class UsersServiceProvider extends ServiceProvider
@@ -29,5 +33,7 @@ class UsersServiceProvider extends ServiceProvider
         Relation::morphMap([
             'users' => User::class,
         ]);
+
+        Event::listen([Login::class, Registered::class], SaveGitHubTokenListener::class);
     }
 }
