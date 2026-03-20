@@ -10,24 +10,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('socialite_users', function (Blueprint $table): void {
-            $table->id();
-
-            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+        Schema::create('social_accounts', function (Blueprint $table): void {
+            $table->uuid('id')->primary();
+            $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('provider');
             $table->string('provider_id');
+            $table->text('access_token')->nullable();
+            $table->string('provider_username')->nullable();
+            $table->timestampsTz();
 
-            $table->timestamps();
-
-            $table->unique([
-                'provider',
-                'provider_id',
-            ]);
+            $table->unique(['provider', 'provider_id']);
+            $table->unique(['user_id', 'provider']);
         });
-    }
-
-    public function down(): void
-    {
-        Schema::dropIfExists('socialite_users');
     }
 };

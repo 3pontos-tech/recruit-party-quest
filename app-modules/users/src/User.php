@@ -18,7 +18,7 @@ use He4rt\Recruitment\Stages\Concerns\InteractsWithInterviewStages;
 use He4rt\Teams\Concerns\InteractsWithTenants;
 use He4rt\Teams\Team;
 use He4rt\Users\Database\Factories\UserFactory;
-use He4rt\Users\Models\UserGitHubConnection;
+use He4rt\Users\Models\SocialAccount;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
@@ -124,11 +124,11 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
     }
 
     /**
-     * @return HasOne<UserGitHubConnection, $this>
+     * @return HasOne<SocialAccount, $this>
      */
     public function githubConnection(): HasOne
     {
-        return $this->hasOne(UserGitHubConnection::class);
+        return $this->hasOne(SocialAccount::class)->where('provider', 'github');
     }
 
     /**
