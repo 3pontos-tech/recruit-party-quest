@@ -13,4 +13,7 @@ return [
     'singular' => 'User',
     'plural' => 'Users',
     'owned_team' => 'Owned Organization',
+    'github' => [
+        'already_linked' => 'This GitHub account is already connected to another user.',
+    ],
 ];

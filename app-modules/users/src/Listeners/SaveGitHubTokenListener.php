@@ -6,35 +6,29 @@ namespace He4rt\Users\Listeners;
 
 use DutchCodingCompany\FilamentSocialite\Events\Login;
 use DutchCodingCompany\FilamentSocialite\Events\Registered;
-use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
-use He4rt\Users\Models\UserGitHubConnection;
-use He4rt\Users\User;
+use He4rt\Users\Enums\OAuthProvider;
+use He4rt\Users\Models\SocialAccount;
 use Laravel\Socialite\Two\User as SocialiteOAuthTwoUser;
 
 final class SaveGitHubTokenListener
 {
     public function handle(Login|Registered $event): void
     {
-        /** @var SocialiteUser $socialiteUser */
-        $socialiteUser = $event->socialiteUser;
+        $socialAccount = $event->socialiteUser;
 
-        if ($socialiteUser->provider !== 'github') {
+        if (! $socialAccount instanceof SocialAccount) {
             return;
         }
 
-        /** @var User $user */
-        $user = $socialiteUser->getUser();
+        if ($socialAccount->provider !== OAuthProvider::GitHub) {
+            return;
+        }
 
         /** @var SocialiteOAuthTwoUser $oauthUser */
         $oauthUser = $event->oauthUser;
 
-        UserGitHubConnection::query()->updateOrCreate(
-            ['user_id' => $user->id],
-            [
-                'github_id' => $oauthUser->getId(),
-                'github_username' => $oauthUser->getNickname() ?? $oauthUser->getName(),
-                'access_token' => $oauthUser->token,
-            ]
-        );
+        $socialAccount->update([
+            'access_token' => $oauthUser->token,
+        ]);
     }
 }
