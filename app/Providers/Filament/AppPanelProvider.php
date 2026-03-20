@@ -18,8 +18,6 @@ use He4rt\App\Filament\Pages\AppDashboard;
 use He4rt\App\Filament\Pages\AppLoginPage;
 use He4rt\App\Filament\Pages\CandidateMyProfilePage;
 use He4rt\App\Filament\Pages\LandingPage;
-use He4rt\App\Filament\Pages\RepoAnalysis\RepoAnalysisListPage;
-use He4rt\App\Filament\Pages\RepoAnalysis\RepoAnalysisResultPage;
 use He4rt\App\Livewire\MyProfile\CandidateEducation;
 use He4rt\App\Livewire\MyProfile\CandidateLinks;
 use He4rt\App\Livewire\MyProfile\CandidatePreferences;
@@ -77,8 +75,6 @@ class AppPanelProvider extends PanelProvider
                 LandingPage::class,
                 AppDashboard::class,
                 TermPage::class,
-                RepoAnalysisListPage::class,
-                RepoAnalysisResultPage::class,
             ])
             ->plugins([
                 BreezyCore::make()
@@ -113,19 +109,21 @@ class AppPanelProvider extends PanelProvider
                     ->userModelClass(User::class)
                     ->socialiteUserModelClass(SocialAccount::class)
                     ->resolveUserUsing(function (string $provider, SocialiteUserContract $oauthUser): ?User {
-                        $user = User::query()->where('email', $oauthUser->getEmail())->first();
-
-                        if ($user !== null) {
-                            return $user;
-                        }
-
                         $socialAccount = SocialAccount::query()
                             ->where('provider', $provider)
                             ->where('provider_id', (string) $oauthUser->getId())
                             ->with('user')
                             ->first();
 
-                        return $socialAccount?->user;
+                        if ($socialAccount !== null) {
+                            return $socialAccount->user;
+                        }
+
+                        $email = $oauthUser->getEmail();
+
+                        return $email === null
+                            ? null
+                            : User::query()->where('email', $email)->first();
                     }),
             ])
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'He4rt\App\Filament\Widgets')
