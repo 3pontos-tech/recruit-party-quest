@@ -4,7 +4,7 @@
 
 @php
     $formattedDate = $analysis->analyzed_at
-        ? $analysis->analyzed_at->translatedFormat('d \d\e F \d\e Y')
+        ? $analysis->analyzed_at->translatedFormat('d F Y')
         : null;
     $result = $analysis->result;
 @endphp
@@ -57,6 +57,7 @@
             tag="a"
             :href="$analysis->repo_url"
             target="_blank"
+            rel="noopener noreferrer"
             icon="heroicon-o-arrow-top-right-on-square"
             outlined
             size="sm"

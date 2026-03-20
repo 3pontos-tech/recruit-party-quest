@@ -8,7 +8,7 @@
 
 @php
     $formattedDate = $analysis->analyzed_at
-        ? $analysis->analyzed_at->format('d M Y')
+        ? $analysis->analyzed_at->translatedFormat('d M Y')
         : null;
 @endphp
 

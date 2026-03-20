@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
 use He4rt\App\Filament\Pages\RepoAnalysis\NewRepoAnalysisPage;
+use He4rt\App\Filament\Pages\RepoAnalysis\RepoAnalysisListPage;
 use He4rt\RepoAnalysis\Models\RepositoryAnalysis;
 use He4rt\RepoAnalysis\Services\GitHubService;
 use He4rt\Users\Models\SocialAccount;
@@ -64,14 +65,15 @@ it('sends warning notification and redirects when cooldown is active', function 
     $github->shouldReceive('listRepositories')->andReturn($this->fakeRepos);
 
     livewire(NewRepoAnalysisPage::class)
-        ->assertNotified();
+        ->assertNotified()
+        ->assertRedirect(RepoAnalysisListPage::getUrl());
 
 });
 
 it('calculates cooldown correctly when a previous analysis exists outside cooldown period', function (): void {
     SocialAccount::factory()->github()->create(['user_id' => $this->user->getKey()]);
 
-    $previous = RepositoryAnalysis::factory()->completed()->create([
+    RepositoryAnalysis::factory()->completed()->create([
         'candidate_id' => $this->candidate->getKey(),
         'repo_full_name' => 'johndoe/my-project',
         'analyzed_at' => now()->subDays(10),
