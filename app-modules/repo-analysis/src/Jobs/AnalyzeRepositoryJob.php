@@ -10,7 +10,8 @@ use He4rt\RepoAnalysis\Exceptions\GitHubException;
 use He4rt\RepoAnalysis\Models\RepositoryAnalysis;
 use He4rt\RepoAnalysis\Services\GitHubService;
 use He4rt\RepoAnalysis\Services\RepoAnalyzerService;
-use He4rt\Users\Models\UserGitHubConnection;
+use He4rt\Users\Enums\OAuthProvider;
+use He4rt\Users\Models\SocialAccount;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -37,8 +38,9 @@ final class AnalyzeRepositoryJob implements ShouldQueue
         try {
             $this->analysis->update(['status' => AnalysisStatus::Analyzing]);
 
-            $connection = UserGitHubConnection::query()
+            $connection = SocialAccount::query()
                 ->where('user_id', $this->analysis->candidate->user_id)
+                ->where('provider', OAuthProvider::GitHub)
                 ->first();
 
             if (is_null($connection)) {
