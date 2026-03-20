@@ -43,7 +43,7 @@ class AppDashboard extends Page
     public function mount(): void
     {
         if (auth()->guest()) {
-            redirect(route('filament.app.pages.landing-page'))->send();
+            $this->redirect(route('filament.app.pages.landing-page'));
         }
     }
 
