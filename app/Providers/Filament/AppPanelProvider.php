@@ -29,6 +29,7 @@ use He4rt\App\Livewire\MyProfile\CandidateSkills;
 use He4rt\App\Livewire\MyProfile\CandidateWorkExperience;
 use He4rt\App\RedirectIfOnboardingIncomplete;
 use He4rt\Term\Filament\Pages\TermPage;
+use He4rt\Users\Models\SocialAccount;
 use He4rt\Users\User;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -37,6 +38,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
+use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
 class AppPanelProvider extends PanelProvider
 {
@@ -108,7 +110,23 @@ class AppPanelProvider extends PanelProvider
                             ->icon('fab-linkedin'),
                     ])
                     ->registration()
-                    ->userModelClass(User::class),
+                    ->userModelClass(User::class)
+                    ->socialiteUserModelClass(SocialAccount::class)
+                    ->resolveUserUsing(function (string $provider, SocialiteUserContract $oauthUser): ?User {
+                        $user = User::query()->where('email', $oauthUser->getEmail())->first();
+
+                        if ($user !== null) {
+                            return $user;
+                        }
+
+                        $socialAccount = SocialAccount::query()
+                            ->where('provider', $provider)
+                            ->where('provider_id', (string) $oauthUser->getId())
+                            ->with('user')
+                            ->first();
+
+                        return $socialAccount?->user;
+                    }),
             ])
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'He4rt\App\Filament\Widgets')
             ->globalSearch(false)

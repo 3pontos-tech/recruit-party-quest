@@ -8,7 +8,8 @@ use DutchCodingCompany\FilamentSocialite\Exceptions\InvalidCallbackPayload;
 use DutchCodingCompany\FilamentSocialite\Http\Controllers\SocialiteLoginController;
 use DutchCodingCompany\FilamentSocialite\Http\Middleware\PanelFromUrlQuery;
 use He4rt\App\Filament\Pages\RepoAnalysis\RepoAnalysisListPage;
-use He4rt\Users\Models\UserGitHubConnection;
+use He4rt\Users\Enums\OAuthProvider;
+use He4rt\Users\Models\SocialAccount;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\User as SocialiteOAuthTwoUser;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,11 +22,23 @@ final class GitHubCallbackController extends Controller
             /** @var SocialiteOAuthTwoUser $oauthUser */
             $oauthUser = Socialite::driver('github')->user();
 
-            UserGitHubConnection::query()->updateOrCreate(
-                ['user_id' => $userId],
+            $conflict = SocialAccount::query()
+                ->where('provider', OAuthProvider::GitHub)
+                ->where('provider_id', (string) $oauthUser->getId())
+                ->where('user_id', '!=', $userId)
+                ->exists();
+
+            if ($conflict) {
+                session()->flash('filament-socialite-login-error', __('users::labels.github.already_linked'));
+
+                return redirect(RepoAnalysisListPage::getUrl());
+            }
+
+            SocialAccount::query()->updateOrCreate(
+                ['user_id' => $userId, 'provider' => OAuthProvider::GitHub],
                 [
-                    'github_id' => (string) $oauthUser->getId(),
-                    'github_username' => $oauthUser->getNickname() ?? $oauthUser->getName(),
+                    'provider_id' => (string) $oauthUser->getId(),
+                    'provider_username' => $oauthUser->getNickname() ?? $oauthUser->getName(),
                     'access_token' => $oauthUser->token,
                 ]
             );
