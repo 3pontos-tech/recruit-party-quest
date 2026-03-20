@@ -29,6 +29,8 @@ class SocialAccount extends BaseModel implements FilamentSocialiteUser
 {
     protected $table = 'social_accounts';
 
+    protected $hidden = ['access_token'];
+
     public static function findForProvider(string $provider, SocialiteUserContract $oauthUser): ?static
     {
         return static::query()

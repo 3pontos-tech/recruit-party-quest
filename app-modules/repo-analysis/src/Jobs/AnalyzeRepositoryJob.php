@@ -51,6 +51,10 @@ final class AnalyzeRepositoryJob implements ShouldQueue
 
             $token = $connection->access_token;
 
+            if (is_null($token)) {
+                $this->failed(null);
+            }
+
             $treeResult = $github->getRepositoryTree(
                 $token,
                 $this->analysis->repo_full_name,
