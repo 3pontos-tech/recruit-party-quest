@@ -1,5 +1,5 @@
 <x-filament-panels::page>
-    <x-filament::section class="flex h-[50vh] flex-col items-center justify-center">
+    <x-filament::section class="">
         <div @if($this->hasInProgressAnalyses()) wire:poll.5s="refreshAnalyses" @endif>
             @if (! $this->hasGitHubConnection)
                 <div class="flex h-full flex-col items-center justify-center gap-6">
