@@ -49,7 +49,7 @@ final readonly class CandidateEducationDTO implements JsonSerializable
             'degree' => $this->degree,
             'field_of_study' => $this->fieldOfStudy,
             'is_enrolled' => $this->isEnrolled,
-            'start_date' => $this->startDate?->format('Y-m-d'),
+            'start_date' => ($this->startDate ?? now())->format('Y-m-d'),
             'end_date' => $this->endDate?->format('Y-m-d'),
         ];
     }

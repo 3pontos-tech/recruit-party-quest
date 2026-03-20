@@ -23,8 +23,6 @@ class ApplicationResource extends Resource
 {
     protected static ?string $model = Application::class;
 
-    protected static string|null|UnitEnum $navigationGroup = 'Recruitment';
-
     protected static ?string $slug = 'recruitment/applications';
 
     protected static ?string $recordTitleAttribute = 'tracking_code';
@@ -32,6 +30,11 @@ class ApplicationResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::DocumentText;
 
     protected static ?int $navigationSort = 3;
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('panel-organization::filament.group.recruitment');
+    }
 
     public static function canEdit(Model $record): bool
     {
