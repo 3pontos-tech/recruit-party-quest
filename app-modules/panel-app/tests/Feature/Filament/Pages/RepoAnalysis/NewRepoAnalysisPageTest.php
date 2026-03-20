@@ -6,7 +6,7 @@ use App\Enums\FilamentPanel;
 use He4rt\App\Filament\Pages\RepoAnalysis\NewRepoAnalysisPage;
 use He4rt\RepoAnalysis\Models\RepositoryAnalysis;
 use He4rt\RepoAnalysis\Services\GitHubService;
-use He4rt\Users\Models\UserGitHubConnection;
+use He4rt\Users\Models\SocialAccount;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\Queue;
 
@@ -41,7 +41,7 @@ it('shows the connect github prompt when no connection exists', function (): voi
 });
 
 it('shows the repo selection form when github is connected', function (): void {
-    UserGitHubConnection::factory()->create(['user_id' => $this->user->getKey()]);
+    SocialAccount::factory()->github()->create(['user_id' => $this->user->getKey()]);
 
     $github = $this->mock(GitHubService::class);
     $github->shouldReceive('listRepositories')->once()->andReturn($this->fakeRepos);
@@ -52,7 +52,7 @@ it('shows the repo selection form when github is connected', function (): void {
 });
 
 it('sends warning notification and redirects when cooldown is active', function (): void {
-    UserGitHubConnection::factory()->create(['user_id' => $this->user->getKey()]);
+    SocialAccount::factory()->github()->create(['user_id' => $this->user->getKey()]);
 
     RepositoryAnalysis::factory()->completed()->create([
         'candidate_id' => $this->candidate->getKey(),
@@ -69,7 +69,7 @@ it('sends warning notification and redirects when cooldown is active', function 
 });
 
 it('calculates cooldown correctly when a previous analysis exists outside cooldown period', function (): void {
-    UserGitHubConnection::factory()->create(['user_id' => $this->user->getKey()]);
+    SocialAccount::factory()->github()->create(['user_id' => $this->user->getKey()]);
 
     $previous = RepositoryAnalysis::factory()->completed()->create([
         'candidate_id' => $this->candidate->getKey(),

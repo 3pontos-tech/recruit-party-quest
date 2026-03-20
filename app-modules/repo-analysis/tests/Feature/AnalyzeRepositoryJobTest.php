@@ -9,7 +9,7 @@ use He4rt\RepoAnalysis\Jobs\AnalyzeRepositoryJob;
 use He4rt\RepoAnalysis\Models\RepositoryAnalysis;
 use He4rt\RepoAnalysis\Services\GitHubService;
 use He4rt\RepoAnalysis\Services\RepoAnalyzerService;
-use He4rt\Users\Models\UserGitHubConnection;
+use He4rt\Users\Models\SocialAccount;
 use He4rt\Users\User;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Log;
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Log;
 beforeEach(function (): void {
     $this->user = User::factory()->create();
     $this->candidate = Candidate::factory()->create(['user_id' => $this->user->getKey()]);
-    $this->connection = UserGitHubConnection::factory()->create(['user_id' => $this->user->getKey()]);
+    $this->connection = SocialAccount::factory()->github()->create(['user_id' => $this->user->getKey()]);
 
     $this->analysis = RepositoryAnalysis::factory()->create([
         'candidate_id' => $this->candidate->getKey(),

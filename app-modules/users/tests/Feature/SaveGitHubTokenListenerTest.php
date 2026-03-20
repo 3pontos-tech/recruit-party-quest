@@ -6,9 +6,8 @@ namespace He4rt\Users\Tests\Feature;
 
 use DutchCodingCompany\FilamentSocialite\Events\Login;
 use DutchCodingCompany\FilamentSocialite\Events\Registered;
-use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use He4rt\Users\Listeners\SaveGitHubTokenListener;
-use He4rt\Users\Models\UserGitHubConnection;
+use He4rt\Users\Models\SocialAccount;
 use He4rt\Users\User;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
@@ -45,83 +44,70 @@ function makeFakeOAuthUser(string $id = '12345', string $nickname = 'johndoe', s
     };
 }
 
-it('creates a github connection when a login event fires', function (): void {
+it('updates access token when a login event fires', function (): void {
     $user = User::factory()->create();
-    $socialiteUser = SocialiteUser::query()->create([
+    $socialAccount = SocialAccount::factory()->github()->create([
         'user_id' => $user->id,
-        'provider' => 'github',
         'provider_id' => '12345',
+        'access_token' => 'old-token',
     ]);
-    $socialiteUser->setRelation('user', $user);
+    $socialAccount->setRelation('user', $user);
 
-    $oauthUser = makeFakeOAuthUser('12345', 'johndoe', 'the-access-token');
+    $oauthUser = makeFakeOAuthUser('12345', 'johndoe', 'new-access-token');
 
-    $event = new Login($socialiteUser, $oauthUser);
+    $event = new Login($socialAccount, $oauthUser);
     new SaveGitHubTokenListener()->handle($event);
 
-    $connection = UserGitHubConnection::query()->where('user_id', $user->id)->first();
-
-    expect($connection)->not->toBeNull()
-        ->and($connection->github_id)->toBe('12345')
-        ->and($connection->github_username)->toBe('johndoe');
+    expect($socialAccount->fresh()->access_token)->toBe('new-access-token');
 });
 
-it('updates an existing connection on re-login', function (): void {
+it('updates access token on re-login', function (): void {
     $user = User::factory()->create();
-    UserGitHubConnection::factory()->create([
+    $socialAccount = SocialAccount::factory()->github()->create([
         'user_id' => $user->id,
-        'github_id' => '12345',
-        'github_username' => 'old-username',
-    ]);
-
-    $socialiteUser = SocialiteUser::query()->create([
-        'user_id' => $user->id,
-        'provider' => 'github',
         'provider_id' => '12345',
+        'access_token' => 'old-token',
     ]);
-    $socialiteUser->setRelation('user', $user);
+    $socialAccount->setRelation('user', $user);
 
-    $oauthUser = makeFakeOAuthUser('12345', 'new-username', 'new-token');
+    $oauthUser = makeFakeOAuthUser('12345', 'new-username', 'refreshed-token');
 
-    $event = new Login($socialiteUser, $oauthUser);
+    $event = new Login($socialAccount, $oauthUser);
     new SaveGitHubTokenListener()->handle($event);
 
-    expect(UserGitHubConnection::query()->where('user_id', $user->id)->count())->toBe(1);
-
-    $connection = UserGitHubConnection::query()->where('user_id', $user->id)->first();
-    expect($connection->github_username)->toBe('new-username');
+    expect($socialAccount->fresh()->access_token)->toBe('refreshed-token');
 });
 
 it('does nothing for non-github providers', function (): void {
     $user = User::factory()->create();
-    $socialiteUser = SocialiteUser::query()->create([
+    $socialAccount = SocialAccount::factory()->google()->create([
         'user_id' => $user->id,
-        'provider' => 'google',
         'provider_id' => '99999',
+        'access_token' => 'original-token',
     ]);
-    $socialiteUser->setRelation('user', $user);
+    $socialAccount->setRelation('user', $user);
 
     $oauthUser = makeFakeOAuthUser('99999', 'googleuser', 'google-token');
 
-    $event = new Login($socialiteUser, $oauthUser);
+    $event = new Login($socialAccount, $oauthUser);
     new SaveGitHubTokenListener()->handle($event);
 
-    expect(UserGitHubConnection::query()->where('user_id', $user->id)->exists())->toBeFalse();
+    expect($socialAccount->fresh()->access_token)->toBe('original-token');
 });
 
-it('creates a github connection when a registered event fires', function (): void {
+it('updates access token when a registered event fires', function (): void {
     $user = User::factory()->create();
-    $socialiteUser = SocialiteUser::query()->create([
+    $socialAccount = SocialAccount::factory()->github()->create([
         'user_id' => $user->id,
-        'provider' => 'github',
         'provider_id' => '77777',
+        'access_token' => null,
     ]);
-    $socialiteUser->setRelation('user', $user);
+    $socialAccount->setRelation('user', $user);
 
     $oauthUser = makeFakeOAuthUser('77777', 'newuser', 'reg-token');
 
-    $event = new Registered('github', $oauthUser, $socialiteUser);
+    $event = new Registered('github', $oauthUser, $socialAccount);
     new SaveGitHubTokenListener()->handle($event);
 
-    expect(UserGitHubConnection::query()->where('user_id', $user->id)->exists())->toBeTrue();
+    expect($socialAccount->fresh()->access_token)->toBe('reg-token');
 });
