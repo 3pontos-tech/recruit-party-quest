@@ -39,7 +39,7 @@
         <div
             class="grid grid-cols-1 content-start items-start gap-8 p-8 sm:gap-10 sm:p-12 lg:grid-cols-2 lg:gap-12 lg:p-16 lg:py-12 xl:grid-cols-7 xl:p-24 xl:py-16"
         >
-            <div class="col-span-1 flex flex-col items-start gap-8 lg:col-span-2 lg:gap-12 xl:col-span-2">
+            <div class="col-span-1 flex flex-col items-start gap-8 lg:col-span-2 lg:gap-12 xl:col-span-4">
                 <div class="flex flex-col">
                     <x-he4rt::logo class="mb-0!" />
                 </div>
@@ -130,17 +130,17 @@
                 </div>
             </div>
 
-            <div class="col-span-1 flex flex-col gap-y-3 sm:gap-y-4 xl:col-span-2">
-                <x-he4rt::heading :level="3" size="2xs">Nossa Newsletter</x-he4rt::heading>
-                <x-he4rt::text size="sm">
-                    Envie nos o seu email e receba as melhores notícias e textos sobre o que acontece no mercado
-                    financeiro
-                </x-he4rt::text>
-                <form class="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
-                    <x-he4rt::input type="email" placeholder="Seu email" id="email" class="flex-1" />
-                    <x-he4rt::button type="submit" class="shrink-0">Inscrever-se</x-he4rt::button>
-                </form>
-            </div>
+            {{-- <div class="col-span-1 flex flex-col gap-y-3 sm:gap-y-4 xl:col-span-2"> --}}
+            {{-- <x-he4rt::heading :level="3" size="2xs">Nossa Newsletter</x-he4rt::heading> --}}
+            {{-- <x-he4rt::text size="sm"> --}}
+            {{-- Envie nos o seu email e receba as melhores notícias e textos sobre o que acontece no mercado --}}
+            {{-- financeiro --}}
+            {{-- </x-he4rt::text> --}}
+            {{-- <form class="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4"> --}}
+            {{-- <x-he4rt::input type="email" placeholder="Seu email" id="email" class="flex-1" /> --}}
+            {{-- <x-he4rt::button type="submit" class="shrink-0">Inscrever-se</x-he4rt::button> --}}
+            {{-- </form> --}}
+            {{-- </div> --}}
         </div>
     </div>
 </footer>
