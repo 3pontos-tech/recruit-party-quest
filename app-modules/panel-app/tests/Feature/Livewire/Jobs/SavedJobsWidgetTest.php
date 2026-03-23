@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use He4rt\App\Livewire\Jobs\SavedJobsWidget;
 use He4rt\Candidates\Models\CandidateJobSaved;
+use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Users\User;
 
@@ -127,4 +128,59 @@ it('refreshes the full list when saved-job-toggled is dispatched and the widget 
 
     expect($component->get('savedJobs'))->toHaveCount(1)
         ->and($component->get('savedJobsCount'))->toBe(1);
+});
+
+it('does not show a closed job in the saved list and does not count it', function (): void {
+    $job = JobRequisition::factory()->available()->create();
+    $job->update(['status' => RequisitionStatusEnum::Closed]);
+
+    CandidateJobSaved::factory()->create([
+        'candidate_id' => $this->candidate->getKey(),
+        'job_requisition_id' => $job->getKey(),
+    ]);
+
+    $component = livewire(SavedJobsWidget::class)
+        ->call('loadJobs');
+
+    expect($component->get('savedJobs'))->toBeEmpty()
+        ->and($component->get('savedJobsCount'))->toBe(0);
+});
+
+it('shows only published jobs when mix of published and closed jobs are saved', function (): void {
+    $publishedJob = JobRequisition::factory()->available()->create();
+    $closedJob = JobRequisition::factory()->available()->create();
+    $closedJob->update(['status' => RequisitionStatusEnum::Closed]);
+
+    CandidateJobSaved::factory()->create([
+        'candidate_id' => $this->candidate->getKey(),
+        'job_requisition_id' => $publishedJob->getKey(),
+    ]);
+
+    CandidateJobSaved::factory()->create([
+        'candidate_id' => $this->candidate->getKey(),
+        'job_requisition_id' => $closedJob->getKey(),
+    ]);
+
+    $component = livewire(SavedJobsWidget::class)
+        ->call('loadJobs');
+
+    expect($component->get('savedJobs'))->toHaveCount(1)
+        ->and($component->get('savedJobsCount'))->toBe(1);
+});
+
+it('does not show a soft-deleted job in the saved list and does not count it', function (): void {
+    $job = JobRequisition::factory()->available()->create();
+
+    CandidateJobSaved::factory()->create([
+        'candidate_id' => $this->candidate->getKey(),
+        'job_requisition_id' => $job->getKey(),
+    ]);
+
+    $job->delete();
+
+    $component = livewire(SavedJobsWidget::class)
+        ->call('loadJobs');
+
+    expect($component->get('savedJobs'))->toBeEmpty()
+        ->and($component->get('savedJobsCount'))->toBe(0);
 });

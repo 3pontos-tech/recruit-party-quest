@@ -6,6 +6,7 @@ use He4rt\App\Filament\Resources\Applications\Pages\ViewApplication;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
+use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Users\User;
 
@@ -26,6 +27,7 @@ it('should render', function (): void {
 });
 
 test('only authorized user can see the application', function (): void {
+    $this->application->requisition->update(['status' => RequisitionStatusEnum::Published]);
     actingAs(User::factory()->createQuietly());
     livewire(ViewApplication::class, ['record' => $this->application->getKey()])
         ->assertforbidden();

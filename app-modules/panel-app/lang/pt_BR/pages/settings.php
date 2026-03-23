@@ -152,13 +152,13 @@ return [
     ],
 
     'links' => [
-        'heading' => 'Links Sociais',
-        'description' => 'Gerencie seus links sociais e profissionais.',
-        'submit' => 'Salvar Links',
-        'notify' => 'Links atualizados com sucesso.',
+        'heading' => 'Redes Sociais',
+        'description' => 'Gerencie suas redes sociais e perfis profissionais.',
+        'submit' => 'Salvar Redes Sociais',
+        'notify' => 'Redes sociais atualizadas com sucesso.',
         'add_link' => 'Adicionar Link',
         'fields' => [
-            'links' => 'Links',
+            'links' => 'Redes Sociais',
             'url' => 'URL',
             'other_label' => 'Rótulo Personalizado',
         ],

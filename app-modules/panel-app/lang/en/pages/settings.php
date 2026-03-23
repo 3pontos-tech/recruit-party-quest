@@ -152,13 +152,13 @@ return [
     ],
 
     'links' => [
-        'heading' => 'Social Links',
-        'description' => 'Manage your social and professional links.',
-        'submit' => 'Save Links',
-        'notify' => 'Links updated successfully.',
+        'heading' => 'Social Networks',
+        'description' => 'Manage your social networks and professional profiles.',
+        'submit' => 'Save Social Networks',
+        'notify' => 'Social networks updated successfully.',
         'add_link' => 'Add Link',
         'fields' => [
-            'links' => 'Links',
+            'links' => 'Social Networks',
             'url' => 'URL',
             'other_label' => 'Custom Label',
         ],

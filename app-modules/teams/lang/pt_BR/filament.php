@@ -104,8 +104,8 @@ return [
             'about_description' => 'Conte ao candidato sobre a sua empresa, cultura, o que os faz único.',
             'work_environment' => 'Ambiente de Trabalho',
             'work_environment_description' => 'Descreva o horário de trabalho, flexibilidade dos horários.',
-            'team_links' => 'Links da Empresa',
-            'team_links_description' => 'Adicione links das redes sociais.',
+            'team_links' => 'Redes Sociais',
+            'team_links_description' => 'Adicione os perfis das redes sociais da sua empresa.',
         ],
         'fields' => [
             'about' => 'Sobre',

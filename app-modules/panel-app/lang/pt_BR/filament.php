@@ -61,7 +61,7 @@ return [
         'tabs' => [
             'profile' => 'Perfil',
             'career' => 'Carreira',
-            'links' => 'Links',
+            'links' => 'Redes Sociais',
             'account' => 'Conta',
         ],
     ],
