@@ -23,6 +23,8 @@ class ApplicationResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'id';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function canAccess(): bool
     {
         return auth()->check();
