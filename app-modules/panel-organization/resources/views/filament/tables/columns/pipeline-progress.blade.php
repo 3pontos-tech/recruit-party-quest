@@ -37,7 +37,9 @@
     @else
         <div class="flex items-center gap-1.5">
             <div class="h-1.5 flex-1 rounded-full bg-gray-300 opacity-40 dark:bg-gray-600"></div>
-            <span class="text-xs text-gray-400 dark:text-gray-500">No stages</span>
+            <span class="text-xs text-gray-400 dark:text-gray-500">
+                {{ __('panel-organization::view.pipeline.no_stages') }}
+            </span>
         </div>
     @endif
 </div>

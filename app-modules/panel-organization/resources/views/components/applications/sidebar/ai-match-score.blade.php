@@ -6,11 +6,11 @@
     // Visual placeholder data - as requested, this will be replaced with actual logic later
     $matchScore = 87; // Mock score
     $matchBreakdown = [
-        'Skills Match' => ['score' => 92, 'color' => 'success'],
-        'Experience' => ['score' => 85, 'color' => 'success'],
-        'Education' => ['score' => 90, 'color' => 'success'],
-        'Location' => ['score' => 78, 'color' => 'warning'],
-        'Availability' => ['score' => 95, 'color' => 'success'],
+        __('panel-organization::view.ai.categories.skills_match') => ['score' => 92, 'color' => 'success'],
+        __('panel-organization::view.ai.categories.experience') => ['score' => 85, 'color' => 'success'],
+        __('panel-organization::view.ai.categories.education') => ['score' => 90, 'color' => 'success'],
+        __('panel-organization::view.ai.categories.location') => ['score' => 78, 'color' => 'warning'],
+        __('panel-organization::view.ai.categories.availability') => ['score' => 95, 'color' => 'success'],
     ];
 
     // Determine overall color based on score

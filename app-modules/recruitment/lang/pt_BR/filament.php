@@ -91,6 +91,8 @@ return [
             'position_details' => 'Detalhes da Posição',
             'position_details_description' => 'Forneça detalhes específicos sobre a posição',
             'team_ownership' => 'Liderança e Status',
+            'job_posting' => 'Vaga',
+            'external_posting' => 'Postagem Externa',
             'compensation' => 'Remuneração',
             'settings' => 'Configurações',
             'job_posting_details' => 'Detalhes da Vaga',

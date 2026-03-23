@@ -21,7 +21,7 @@ class EditJobRequisition extends EditRecord
         /** @var JobRequisition $record */
         $record = $this->getRecord();
 
-        return 'Edit: '.$record->post->title;
+        return __('panel-organization::filament.job-requisitions.edit_title', ['title' => $record->post->title]);
     }
 
     protected function getHeaderActions(): array
