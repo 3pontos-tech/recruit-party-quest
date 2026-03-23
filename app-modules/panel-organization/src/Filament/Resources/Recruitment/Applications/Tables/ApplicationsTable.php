@@ -111,7 +111,7 @@ class ApplicationsTable
                 SelectFilter::make('requisition')
                     ->label(__('applications::filament.filters.requisition'))
                     ->relationship('requisition', 'id', fn ($query) => $query->with('post'))
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->post->title ?? 'Vaga sem título')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->post->title ?? __('panel-organization::filament.group.job_no_title'))
                     ->preload(),
             ])
             ->recordActions([

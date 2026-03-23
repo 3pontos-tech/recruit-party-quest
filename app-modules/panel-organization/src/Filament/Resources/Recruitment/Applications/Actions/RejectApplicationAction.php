@@ -39,7 +39,7 @@ class RejectApplicationAction extends Action
                 );
                 Notification::make()
                     ->danger()
-                    ->title('User rejected successfully')
+                    ->title(__('panel-organization::filament.actions.reject_application.notification'))
                     ->send();
 
                 return redirect(request()->header('Referer'));

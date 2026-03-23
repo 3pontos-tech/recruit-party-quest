@@ -40,7 +40,9 @@
     <div class="flex justify-end pt-4">
         <div class="relative" x-data="{ showTooltip: false }">
             <div @mouseenter="if (!isValid) showTooltip = true" @mouseleave="showTooltip = false">
-                <x-he4rt::button type="submit" variant="solid">Submit Application</x-he4rt::button>
+                <x-he4rt::button type="submit" variant="solid">
+                    {{ __('screening::question_validations.submit') }}
+                </x-he4rt::button>
             </div>
 
             <div
@@ -53,7 +55,7 @@
                 x-transition:leave-end="translate-y-1 opacity-0"
                 class="bg-elevation-05dp text-text-high absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 rounded-md px-3 py-2 text-sm whitespace-nowrap shadow-lg"
             >
-                Please answer all required questions
+                {{ __('screening::question_validations.answer_required_questions') }}
             </div>
         </div>
     </div>

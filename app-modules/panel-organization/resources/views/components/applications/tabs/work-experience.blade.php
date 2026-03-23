@@ -31,7 +31,7 @@
                 return $firstLine;
             }
 
-            return 'Professional Role';
+            return __('panel-organization::view.tabs.work_experience.professional_role_fallback');
         }
     }
 

@@ -26,6 +26,7 @@ return [
             'label' => 'Job Requisition',
             'plural_label' => 'Job Requisitions',
         ],
+        'edit_title' => 'Edit: :title',
     ],
 
     'actions' => [
@@ -53,6 +54,7 @@ return [
             'label' => 'Reject Application',
             'modal_heading' => 'Reject Application',
             'modal_description' => 'This action cannot be undone. The candidate will be notified of the rejection.',
+            'notification' => 'Application rejected successfully',
         ],
         'generate_job_requisition' => [
             'label' => 'Generate with AI',
@@ -145,4 +147,11 @@ return [
         'concerns_placeholder' => 'Enter any concerns...',
     ],
 
+    'proficiency' => [
+        1 => 'Beginner',
+        2 => 'Basic',
+        3 => 'Intermediate',
+        4 => 'Advanced',
+        5 => 'Expert',
+    ],
 ];

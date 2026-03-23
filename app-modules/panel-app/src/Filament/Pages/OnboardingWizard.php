@@ -93,6 +93,12 @@ class OnboardingWizard extends Page
             return;
         }
 
+        if ($user->candidate?->hasCompletedOnboarding()) {
+            $this->redirect(route('filament.app.pages.dashboard'));
+
+            return;
+        }
+
         $this->user = $user;
         $this->record = $user->candidate;
         $this->content->fill();

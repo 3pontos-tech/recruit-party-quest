@@ -41,7 +41,9 @@
     @else
         <x-filament::section :secondary="true">
             <div class="text-center">
-                <h3 class="text-text-high text-lg font-semibold">There are no comments yet.</h3>
+                <h3 class="text-text-high text-lg font-semibold">
+                    {{ __('panel-organization::view.tabs.comments.empty') }}
+                </h3>
             </div>
         </x-filament::section>
     @endif

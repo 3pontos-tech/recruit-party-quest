@@ -27,6 +27,7 @@ return [
             'label' => 'Gestão de Vaga',
             'plural_label' => 'Gestão de Vagas',
         ],
+        'edit_title' => 'Editar: :title',
     ],
 
     'actions' => [
@@ -54,6 +55,7 @@ return [
             'label' => 'Rejeitar Candidatura',
             'modal_heading' => 'Rejeitar Candidatura',
             'modal_description' => 'Esta ação não pode ser desfeita. O candidato será notificado da rejeição.',
+            'notification' => 'Candidatura rejeitada com sucesso',
         ],
         'generate_job_requisition' => [
             'label' => 'Gerar com IA',

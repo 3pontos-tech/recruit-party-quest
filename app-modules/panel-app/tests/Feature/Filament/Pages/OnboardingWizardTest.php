@@ -42,6 +42,20 @@ describe('Page Rendering & Access', function (): void {
         expect($component->instance()->getTitle())
             ->toBe(__('panel-app::pages/onboarding.title'));
     });
+
+    it('should redirect to dashboard if user already completed onboarding', function (): void {
+        $onboardedUser = User::factory()->create();
+        Candidate::factory()->create([
+            'user_id' => $onboardedUser->id,
+            'is_onboarded' => true,
+            'onboarding_completed_at' => now(),
+        ]);
+
+        actingAs($onboardedUser);
+
+        livewire(OnboardingWizard::class)
+            ->assertRedirect(route('filament.app.pages.dashboard'));
+    });
 });
 
 describe('Initial State & Configuration', function (): void {
