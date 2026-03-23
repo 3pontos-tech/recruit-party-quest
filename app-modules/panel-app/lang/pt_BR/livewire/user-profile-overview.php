@@ -8,6 +8,6 @@ return [
     'profile_completeness' => 'Completude do Perfil',
     'complete_profile_hint' => 'Complete seu perfil para aumentar a visibilidade para recrutadores',
     'contact_information' => 'Informações de Contato',
-    'links' => 'Links',
+    'links' => 'Redes Sociais',
     'job_preferences' => 'Preferências de Trabalho',
 ];
