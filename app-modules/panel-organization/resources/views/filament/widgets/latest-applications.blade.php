@@ -25,7 +25,7 @@
                         </div>
                         <div class="shrink-0 text-right">
                             <x-he4rt::text size="xs" class="text-text-medium">
-                                {{ $app->currentStage?->name ?? __('panel-organization::filament.widgets.latest_applications.no_stage') }}
+                                {{ $app->currentStage?->stage_type?->getLabel() ?? __('panel-organization::filament.widgets.latest_applications.no_stage') }}
                             </x-he4rt::text>
                             <x-he4rt::text size="xs" class="text-text-low">
                                 {{ $app->created_at->diffForHumans() }}
