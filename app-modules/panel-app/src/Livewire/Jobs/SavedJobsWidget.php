@@ -74,7 +74,7 @@ class SavedJobsWidget extends Component
             return;
         }
 
-        $this->savedJobsCount = auth()->user()->candidate->bookmarkedJobs()->count();
+        $this->savedJobsCount = auth()->user()->candidate->bookmarkedJobs()->withPublishedRequisition()->count();
     }
 
     private function loadSavedJobs(): void
@@ -87,6 +87,7 @@ class SavedJobsWidget extends Component
 
         $this->savedJobs = auth()->user()->candidate
             ->bookmarkedJobs()
+            ->withPublishedRequisition()
             ->with([
                 'jobRequisition' => fn ($q) => $q->withCount('applications')->with(['post', 'team', 'department']),
             ])
