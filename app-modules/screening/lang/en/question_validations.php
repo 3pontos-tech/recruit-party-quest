@@ -11,4 +11,6 @@ return [
     'numeric-max' => 'The field must not be greater than :max.',
     'min-options' => 'Select at least :min options.',
     'max-options' => 'Select a maximum of :max options.',
+    'submit' => 'Submit Application',
+    'answer_required_questions' => 'Please answer all required questions',
 ];

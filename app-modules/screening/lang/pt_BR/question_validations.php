@@ -11,4 +11,6 @@ return [
     'numeric-max' => 'O Campo não pode ser maior que :max.',
     'min-options' => 'Selecione ao menos :min opções.',
     'max-options' => 'Selecione no máximo :max opções.',
+    'submit' => 'Enviar Candidatura',
+    'answer_required_questions' => 'Por favor, responda todas as perguntas obrigatórias',
 ];
