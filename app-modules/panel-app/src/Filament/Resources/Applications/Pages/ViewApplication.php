@@ -44,7 +44,7 @@ class ViewApplication extends ViewRecord
 
     public function getTitle(): string|Htmlable
     {
-        return $this->getRecord()->requisition?->post?->title ?? static::getResource()::getModelLabel();
+        return $this->getRecord()->requisition->post->title;
     }
 
     public function getBreadcrumbs(): array
