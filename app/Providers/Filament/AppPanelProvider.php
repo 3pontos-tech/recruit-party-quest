@@ -49,6 +49,7 @@ class AppPanelProvider extends PanelProvider
             ->registration()
             ->topNavigation()
             ->brandLogo(fn () => view('partials.logo-compact'))
+            ->favicon(asset('favicon.ico'))
             ->maxContentWidth(Width::ScreenTwoExtraLarge)
             ->path($this->panelEnum->getPath())
             ->colors([
