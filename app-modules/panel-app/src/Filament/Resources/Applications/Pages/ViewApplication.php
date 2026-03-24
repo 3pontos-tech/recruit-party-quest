@@ -11,6 +11,7 @@ use He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource;
 use He4rt\Applications\Models\Application;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Users\User;
+use Illuminate\Contracts\Support\Htmlable;
 
 /**
  * @method Application getRecord()
@@ -39,6 +40,11 @@ class ViewApplication extends ViewRecord
                 $this->redirect(JobRequisitionResource::getUrl('index'));
             }
         }
+    }
+
+    public function getTitle(): string|Htmlable
+    {
+        return $this->getRecord()->requisition->post->title;
     }
 
     public function getBreadcrumbs(): array
