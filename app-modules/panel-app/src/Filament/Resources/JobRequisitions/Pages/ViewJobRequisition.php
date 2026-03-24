@@ -67,7 +67,7 @@ class ViewJobRequisition extends ViewRecord
         /** @var JobRequisition $record */
         $record = $this->getRecord();
 
-        return $record->post->title;
+        return $record->post?->title ?? static::getResource()::getModelLabel();
     }
 
     public function getBreadcrumbs(): array
