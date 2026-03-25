@@ -161,6 +161,37 @@ it('creates stages that are active and visible by default', function (): void {
     });
 });
 
+it('enforces slug pattern with team slug on creation', function (): void {
+    $team = Team::factory()->create(['slug' => 'acme-corp']);
+    $requisition = JobRequisition::factory()->create([
+        'team_id' => $team->getKey(),
+        'slug' => 'senior-developer-ab1x',
+    ]);
+
+    expect($requisition->slug)->toMatch('/^senior-developer-acme-corp-[a-z0-9]{5}$/');
+});
+
+it('preserves slug when it already follows the expected pattern', function (): void {
+    $team = Team::factory()->create(['slug' => 'acme-corp']);
+    $validSlug = 'senior-developer-acme-corp-ab1x9';
+    $requisition = JobRequisition::factory()->create([
+        'team_id' => $team->getKey(),
+        'slug' => $validSlug,
+    ]);
+
+    expect($requisition->slug)->toBe($validSlug);
+});
+
+it('enforces slug pattern even with uuid-style slugs from factory', function (): void {
+    $team = Team::factory()->create(['slug' => 'my-team']);
+    $requisition = JobRequisition::factory()->create([
+        'team_id' => $team->getKey(),
+    ]);
+
+    expect($requisition->slug)->toEndWith('-my-team-'.mb_substr($requisition->slug, -5))
+        ->and($requisition->slug)->toMatch('/-my-team-[a-z0-9]{5}$/');
+});
+
 it('creates stages with expected names and descriptions', function (): void {
     $requisition = JobRequisition::factory()->create();
 

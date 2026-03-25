@@ -28,6 +28,8 @@ class JobRequisitionResource extends Resource
 
     protected static bool $shouldRegisterNavigation = true;
 
+    protected static ?string $slug = 'vagas';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBriefcase;
 
     protected static ?string $recordTitleAttribute = 'id';

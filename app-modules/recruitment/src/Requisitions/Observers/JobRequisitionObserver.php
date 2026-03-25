@@ -6,9 +6,23 @@ namespace He4rt\Recruitment\Requisitions\Observers;
 
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
+use Illuminate\Support\Str;
 
 final class JobRequisitionObserver
 {
+    public function creating(JobRequisition $jobRequisition): void
+    {
+        $teamSlug = $jobRequisition->team->slug;
+        $pattern = '/^(.+)-'.preg_quote($teamSlug, '/').'-[a-z0-9]{5}$/';
+
+        if (preg_match($pattern, $jobRequisition->slug)) {
+            return;
+        }
+
+        $titleSlug = Str::beforeLast($jobRequisition->slug, '-');
+        $jobRequisition->slug = $titleSlug.'-'.$teamSlug.'-'.mb_strtolower((string) str()->random(5));
+    }
+
     public function created(JobRequisition $jobRequisition): void
     {
         $stagesConfig = [

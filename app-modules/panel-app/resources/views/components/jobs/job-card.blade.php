@@ -9,7 +9,7 @@
 
 <x-he4rt::card
     class="group"
-    href="{{ He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource::getUrl('view', ['record' => $job]) }}"
+    href="{{ He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource::getUrl('view', ['record' => $job->post->slug]) }}"
 >
     <x-slot:header class="gap-4">
         <x-he4rt::avatar
