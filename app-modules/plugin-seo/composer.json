@@ -1,0 +1,28 @@
+{
+    "name": "he4rt/plugin-seo",
+    "description": "Filament SEO metadata plugin for declarative page metadata management",
+    "type": "library",
+    "version": "1.0",
+    "license": "proprietary",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "He4rt\\PluginSeo\\": "src/",
+            "He4rt\\PluginSeo\\Database\\Factories\\": "database/factories/",
+            "He4rt\\PluginSeo\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "He4rt\\PluginSeo\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "He4rt\\PluginSeo\\SeoPluginServiceProvider"
+            ]
+        }
+    }
+}

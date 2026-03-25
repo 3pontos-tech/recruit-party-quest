@@ -6,12 +6,14 @@ namespace He4rt\App\Filament\Pages;
 
 use Filament\Pages\Dashboard;
 use Filament\Support\Enums\Width;
-use Filament\Support\Facades\FilamentView;
-use Filament\View\PanelsRenderHook;
-use Illuminate\Support\Facades\Blade;
+use He4rt\PluginSeo\Concerns\InteractsWithMetadata;
+use He4rt\PluginSeo\Contracts\HasMetadata;
+use He4rt\PluginSeo\Metadata;
 
-class LandingPage extends Dashboard
+class LandingPage extends Dashboard implements HasMetadata
 {
+    use InteractsWithMetadata;
+
     protected static bool $shouldRegisterNavigation = false;
 
     protected Width|string|null $maxContentWidth = Width::Full;
@@ -31,21 +33,12 @@ class LandingPage extends Dashboard
         return 'panel-app::filament.guest';
     }
 
-    public function mount(): void
+    public function getMetadata(): Metadata
     {
-        $this->registerMetaTags();
-    }
-
-    protected function registerMetaTags(): void
-    {
-        FilamentView::registerRenderHook(
-            PanelsRenderHook::HEAD_START,
-            fn (): string => Blade::render('components.metatags', [
-                'url' => config('app.url'),
-                'title' => 'Seja bem vindo à 3Pontos',
-                'description' => 'Somos o ecossistema que une solução e conhecimento em um único lugar aceleramos sua empresa enquanto fortalecemos sua carreira.',
-                'coverImage' => asset('images/seo.png'),
-            ]),
-        );
+        return Metadata::make()
+            ->title('Seja bem vindo à 3Pontos')
+            ->description('Somos o ecossistema que une solução e conhecimento em um único lugar aceleramos sua empresa enquanto fortalecemos sua carreira.')
+            ->url(config('app.url'))
+            ->ogImage(asset('images/seo.png'));
     }
 }

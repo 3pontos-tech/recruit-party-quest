@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "98d5fe3e95d8b2d3abee0e9fae7b2017",
+    "content-hash": "b6d2b6c0b886912aeec7a72fa1bb8365",
     "packages": [
         {
             "name": "alizharb/filament-activity-log",
@@ -3864,6 +3864,43 @@
             "license": [
                 "proprietary"
             ],
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "he4rt/plugin-seo",
+            "version": "1.0",
+            "dist": {
+                "type": "path",
+                "url": "app-modules/plugin-seo",
+                "reference": "c1d65ded24530f736e15b945057de1dd8a0ac05c"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "He4rt\\PluginSeo\\SeoPluginServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "He4rt\\PluginSeo\\": "src/",
+                    "He4rt\\PluginSeo\\Database\\Factories\\": "database/factories/",
+                    "He4rt\\PluginSeo\\Database\\Seeders\\": "database/seeders/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "He4rt\\PluginSeo\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Filament SEO metadata plugin for declarative page metadata management",
             "transport-options": {
                 "symlink": true,
                 "relative": true

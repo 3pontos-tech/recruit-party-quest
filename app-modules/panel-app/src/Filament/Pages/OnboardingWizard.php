@@ -53,6 +53,7 @@ class OnboardingWizard extends Page
     use EvaluatesClosures;
     use InteractsWithFormActions;
     use InteractsWithForms;
+
     use InteractsWithRecord;
 
     /**
@@ -250,8 +251,8 @@ class OnboardingWizard extends Page
 
         $workState = collect($fields->work_experiences)->mapWithKeys(fn ($item) => [
             (string) Str::uuid() => $item instanceof JsonSerializable
-            ? $item->jsonSerialize()
-            : $item,
+                ? $item->jsonSerialize()
+                : $item,
         ])->all();
 
         $educationState = collect($fields->education)->mapWithKeys(fn ($item) => [
