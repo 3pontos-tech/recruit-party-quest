@@ -106,6 +106,21 @@ it('should display appropriate error messages for failures', function (): void {
         ->assertNotified(__('panel-app::pages/onboarding.notifications.consent_required.title'));
 });
 
+describe('Resume Analysis Error Handling', function (): void {
+    it('sends a danger notification when resume analysis fails', function (): void {
+        livewire(OnboardingWizard::class)
+            ->call('again', ['message' => 'Rate limit exceeded'])
+            ->assertNotified(__('panel-app::pages/onboarding.notifications.rate_limit.title'));
+    });
+
+    it('re-enables the skip button after a resume analysis error', function (): void {
+        livewire(OnboardingWizard::class)
+            ->set('canSkipResumeAnalysis', false)
+            ->call('again', ['message' => 'error'])
+            ->assertSet('canSkipResumeAnalysis', true);
+    });
+});
+
 describe('Complete Registration Flow', function (): void {
     it('should complete full onboarding successfully', function (): void {
         livewire(OnboardingWizard::class)
