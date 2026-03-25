@@ -293,7 +293,6 @@ class OnboardingWizard extends Page
                             ->default('pt_BR'),
                         Toggle::make('data_consent_given')
                             ->label(__('panel-app::pages/onboarding.steps.account.fields.data_consent'))
-                            ->accepted(fn ($state) => $state === true)
                             ->accepted()
                             ->helperText(__('panel-app::pages/onboarding.steps.account.fields.data_consent_helper')),
                     ]),
