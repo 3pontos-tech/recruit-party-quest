@@ -26,19 +26,15 @@ class ApplicationsTable
                     ->label(__('applications::filament.fields.id'))
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->copyable(),
-                TextColumn::make('tracking_code')
-                    ->label(__('applications::filament.fields.tracking_code'))
-                    ->searchable()
-                    ->copyable()
-                    ->sortable(),
+                TextColumn::make('requisition.post.title')
+                    ->label(__('applications::filament.fields.requisition'))
+                    ->toggleable()
+                    ->sortable()
+                    ->copyable(),
                 TextColumn::make('candidate.user.name')
                     ->label(__('applications::filament.fields.candidate'))
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('requisition.id')
-                    ->label(__('applications::filament.fields.requisition'))
-                    ->toggleable()
-                    ->copyable(),
                 TextColumn::make('status')
                     ->label(__('applications::filament.fields.status'))
                     ->badge()
@@ -46,15 +42,21 @@ class ApplicationsTable
                 TextColumn::make('source')
                     ->label(__('applications::filament.fields.source'))
                     ->badge()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('currentStage.name')
                     ->label(__('applications::filament.fields.current_stage'))
                     ->sortable()
                     ->toggleable(),
+                TextColumn::make('tracking_code')
+                    ->label(__('applications::filament.fields.tracking_code'))
+                    ->searchable()
+                    ->copyable()
+                    ->sortable(),
                 TextColumn::make('evaluations_count')
                     ->label(__('applications::filament.fields.evaluations_count'))
                     ->counts('evaluations')
                     ->badge()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('offer_amount')
                     ->label(__('applications::filament.fields.offer_amount'))
