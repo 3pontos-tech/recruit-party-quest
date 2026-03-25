@@ -106,6 +106,33 @@ it('should display appropriate error messages for failures', function (): void {
         ->assertNotified(__('panel-app::pages/onboarding.notifications.consent_required.title'));
 });
 
+describe('Resume Analysis Error Handling', function (): void {
+    it('sends a rate limit notification when code is 503', function (): void {
+        livewire(OnboardingWizard::class)
+            ->call('again', ['message' => 'Rate limit exceeded', 'code' => 503])
+            ->assertNotified(__('panel-app::pages/onboarding.notifications.rate_limit.title'));
+    });
+
+    it('sends an invalid file notification when code is 422', function (): void {
+        livewire(OnboardingWizard::class)
+            ->call('again', ['message' => 'File sent is not a curriculum.', 'code' => 422])
+            ->assertNotified(__('panel-app::pages/onboarding.notifications.is_not_cv.title'));
+    });
+
+    it('falls back to rate limit notification when code is absent', function (): void {
+        livewire(OnboardingWizard::class)
+            ->call('again', ['message' => 'Unknown error'])
+            ->assertNotified(__('panel-app::pages/onboarding.notifications.rate_limit.title'));
+    });
+
+    it('re-enables the skip button after a resume analysis error', function (): void {
+        livewire(OnboardingWizard::class)
+            ->set('canSkipResumeAnalysis', false)
+            ->call('again', ['message' => 'error', 'code' => 503])
+            ->assertSet('canSkipResumeAnalysis', true);
+    });
+});
+
 describe('Complete Registration Flow', function (): void {
     it('should complete full onboarding successfully', function (): void {
         livewire(OnboardingWizard::class)

@@ -43,6 +43,7 @@ use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use JsonSerializable;
 use Livewire\Attributes\On;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @property-read Schema $content
@@ -104,11 +105,24 @@ class OnboardingWizard extends Page
         $this->content->fill();
     }
 
+    /**
+     * @param  array<string, mixed>  $event
+     */
     #[On('echo-private:candidate-onboarding.resume.{user.id},.error')]
-    public function again(): void
+    public function again(array $event): void
     {
         $this->canSkipResumeAnalysis = true;
         $this->dispatch('close')->to(ResumeFileUploadProgress::class);
+
+        $notificationKey = ($event['code'] ?? null) === Response::HTTP_UNPROCESSABLE_ENTITY
+            ? 'is_not_cv'
+            : 'rate_limit';
+
+        Notification::make()
+            ->danger()
+            ->title(__(sprintf('panel-app::pages/onboarding.notifications.%s.title', $notificationKey)))
+            ->body(__(sprintf('panel-app::pages/onboarding.notifications.%s.body', $notificationKey)))
+            ->send();
     }
 
     public function content(Schema $schema): Schema
