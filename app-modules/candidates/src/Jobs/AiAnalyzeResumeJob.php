@@ -38,7 +38,13 @@ final class AiAnalyzeResumeJob implements ShouldQueue
             $fields = resolve(AiAutocompleteInterface::class)->execute($temporaryFile);
             broadcast(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Finished, $fields, $this->userId));
         } catch (OnboardingException $onboardingException) {
-            broadcast(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Error, null, $this->userId, $onboardingException->getMessage()));
+            broadcast(new AnalyzeResumeEvent(
+                status: ResumeAnalyzeStatus::Error,
+                fields: null,
+                userId: $this->userId,
+                message: $onboardingException->getMessage(),
+                code: $onboardingException->getCode(),
+            ));
         }
 
     }

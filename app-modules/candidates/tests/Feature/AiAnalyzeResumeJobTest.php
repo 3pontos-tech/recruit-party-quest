@@ -41,14 +41,18 @@ it('broadcasts a Finished event when the CV analysis succeeds', function (): voi
 
 it('broadcasts an Error event when the CV analysis throws OnboardingException', function (): void {
     $errorMessage = 'Something went wrong';
+    $errorCode = 503;
 
-    app()->bind(AiAutocompleteInterface::class, fn () => new readonly class($errorMessage) implements AiAutocompleteInterface
+    app()->bind(AiAutocompleteInterface::class, fn () => new readonly class($errorMessage, $errorCode) implements AiAutocompleteInterface
     {
-        public function __construct(private string $message) {}
+        public function __construct(
+            private string $message,
+            private int $code,
+        ) {}
 
         public function execute(TemporaryUploadedFile $file): CandidateOnboardingDTO
         {
-            throw new OnboardingException($this->message);
+            throw new OnboardingException($this->message, $this->code);
         }
     });
 
@@ -56,5 +60,6 @@ it('broadcasts an Error event when the CV analysis throws OnboardingException', 
 
     Event::assertDispatched(fn (AnalyzeResumeEvent $event) => $event->status === ResumeAnalyzeStatus::Error
         && $event->userId === (string) $this->user->id
-        && $event->message === $errorMessage);
+        && $event->message === $errorMessage
+        && $event->code === $errorCode);
 });

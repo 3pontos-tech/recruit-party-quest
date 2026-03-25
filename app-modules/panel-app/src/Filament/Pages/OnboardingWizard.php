@@ -43,6 +43,7 @@ use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use JsonSerializable;
 use Livewire\Attributes\On;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @property-read Schema $content
@@ -113,10 +114,14 @@ class OnboardingWizard extends Page
         $this->canSkipResumeAnalysis = true;
         $this->dispatch('close')->to(ResumeFileUploadProgress::class);
 
+        $notificationKey = ($event['code'] ?? null) === Response::HTTP_UNPROCESSABLE_ENTITY
+            ? 'is_not_cv'
+            : 'rate_limit';
+
         Notification::make()
             ->danger()
-            ->title(__('panel-app::pages/onboarding.notifications.rate_limit.title'))
-            ->body(__('panel-app::pages/onboarding.notifications.rate_limit.body'))
+            ->title(__(sprintf('panel-app::pages/onboarding.notifications.%s.title', $notificationKey)))
+            ->body(__(sprintf('panel-app::pages/onboarding.notifications.%s.body', $notificationKey)))
             ->send();
     }
 

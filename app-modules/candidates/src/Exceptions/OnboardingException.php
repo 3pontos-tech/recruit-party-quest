@@ -13,7 +13,7 @@ class OnboardingException extends Exception
     public static function invalidCv(): self
     {
         return new self(
-            message: __('panel-app::pages/onboarding.notifications.is_not_cv.message'),
+            message: __('panel-app::pages/onboarding.notifications.is_not_cv.body'),
             code: Response::HTTP_UNPROCESSABLE_ENTITY
         );
     }
@@ -21,7 +21,7 @@ class OnboardingException extends Exception
     public static function rateLimiting(?Throwable $previous = null): self
     {
         return new self(
-            message: __('panel-app::pages/onboarding.notifications.something_went_wrong.message'),
+            message: __('panel-app::pages/onboarding.notifications.rate_limit.body'),
             code: Response::HTTP_SERVICE_UNAVAILABLE,
             previous: $previous,
         );

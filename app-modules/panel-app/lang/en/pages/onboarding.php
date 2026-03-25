@@ -34,7 +34,8 @@ return [
             'message' => 'Something went wrong. Please try again.',
         ],
         'is_not_cv' => [
-            'message' => 'File sent is not a curriculum.',
+            'title' => 'Invalid file',
+            'body' => 'File sent is not a curriculum.',
         ],
         'rate_limit' => [
             'title' => 'CV analysis unavailable',

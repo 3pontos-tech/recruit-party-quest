@@ -79,7 +79,7 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
                     'model' => $model,
                     'error' => $e->getMessage(),
                 ]);
-                throw OnboardingException::rateLimiting();
+                throw OnboardingException::rateLimiting(previous: $e);
             }
         }
 

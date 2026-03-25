@@ -34,7 +34,8 @@ return [
             'message' => 'Algo deu errado, tente novamente.',
         ],
         'is_not_cv' => [
-            'message' => 'Arquivo enviado não é um currículo.',
+            'title' => 'Arquivo inválido',
+            'body' => 'Arquivo enviado não é um currículo.',
         ],
         'rate_limit' => [
             'title' => 'Análise de CV indisponível',
