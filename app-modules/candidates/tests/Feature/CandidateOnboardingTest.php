@@ -49,7 +49,7 @@ test('candidate can not see other pages until onboarding was made ', function ()
         ->assertSuccessful();
 
     get('/dashboard')
-        ->assertRedirectToRoute('filament.app.pages.onboarding');
+        ->assertRedirectToRoute(OnboardingWizard::getRouteName());
 });
 
 describe('wizard steps', function (): void {

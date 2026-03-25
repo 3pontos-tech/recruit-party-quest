@@ -117,7 +117,7 @@ class SavedJobsWidget extends Component
             'id' => (string) $job->getKey(),
             'title' => $job->post->title,
             'company' => $job->team->name,
-            'url' => JobRequisitionResource::getUrl('view', ['slug' => $job->post->slug]),
+            'url' => JobRequisitionResource::getUrl('view', ['record' => $job->post->slug]),
             'workArrangement' => $job->work_arrangement->getLabel(),
             'employmentType' => $job->employment_type->getLabel(),
             'experienceLevel' => $job->experience_level->getLabel(),

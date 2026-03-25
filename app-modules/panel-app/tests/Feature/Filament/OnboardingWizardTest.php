@@ -11,7 +11,7 @@ use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
 
 it('redirects unauthenticated users to login', function (): void {
-    get(route('filament.app.pages.onboarding'))
+    get(route(OnboardingWizard::getRouteName()))
         ->assertRedirect(route('filament.app.auth.login'));
 });
 
@@ -49,7 +49,7 @@ it('redirects non-onboarding pages to onboarding when candidate has not complete
     actingAs($user);
 
     get(route('filament.app.pages.dashboard'))
-        ->assertRedirect(route('filament.app.pages.onboarding'));
+        ->assertRedirect(route(OnboardingWizard::getRouteName()));
 });
 
 it('redirects non-onboarding pages to onboarding when user has no candidate', function (): void {
@@ -58,5 +58,5 @@ it('redirects non-onboarding pages to onboarding when user has no candidate', fu
     actingAs($user);
 
     get(route('filament.app.pages.dashboard'))
-        ->assertRedirect(route('filament.app.pages.onboarding'));
+        ->assertRedirect(route(OnboardingWizard::getRouteName()));
 });

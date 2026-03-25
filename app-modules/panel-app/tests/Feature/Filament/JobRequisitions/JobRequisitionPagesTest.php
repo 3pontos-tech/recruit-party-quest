@@ -7,6 +7,7 @@ use He4rt\App\Filament\Resources\JobRequisitions\Pages\ViewJobRequisition;
 use He4rt\Applications\Actions\ApplyToJobRequisitionAction;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
+use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Teams\Department;
@@ -29,6 +30,10 @@ beforeEach(function (): void {
         ->for($this->department)
         ->for($this->recruiter, 'recruiter')
         ->for($this->user, 'createdBy')
+        ->create();
+
+    $this->jobPosting = JobPosting::factory()
+        ->for($this->jobRequisition, 'jobRequisition')
         ->create();
 
     actingAs($this->user);
@@ -69,7 +74,7 @@ describe('ViewJobRequisition Page', function (): void {
     });
 
     it('should handle applyDirectly method for candidates', function (): void {
-        $component = livewire(ViewJobRequisition::class, ['record' => $this->jobRequisition->getKey()]);
+        $component = livewire(ViewJobRequisition::class, ['record' => $this->jobPosting->slug]);
 
         expect(method_exists($component->instance(), 'applyDirectly'))->toBeTrue();
 
@@ -93,7 +98,7 @@ describe('ViewJobRequisition Page', function (): void {
 
         actingAs($userWithoutCandidate);
 
-        livewire(ViewJobRequisition::class, ['record' => $this->jobRequisition->getKey()])
+        livewire(ViewJobRequisition::class, ['record' => $this->jobPosting->slug])
             ->assertOk();
     });
 });

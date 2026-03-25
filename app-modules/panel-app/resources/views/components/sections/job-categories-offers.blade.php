@@ -32,7 +32,7 @@
         <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             @foreach (JobCategoryEnum::cases() as $category)
                 <x-he4rt::card
-                    :href="route('filament.app.resources.job-requisitions.index', ['category' => $category->value])"
+                    :href="He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource::getUrl('index', ['category' => $category->value])"
                     class="group p-8"
                     density="compact"
                 >

@@ -10,7 +10,7 @@
 
 @php
     /** @var \He4rt\Recruitment\Requisitions\Models\JobRequisition $job */
-    $jobUrl = He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource::getUrl('view', ['record' => $job->post->slug]);
+    $jobUrl = $job->post ? He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource::getUrl('view', ['record' => $job->post->slug]) : '#';
     $jobTitle = $job->post?->title ?? 'Vaga';
 @endphp
 
