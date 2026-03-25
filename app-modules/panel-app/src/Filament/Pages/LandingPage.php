@@ -36,8 +36,6 @@ class LandingPage extends Dashboard implements HasMetadata
     public function getMetadata(): Metadata
     {
         return Metadata::make()
-            ->title('Seja bem vindo à 3Pontos')
-            ->description('Somos o ecossistema que une solução e conhecimento em um único lugar aceleramos sua empresa enquanto fortalecemos sua carreira.')
             ->url(config('app.url'))
             ->ogImage(asset('images/seo.png'));
     }
