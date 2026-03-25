@@ -280,6 +280,7 @@ class OnboardingWizard extends Page
                                 ->mapWithKeys(fn ($tz) => [$tz => $tz])
                                 ->all())
                             ->searchable()
+                            ->default('America/Sao_Paulo')
                             ->required()
                             ->native(false),
                         Select::make('preferred_language')
@@ -289,10 +290,10 @@ class OnboardingWizard extends Page
                                 'en_US' => __('panel-app::pages/onboarding.steps.account.options.preferred_language.en_US'),
                             ])
                             ->required()
-                            ->default('en'),
+                            ->default('pt_BR'),
                         Toggle::make('data_consent_given')
                             ->label(__('panel-app::pages/onboarding.steps.account.fields.data_consent'))
-                            ->accepted(fn ($state) => $state === true)
+                            ->accepted()
                             ->helperText(__('panel-app::pages/onboarding.steps.account.fields.data_consent_helper')),
                     ]),
             ],
