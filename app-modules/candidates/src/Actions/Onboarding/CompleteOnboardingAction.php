@@ -34,60 +34,101 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
      */
     public function execute(TemporaryUploadedFile $file): CandidateOnboardingDTO
     {
-        try {
-            /** @var Response $response */
-            $response = Prism::structured()
-                ->using(config('ai.provider.gemini.enum'), config('ai.provider.gemini.model'))
-                ->withSchema($this->structureSchema())
-                ->withPrompt(
-                    <<<PROMPT
-                           Você é um assistente de triagem de currículos. Analise o arquivo anexo:
+        $provider = config('ai.provider.gemini.enum');
+        $models = [
+            config('ai.provider.gemini.model'),
+            config('ai.provider.gemini.fallback_model'),
+        ];
 
-                            ### CRITÉRIOS DE REJEIÇÃO (is_cv: FALSE):
-                            1. **Tipo de Arquivo**: Se NÃO for um currículo, perfil profissional ou certificado.
-                            2. **Conteúdo**: Documentos fiscais, fotos pessoais ou textos sem nexo profissional.
+        $output = $this->callWithFallback($file, $provider, $models);
 
-                            ### JUSTIFICATIVA (rejection_reason):
-                            - Se não for um currículo, escreva: "{$this->notAnCv->value}"
+        return CandidateOnboardingDTO::make([
+            'education' => array_map(
+                CandidateEducationDTO::make(...),
+                $output['education']
+            ),
+            'work_experiences' => array_map(
+                CandidateWorkExperienceDTO::make(...),
+                $output['work_experiences']
+            ),
+        ]);
+    }
 
-                            ### EXTRAÇÃO (Se is_cv: TRUE):
-                            - Extraia até 5 experiências profissionais e a formação acadêmica.
-PROMPT,
-                    [
-                        Document::fromRawContent(
-                            rawContent: $file->get(),
-                            mimeType: $file->getMimeType()
-                        ),
-                    ]
-                )
-                ->asStructured();
+    /**
+     * @param  array<string>  $models
+     * @return array<string, mixed>
+     *
+     * @throws FileNotFoundException
+     * @throws OnboardingException
+     */
+    private function callWithFallback(TemporaryUploadedFile $file, string $provider, array $models): array
+    {
+        $lastException = null;
 
-            $output = $response->structured;
-            $this->validate($output);
-            $workExperiences = [];
-            $education = [];
+        foreach ($models as $model) {
+            try {
+                return $this->callPrism($file, $provider, $model);
+            } catch (PrismRateLimitedException $e) {
+                logger()->warning('Gemini rate limit hit, trying next model', [
+                    'model' => $model,
+                    'retry_after' => $e->retryAfter,
+                ]);
+                $lastException = $e;
 
-            foreach ($output['work_experiences'] as $item) {
-                $workExperiences[] = CandidateWorkExperienceDTO::make(
-                    $item
-                );
+                continue;
+            } catch (PrismException $e) {
+                logger()->error('Prism non-recoverable error during CV analysis', [
+                    'model' => $model,
+                    'error' => $e->getMessage(),
+                ]);
+                throw OnboardingException::rateLimiting();
             }
-
-            foreach ($output['education'] as $item) {
-                $education[] = CandidateEducationDTO::make(
-                    $item
-                );
-            }
-
-            return CandidateOnboardingDTO::make([
-                'education' => $education,
-                'work_experiences' => $workExperiences,
-            ]);
-        } catch (PrismRateLimitedException|PrismException) {
-            // This is just a proxy to aggregate the Prism domain with Onboarding.
-            throw OnboardingException::rateLimiting();
         }
 
+        throw OnboardingException::rateLimiting(previous: $lastException);
+    }
+
+    /**
+     * @return array<string, mixed>
+     *
+     * @throws FileNotFoundException
+     * @throws OnboardingException
+     * @throws PrismRateLimitedException
+     * @throws PrismException
+     */
+    private function callPrism(TemporaryUploadedFile $file, string $provider, string $model): array
+    {
+        /** @var Response $response */
+        $response = Prism::structured()
+            ->using($provider, $model)
+            ->withSchema($this->structureSchema())
+            ->withPrompt(
+                <<<PROMPT
+                       Você é um assistente de triagem de currículos. Analise o arquivo anexo:
+
+                        ### CRITÉRIOS DE REJEIÇÃO (is_cv: FALSE):
+                        1. **Tipo de Arquivo**: Se NÃO for um currículo, perfil profissional ou certificado.
+                        2. **Conteúdo**: Documentos fiscais, fotos pessoais ou textos sem nexo profissional.
+
+                        ### JUSTIFICATIVA (rejection_reason):
+                        - Se não for um currículo, escreva: "{$this->notAnCv->value}"
+
+                        ### EXTRAÇÃO (Se is_cv: TRUE):
+                        - Extraia até 5 experiências profissionais e a formação acadêmica.
+PROMPT,
+                [
+                    Document::fromRawContent(
+                        rawContent: $file->get(),
+                        mimeType: $file->getMimeType()
+                    ),
+                ]
+            )
+            ->asStructured();
+
+        $output = $response->structured;
+        $this->validate($output);
+
+        return $output;
     }
 
     private function structureSchema(): ObjectSchema

@@ -6,6 +6,7 @@ namespace He4rt\Candidates\Exceptions;
 
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class OnboardingException extends Exception
 {
@@ -17,11 +18,12 @@ class OnboardingException extends Exception
         );
     }
 
-    public static function rateLimiting(): self
+    public static function rateLimiting(?Throwable $previous = null): self
     {
         return new self(
             message: __('panel-app::pages/onboarding.notifications.something_went_wrong.message'),
-            code: Response::HTTP_SERVICE_UNAVAILABLE
+            code: Response::HTTP_SERVICE_UNAVAILABLE,
+            previous: $previous,
         );
     }
 }
