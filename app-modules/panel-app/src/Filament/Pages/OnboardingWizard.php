@@ -104,11 +104,20 @@ class OnboardingWizard extends Page
         $this->content->fill();
     }
 
+    /**
+     * @param  array<string, mixed>  $event
+     */
     #[On('echo-private:candidate-onboarding.resume.{user.id},.error')]
-    public function again(): void
+    public function again(array $event): void
     {
         $this->canSkipResumeAnalysis = true;
         $this->dispatch('close')->to(ResumeFileUploadProgress::class);
+
+        Notification::make()
+            ->danger()
+            ->title(__('panel-app::pages/onboarding.notifications.rate_limit.title'))
+            ->body(__('panel-app::pages/onboarding.notifications.rate_limit.body'))
+            ->send();
     }
 
     public function content(Schema $schema): Schema

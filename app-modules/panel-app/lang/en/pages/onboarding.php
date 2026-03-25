@@ -36,6 +36,10 @@ return [
         'is_not_cv' => [
             'message' => 'File sent is not a curriculum.',
         ],
+        'rate_limit' => [
+            'title' => 'CV analysis unavailable',
+            'body' => 'Our AI service is temporarily unavailable. You can fill in your details manually below, or try uploading your CV again later from your profile page under the Career tab.',
+        ],
     ],
     'steps' => [
         'account' => [
