@@ -9,6 +9,7 @@ use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Database\Factories\CandidateFactory;
 use He4rt\Candidates\Policies\CandidatePolicy;
 use He4rt\Location\Concerns\HasAddress;
+use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
@@ -240,6 +241,7 @@ class Candidate extends BaseModel implements HasMedia
     protected function casts(): array
     {
         return [
+            'experience_level' => ExperienceLevelEnum::class,
             'willing_to_relocate' => 'boolean',
             'is_open_to_remote' => 'boolean',
             'has_disability' => 'boolean',

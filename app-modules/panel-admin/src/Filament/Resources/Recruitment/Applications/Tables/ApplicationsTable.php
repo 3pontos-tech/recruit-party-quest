@@ -29,7 +29,7 @@ class ApplicationsTable
                 TextColumn::make('requisition.post.title')
                     ->label(__('applications::filament.fields.requisition'))
                     ->toggleable()
-                    ->sortable()
+                    ->searchable()
                     ->copyable(),
                 TextColumn::make('candidate.user.name')
                     ->label(__('applications::filament.fields.candidate'))
