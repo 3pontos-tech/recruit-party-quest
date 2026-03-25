@@ -20,7 +20,7 @@ final class AppLoginPage extends Login
     {
         parent::mount();
 
-        if (! app()->isProduction()) {
+        if (app()->isLocal()) {
             $this->form->fill([
                 'email' => 'admin@admin.com',
                 'password' => 'password',
