@@ -37,7 +37,7 @@ use Spatie\Tags\HasTags;
  * @property bool $is_open_to_remote
  * @property float|null $expected_salary
  * @property string $expected_salary_currency
- * @property string|null $experience_level
+ * @property ExperienceLevelEnum|null $experience_level
  * @property string|null $self_identified_gender
  * @property bool $has_disability
  * @property string|null $source
