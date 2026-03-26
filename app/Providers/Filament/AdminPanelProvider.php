@@ -41,6 +41,7 @@ final class AdminPanelProvider extends PanelProvider
             ->id($this->panelEnum->value)
             ->login(LoginPage::class)
             ->topbar()
+            ->databaseNotifications()
             ->sidebarFullyCollapsibleOnDesktop()
             ->colors([
                 'primary' => Color::Purple,
