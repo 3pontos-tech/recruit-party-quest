@@ -35,6 +35,7 @@ use He4rt\Candidates\DTOs\CandidateDTO;
 use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\DTOs\Collections\CandidateEducationCollection;
 use He4rt\Candidates\DTOs\Collections\CandidateWorkExperienceCollection;
+use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Users\User;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Blade;
@@ -427,7 +428,7 @@ class OnboardingWizard extends Page
                     ->schema([
                         Select::make('experience_level')
                             ->label(__('panel-app::pages/onboarding.steps.preferences.fields.experience_level'))
-                            ->options(__('panel-app::pages/onboarding.steps.preferences.options.experience_levels'))
+                            ->options(ExperienceLevelEnum::class)
                             ->required(),
                         TextInput::make('employment_type_interests')
                             ->label(__('panel-app::pages/onboarding.steps.preferences.fields.employment_type_interests'))

@@ -32,6 +32,10 @@ class JobRequisitionsTable
                     ->label(__('recruitment::filament.requisition.fields.id'))
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->copyable(),
+                TextColumn::make('post.title')
+                    ->label(__('recruitment::filament.requisition.fields.post_title'))
+                    ->searchable()
+                    ->placeholder('-'),
                 TextColumn::make('team.name')
                     ->label(__('recruitment::filament.requisition.fields.team'))
                     ->searchable()
@@ -39,13 +43,19 @@ class JobRequisitionsTable
                 TextColumn::make('department.name')
                     ->label(__('recruitment::filament.requisition.fields.department'))
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('status')
                     ->label(__('recruitment::filament.requisition.fields.status'))
                     ->badge()
                     ->sortable(),
                 TextColumn::make('priority')
                     ->label(__('recruitment::filament.requisition.fields.priority'))
+                    ->badge()
+                    ->sortable(),
+                TextColumn::make('applications_count')
+                    ->label(__('recruitment::filament.requisition.fields.applications_count'))
+                    ->counts('applications')
                     ->badge()
                     ->sortable(),
                 TextColumn::make('work_arrangement')
@@ -62,20 +72,22 @@ class JobRequisitionsTable
                     ->toggleable(),
                 TextColumn::make('positions_available')
                     ->label(__('recruitment::filament.requisition.fields.positions_available'))
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('salary_range')
                     ->label(__('recruitment::filament.requisition.fields.salary_range'))
                     ->state(fn (JobRequisition $record): string => self::formatSalaryRange($record))
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('hiringManager.name')
                     ->label(__('recruitment::filament.requisition.fields.hiring_manager'))
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('published_at')
                     ->label(__('recruitment::filament.requisition.fields.published_at'))
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->label(__('recruitment::filament.requisition.fields.created_at'))
                     ->dateTime()
