@@ -8,6 +8,7 @@ use App\Providers\Tools\DebugbarServiceProvider;
 use App\Providers\Tools\TelescopeServiceProvider;
 use Carbon\CarbonImmutable;
 use He4rt\Users\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Schema\Builder;
@@ -28,6 +29,8 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(Authenticatable::class, User::class);
+
         $this->registerDebugbar();
         $this->registerTelescope();
     }
