@@ -71,7 +71,7 @@ describe('ViewJobRequisition Page — Confidential', function (): void {
 
         $confidentialPosting = JobPosting::factory()
             ->for($confidentialRequisition, 'jobRequisition')
-            ->create();
+            ->create(['slug' => 'confidential-company-'.str()->uuid()]);
 
         livewire(ViewJobRequisition::class, ['record' => $confidentialPosting->slug])
             ->assertOk()
@@ -95,7 +95,7 @@ describe('ViewJobRequisition Page — Confidential', function (): void {
 
         $confidentialPosting = JobPosting::factory()
             ->for($confidentialRequisition, 'jobRequisition')
-            ->create();
+            ->create(['slug' => 'confidential-about-'.str()->uuid()]);
 
         livewire(ViewJobRequisition::class, ['record' => $confidentialPosting->slug])
             ->assertOk()
