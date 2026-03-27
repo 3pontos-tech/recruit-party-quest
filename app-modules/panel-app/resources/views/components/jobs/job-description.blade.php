@@ -48,7 +48,7 @@
                             {{ $posting->title }}
                         </x-he4rt::heading>
                         <x-he4rt::text size="md" class="text-text-medium font-medium">
-                            {{ $team->name }}
+                            {{ $jobRequisition->is_confidential ? __('panel-app::filament.confidential.company_name') : $team->name }}
                         </x-he4rt::text>
                     </div>
 
