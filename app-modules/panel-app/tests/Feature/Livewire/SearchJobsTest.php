@@ -58,7 +58,7 @@ it('should not render internal only jobs', function (): void {
     $livewire->assertDontSee($internalJob->getKey());
 });
 
-it('should not render confidential jobs', function (): void {
+it('should render confidential jobs but hide company name', function (): void {
     actingAs(User::factory()->createOne());
 
     $publicJob = JobRequisition::factory()->available()->create();
@@ -73,6 +73,10 @@ it('should not render confidential jobs', function (): void {
     $livewire->assertSee($publicJob->team->name);
     $livewire->assertSee($publicJob->getKey());
 
+    // Vaga confidencial aparece na listagem
+    $livewire->assertSee($confidentialJob->getKey());
+    // Nome real da empresa NÃO é exibido
     $livewire->assertDontSee($confidentialJob->team->name);
-    $livewire->assertDontSee($confidentialJob->getKey());
+    // Texto genérico é exibido
+    $livewire->assertSee(__('panel-app::filament.confidential.company_name'));
 });

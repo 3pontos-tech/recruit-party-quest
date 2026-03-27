@@ -60,6 +60,49 @@ describe('ListJobRequisitions Page', function (): void {
     });
 });
 
+describe('ViewJobRequisition Page — Confidential', function (): void {
+    it('should hide company name for confidential jobs', function (): void {
+        $confidentialRequisition = JobRequisition::factory()
+            ->for($this->team)
+            ->for($this->department)
+            ->for($this->recruiter, 'recruiter')
+            ->for($this->user, 'createdBy')
+            ->create(['is_confidential' => true]);
+
+        $confidentialPosting = JobPosting::factory()
+            ->for($confidentialRequisition, 'jobRequisition')
+            ->create();
+
+        livewire(ViewJobRequisition::class, ['record' => $confidentialPosting->slug])
+            ->assertOk()
+            ->assertDontSee($this->team->name)
+            ->assertSee(__('panel-app::filament.confidential.company_name'));
+    });
+
+    it('should show company name for non-confidential jobs', function (): void {
+        livewire(ViewJobRequisition::class, ['record' => $this->jobPosting->slug])
+            ->assertOk()
+            ->assertSee($this->team->name);
+    });
+
+    it('should show confidential-about section for confidential jobs', function (): void {
+        $confidentialRequisition = JobRequisition::factory()
+            ->for($this->team)
+            ->for($this->department)
+            ->for($this->recruiter, 'recruiter')
+            ->for($this->user, 'createdBy')
+            ->create(['is_confidential' => true]);
+
+        $confidentialPosting = JobPosting::factory()
+            ->for($confidentialRequisition, 'jobRequisition')
+            ->create();
+
+        livewire(ViewJobRequisition::class, ['record' => $confidentialPosting->slug])
+            ->assertOk()
+            ->assertSee(__('panel-app::filament.confidential.about_heading'));
+    });
+});
+
 describe('ViewJobRequisition Page', function (): void {
     it('should handle redirect when candidate has existing application', function (): void {
         Application::factory()
