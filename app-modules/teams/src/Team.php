@@ -19,6 +19,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\File;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * @property-read string $id
@@ -44,10 +48,11 @@ use Illuminate\Support\Carbon;
 #[UsePolicy(TeamPolicy::class)]
 #[UseFactory(TeamFactory::class)]
 #[ObservedBy(TeamObserver::class)]
-class Team extends BaseModel
+class Team extends BaseModel implements HasMedia
 {
     use HasAddresses;
     use HasLinks;
+    use InteractsWithMedia;
     use SoftDeletes;
 
     /**
@@ -77,6 +82,25 @@ class Team extends BaseModel
     public function departments(): HasMany
     {
         return $this->hasMany(Department::class);
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('logo')
+            ->singleFile()
+            ->acceptsFile(fn (File $file): bool => in_array(
+                $file->mimeType,
+                ['image/jpeg', 'image/png', 'image/webp'],
+                true
+            ));
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->performOnCollections('logo')
+            ->width(200)
+            ->height(200);
     }
 
     protected function casts(): array
