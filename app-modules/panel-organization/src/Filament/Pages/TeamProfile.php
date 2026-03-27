@@ -6,6 +6,7 @@ namespace He4rt\Organization\Filament\Pages;
 
 use App\Filament\Schemas\Components\He4rtToggle;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -73,6 +74,21 @@ class TeamProfile extends Page
             ->model(fn () => Filament::getTenant())
             ->statePath('data')
             ->components([
+                Section::make(__('teams::filament.profile.sections.identity'))
+                    ->description(__('teams::filament.profile.sections.identity_description'))
+                    ->icon(Heroicon::Photo)
+                    ->schema([
+                        SpatieMediaLibraryFileUpload::make('logo')
+                            ->label(__('teams::filament.profile.fields.logo'))
+                            ->disk('r2')
+                            ->collection('logo')
+                            ->visibility('public')
+                            ->image()
+                            ->imageEditor()
+                            ->maxSize(2048)
+                            ->columnSpanFull(),
+                    ]),
+
                 Section::make(__('teams::filament.profile.sections.about'))
                     ->description(__('teams::filament.profile.sections.about_description'))
                     ->icon(Heroicon::BuildingOffice2)
