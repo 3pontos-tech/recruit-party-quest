@@ -30,7 +30,7 @@ beforeEach(function (): void {
         ->for($this->department)
         ->for($this->recruiter, 'recruiter')
         ->for($this->user, 'createdBy')
-        ->create();
+        ->create(['is_confidential' => false]);
 
     $this->jobPosting = JobPosting::factory()
         ->for($this->jobRequisition, 'jobRequisition')
