@@ -22,6 +22,13 @@ return [
         'good' => 'Good Match',
         'fair' => 'Fair Match',
         'breakdown' => 'Breakdown',
+        'categories' => [
+            'skills_match' => 'Skills Match',
+            'experience' => 'Experience',
+            'education' => 'Education',
+            'location' => 'Location',
+            'availability' => 'Availability',
+        ],
         'key_insights' => 'Key Insights',
         'strong_skills' => 'Strong technical skills alignment',
         'relevant_experience' => 'Relevant industry experience',
@@ -45,6 +52,7 @@ return [
     'pipeline' => [
         'title' => 'Pipeline Progress',
         'overall_progress' => 'Overall Progress',
+        'no_stages' => 'No stages',
         'application_submitted' => 'Application submitted',
         'last_updated' => 'Last updated',
         'current' => 'Current',
@@ -105,6 +113,7 @@ return [
             'title' => 'Comments',
             'subtitle' => 'Internal comments',
             'published_at' => 'Published at: ',
+            'empty' => 'There are no comments yet.',
         ],
         'feedbacks' => [
             'title' => 'Stage Feedbacks',

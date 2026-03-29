@@ -20,6 +20,7 @@ final class AnalyzeResumeEvent implements ShouldBroadcast
         public readonly ?CandidateOnboardingDTO $fields,
         public readonly string $userId,
         public readonly ?string $message = null,
+        public readonly ?int $code = null,
     ) {}
 
     public function broadcastOn(): array

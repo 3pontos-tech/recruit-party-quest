@@ -143,7 +143,7 @@ class JobRequisitionForm
                                             ->options(WorkArrangementEnum::class)
                                             ->icon(Heroicon::Home)
                                             ->iconColor('red')
-                                            ->description('Where and how the employee will work')
+                                            ->description(__('recruitment::filament.requisition.fields.work_arrangement_description'))
                                             ->native(false)
                                             ->required(),
                                         He4rtSelect::make('employment_type')
@@ -158,7 +158,7 @@ class JobRequisitionForm
                                             ->label(__('recruitment::filament.requisition.fields.experience_level'))
                                             ->options(ExperienceLevelEnum::class)
                                             ->iconColor('yellow')
-                                            ->description('Required seniority for this position')
+                                            ->description(__('recruitment::filament.requisition.fields.experience_level_description'))
                                             ->icon(Heroicon::CheckBadge)
                                             ->native(false)
                                             ->required(),
@@ -202,13 +202,13 @@ class JobRequisitionForm
                                             ->label(__('recruitment::filament.requisition.fields.status'))
                                             ->icon(Heroicon::Squares2x2)
                                             ->iconColor('gray')
-                                            ->description('Draft? Reviewing? Published?')
+                                            ->description(__('recruitment::filament.requisition.fields.status_description'))
                                             ->options(RequisitionStatusEnum::class)
                                             ->default(RequisitionStatusEnum::Draft)
                                             ->required(),
                                         He4rtSelect::make('priority')
                                             ->label(__('recruitment::filament.requisition.fields.priority'))
-                                            ->description('How fast we must close this position?')
+                                            ->description(__('recruitment::filament.requisition.fields.priority_description'))
                                             ->icon(Heroicon::Cube)
                                             ->iconColor('yellow')
                                             ->options(RequisitionPriorityEnum::class)

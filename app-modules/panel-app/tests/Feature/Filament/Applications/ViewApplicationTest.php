@@ -3,10 +3,12 @@
 declare(strict_types=1);
 
 use He4rt\App\Filament\Resources\Applications\Pages\ViewApplication;
+use He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
+use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Stages\Models\Stage;
 
 use function Pest\Laravel\actingAs;
@@ -121,4 +123,38 @@ it('does not show details section when rejection details are absent', function (
     livewire(ViewApplication::class, ['record' => $application->getKey()])
         ->assertOk()
         ->assertDontSee('Feedback');
+});
+
+it('allows candidate to view their own application when job is not published', function (): void {
+    $application = Application::factory()
+        ->for($this->candidate, 'candidate')
+        ->create();
+
+    $application->requisition->update(['status' => RequisitionStatusEnum::Closed]);
+
+    livewire(ViewApplication::class, ['record' => $application->getKey()])
+        ->assertOk();
+});
+
+it('redirects non-applicant when job is not published', function (): void {
+    $otherCandidate = Candidate::factory()->create();
+    $application = Application::factory()
+        ->for($otherCandidate, 'candidate')
+        ->create();
+
+    $application->requisition->update(['status' => RequisitionStatusEnum::Closed]);
+
+    livewire(ViewApplication::class, ['record' => $application->getKey()])
+        ->assertRedirect(JobRequisitionResource::getUrl('index'));
+});
+
+it('allows anyone with permission to view application when job is published', function (): void {
+    $application = Application::factory()
+        ->for($this->candidate, 'candidate')
+        ->create();
+
+    $application->requisition->update(['status' => RequisitionStatusEnum::Published]);
+
+    livewire(ViewApplication::class, ['record' => $application->getKey()])
+        ->assertOk();
 });

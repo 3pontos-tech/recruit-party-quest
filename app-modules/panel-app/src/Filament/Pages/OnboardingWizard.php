@@ -35,6 +35,7 @@ use He4rt\Candidates\DTOs\CandidateDTO;
 use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\DTOs\Collections\CandidateEducationCollection;
 use He4rt\Candidates\DTOs\Collections\CandidateWorkExperienceCollection;
+use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Users\User;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Blade;
@@ -43,6 +44,7 @@ use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use JsonSerializable;
 use Livewire\Attributes\On;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @property-read Schema $content
@@ -52,6 +54,7 @@ class OnboardingWizard extends Page
     use EvaluatesClosures;
     use InteractsWithFormActions;
     use InteractsWithForms;
+
     use InteractsWithRecord;
 
     /**
@@ -93,16 +96,35 @@ class OnboardingWizard extends Page
             return;
         }
 
+        if ($user->candidate?->hasCompletedOnboarding()) {
+            $this->redirect(route('filament.app.pages.dashboard'));
+
+            return;
+        }
+
         $this->user = $user;
         $this->record = $user->candidate;
         $this->content->fill();
     }
 
+    /**
+     * @param  array<string, mixed>  $event
+     */
     #[On('echo-private:candidate-onboarding.resume.{user.id},.error')]
-    public function again(): void
+    public function again(array $event): void
     {
         $this->canSkipResumeAnalysis = true;
         $this->dispatch('close')->to(ResumeFileUploadProgress::class);
+
+        $notificationKey = ($event['code'] ?? null) === Response::HTTP_UNPROCESSABLE_ENTITY
+            ? 'is_not_cv'
+            : 'rate_limit';
+
+        Notification::make()
+            ->danger()
+            ->title(__(sprintf('panel-app::pages/onboarding.notifications.%s.title', $notificationKey)))
+            ->body(__(sprintf('panel-app::pages/onboarding.notifications.%s.body', $notificationKey)))
+            ->send();
     }
 
     public function content(Schema $schema): Schema
@@ -230,8 +252,8 @@ class OnboardingWizard extends Page
 
         $workState = collect($fields->work_experiences)->mapWithKeys(fn ($item) => [
             (string) Str::uuid() => $item instanceof JsonSerializable
-            ? $item->jsonSerialize()
-            : $item,
+                ? $item->jsonSerialize()
+                : $item,
         ])->all();
 
         $educationState = collect($fields->education)->mapWithKeys(fn ($item) => [
@@ -274,6 +296,7 @@ class OnboardingWizard extends Page
                                 ->mapWithKeys(fn ($tz) => [$tz => $tz])
                                 ->all())
                             ->searchable()
+                            ->default('America/Sao_Paulo')
                             ->required()
                             ->native(false),
                         Select::make('preferred_language')
@@ -283,10 +306,10 @@ class OnboardingWizard extends Page
                                 'en_US' => __('panel-app::pages/onboarding.steps.account.options.preferred_language.en_US'),
                             ])
                             ->required()
-                            ->default('en'),
+                            ->default('pt_BR'),
                         Toggle::make('data_consent_given')
                             ->label(__('panel-app::pages/onboarding.steps.account.fields.data_consent'))
-                            ->accepted(fn ($state) => $state === true)
+                            ->accepted()
                             ->helperText(__('panel-app::pages/onboarding.steps.account.fields.data_consent_helper')),
                     ]),
             ],
@@ -405,7 +428,7 @@ class OnboardingWizard extends Page
                     ->schema([
                         Select::make('experience_level')
                             ->label(__('panel-app::pages/onboarding.steps.preferences.fields.experience_level'))
-                            ->options(__('panel-app::pages/onboarding.steps.preferences.options.experience_levels'))
+                            ->options(ExperienceLevelEnum::class)
                             ->required(),
                         TextInput::make('employment_type_interests')
                             ->label(__('panel-app::pages/onboarding.steps.preferences.fields.employment_type_interests'))

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use He4rt\App\Filament\Resources\JobRequisitions\Pages\ViewJobRequisition;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 
 it('should render', function (): void {
@@ -9,7 +10,7 @@ it('should render', function (): void {
     $jobRequisition = $jobPost->jobRequisition;
 
     $this->from('/')
-        ->get(route('filament.app.resources.job-requisitions.view', ['record' => $jobRequisition]))
+        ->get(route(ViewJobRequisition::getRouteName(), ['record' => $jobPost->slug]))
         ->assertOk()
         ->assertSeeText($jobPost->title)
         ->assertSeeText($jobRequisition->team->name);

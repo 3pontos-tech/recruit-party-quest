@@ -17,6 +17,8 @@ use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Icons\Heroicon;
 use He4rt\Organization\Filament\Pages\TeamProfile;
+use He4rt\PluginSeo\Metadata;
+use He4rt\PluginSeo\SeoPlugin;
 use He4rt\Teams\Team;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -62,6 +64,13 @@ class OrganizationPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Organization/Pages'), for: 'App\Filament\Organization\Pages')
             ->pages([
                 Dashboard::class,
+            ])
+            ->plugins([
+                SeoPlugin::make()
+                    ->defaults(
+                        Metadata::make()
+                            ->robots('noindex, nofollow')
+                    ),
             ])
             ->discoverWidgets(in: app_path('Filament/Organization/Widgets'), for: 'App\Filament\Organization\Widgets')
             ->middleware([

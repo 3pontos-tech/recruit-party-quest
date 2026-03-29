@@ -22,6 +22,13 @@ return [
         'good' => 'Boa combinação',
         'fair' => 'Combinação razoável',
         'breakdown' => 'Desdobramento',
+        'categories' => [
+            'skills_match' => 'Habilidades',
+            'experience' => 'Experiência',
+            'education' => 'Formação',
+            'location' => 'Localização',
+            'availability' => 'Disponibilidade',
+        ],
         'key_insights' => 'Principais insights',
         'strong_skills' => 'Alinhamento forte de habilidades técnicas',
         'relevant_experience' => 'Experiência relevante na indústria',
@@ -45,6 +52,7 @@ return [
     'pipeline' => [
         'title' => 'Progresso da Pipeline',
         'overall_progress' => 'Progresso geral',
+        'no_stages' => 'Sem etapas',
         'application_submitted' => 'Aplicação enviada',
         'last_updated' => 'Última atualização',
         'current' => 'Atual',
@@ -59,6 +67,7 @@ return [
         'skills_title' => 'Habilidades e Proficiência',
         'skills_subtitle' => 'Competências técnicas e profissionais',
         'experience_label' => 'experiência',
+        'skills_count' => '{0} sem habilidades|{1} :count habilidade|[2,*] :count habilidades',
         'no_skills_by_category' => 'Sem habilidades por categoria',
         'no_skills_listed' => 'Nenhuma habilidade listada',
         'add_skills' => 'Adicionar habilidades',
@@ -104,6 +113,7 @@ return [
             'title' => 'Comentários',
             'subtitle' => 'Comentários internos',
             'published_at' => 'Publicado em: ',
+            'empty' => 'Ainda não há comentários.',
         ],
         'feedbacks' => [
             'title' => 'Feedbacks por Etapa',

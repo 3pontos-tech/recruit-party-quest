@@ -9,8 +9,10 @@ use Filament\Support\Enums\Width;
 use He4rt\App\Filament\Resources\Applications\ApplicationResource;
 use He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource;
 use He4rt\Applications\Actions\ApplyToJobRequisitionAction;
+use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Users\User;
+use Illuminate\Contracts\Support\Htmlable;
 
 /**
  * @property JobRequisition $record
@@ -25,6 +27,8 @@ class ViewJobRequisition extends ViewRecord
 
     public function mount(int|string $record): void
     {
+        $record = JobPosting::query()->where('slug', $record)->firstOrFail()->job_requisition_id;
+
         parent::mount($record);
 
         /** @var User|null $user */
@@ -59,6 +63,14 @@ class ViewJobRequisition extends ViewRecord
         $application = $action->execute($this->record, $user->candidate);
 
         $this->redirect(ApplicationResource::getUrl('view', ['record' => $application]));
+    }
+
+    public function getTitle(): string|Htmlable
+    {
+        /** @var JobRequisition $record */
+        $record = $this->getRecord();
+
+        return $record->post->title;
     }
 
     public function getBreadcrumbs(): array

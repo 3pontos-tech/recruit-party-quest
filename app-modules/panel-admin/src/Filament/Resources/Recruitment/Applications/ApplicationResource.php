@@ -89,6 +89,7 @@ class ApplicationResource extends Resource
     {
         /** @var Builder<Application> */
         return parent::getEloquentQuery()
+            ->with(['requisition.post'])
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

@@ -26,6 +26,8 @@ use He4rt\App\Livewire\MyProfile\CandidateResumeUpload;
 use He4rt\App\Livewire\MyProfile\CandidateSkills;
 use He4rt\App\Livewire\MyProfile\CandidateWorkExperience;
 use He4rt\App\RedirectIfOnboardingIncomplete;
+use He4rt\PluginSeo\Metadata;
+use He4rt\PluginSeo\SeoPlugin;
 use He4rt\Term\Filament\Pages\TermPage;
 use He4rt\Users\Models\SocialAccount;
 use He4rt\Users\User;
@@ -51,6 +53,7 @@ class AppPanelProvider extends PanelProvider
             ->registration()
             ->topNavigation()
             ->brandLogo(fn () => view('partials.logo-compact'))
+            ->favicon(asset('favicon.ico'))
             ->maxContentWidth(Width::ScreenTwoExtraLarge)
             ->path($this->panelEnum->getPath())
             ->colors([
@@ -77,6 +80,12 @@ class AppPanelProvider extends PanelProvider
                 TermPage::class,
             ])
             ->plugins([
+                SeoPlugin::make()
+                    ->defaults(
+                        Metadata::make()
+                            ->ogImage(asset('images/seo.png'))
+                            ->description('Somos o ecossistema que une solução e conhecimento em um único lugar.')
+                    ),
                 BreezyCore::make()
                     ->myProfile()
                     ->customMyProfilePage(CandidateMyProfilePage::class)

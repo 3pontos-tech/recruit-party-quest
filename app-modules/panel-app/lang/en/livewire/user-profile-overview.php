@@ -8,6 +8,6 @@ return [
     'profile_completeness' => 'Profile Completeness',
     'complete_profile_hint' => 'Complete your profile to increase visibility to recruiters',
     'contact_information' => 'Contact Information',
-    'links' => 'Links',
+    'links' => 'Social Networks',
     'job_preferences' => 'Job Preferences',
 ];

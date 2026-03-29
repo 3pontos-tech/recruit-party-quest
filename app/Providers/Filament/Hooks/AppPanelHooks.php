@@ -6,6 +6,7 @@ namespace App\Providers\Filament\Hooks;
 
 use Filament\Panel;
 use Filament\View\PanelsRenderHook;
+use He4rt\App\Filament\Pages\OnboardingWizard;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Blade;
@@ -67,7 +68,7 @@ class AppPanelHooks
         $panel->renderHook(
             PanelsRenderHook::FOOTER,
             function (): null|Factory|View {
-                if (request()->routeIs('filament.app.pages.onboarding')) {
+                if (request()->routeIs(OnboardingWizard::getRouteName())) {
                     return null;
                 }
 

@@ -15,7 +15,7 @@ return [
             'education' => 'Histórico educacional',
             'skills' => 'Habilidades (pelo menos 3)',
             'preferences' => 'Preferências de trabalho',
-            'links' => 'Links sociais (pelo menos 2)',
+            'links' => 'Redes sociais (pelo menos 2)',
         ],
     ],
 

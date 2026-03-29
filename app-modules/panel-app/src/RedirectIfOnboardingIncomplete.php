@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\App;
 
 use Closure;
+use He4rt\App\Filament\Pages\OnboardingWizard;
 use He4rt\Candidates\Models\Candidate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +28,7 @@ class RedirectIfOnboardingIncomplete
         $isOnboarding = $request->route()->uri === 'onboarding';
 
         if ((! $candidate || ! $candidate->hasCompletedOnboarding()) && ! $isOnboarding && ! $isLandingPage) {
-            return redirect(route('filament.app.pages.onboarding'));
+            return redirect(OnboardingWizard::getUrl());
         }
 
         return $next($request);

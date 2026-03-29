@@ -12,6 +12,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
+use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use Jeffgreco13\FilamentBreezy\Livewire\MyProfileComponent;
 
 /**
@@ -101,7 +102,7 @@ class CandidatePreferences extends MyProfileComponent
                 Select::make('experience_level')
                     ->label(__('panel-app::pages/settings.preferences.fields.experience_level'))
                     ->prefixIcon('heroicon-o-briefcase')
-                    ->options(__('panel-app::pages/settings.preferences.options.experience_levels'))
+                    ->options(ExperienceLevelEnum::class)
                     ->placeholder(__('panel-app::pages/settings.preferences.placeholders.experience_level')),
                 Select::make('timezone')
                     ->label(__('panel-app::pages/settings.preferences.fields.timezone'))

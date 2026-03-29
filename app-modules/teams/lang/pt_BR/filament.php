@@ -114,4 +114,21 @@ return [
             'footer' => 'Empresa :team_name',
         ],
     ],
+    'profile' => [
+        'label' => 'Perfil da Organização',
+        'sections' => [
+            'about' => 'Sobre',
+            'about_description' => 'Conte ao candidato sobre a sua empresa, cultura, o que os faz único.',
+            'work_environment' => 'Ambiente de Trabalho',
+            'work_environment_description' => 'Descreva o horário de trabalho, flexibilidade dos horários.',
+            'team_links' => 'Redes Sociais',
+            'team_links_description' => 'Adicione os perfis das redes sociais da sua empresa.',
+        ],
+        'fields' => [
+            'about' => 'Sobre',
+            'work_schedule' => 'Horário de Serviço',
+            'accessibility_accommodations' => 'Adaptações para acessibilidade',
+            'is_disability_confident' => 'Empresa Inclusiva',
+        ],
+    ],
 ];

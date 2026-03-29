@@ -6,8 +6,10 @@ namespace He4rt\Candidates\Models;
 
 use App\Models\BaseModel;
 use He4rt\Candidates\Database\Factories\CandidateJobSavedFactory;
+use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -47,5 +49,14 @@ class CandidateJobSaved extends BaseModel
     public function jobRequisition(): BelongsTo
     {
         return $this->belongsTo(JobRequisition::class);
+    }
+
+    /**
+     * @param  Builder<CandidateJobSaved>  $query
+     * @return Builder<CandidateJobSaved>
+     */
+    protected function scopeWithPublishedRequisition(Builder $query): Builder
+    {
+        return $query->whereHas('jobRequisition', fn (Builder $q) => $q->where('status', RequisitionStatusEnum::Published));
     }
 }

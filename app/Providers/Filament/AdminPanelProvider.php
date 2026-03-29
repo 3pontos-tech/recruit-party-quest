@@ -19,6 +19,8 @@ use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
+use He4rt\PluginSeo\Metadata;
+use He4rt\PluginSeo\SeoPlugin;
 use He4rt\Term\TermPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -39,6 +41,7 @@ final class AdminPanelProvider extends PanelProvider
             ->id($this->panelEnum->value)
             ->login(LoginPage::class)
             ->topbar()
+            ->databaseNotifications()
             ->sidebarFullyCollapsibleOnDesktop()
             ->colors([
                 'primary' => Color::Purple,
@@ -59,6 +62,10 @@ final class AdminPanelProvider extends PanelProvider
                 Dashboard::class,
             ])
             ->plugins([
+                SeoPlugin::make()
+                    ->defaults(
+                        Metadata::make()
+                    ),
                 FilamentBetterEmailPlugin::make(),
                 ActivityLogPlugin::make()
                     ->label('Log')

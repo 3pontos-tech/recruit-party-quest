@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Candidates\Database\Factories;
 
 use He4rt\Candidates\Models\Candidate;
+use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Date;
@@ -25,7 +26,7 @@ class CandidateFactory extends Factory
             'is_open_to_remote' => fake()->boolean(),
             'expected_salary' => fake()->randomFloat(2, 30000, 150000),
             'expected_salary_currency' => 'USD',
-            'experience_level' => fake()->randomElement(['junior', 'mid', 'senior', 'lead']),
+            'experience_level' => fake()->randomElement(ExperienceLevelEnum::cases()),
             'self_identified_gender' => fake()->randomElement(['male', 'female', 'non-binary', 'prefer not to say']),
             'has_disability' => fake()->boolean(),
             'source' => fake()->randomElement(['linkedin', 'referral', 'website']),

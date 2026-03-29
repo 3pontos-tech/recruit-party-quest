@@ -15,7 +15,7 @@ return [
             'education' => 'Education history',
             'skills' => 'Skills (at least 3)',
             'preferences' => 'Job preferences',
-            'links' => 'Social links (at least 2)',
+            'links' => 'Social networks (at least 2)',
         ],
     ],
 

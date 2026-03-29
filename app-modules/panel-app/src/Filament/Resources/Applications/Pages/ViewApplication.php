@@ -7,7 +7,11 @@ namespace He4rt\App\Filament\Resources\Applications\Pages;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\Width;
 use He4rt\App\Filament\Resources\Applications\ApplicationResource;
+use He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource;
 use He4rt\Applications\Models\Application;
+use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
+use He4rt\Users\User;
+use Illuminate\Contracts\Support\Htmlable;
 
 /**
  * @method Application getRecord()
@@ -19,6 +23,29 @@ class ViewApplication extends ViewRecord
     protected Width|string|null $maxContentWidth = Width::ScreenExtraLarge;
 
     protected string $view = 'panel-app::filament.applications.view-application';
+
+    public function mount(int|string $record): void
+    {
+        parent::mount($record);
+
+        $application = $this->getRecord();
+        $requisition = $application->requisition;
+
+        if ($requisition->status !== RequisitionStatusEnum::Published) {
+            /** @var User|null $user */
+            $user = auth()->user();
+            $isApplicant = $application->candidate->user_id === $user?->getKey();
+
+            if (! $isApplicant) {
+                $this->redirect(JobRequisitionResource::getUrl('index'));
+            }
+        }
+    }
+
+    public function getTitle(): string|Htmlable
+    {
+        return $this->getRecord()->requisition->post->title;
+    }
 
     public function getBreadcrumbs(): array
     {

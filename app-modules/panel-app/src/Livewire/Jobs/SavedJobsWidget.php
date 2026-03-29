@@ -74,7 +74,7 @@ class SavedJobsWidget extends Component
             return;
         }
 
-        $this->savedJobsCount = auth()->user()->candidate->bookmarkedJobs()->count();
+        $this->savedJobsCount = auth()->user()->candidate->bookmarkedJobs()->withPublishedRequisition()->count();
     }
 
     private function loadSavedJobs(): void
@@ -87,6 +87,7 @@ class SavedJobsWidget extends Component
 
         $this->savedJobs = auth()->user()->candidate
             ->bookmarkedJobs()
+            ->withPublishedRequisition()
             ->with([
                 'jobRequisition' => fn ($q) => $q->withCount('applications')->with(['post', 'team', 'department']),
             ])
@@ -116,7 +117,7 @@ class SavedJobsWidget extends Component
             'id' => (string) $job->getKey(),
             'title' => $job->post->title,
             'company' => $job->team->name,
-            'url' => JobRequisitionResource::getUrl('view', ['record' => $job]),
+            'url' => JobRequisitionResource::getUrl('view', ['record' => $job->post->slug]),
             'workArrangement' => $job->work_arrangement->getLabel(),
             'employmentType' => $job->employment_type->getLabel(),
             'experienceLevel' => $job->experience_level->getLabel(),

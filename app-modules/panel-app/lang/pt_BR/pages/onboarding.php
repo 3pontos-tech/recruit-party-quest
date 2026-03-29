@@ -34,7 +34,12 @@ return [
             'message' => 'Algo deu errado, tente novamente.',
         ],
         'is_not_cv' => [
-            'message' => 'Arquivo enviado não é um currículo.',
+            'title' => 'Arquivo inválido',
+            'body' => 'Arquivo enviado não é um currículo.',
+        ],
+        'rate_limit' => [
+            'title' => 'Análise de CV indisponível',
+            'body' => 'O serviço de análise está temporariamente indisponível. Você pode preencher os dados manualmente abaixo, ou tentar novamente mais tarde pelo seu perfil na aba Carreira.',
         ],
     ],
     'steps' => [
