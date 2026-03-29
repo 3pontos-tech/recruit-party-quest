@@ -61,7 +61,9 @@ it('should not render internal only jobs', function (): void {
 it('should render confidential jobs but hide company name', function (): void {
     actingAs(User::factory()->createOne());
 
-    $publicJob = JobRequisition::factory()->available()->create();
+    $publicJob = JobRequisition::factory()->available()->create([
+        'is_confidential' => false,
+    ]);
 
     $confidentialJob = JobRequisition::factory()->available()->create([
         'is_confidential' => true,

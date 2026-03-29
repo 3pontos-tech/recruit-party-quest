@@ -85,7 +85,7 @@
                         </x-he4rt::tag>
 
                         {{-- Diversity Tag --}}
-                        @if ($team->is_disability_confident)
+                        @if (! $jobRequisition->is_confidential && $team->is_disability_confident)
                             <x-he4rt::tag icon="heroicon-o-heart" variant="ghost">
                                 {{ __('panel-app::filament.pages.job_description.diversity') }}
                             </x-he4rt::tag>
