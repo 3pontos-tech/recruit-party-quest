@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use App\Http\Controllers\GitHubCallbackController;
 use App\Http\Controllers\GitHubConnectController;
+use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('web')->get('/auth/github/callback', [GitHubCallbackController::class, 'handle'])
