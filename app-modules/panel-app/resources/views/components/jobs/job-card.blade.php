@@ -13,7 +13,7 @@
 >
     <x-slot:header class="gap-4">
         <x-he4rt::avatar
-            :src="$job->is_confidential ? asset('images/3pontos/logo-chain-white.png') : asset('images/3pontos/logo-chain-white.png')"
+            :src="$job->is_confidential ? asset('images/3pontos/logo-chain-white.png') : $job->team->logo_thumb_url"
             :alt="$job->is_confidential ? __('panel-app::filament.confidential.company_name') : $job->team->name"
             size="lg"
             :circular="false"

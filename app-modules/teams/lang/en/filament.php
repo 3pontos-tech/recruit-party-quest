@@ -89,6 +89,8 @@ return [
     'profile' => [
         'label' => 'Team Profile',
         'sections' => [
+            'identity' => 'Visual Identity',
+            'identity_description' => 'Upload your company logo to be displayed on job listings.',
             'about' => 'About Your Company',
             'about_description' => 'Tell candidates about your company, culture, and what makes you unique.',
             'work_environment' => 'Work Environment',
@@ -97,6 +99,7 @@ return [
             'team_links_description' => "Add your company's social network profiles.",
         ],
         'fields' => [
+            'logo' => 'Company Logo',
             'about' => 'About',
             'work_schedule' => 'Work Schedule',
             'accessibility_accommodations' => 'Accessibility Accommodations',

@@ -100,6 +100,8 @@ return [
     'profile' => [
         'label' => 'Perfil da Organização',
         'sections' => [
+            'identity' => 'Identidade Visual',
+            'identity_description' => 'Faça upload da logo da sua empresa para ser exibida nas vagas.',
             'about' => 'Sobre',
             'about_description' => 'Conte ao candidato sobre a sua empresa, cultura, o que os faz único.',
             'work_environment' => 'Ambiente de Trabalho',
@@ -108,6 +110,7 @@ return [
             'team_links_description' => 'Adicione os perfis das redes sociais da sua empresa.',
         ],
         'fields' => [
+            'logo' => 'Logo da Empresa',
             'about' => 'Sobre',
             'work_schedule' => 'Horário de Serviço',
             'accessibility_accommodations' => 'Adaptações para acessibilidade',
