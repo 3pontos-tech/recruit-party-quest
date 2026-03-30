@@ -13,6 +13,7 @@ use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -42,6 +43,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property-read Carbon $updated_at
  * @property-read Carbon|null $deleted_at
  * @property-read Collection|Department[] $departments
+ * @property-read string $logo_thumb_url
  *
  * @extends BaseModel<TeamFactory>
  */
@@ -101,6 +103,13 @@ class Team extends BaseModel implements HasMedia
             ->performOnCollections('logo')
             ->width(200)
             ->height(200);
+    }
+
+    protected function logoThumbUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): string => $this->getFirstMediaUrl('logo', 'thumb'),
+        );
     }
 
     protected function casts(): array
