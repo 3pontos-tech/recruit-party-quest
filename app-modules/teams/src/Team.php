@@ -105,6 +105,7 @@ class Team extends BaseModel implements HasMedia
             ->height(200);
     }
 
+    /** @return Attribute<string, never> */
     protected function logoThumbUrl(): Attribute
     {
         return Attribute::make(
