@@ -183,8 +183,7 @@ class JobRequisition extends BaseModel implements HasActivityLogTitle
     #[Scope]
     protected function publicJobs(Builder $query): Builder
     {
-        return $query->where('is_internal_only', false)
-            ->where('is_confidential', false);
+        return $query->where('is_internal_only', false);
     }
 
     protected function casts(): array

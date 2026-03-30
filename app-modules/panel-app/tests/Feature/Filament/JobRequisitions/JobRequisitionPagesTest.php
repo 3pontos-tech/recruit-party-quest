@@ -30,7 +30,7 @@ beforeEach(function (): void {
         ->for($this->department)
         ->for($this->recruiter, 'recruiter')
         ->for($this->user, 'createdBy')
-        ->create();
+        ->create(['is_confidential' => false]);
 
     $this->jobPosting = JobPosting::factory()
         ->for($this->jobRequisition, 'jobRequisition')
@@ -57,6 +57,49 @@ describe('ListJobRequisitions Page', function (): void {
             ->assertTableColumnExists('experience_level')
             ->assertTableColumnExists('status')
             ->assertTableColumnExists('priority');
+    });
+});
+
+describe('ViewJobRequisition Page — Confidential', function (): void {
+    it('should hide company name for confidential jobs', function (): void {
+        $confidentialRequisition = JobRequisition::factory()
+            ->for($this->team)
+            ->for($this->department)
+            ->for($this->recruiter, 'recruiter')
+            ->for($this->user, 'createdBy')
+            ->create(['is_confidential' => true]);
+
+        $confidentialPosting = JobPosting::factory()
+            ->for($confidentialRequisition, 'jobRequisition')
+            ->create(['slug' => 'confidential-company-'.str()->uuid()]);
+
+        livewire(ViewJobRequisition::class, ['record' => $confidentialPosting->slug])
+            ->assertOk()
+            ->assertDontSee($this->team->name)
+            ->assertSee(__('panel-app::filament.confidential.company_name'));
+    });
+
+    it('should show company name for non-confidential jobs', function (): void {
+        livewire(ViewJobRequisition::class, ['record' => $this->jobPosting->slug])
+            ->assertOk()
+            ->assertSee($this->team->name);
+    });
+
+    it('should show confidential-about section for confidential jobs', function (): void {
+        $confidentialRequisition = JobRequisition::factory()
+            ->for($this->team)
+            ->for($this->department)
+            ->for($this->recruiter, 'recruiter')
+            ->for($this->user, 'createdBy')
+            ->create(['is_confidential' => true]);
+
+        $confidentialPosting = JobPosting::factory()
+            ->for($confidentialRequisition, 'jobRequisition')
+            ->create(['slug' => 'confidential-about-'.str()->uuid()]);
+
+        livewire(ViewJobRequisition::class, ['record' => $confidentialPosting->slug])
+            ->assertOk()
+            ->assertSee(__('panel-app::filament.confidential.about_heading'));
     });
 });
 

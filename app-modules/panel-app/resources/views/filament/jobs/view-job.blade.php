@@ -7,7 +7,9 @@
 
             <aside class="h-full pb-20 lg:pb-32">
                 <div class="sticky top-24 flex flex-col gap-6">
-                    @if ($this->getRecord()->team?->about)
+                    @if ($this->getRecord()->is_confidential)
+                        <x-panel-app::team.confidential-about />
+                    @elseif ($this->getRecord()->team?->about)
                         <x-panel-app::team.about :team="$this->getRecord()->team" />
                     @endif
                 </div>

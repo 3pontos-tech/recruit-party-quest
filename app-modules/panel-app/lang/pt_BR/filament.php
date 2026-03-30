@@ -51,6 +51,11 @@ return [
             'access' => 'Acessar',
         ],
     ],
+    'confidential' => [
+        'company_name' => 'Empresa Confidencial',
+        'about_heading' => 'Vaga Confidencial',
+        'about_description' => 'As informações desta empresa são mantidas em sigilo durante o processo seletivo. Ao avançar nas etapas, mais detalhes serão compartilhados com você.',
+    ],
     'stage_timeline' => [
         'application' => 'Candidatura',
         'stage' => 'Fase',

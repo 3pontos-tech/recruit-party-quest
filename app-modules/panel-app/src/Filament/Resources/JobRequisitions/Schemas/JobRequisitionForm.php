@@ -61,9 +61,11 @@ class JobRequisitionForm
                 DateTimePicker::make('published_at'),
                 DateTimePicker::make('closed_at'),
                 Toggle::make('is_internal_only')
-                    ->required(),
+                    ->label(__('recruitment::filament.requisition.fields.is_internal_only'))
+                    ->default(false),
                 Toggle::make('is_confidential')
-                    ->required(),
+                    ->label(__('recruitment::filament.requisition.fields.is_confidential'))
+                    ->default(false),
                 TextInput::make('slug')
                     ->required(),
             ]);
