@@ -13,7 +13,7 @@
         <div class="flex flex-col gap-2">
             <div class="flex items-center gap-3">
                 <img
-                    src="{{ $team->getFirstMediaUrl('logo', 'thumb') ?: asset('images/3pontos/logo-chain-white.png') }}"
+                    src="{{ $team->logo_thumb_url ?: asset('images/3pontos/logo-chain-white.png') }}"
                     alt="{{ $team->name }}"
                     class="h-10 w-10 rounded-md object-cover"
                 />
