@@ -13,7 +13,7 @@
 >
     <x-slot:header class="gap-4">
         <x-he4rt::avatar
-            :src="asset('images/3pontos/logo-chain-white.png')"
+            :src="$job->team->logo_thumb_url ?: asset('images/3pontos/logo-chain-white.png')"
             :alt="$job->team->name"
             size="lg"
             :circular="false"

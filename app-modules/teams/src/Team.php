@@ -13,12 +13,17 @@ use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\File;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * @property-read string $id
@@ -38,16 +43,18 @@ use Illuminate\Support\Carbon;
  * @property-read Carbon $updated_at
  * @property-read Carbon|null $deleted_at
  * @property-read Collection|Department[] $departments
+ * @property-read string $logo_thumb_url
  *
  * @extends BaseModel<TeamFactory>
  */
 #[UsePolicy(TeamPolicy::class)]
 #[UseFactory(TeamFactory::class)]
 #[ObservedBy(TeamObserver::class)]
-class Team extends BaseModel
+class Team extends BaseModel implements HasMedia
 {
     use HasAddresses;
     use HasLinks;
+    use InteractsWithMedia;
     use SoftDeletes;
 
     /**
@@ -77,6 +84,33 @@ class Team extends BaseModel
     public function departments(): HasMany
     {
         return $this->hasMany(Department::class);
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('logo')
+            ->singleFile()
+            ->acceptsFile(fn (File $file): bool => in_array(
+                $file->mimeType,
+                ['image/jpeg', 'image/png', 'image/webp'],
+                true
+            ));
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->performOnCollections('logo')
+            ->width(200)
+            ->height(200);
+    }
+
+    /** @return Attribute<string, never> */
+    protected function logoThumbUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): string => $this->getFirstMediaUrl('logo', 'thumb'),
+        );
     }
 
     protected function casts(): array
