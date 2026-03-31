@@ -11,6 +11,7 @@ use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Arr;
 use Jeffgreco13\FilamentBreezy\Livewire\MyProfileComponent;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 /**
  * @property mixed $form
@@ -62,13 +63,15 @@ class CandidateProfileInfo extends MyProfileComponent
                     ->rows(5)
                     ->maxLength(2000)
                     ->columnSpanFull(),
-                TextInput::make('phone_number')
+                PhoneInput::make('phone_number')
                     ->label(__('panel-app::pages/settings.profile_info.fields.phone_number'))
-                    ->prefixIcon('heroicon-o-phone')
-                    ->tel()
-                    ->mask('(99) 99999-9999')
-                    ->placeholder(__('panel-app::pages/settings.profile_info.placeholders.phone_number'))
-                    ->maxLength(20),
+                    ->defaultCountry('BR')
+                    ->initialCountry('br')
+                    ->required()
+                    ->validateFor(country: 'BR')
+                    ->validationMessages([
+                        'phone' => __('panel-app::pages/settings.profile_info.validations.phone_number'),
+                    ]),
             ])
             ->columns(2)
             ->statePath('data');
