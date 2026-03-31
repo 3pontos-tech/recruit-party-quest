@@ -17,7 +17,7 @@ return [
         'placeholders' => [
             'headline' => 'e.g., Senior Software Engineer | Full-Stack Developer',
             'summary' => 'Write a brief professional summary highlighting your expertise, experience, and career goals...',
-            'phone_number' => 'e.g., +1 (555) 123-4567',
+            'phone_number' => 'e.g., +55 (11) 98765-4321',
         ],
         'validations' => [
             'phone_number' => 'Please enter a valid phone number with area code (e.g., (11) 98765-4321).',
