@@ -208,10 +208,13 @@ describe('Complete Registration Flow', function (): void {
             ->set('data.timezone', 'America/Sao_Paulo')
             ->set('data.preferred_language', 'pt_BR')
             ->set('data.phone', '+5511987654321')
+            ->set('data.confirm_submission', true)
             ->set('data.data_consent_given', true)
             ->set('data.work_experiences', [])
             ->set('data.education', [])
-            ->call('handleRegistration');
+            ->call('handleRegistration')
+            ->assertHasNoFormErrors()
+            ->assertRedirectToRoute('filament.app.pages.dashboard');
 
         assertDatabaseHas(Candidate::class, [
             'user_id' => $this->user->id,

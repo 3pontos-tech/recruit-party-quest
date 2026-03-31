@@ -310,7 +310,8 @@ class OnboardingWizard extends Page
                             ->default('pt_BR'),
                         PhoneInput::make('phone')
                             ->label(__('panel-app::pages/onboarding.steps.account.fields.phone'))
-                            ->defaultCountry('Brazil')
+                            ->defaultCountry('BR')
+                            ->initialCountry('BR')
                             ->required()
                             ->validateFor(country: 'BR')
                             ->validationMessages([
