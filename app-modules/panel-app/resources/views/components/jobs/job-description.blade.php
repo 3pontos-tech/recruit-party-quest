@@ -1,6 +1,5 @@
 @php
     use He4rt\Recruitment\Requisitions\Enums\JobRequisitionItemTypeEnum;
-    use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
     use Illuminate\Support\Js;
 @endphp
 
