@@ -109,7 +109,7 @@ class Team extends BaseModel implements HasMedia
     protected function logoThumbUrl(): Attribute
     {
         return Attribute::make(
-            get: fn (): string => $this->getFirstMediaUrl('logo', 'thumb'),
+            get: fn (): string => $this->getFirstMediaUrl('logo', 'thumb') ?: asset('images/3pontos/logo-chain-white.png'),
         );
     }
 
