@@ -1,5 +1,6 @@
 @php
     use He4rt\Recruitment\Requisitions\Enums\JobRequisitionItemTypeEnum;
+    use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
     use Illuminate\Support\Js;
 @endphp
 
@@ -53,11 +54,6 @@
                     </div>
 
                     <div class="flex flex-wrap gap-x-6 gap-y-3 pt-1">
-                        {{-- Location - Fallback to Remote if not available --}}
-                        <x-he4rt::tag icon="heroicon-o-map-pin" variant="ghost">
-                            {{ __('panel-app::filament.pages.job_description.location_remote') }}
-                        </x-he4rt::tag>
-
                         {{-- Work Model --}}
                         <x-he4rt::tag :icon="$jobRequisition->work_arrangement->getIcon()" variant="ghost">
                             {{ $jobRequisition->work_arrangement->getLabel() }}
