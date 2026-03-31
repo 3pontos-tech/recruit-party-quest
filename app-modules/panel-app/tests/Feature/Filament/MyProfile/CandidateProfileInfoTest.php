@@ -86,13 +86,13 @@ it('re-fills the form after submitting to clear stale upload state', function ()
         ->assertNotified();
 });
 
-it('requires phone_number to save profile', function (): void {
+it('allows saving profile without phone_number', function (): void {
     $this->candidate->update(['phone_number' => null]);
 
     Livewire::test(CandidateProfileInfo::class)
         ->fillForm(['phone_number' => null])
         ->call('submit')
-        ->assertHasFormErrors(['phone_number' => 'required']);
+        ->assertHasNoFormErrors();
 });
 
 it('rejects invalid phone_number format', function (): void {

@@ -66,8 +66,7 @@ class CandidateProfileInfo extends MyProfileComponent
                 PhoneInput::make('phone_number')
                     ->label(__('panel-app::pages/settings.profile_info.fields.phone_number'))
                     ->defaultCountry('BR')
-                    ->initialCountry('br')
-                    ->required()
+                    ->initialCountry('BR')
                     ->validateFor(country: 'BR')
                     ->validationMessages([
                         'phone' => __('panel-app::pages/settings.profile_info.validations.phone_number'),
