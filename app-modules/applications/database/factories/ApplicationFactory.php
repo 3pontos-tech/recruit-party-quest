@@ -72,10 +72,69 @@ class ApplicationFactory extends Factory
         });
     }
 
+    /**
+     * Set an explicit status without relying on the array attribute shorthand.
+     */
+    public function withStatus(ApplicationStatusEnum $status): static
+    {
+        return $this->state(['status' => $status]);
+    }
+
+    /**
+     * Replace all stages for the application's requisition with a single stage at
+     * display_order=1 and leaves current_stage_id as null, so getNextStage() will
+     * deterministically return that one stage.
+     * Use createWithStage() to get both the application and the controlled stage.
+     */
+    public function withIsolatedStages(): static
+    {
+        return $this->afterCreating(function (Application $application): void {
+            Stage::query()->where('job_requisition_id', $application->requisition_id)->delete();
+            Stage::factory()->create([
+                'job_requisition_id' => $application->requisition_id,
+                'display_order' => 1,
+            ]);
+            $application->update(['current_stage_id' => null]);
+        });
+    }
+
+    /**
+     * Create the application with no stages attached to its requisition.
+     * Useful for testing "no next stage available" scenarios.
+     */
+    public function withNoStages(): static
+    {
+        return $this->afterCreating(function (Application $application): void {
+            Stage::query()->where('job_requisition_id', $application->requisition_id)->delete();
+            $application->update(['current_stage_id' => null]);
+        });
+    }
+
+    /**
+     * Create the application and return it together with its single controlled stage.
+     * Must be called after withIsolatedStages().
+     *
+     * @param  array<string, mixed>  $attributes
+     * @return array{0: Application, 1: Stage}
+     */
+    public function createWithStage(array $attributes = []): array
+    {
+        $application = $this->create($attributes);
+        $stage = Stage::query()->where('job_requisition_id', $application->requisition_id)
+            ->orderBy('display_order')
+            ->firstOrFail();
+
+        return [$application, $stage];
+    }
+
     public function configure(): static
     {
         return $this->afterCreating(function (Application $application): void {
-            if ($application->requisition_id && ! $application->current_stage_id) {
+            if (! $application->requisition_id) {
+                return;
+            }
+
+            if (! $application->current_stage_id) {
                 $stage = Stage::factory()->create(['job_requisition_id' => $application->requisition_id]);
                 $application->update(['current_stage_id' => $stage->id]);
             }
