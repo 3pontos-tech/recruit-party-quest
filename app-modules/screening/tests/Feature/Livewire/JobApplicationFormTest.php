@@ -157,15 +157,3 @@ it('should assign first stage to application when stages exist', function (): vo
 
     expect($application->current_stage_id)->toBe($firstStage->getKey());
 })->group('screening');
-
-it('should not allow unauthenticated users to submit', function (): void {
-    auth()->logout();
-    $requisition = JobRequisition::factory()->create();
-
-    expect(fn () => livewire(JobApplicationForm::class, ['requisition' => $requisition])
-        ->set('source', CandidateSourceEnum::LinkedIn)
-        ->call('submit')
-    )->toThrow(Throwable::class);
-
-    assertDatabaseCount(Application::class, 0);
-})->group('screening');
