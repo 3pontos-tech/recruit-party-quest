@@ -3,15 +3,21 @@
 declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
+use He4rt\Applications\Enums\ApplicationStatusEnum;
+use He4rt\Applications\Enums\CandidateSourceEnum;
+use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Screening\Livewire\JobApplicationForm;
 use He4rt\Screening\Models\ScreeningQuestion;
+use He4rt\Screening\Models\ScreeningResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 use function Pest\Laravel\actingAs;
+use function Pest\Laravel\assertDatabaseCount;
+use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
@@ -83,3 +89,86 @@ test('source question are required', function (): void {
         ->call('submit')
         ->assertHasErrors(['source' => 'required']);
 });
+
+it('should submit successfully when requisition has no screening questions', function (): void {
+    $requisition = JobRequisition::factory()->create();
+
+    $livewire = livewire(JobApplicationForm::class, ['requisition' => $requisition])
+        ->set('source', CandidateSourceEnum::LinkedIn)
+        ->call('submit')
+        ->assertHasNoErrors()
+        ->assertNotified('Your application has been submitted');
+
+    $application = Application::query()->first();
+    $livewire->assertRedirect(route('filament.app.resources.applications.view', ['record' => $application->getKey()]));
+
+    assertDatabaseCount(Application::class, 1);
+    assertDatabaseHas(Application::class, [
+        'requisition_id' => $requisition->getKey(),
+        'candidate_id' => auth()->user()->candidate->getKey(),
+        'team_id' => $requisition->team_id,
+        'status' => ApplicationStatusEnum::New,
+        'source' => CandidateSourceEnum::LinkedIn,
+    ]);
+    assertDatabaseCount(ScreeningResponse::class, 0);
+})->group('screening');
+
+it('should submit successfully and save screening responses', function (): void {
+    $requisition = JobRequisition::factory()->create();
+    $question = ScreeningQuestion::factory()
+        ->for($requisition, 'screenable')
+        ->text()
+        ->required()
+        ->create();
+
+    $livewire = livewire(JobApplicationForm::class, ['requisition' => $requisition])
+        ->set('source', CandidateSourceEnum::LinkedIn)
+        ->set('responses.'.$question->getKey(), 'Minha resposta')
+        ->call('submit')
+        ->assertHasNoErrors()
+        ->assertNotified('Your application has been submitted');
+
+    $application = Application::query()->first();
+    $livewire->assertRedirect(route('filament.app.resources.applications.view', ['record' => $application->getKey()]));
+
+    assertDatabaseCount(Application::class, 1);
+    assertDatabaseHas(ScreeningResponse::class, [
+        'team_id' => $requisition->team_id,
+        'application_id' => $application->getKey(),
+        'question_id' => $question->getKey(),
+        'response_value' => json_encode(['value' => 'Minha resposta']),
+    ]);
+})->group('screening');
+
+it('should assign first stage to application when stages exist', function (): void {
+    $requisition = JobRequisition::factory()->create();
+    Stage::factory()->create([
+        'job_requisition_id' => $requisition->id,
+        'team_id' => $requisition->team_id,
+    ]);
+
+    livewire(JobApplicationForm::class, ['requisition' => $requisition])
+        ->set('source', CandidateSourceEnum::LinkedIn)
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    $application = Application::query()->where('requisition_id', $requisition->id)->first();
+    $firstStage = $requisition->fresh()->stages->sortBy('display_order')->first();
+
+    expect($application->current_stage_id)->toBe($firstStage->getKey());
+})->group('screening');
+
+it('should not allow unauthenticated users to submit', function (): void {
+    auth()->logout();
+    $requisition = JobRequisition::factory()->create();
+
+    try {
+        livewire(JobApplicationForm::class, ['requisition' => $requisition])
+            ->set('source', CandidateSourceEnum::LinkedIn)
+            ->call('submit');
+    } catch (\Throwable) {
+        // esperado: usuário não autenticado não pode submeter
+    }
+
+    assertDatabaseCount(Application::class, 0);
+})->group('screening');
