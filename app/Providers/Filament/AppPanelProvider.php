@@ -35,6 +35,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Str;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 
@@ -109,6 +110,10 @@ class AppPanelProvider extends PanelProvider
                             ->icon('fab-linkedin'),
                     ])
                     ->registration()
+                    ->createUserUsing(fn (string $provider, \Laravel\Socialite\Contracts\User $oauthUser, FilamentSocialitePlugin $plugin) => $plugin->getUserModelClass()::query()->create([
+                        'name' => $oauthUser->getName() ?? $oauthUser->getNickname() ?? Str::before($oauthUser->getEmail(), '@'),
+                        'email' => $oauthUser->getEmail(),
+                    ]))
                     ->userModelClass(User::class),
             ])
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'He4rt\App\Filament\Widgets')

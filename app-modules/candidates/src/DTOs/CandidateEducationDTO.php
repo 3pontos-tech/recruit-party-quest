@@ -30,10 +30,10 @@ final readonly class CandidateEducationDTO implements JsonSerializable
             degree: $data['degree'],
             fieldOfStudy: $data['field_of_study'],
             isEnrolled: $data['is_enrolled'],
-            startDate: (filled($data['start_date']) && $data['start_date'] !== 'null')
+            startDate: (filled($data['start_date'] ?? null) && $data['start_date'] !== 'null')
                 ? Date::parse($data['start_date'])
                 : null,
-            endDate: (filled($data['end_date']) && $data['end_date'] !== 'null')
+            endDate: (filled($data['end_date'] ?? null) && $data['end_date'] !== 'null')
                 ? Date::parse($data['end_date'])
                 : null,
         );

@@ -43,11 +43,11 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
         return CandidateOnboardingDTO::make([
             'education' => array_map(
                 CandidateEducationDTO::make(...),
-                $output['education']
+                $output['education'] ?? []
             ),
             'work_experiences' => array_map(
                 CandidateWorkExperienceDTO::make(...),
-                $output['work_experiences']
+                $output['work_experiences'] ?? []
             ),
         ]);
     }

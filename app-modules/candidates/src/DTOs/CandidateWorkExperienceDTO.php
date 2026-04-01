@@ -28,10 +28,10 @@ final readonly class CandidateWorkExperienceDTO implements JsonSerializable
             companyName: $data['company_name'],
             description: $data['description'],
             isCurrentlyWorking: $data['is_currently_working_here'] ?? false,
-            startDate: (filled($data['start_date']) && $data['start_date'] !== 'null')
+            startDate: (filled($data['start_date'] ?? null) && $data['start_date'] !== 'null')
                 ? Date::parse($data['start_date'])
                 : null,
-            endDate: (filled($data['end_date']) && $data['end_date'] !== 'null')
+            endDate: (filled($data['end_date'] ?? null) && $data['end_date'] !== 'null')
                 ? Date::parse($data['end_date'])
                 : null,
         );
