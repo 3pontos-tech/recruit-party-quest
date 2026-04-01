@@ -80,6 +80,7 @@ return [
             'credentials_title' => 'Your Login Credentials',
             'email_label' => 'Email',
             'password_label' => 'Temporary Password',
+            'password_recovery_instructions' => 'A temporary password has been generated for you. Use the "Forgot Your Password?" button below to set your own password before your first login.',
             'instructions' => 'Please log in using these credentials. We recommend changing your password after your first login.',
             'login_button' => 'Log In Now',
             'forgot_password_button' => 'Forgot Your Password?',

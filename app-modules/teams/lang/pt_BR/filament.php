@@ -91,6 +91,7 @@ return [
             'credentials_title' => 'Suas Credenciais de Acesso',
             'email_label' => 'E-mail',
             'password_label' => 'Senha Temporária',
+            'password_recovery_instructions' => 'Uma senha temporária foi gerada para você. Use o botão "Esqueceu Sua Senha?" abaixo para definir sua própria senha antes do primeiro acesso.',
             'instructions' => 'Por favor, faça login usando estas credenciais. Recomendamos alterar sua senha após o primeiro acesso.',
             'login_button' => 'Entrar Agora',
             'forgot_password_button' => 'Esqueceu Sua Senha?',

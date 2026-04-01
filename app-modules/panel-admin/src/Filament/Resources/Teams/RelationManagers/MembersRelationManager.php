@@ -59,10 +59,6 @@ class MembersRelationManager extends RelationManager
                             ->label(__('teams::filament.fields.email'))
                             ->email()
                             ->required(),
-                        TextInput::make('password')
-                            ->label(__('teams::filament.fields.password'))
-                            ->password()
-                            ->required(),
                     ])
                     ->mutateDataUsing(function (array $data): array {
                         $data['team_id'] = $this->getOwnerRecord()->getKey();

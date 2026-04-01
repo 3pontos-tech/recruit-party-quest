@@ -8,7 +8,7 @@
     ## {{ __('teams::filament.emails.team_invitation.credentials_title') }} -
     **{{ __('teams::filament.emails.team_invitation.email_label') }}:** {{ $user->email }} -
     **{{ __('teams::filament.emails.team_invitation.password_label') }}:**
-    {{ __('teams::filament.emails.team_invitation.password_recovery') }}
+    {{ __('teams::filament.emails.team_invitation.password_recovery_instructions') }}
 
     @component('mail::button', ['url' => config('app.url') . '/login'])
         {{ __('teams::filament.emails.team_invitation.login_button') }}
