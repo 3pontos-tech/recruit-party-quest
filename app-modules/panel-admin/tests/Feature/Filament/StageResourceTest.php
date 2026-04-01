@@ -39,7 +39,7 @@ it('validates required fields when editing stage', function (): void {
 
     livewire(EditStage::class, ['record' => $stage->getRouteKey()])
         ->set('data.name', '')
-        ->set('data.stage_type', null)
+        ->set('data.stage_type')
         ->call('save')
         ->assertHasFormErrors(['name', 'stage_type']);
 });
