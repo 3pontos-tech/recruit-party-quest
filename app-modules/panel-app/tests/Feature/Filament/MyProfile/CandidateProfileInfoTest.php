@@ -86,6 +86,22 @@ it('re-fills the form after submitting to clear stale upload state', function ()
         ->assertNotified();
 });
 
+it('allows saving profile without phone_number', function (): void {
+    $this->candidate->update(['phone_number' => null]);
+
+    Livewire::test(CandidateProfileInfo::class)
+        ->fillForm(['phone_number' => null])
+        ->call('submit')
+        ->assertHasNoFormErrors();
+});
+
+it('rejects invalid phone_number format', function (): void {
+    Livewire::test(CandidateProfileInfo::class)
+        ->fillForm(['phone_number' => '123'])
+        ->call('submit')
+        ->assertHasFormErrors(['phone_number']);
+});
+
 it('candidate has single file avatar collection', function (): void {
     Storage::fake('public');
 

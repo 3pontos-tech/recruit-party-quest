@@ -19,6 +19,9 @@ return [
             'summary' => 'Escreva um breve resumo profissional destacando sua expertise, experiência e objetivos de carreira...',
             'phone_number' => 'ex: +55 (11) 98765-4321',
         ],
+        'validations' => [
+            'phone_number' => 'Informe um número de telefone válido com DDD (ex: (11) 98765-4321).',
+        ],
     ],
 
     'preferences' => [

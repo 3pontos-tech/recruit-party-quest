@@ -50,7 +50,8 @@
         "spatie/laravel-activitylog": "^4.12.3",
         "spatie/laravel-backup": "^9.4.1",
         "spatie/laravel-permission": "^6.25.0",
-        "tpetry/laravel-postgresql-enhanced": "^3.6.0"
+        "tpetry/laravel-postgresql-enhanced": "^3.6.0",
+        "ysfkaya/filament-phone-input": "^4.1"
     },
     "require-dev": {
         "driftingly/rector-laravel": "^2.2.0",

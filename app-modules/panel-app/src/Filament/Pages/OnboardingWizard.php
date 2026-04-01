@@ -45,6 +45,7 @@ use Illuminate\Support\Str;
 use JsonSerializable;
 use Livewire\Attributes\On;
 use Symfony\Component\HttpFoundation\Response;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 /**
  * @property-read Schema $content
@@ -307,6 +308,15 @@ class OnboardingWizard extends Page
                             ])
                             ->required()
                             ->default('pt_BR'),
+                        PhoneInput::make('phone')
+                            ->label(__('panel-app::pages/onboarding.steps.account.fields.phone'))
+                            ->defaultCountry('BR')
+                            ->initialCountry('BR')
+                            ->required()
+                            ->validateFor(country: 'BR')
+                            ->validationMessages([
+                                'phone' => __('panel-app::pages/onboarding.steps.account.validations.phone'),
+                            ]),
                         Toggle::make('data_consent_given')
                             ->label(__('panel-app::pages/onboarding.steps.account.fields.data_consent'))
                             ->accepted()

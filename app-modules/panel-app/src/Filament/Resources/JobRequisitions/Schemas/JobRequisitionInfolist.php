@@ -22,6 +22,7 @@ class JobRequisitionInfolist
                 TextEntry::make('department.name')
                     ->label('Department'),
                 TextEntry::make('work_arrangement')
+                    ->label(__('recruitment::filament.requisition.fields.work_arrangement'))
                     ->badge(),
                 TextEntry::make('employment_type')
                     ->badge(),

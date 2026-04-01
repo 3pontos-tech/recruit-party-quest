@@ -58,8 +58,12 @@ return [
                 'email' => 'Email',
                 'timezone' => 'Timezone',
                 'preferred_language' => 'Preferred Language',
+                'phone' => 'Phone',
                 'data_consent' => 'I consent to the processing of my personal data',
                 'data_consent_helper' => 'This is required to proceed with your application.',
+            ],
+            'validations' => [
+                'phone' => 'Please enter a valid phone number with area code (e.g., (11) 98765-4321).',
             ],
         ],
         'cv' => [
