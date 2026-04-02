@@ -30,7 +30,7 @@ describe('OfferExtendedTransition', function (): void {
         );
     });
 
-    it('processStep() keeps status as OfferExtended (no change to model status in this step)', function (): void {
+    it('processStep() sets status to OfferAccepted', function (): void {
         $user = User::factory()->create();
         $application = Application::factory()->withOffer()->create();
 
@@ -39,10 +39,9 @@ describe('OfferExtendedTransition', function (): void {
             'to_stage_id' => Stage::factory()->create(['job_requisition_id' => $application->requisition_id])->id,
         ], $user->id);
 
-        // OfferExtendedTransition::processStep() updates to OfferExtended (re-saves same status)
         $application->current_step->handle($data);
 
-        expect($application->fresh()->status)->toBe(ApplicationStatusEnum::OfferExtended);
+        expect($application->fresh()->status)->toBe(ApplicationStatusEnum::OfferAccepted);
     });
 
     it('OfferExtended → OfferAccepted without to_stage_id throws MissingTransitionDataException', function (): void {

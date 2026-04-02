@@ -134,7 +134,14 @@ describe('AbstractApplicationTransition::handle()', function (): void {
     });
 
     it('ApplicationStatusChanged is dispatched after the DB transaction commits', function (): void {
-        Event::fake([ApplicationStatusChanged::class]);
+        $state = new stdClass;
+        $state->historyExistedAtDispatch = false;
+
+        Event::listen(ApplicationStatusChanged::class, function (ApplicationStatusChanged $event) use ($state): void {
+            $state->historyExistedAtDispatch = ApplicationStageHistory::query()
+                ->where('application_id', $event->application->id)
+                ->exists();
+        });
 
         $user = User::factory()->create();
         $application = Application::factory()->create([
@@ -147,7 +154,6 @@ describe('AbstractApplicationTransition::handle()', function (): void {
 
         $application->current_step->handle($data);
 
-        // The application must already be persisted at the time the event is dispatched
-        Event::assertDispatched(fn (ApplicationStatusChanged $event): bool => ApplicationStageHistory::query()->where('application_id', $event->application->id)->exists());
+        expect($state->historyExistedAtDispatch)->toBeTrue();
     });
 });

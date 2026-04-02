@@ -24,7 +24,7 @@ describe('OfferAcceptedTransition', function (): void {
         expect(array_keys($transition->choices()))->toBe([ApplicationStatusEnum::Hired->value]);
     });
 
-    it('processStep() sets status to OfferAccepted (not Hired)', function (): void {
+    it('processStep() sets status to Hired', function (): void {
         $user = User::factory()->create();
         $application = Application::factory()->create([
             'status' => ApplicationStatusEnum::OfferAccepted,
@@ -36,9 +36,7 @@ describe('OfferAcceptedTransition', function (): void {
 
         $application->current_step->handle($data);
 
-        // OfferAcceptedTransition::processStep() intentionally sets OfferAccepted
-        // (HiredTransition is the next step to set Hired)
-        expect($application->fresh()->status)->toBe(ApplicationStatusEnum::OfferAccepted);
+        expect($application->fresh()->status)->toBe(ApplicationStatusEnum::Hired);
     });
 
     it('throws InvalidTransitionException for illegal target status', function (): void {
