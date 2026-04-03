@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Users\Database\Factories;
 
+use He4rt\Permissions\Roles;
 use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -55,6 +56,21 @@ final class UserFactory extends Factory
         return $this->state(fn (array $attributes): array => [
             'name' => 'admin',
             'email' => 'admin@admin.com',
-        ]);
+        ])->afterCreating(function (User $user): void {
+            $user->assignRole(Roles::SuperAdmin);
+        });
+    }
+
+    /**
+     * Create a self-contained user
+     */
+    public function user(): self
+    {
+        return $this->state(fn (array $attributes): array => [
+            'name' => 'user',
+            'email' => 'user@user.com',
+        ])->afterCreating(function (User $user): void {
+            $user->assignRole(Roles::User);
+        });
     }
 }

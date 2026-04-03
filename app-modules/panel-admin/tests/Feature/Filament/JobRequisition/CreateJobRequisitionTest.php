@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Filament\Facades\Filament;
+use App\Enums\FilamentPanel;
 use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\Pages\CreateJobRequisition;
-use He4rt\Permissions\Roles;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
@@ -20,12 +19,9 @@ use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
-    Filament::setCurrentPanel(Filament::getPanel('admin'));
+    filament()->setCurrentPanel(FilamentPanel::Admin->value);
 
-    actingAs(User::factory()->create());
-
-    // Give the user SuperAdmin role to bypass all policies
-    auth()->user()->assignRole(Roles::SuperAdmin->value);
+    actingAs(User::factory()->admin()->create());
 
     $this->team = Team::factory()->create();
     $this->recruiter = Recruiter::factory()

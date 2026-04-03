@@ -38,3 +38,15 @@ test('it can be rendered', function (): void {
 
     expect($mailable->render())->toBeString();
 });
+
+test('rendered email does not contain raw translation keys', function (): void {
+    $user = User::factory()->make(['name' => 'Jane Doe', 'email' => 'jane@example.com']);
+    $team = Team::factory()->make(['name' => 'Core Team']);
+
+    $rendered = new TeamInvitationMail($user, $team)->render();
+
+    expect($rendered)
+        ->not->toContain('teams::filament')
+        ->toContain('jane@example.com')
+        ->toContain('Core Team');
+});

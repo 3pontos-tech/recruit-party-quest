@@ -20,8 +20,7 @@ function panelFor(FilamentPanel $panel): Panel
 }
 
 it('allows super admin to access all panels', function (FilamentPanel $panel): void {
-    $user = User::factory()->create();
-    $user->assignRole(Roles::SuperAdmin->value);
+    $user = User::factory()->admin()->create();
 
     expect($user->canAccessPanel(panelFor($panel)))->toBeTrue();
 })->with([FilamentPanel::Admin, FilamentPanel::Organization, FilamentPanel::App]);
@@ -48,15 +47,13 @@ it('allows owner to access organization and app panels', function (FilamentPanel
 })->with([FilamentPanel::Organization, FilamentPanel::App]);
 
 it('denies user access to admin and organization panels', function (FilamentPanel $panel): void {
-    $user = User::factory()->create();
-    $user->assignRole(Roles::User->value);
+    $user = User::factory()->user()->create();
 
     expect($user->canAccessPanel(panelFor($panel)))->toBeFalse();
 })->with([FilamentPanel::Admin, FilamentPanel::Organization]);
 
 it('allows user to access app panel', function (): void {
-    $user = User::factory()->create();
-    $user->assignRole(Roles::User->value);
+    $user = User::factory()->user()->create();
 
     expect($user->canAccessPanel(panelFor(FilamentPanel::App)))->toBeTrue();
 });

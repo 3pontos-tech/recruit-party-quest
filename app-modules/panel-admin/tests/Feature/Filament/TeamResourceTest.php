@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace He4rt\Admin\Tests\Feature\Filament;
 
+use App\Enums\FilamentPanel;
 use Filament\Actions\Testing\TestAction;
-use Filament\Facades\Filament;
 use Filament\Pages\Dashboard;
 use He4rt\Admin\Filament\Resources\Teams\Pages\CreateTeam;
 use He4rt\Admin\Filament\Resources\Teams\Pages\EditTeam;
@@ -19,12 +19,9 @@ use function Pest\Laravel\actingAs;
 use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
-    Filament::setCurrentPanel(Filament::getPanel('admin'));
+    filament()->setCurrentPanel(FilamentPanel::Admin->value);
 
-    actingAs(User::factory()->create());
-
-    // Give the user SuperAdmin role to bypass all policies
-    auth()->user()->assignRole(Roles::SuperAdmin->value);
+    actingAs(User::factory()->admin()->create());
 });
 
 it('can list teams with translated columns', function (): void {

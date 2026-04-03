@@ -37,13 +37,18 @@ final class OfferExtendedTransition extends AbstractApplicationTransition
 
     public function processStep(TransitionData $data): void
     {
-        $this->application->update([
-            'status' => ApplicationStatusEnum::OfferExtended,
-            'offer_extended_at' => $data->offerExtendedAt ?? now(),
-            'offer_extended_by' => $data->byUserId,
-            'offer_amount' => $data->offerAmount ?? $this->application->offer_amount,
-            'offer_response_deadline' => $data->offerResponseDeadline ?? $this->application->offer_response_deadline,
-        ]);
+        $payload = ['status' => $data->toStatus];
+
+        if ($data->toStatus === ApplicationStatusEnum::OfferAccepted) {
+            $payload += [
+                'offer_extended_at' => $data->offerExtendedAt ?? now(),
+                'offer_extended_by' => $data->byUserId,
+                'offer_amount' => $data->offerAmount ?? $this->application->offer_amount,
+                'offer_response_deadline' => $data->offerResponseDeadline ?? $this->application->offer_response_deadline,
+            ];
+        }
+
+        $this->application->update($payload);
     }
 
     public function notify(TransitionData $data): void {}

@@ -32,7 +32,7 @@ final class OfferAcceptedTransition extends AbstractApplicationTransition
     public function processStep(TransitionData $data): void
     {
         $this->application->update([
-            'status' => ApplicationStatusEnum::OfferAccepted,
+            'status' => $data->toStatus,
         ]);
     }
 
