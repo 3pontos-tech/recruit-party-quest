@@ -31,6 +31,21 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}-tests
       cancel-in-progress: true
+
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_sycorax
+        ports:
+          - 5432/tcp
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout code
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
@@ -73,8 +88,13 @@ jobs:
           npm ci
           npm run build
 
+      - name: Copy .env file
+        run: |
+          cp .env.testing.example .env.testing
+
       - name: Run Tests
         env:
           XDEBUG_MODE: coverage
+          DB_PORT: ${{ job.services.postgres.ports['5432'] }}
         run: |
           vendor/bin/pest --ci --parallel
