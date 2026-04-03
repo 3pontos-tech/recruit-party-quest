@@ -89,6 +89,7 @@ class Stage extends BaseModel
         return [
             'active' => 'boolean',
             'hidden' => 'boolean',
+            'display_order' => 'integer',
             'stage_type' => StageTypeEnum::class,
         ];
     }
