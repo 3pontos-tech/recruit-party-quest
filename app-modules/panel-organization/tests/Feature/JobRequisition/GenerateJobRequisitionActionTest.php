@@ -11,6 +11,7 @@ use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 use He4rt\Recruitment\Requisitions\Jobs\GeneratePostJob;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Teams\Department;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Queue;
 use Livewire\Livewire;
 
@@ -60,9 +61,12 @@ it('dispatches GeneratePostJob with the correct DTO data', function (): void {
 });
 
 it('shows an error notification and does not dispatch the job when the queue connection fails', function (): void {
+    Bus::fake();
     config(['queue.default' => 'nonexistent_queue_connection_xyz']);
 
     Livewire::test(CreateJobRequisition::class)
         ->callAction('generate-job-requisition-action', data: $this->actionData)
         ->assertNotified();
+
+    Bus::assertNotDispatched(GeneratePostJob::class);
 });
