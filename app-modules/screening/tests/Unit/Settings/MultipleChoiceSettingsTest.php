@@ -79,27 +79,42 @@ describe('MultipleChoiceSettings', function (): void {
         });
 
         it('when required=true and minSelections=0, enforces at least 1 selection', function (): void {
-            // required=true + minSelections=0 → max(0, 1) = 1
             $settings = new MultipleChoiceSettings(minSelections: 0);
-            $rules = $settings->rules('skills', true);
+            /** @var MultipleChoiceRule $rule */
+            $rule = $settings->rules('skills', true)[2];
 
-            // The MultipleChoiceRule is constructed with min=1
-            expect($rules[2])->toBeInstanceOf(MultipleChoiceRule::class);
+            $failed = false;
+            $rule->validate('skills', [], function () use (&$failed): void {
+                $failed = true;
+            });
+
+            expect($failed)->toBeTrue();
         });
 
         it('when required=true and minSelections=3, preserves the higher min', function (): void {
-            // required=true + minSelections=3 → max(3, 1) = 3
             $settings = new MultipleChoiceSettings(minSelections: 3);
-            $rules = $settings->rules('skills', true);
+            /** @var MultipleChoiceRule $rule */
+            $rule = $settings->rules('skills', true)[2];
 
-            expect($rules[2])->toBeInstanceOf(MultipleChoiceRule::class);
+            $failed = false;
+            $rule->validate('skills', ['a', 'b'], function () use (&$failed): void {
+                $failed = true;
+            });
+
+            expect($failed)->toBeTrue();
         });
 
         it('when required=false, uses minSelections directly (can be 0)', function (): void {
             $settings = new MultipleChoiceSettings(minSelections: 0);
-            $rules = $settings->rules('skills', false);
+            /** @var MultipleChoiceRule $rule */
+            $rule = $settings->rules('skills', false)[2];
 
-            expect($rules[2])->toBeInstanceOf(MultipleChoiceRule::class);
+            $failed = false;
+            $rule->validate('skills', [], function () use (&$failed): void {
+                $failed = true;
+            });
+
+            expect($failed)->toBeFalse();
         });
 
         it('returns exactly 3 rules', function (): void {
