@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Teams\Database\Factories;
 
+use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Teams\Department;
 use He4rt\Teams\Team;
 use He4rt\Users\User;
@@ -26,6 +27,14 @@ class DepartmentFactory extends Factory
             'team_id' => Team::factory(),
             'head_user_id' => User::factory(),
         ];
+    }
+
+    public function forRecruiter(Recruiter $recruiter): static
+    {
+        return $this->state(fn () => [
+            'team_id' => $recruiter->team->getKey(),
+            'head_user_id' => $recruiter->user_id,
+        ]);
     }
 
     public function configure(): static
