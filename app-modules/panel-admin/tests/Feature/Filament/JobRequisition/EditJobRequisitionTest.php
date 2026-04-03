@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Filament\Facades\Filament;
+use App\Enums\FilamentPanel;
 use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\Pages\EditJobRequisition;
-use He4rt\Permissions\Roles;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
@@ -15,11 +14,9 @@ use function Pest\Laravel\actingAs;
 use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
-    Filament::setCurrentPanel(Filament::getPanel('admin'));
+    filament()->setCurrentPanel(FilamentPanel::Admin->value);
 
-    actingAs(User::factory()->create());
-
-    auth()->user()->assignRole(Roles::SuperAdmin->value);
+    actingAs(User::factory()->admin()->create());
 });
 
 it('can render edit job requisition page', function (): void {

@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace He4rt\Admin\Tests\Feature\Filament;
 
-use Filament\Facades\Filament;
+use App\Enums\FilamentPanel;
 use He4rt\Admin\Filament\Resources\Users\Pages\CreateUser;
 use He4rt\Admin\Filament\Resources\Users\Pages\EditUser;
 use He4rt\Admin\Filament\Resources\Users\Pages\ListUsers;
 use He4rt\Admin\Filament\Resources\Users\UserResource;
-use He4rt\Permissions\Roles;
 use He4rt\Users\User;
 
 use function Pest\Laravel\actingAs;
@@ -18,12 +17,9 @@ use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
-    Filament::setCurrentPanel(Filament::getPanel('admin'));
+    filament()->setCurrentPanel(FilamentPanel::Admin->value);
 
-    actingAs(User::factory()->create());
-
-    // Give the user SuperAdmin role to bypass all policies
-    auth()->user()->assignRole(Roles::SuperAdmin->value);
+    actingAs(User::factory()->admin()->create());
 });
 
 it('can list users', function (): void {

@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace He4rt\Admin\Tests\Feature\Filament;
 
+use App\Enums\FilamentPanel;
 use Filament\Actions\Testing\TestAction;
-use Filament\Facades\Filament;
 use He4rt\Admin\Filament\Resources\Teams\Pages\EditTeam;
 use He4rt\Admin\Filament\Resources\Teams\RelationManagers\MembersRelationManager;
-use He4rt\Permissions\Roles;
 use He4rt\Teams\Actions\NewMember\SendTeamInvitationJob;
 use He4rt\Teams\Team;
 use He4rt\Users\User;
@@ -19,11 +18,9 @@ use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
-    Filament::setCurrentPanel(Filament::getPanel('admin'));
+    filament()->setCurrentPanel(FilamentPanel::Admin->value);
 
-    actingAs(User::factory()->create());
-
-    auth()->user()->assignRole(Roles::SuperAdmin->value);
+    actingAs(User::factory()->admin()->create());
 });
 
 test('invite action creates user, attaches to team and dispatches job', function (): void {

@@ -2,8 +2,7 @@
 
 declare(strict_types=1);
 
-use Filament\Facades\Filament;
-use He4rt\Permissions\Roles;
+use App\Enums\FilamentPanel;
 use He4rt\Term\Filament\Resources\Pages\CreateTerm;
 use He4rt\Term\Filament\Resources\Pages\EditTerm;
 use He4rt\Term\Filament\Resources\Pages\ListTerms;
@@ -15,11 +14,9 @@ use function Pest\Laravel\actingAs;
 use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
-    Filament::setCurrentPanel(Filament::getPanel('admin'));
+    filament()->setCurrentPanel(FilamentPanel::Admin->value);
 
-    actingAs(User::factory()->create());
-
-    auth()->user()->assignRole(Roles::SuperAdmin->value);
+    actingAs(User::factory()->admin()->create());
 });
 
 it('can list terms', function (): void {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Permissions\Tests\Feature\Filament;
 
-use Filament\Facades\Filament;
+use App\Enums\FilamentPanel;
 use He4rt\Admin\Filament\Resources\Permissions\Pages\CreateRole;
 use He4rt\Admin\Filament\Resources\Permissions\Pages\EditRole;
 use He4rt\Admin\Filament\Resources\Permissions\Pages\ListRoles;
@@ -20,12 +20,9 @@ use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
-    Filament::setCurrentPanel(Filament::getPanel('admin'));
+    filament()->setCurrentPanel(FilamentPanel::Admin->value);
 
-    actingAs(User::factory()->create());
-
-    // Give the user SuperAdmin role to bypass all policies
-    auth()->user()->assignRole(Roles::SuperAdmin->value);
+    actingAs(User::factory()->admin()->create());
 });
 
 it('can list roles', function (): void {
