@@ -38,7 +38,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: test_sycorax
+          POSTGRES_DB: test_recruit_party_quest
         ports:
           - 5432/tcp
         options: >-
@@ -90,7 +90,7 @@ jobs:
 
       - name: Copy .env file
         run: |
-          cp .env.testing.example .env.testing
+          cp .env.testing .env.testing
 
       - name: Run Tests
         env:
