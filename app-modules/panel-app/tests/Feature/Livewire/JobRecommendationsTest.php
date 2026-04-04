@@ -57,12 +57,12 @@ it('filters jobs when jobTypes contains EnumSynth nested array format', function
 });
 
 it('returns no jobs when jobTypes filter matches no employment type in the database', function (): void {
-    JobRequisition::factory()->available()->create([
+    $job = JobRequisition::factory()->available()->create([
         'employment_type' => EmploymentTypeEnum::FullTimeEmployee,
     ]);
 
     livewire(JobRecommendations::class)
         ->set('jobTypes', ['non_existent_type'])
         ->assertOk()
-        ->assertSee('0');
+        ->assertDontSee((string) $job->getKey());
 });

@@ -26,7 +26,7 @@ class JobRecommendations extends Component
     public string $workModel = '';
 
     /**
-     * @var array<int, EmploymentTypeEnum|array{value: string, class: string}|string>
+     * @var array<int, EmploymentTypeEnum|array<string, mixed>|string>
      */
     #[Url]
     public array $jobTypes = [];
@@ -61,13 +61,17 @@ class JobRecommendations extends Component
      */
     private function normalizedJobTypes(): array
     {
-        return array_map(
-            fn (mixed $type): string => match (true) {
-                $type instanceof EmploymentTypeEnum => $type->value,
-                is_array($type) => $type['value'],
-                default => $type,
-            },
-            $this->jobTypes
-        );
+        return array_values(array_filter(
+            array_map(
+                fn (mixed $type): ?string => match (true) {
+                    $type instanceof EmploymentTypeEnum => $type->value,
+                    is_array($type) && isset($type['value']) && is_string($type['value']) => $type['value'],
+                    is_string($type) => $type,
+                    default => null,
+                },
+                $this->jobTypes
+            ),
+            static fn (?string $type): bool => $type !== null
+        ));
     }
 }
