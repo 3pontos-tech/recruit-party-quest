@@ -43,7 +43,7 @@ class JobRecommendations extends Component
             ->withCount('applications')
             ->where('status', RequisitionStatusEnum::Published->value)
             ->when($this->search, fn ($q) => $q->whereHas('post', fn (Builder $p) => $p->where('title', 'like', sprintf('%%%s%%', $this->search))))
-            ->unless($this->jobTypes === [], fn ($q) => $q->whereIn('employment_type', $this->jobTypes))
+            ->unless($this->jobTypes === [], fn ($q) => $q->whereIn('employment_type', $this->normalizedJobTypes()))
             ->latest()
             ->paginate(12);
     }
@@ -51,5 +51,23 @@ class JobRecommendations extends Component
     public function render(): View
     {
         return view('panel-app::livewire.job-recommendations');
+    }
+
+    /**
+     * Normaliza $jobTypes para strings, independente de como o Livewire serializou
+     * (string vinda da URL, EmploymentTypeEnum, ou array do EnumSynth).
+     *
+     * @return array<int, string>
+     */
+    private function normalizedJobTypes(): array
+    {
+        return array_map(
+            fn (mixed $type): string => match (true) {
+                $type instanceof EmploymentTypeEnum => $type->value,
+                is_array($type) => (string) $type['value'],
+                default => (string) $type,
+            },
+            $this->jobTypes
+        );
     }
 }
