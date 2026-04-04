@@ -26,7 +26,7 @@ class JobRecommendations extends Component
     public string $workModel = '';
 
     /**
-     * @var array<int, EmploymentTypeEnum>
+     * @var array<int, EmploymentTypeEnum|array{value: string, class: string}|string>
      */
     #[Url]
     public array $jobTypes = [];
@@ -64,8 +64,8 @@ class JobRecommendations extends Component
         return array_map(
             fn (mixed $type): string => match (true) {
                 $type instanceof EmploymentTypeEnum => $type->value,
-                is_array($type) => (string) $type['value'],
-                default => (string) $type,
+                is_array($type) => $type['value'],
+                default => $type,
             },
             $this->jobTypes
         );
