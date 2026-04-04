@@ -69,6 +69,10 @@ test-unit: ## Run unit tests
 test-feature: ## Run feature tests
 	@$(CURDIR)/vendor/bin/pest --parallel --compact --group=feature
 
+.PHONY: setup-test-db
+setup-test-db: ## Create the testing database for running tests
+	@PGHOST=localhost PGUSER=postgres PGPASSWORD=postgres createdb test_sycorax 2>/dev/null || echo "Database test_sycorax already exists"
+
 ## Module Tests
 
 .PHONY: test-module-applications

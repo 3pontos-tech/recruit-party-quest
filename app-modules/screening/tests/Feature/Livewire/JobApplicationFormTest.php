@@ -136,8 +136,14 @@ it('should submit successfully and save screening responses', function (): void 
         'team_id' => $requisition->team_id,
         'application_id' => $application->getKey(),
         'question_id' => $question->getKey(),
-        'response_value' => json_encode(['value' => 'Minha resposta']),
     ]);
+
+    $screeningResponse = ScreeningResponse::query()
+        ->where('application_id', $application->getKey())
+        ->where('question_id', $question->getKey())
+        ->first();
+
+    expect($screeningResponse->response_value)->toBe(['value' => 'Minha resposta']);
 })->group('screening');
 
 it('should assign first stage to application when stages exist', function (): void {
