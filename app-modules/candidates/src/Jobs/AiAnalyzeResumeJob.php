@@ -14,7 +14,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Redis;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 final class AiAnalyzeResumeJob implements ShouldQueue
 {
@@ -23,14 +26,64 @@ final class AiAnalyzeResumeJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
+    public int $timeout = 90;
+
     public function __construct(
         public string $temporaryFile,
         public string $userId
     ) {}
 
+    public function tries(): int
+    {
+        return 2;
+    }
+
+    /** @return array<int, int> */
+    public function backoff(): array
+    {
+        return [15];
+    }
+
     public function handle(): void
     {
+        Redis::throttle('gemini-cv-analysis')
+            ->allow(3)
+            ->every(10)
+            ->then(
+                function (): void {
+                    $this->processAnalysis();
+                },
+                function (): void {
+                    logger()->info('Gemini CV analysis throttled, releasing job', [
+                        'userId' => $this->userId,
+                        'attempt' => $this->attempts(),
+                    ]);
+                    $this->release(5);
+                }
+            );
+    }
 
+    public function failed(?Throwable $exception): void
+    {
+        logger()->error('CV analysis permanently failed after all retries', [
+            'userId' => $this->userId,
+            'exception' => $exception?->getMessage(),
+            'class' => $exception instanceof Throwable ? $exception::class : null,
+        ]);
+
+        broadcast(new AnalyzeResumeEvent(
+            status: ResumeAnalyzeStatus::Error,
+            fields: null,
+            userId: $this->userId,
+            message: __('panel-app::pages/onboarding.notifications.rate_limit.body'),
+            code: Response::HTTP_SERVICE_UNAVAILABLE,
+        ));
+
+        report_if($exception instanceof Throwable, $exception);
+    }
+
+    private function processAnalysis(): void
+    {
         $temporaryFile = TemporaryUploadedFile::createFromLivewire($this->temporaryFile);
 
         try {
@@ -38,14 +91,31 @@ final class AiAnalyzeResumeJob implements ShouldQueue
             $fields = resolve(AiAutocompleteInterface::class)->execute($temporaryFile);
             broadcast(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Finished, $fields, $this->userId));
         } catch (OnboardingException $onboardingException) {
-            broadcast(new AnalyzeResumeEvent(
-                status: ResumeAnalyzeStatus::Error,
-                fields: null,
-                userId: $this->userId,
-                message: $onboardingException->getMessage(),
-                code: $onboardingException->getCode(),
-            ));
-        }
+            if ($onboardingException->getCode() === Response::HTTP_UNPROCESSABLE_ENTITY) {
+                logger()->warning('CV rejected as invalid document', [
+                    'userId' => $this->userId,
+                    'message' => $onboardingException->getMessage(),
+                ]);
 
+                broadcast(new AnalyzeResumeEvent(
+                    status: ResumeAnalyzeStatus::Error,
+                    fields: null,
+                    userId: $this->userId,
+                    message: $onboardingException->getMessage(),
+                    code: $onboardingException->getCode(),
+                ));
+
+                return;
+            }
+
+            logger()->warning('Transient CV analysis failure, will retry', [
+                'userId' => $this->userId,
+                'attempt' => $this->attempts(),
+                'error' => $onboardingException->getMessage(),
+                'code' => $onboardingException->getCode(),
+            ]);
+
+            throw $onboardingException;
+        }
     }
 }
