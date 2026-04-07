@@ -79,7 +79,8 @@ return [
             'introduction' => 'You have been invited to join the :team_name team.',
             'credentials_title' => 'Your Login Credentials',
             'email_label' => 'Email',
-            'password_label' => 'Temporary Password',
+            'password_setup_title' => 'Set Your Password',
+            'password_recovery_instructions' => 'A temporary password has been generated for you. Use the "Forgot Your Password?" button below to set your own password before your first login.',
             'instructions' => 'Please log in using these credentials. We recommend changing your password after your first login.',
             'login_button' => 'Log In Now',
             'forgot_password_button' => 'Forgot Your Password?',
@@ -89,6 +90,8 @@ return [
     'profile' => [
         'label' => 'Team Profile',
         'sections' => [
+            'identity' => 'Visual Identity',
+            'identity_description' => 'Upload your company logo to be displayed on job listings.',
             'about' => 'About Your Company',
             'about_description' => 'Tell candidates about your company, culture, and what makes you unique.',
             'work_environment' => 'Work Environment',
@@ -97,6 +100,7 @@ return [
             'team_links_description' => "Add your company's social network profiles.",
         ],
         'fields' => [
+            'logo' => 'Company Logo',
             'about' => 'About',
             'work_schedule' => 'Work Schedule',
             'accessibility_accommodations' => 'Accessibility Accommodations',

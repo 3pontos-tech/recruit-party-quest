@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Filament\Facades\Filament;
+use App\Enums\FilamentPanel;
 use He4rt\Admin\Filament\Resources\Recruitment\Candidates\Pages\CreateCandidate;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Permissions\Roles;
@@ -14,17 +14,15 @@ use function Pest\Laravel\assertDatabaseCount;
 use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
-    Filament::setCurrentPanel(Filament::getPanel('admin'));
+    filament()->setCurrentPanel(FilamentPanel::Admin->value);
 
-    $this->authUser = User::factory()->createQuietly();
+    $this->authUser = User::factory()->admin()->createQuietly();
     actingAs($this->authUser);
-
-    $this->authUser->assignRole(Roles::SuperAdmin->value);
 
     $this->team = Team::factory()->createQuietly();
     $this->team->members()->attach($this->authUser);
 
-    Filament::setTenant($this->team);
+    filament()->setTenant($this->team);
 });
 
 it('should render', function (): void {

@@ -13,8 +13,8 @@
 >
     <x-slot:header class="gap-4">
         <x-he4rt::avatar
-            :src="asset('images/3pontos/logo-chain-white.png')"
-            :alt="$job->team->name"
+            :src="$job->is_confidential ? asset('images/3pontos/logo-chain-white.png') : $job->team->logo_thumb_url"
+            :alt="$job->is_confidential ? __('panel-app::filament.confidential.company_name') : $job->team->name"
             size="lg"
             :circular="false"
             class="group-hover:border-outline-high/32 border-outline-light dark:border-outline-dark h-14 w-14 border transition duration-500"
@@ -25,7 +25,7 @@
                 {{ $job->post?->title ?? 'Sem título' }}
             </x-he4rt::heading>
             <x-he4rt::text class="group-hover:text-text-high transition duration-500">
-                {{ $job->team->name }}
+                {{ $job->is_confidential ? __('panel-app::filament.confidential.company_name') : $job->team->name }}
             </x-he4rt::text>
         </div>
 

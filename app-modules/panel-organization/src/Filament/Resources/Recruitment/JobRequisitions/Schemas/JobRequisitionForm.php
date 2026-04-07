@@ -57,7 +57,11 @@ class JobRequisitionForm
                                             ->label(__('recruitment::filament.requisition.job_posting.fields.title'))
                                             ->required()
                                             ->live(debounce: 700)
-                                            ->afterStateUpdated(function (Set $set, string $state): void {
+                                            ->afterStateUpdated(function (Set $set, ?string $state): void {
+                                                if (blank($state)) {
+                                                    return;
+                                                }
+
                                                 $slug = sprintf('%s-%s', $state, Str::random(4));
                                                 $set('slug', str($slug)->slug());
                                             })

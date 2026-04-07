@@ -35,6 +35,7 @@ use He4rt\Candidates\DTOs\CandidateDTO;
 use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\DTOs\Collections\CandidateEducationCollection;
 use He4rt\Candidates\DTOs\Collections\CandidateWorkExperienceCollection;
+use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Users\User;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Blade;
@@ -44,6 +45,7 @@ use Illuminate\Support\Str;
 use JsonSerializable;
 use Livewire\Attributes\On;
 use Symfony\Component\HttpFoundation\Response;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 /**
  * @property-read Schema $content
@@ -306,6 +308,15 @@ class OnboardingWizard extends Page
                             ])
                             ->required()
                             ->default('pt_BR'),
+                        PhoneInput::make('phone')
+                            ->label(__('panel-app::pages/onboarding.steps.account.fields.phone'))
+                            ->defaultCountry('BR')
+                            ->initialCountry('BR')
+                            ->required()
+                            ->validateFor(country: 'BR')
+                            ->validationMessages([
+                                'phone' => __('panel-app::pages/onboarding.steps.account.validations.phone'),
+                            ]),
                         Toggle::make('data_consent_given')
                             ->label(__('panel-app::pages/onboarding.steps.account.fields.data_consent'))
                             ->accepted()
@@ -427,7 +438,7 @@ class OnboardingWizard extends Page
                     ->schema([
                         Select::make('experience_level')
                             ->label(__('panel-app::pages/onboarding.steps.preferences.fields.experience_level'))
-                            ->options(__('panel-app::pages/onboarding.steps.preferences.options.experience_levels'))
+                            ->options(ExperienceLevelEnum::class)
                             ->required(),
                         TextInput::make('employment_type_interests')
                             ->label(__('panel-app::pages/onboarding.steps.preferences.fields.employment_type_interests'))

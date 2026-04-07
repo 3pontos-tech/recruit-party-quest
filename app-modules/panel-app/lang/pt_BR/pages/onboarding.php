@@ -58,8 +58,12 @@ return [
                 'email' => 'E-mail',
                 'timezone' => 'Fuso Horário',
                 'preferred_language' => 'Idioma de Preferência',
+                'phone' => 'Telefone',
                 'data_consent' => 'Eu consinto com o processamento dos meus dados pessoais',
                 'data_consent_helper' => 'Isso é necessário para prosseguir com sua candidatura.',
+            ],
+            'validations' => [
+                'phone' => 'Informe um número de telefone válido com DDD (ex: (11) 98765-4321).',
             ],
         ],
         'cv' => [

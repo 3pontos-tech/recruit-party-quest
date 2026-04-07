@@ -139,6 +139,8 @@ return [
             'is_internal_only' => 'Apenas Interno',
             'is_confidential' => 'Confidencial',
             'target_start_at' => 'Data de Início Prevista',
+            'post_title' => 'Título da Vaga',
+            'applications_count' => 'Candidaturas',
             'published_at' => 'Publicado em',
             'created_at' => 'Criado em',
             'updated_at' => 'Atualizado em',

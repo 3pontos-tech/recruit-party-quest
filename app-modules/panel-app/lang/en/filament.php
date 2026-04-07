@@ -51,6 +51,11 @@ return [
             'access' => 'Access',
         ],
     ],
+    'confidential' => [
+        'company_name' => 'Confidential Company',
+        'about_heading' => 'Confidential Job',
+        'about_description' => 'Company information is kept confidential during the selection process. As you advance through the stages, more details will be shared with you.',
+    ],
     'stage_timeline' => [
         'application' => 'Application',
         'stage' => 'Stage',

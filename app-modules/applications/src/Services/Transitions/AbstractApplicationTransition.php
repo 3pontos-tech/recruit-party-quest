@@ -64,6 +64,9 @@ abstract class AbstractApplicationTransition
 
         $toStatus = $this->application->refresh()->status->value;
 
+        // TODO: ApplicationStatusChanged não possui listeners registrados ainda.
+        // Pode ser utilizado para: envio de e-mail ao candidato, notificações ao recrutador,
+        // webhooks para sistemas externos (HRIS) ou logs de auditoria (Nightwatch/Telescope).
         if ($fromStatus !== $toStatus) {
             event(new ApplicationStatusChanged(
                 $this->application,

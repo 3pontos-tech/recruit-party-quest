@@ -139,6 +139,8 @@ return [
             'is_internal_only' => 'Internal Only',
             'is_confidential' => 'Confidential',
             'target_start_at' => 'Target Start Date',
+            'post_title' => 'Job Title',
+            'applications_count' => 'Applications',
             'published_at' => 'Published At',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',

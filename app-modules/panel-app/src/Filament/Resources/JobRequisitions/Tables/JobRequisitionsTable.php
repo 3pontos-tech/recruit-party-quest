@@ -29,6 +29,7 @@ class JobRequisitionsTable
                 TextColumn::make('department.name')
                     ->searchable(),
                 TextColumn::make('work_arrangement')
+                    ->label(__('recruitment::filament.requisition.fields.work_arrangement'))
                     ->badge()
                     ->searchable(),
                 TextColumn::make('employment_type')

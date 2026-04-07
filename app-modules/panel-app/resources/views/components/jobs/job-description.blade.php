@@ -48,16 +48,11 @@
                             {{ $posting->title }}
                         </x-he4rt::heading>
                         <x-he4rt::text size="md" class="text-text-medium font-medium">
-                            {{ $team->name }}
+                            {{ $jobRequisition->is_confidential ? __('panel-app::filament.confidential.company_name') : $team->name }}
                         </x-he4rt::text>
                     </div>
 
                     <div class="flex flex-wrap gap-x-6 gap-y-3 pt-1">
-                        {{-- Location - Fallback to Remote if not available --}}
-                        <x-he4rt::tag icon="heroicon-o-map-pin" variant="ghost">
-                            {{ __('panel-app::filament.pages.job_description.location_remote') }}
-                        </x-he4rt::tag>
-
                         {{-- Work Model --}}
                         <x-he4rt::tag :icon="$jobRequisition->work_arrangement->getIcon()" variant="ghost">
                             {{ $jobRequisition->work_arrangement->getLabel() }}
@@ -85,7 +80,7 @@
                         </x-he4rt::tag>
 
                         {{-- Diversity Tag --}}
-                        @if ($team->is_disability_confident)
+                        @if (! $jobRequisition->is_confidential && $team->is_disability_confident)
                             <x-he4rt::tag icon="heroicon-o-heart" variant="ghost">
                                 {{ __('panel-app::filament.pages.job_description.diversity') }}
                             </x-he4rt::tag>

@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace He4rt\Users\Tests\Feature;
 
-use He4rt\Permissions\Roles;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\Gate;
 
 it('allows super admin to perform all actions', function (): void {
-    $superUser = User::factory()->create();
-    $superUser->assignRole(Roles::SuperAdmin->value);
+    $superUser = User::factory()->admin()->create();
 
     $user = User::factory()->create();
 

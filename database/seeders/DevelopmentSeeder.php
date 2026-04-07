@@ -14,6 +14,7 @@ use He4rt\Candidates\Models\WorkExperience;
 use He4rt\Feedback\Models\ApplicationComment;
 use He4rt\Feedback\Models\Evaluation;
 use He4rt\Location\Address;
+use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\JobRequisitionItemTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
@@ -413,7 +414,7 @@ final class DevelopmentSeeder extends Seeder
             'is_open_to_remote' => true,
             'expected_salary' => fake()->numberBetween(10000, 15000),
             'expected_salary_currency' => 'USD',
-            'experience_level' => fake()->randomElement(['senior', 'lead']),
+            'experience_level' => fake()->randomElement(ExperienceLevelEnum::cases()),
             'source' => 'internal',
             'is_onboarded' => true,
             'data_consent_given' => true,

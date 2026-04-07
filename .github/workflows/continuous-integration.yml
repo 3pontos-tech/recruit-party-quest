@@ -38,7 +38,7 @@ jobs:
         id: setup
         run: |
           echo "PHP_VERSION=8.4" >> "$GITHUB_OUTPUT"
-          echo "PHP_EXTENSIONS=mbstring,pdo,xml,ctype,fileinfo,json,curl,openssl,dom,zip" >> "$GITHUB_OUTPUT"
+          echo "PHP_EXTENSIONS=mbstring,pdo,pdo_pgsql,xml,ctype,fileinfo,json,curl,openssl,dom,zip" >> "$GITHUB_OUTPUT"
           echo "PHP_INI_PROPERTIES=post_max_size=256M,upload_max_filesize=256M" >> "$GITHUB_OUTPUT"
           echo "COMPOSER_FLAGS=--prefer-dist --optimize-autoloader" >> "$GITHUB_OUTPUT"
 
@@ -57,7 +57,7 @@ jobs:
           echo "key=${combined_key}" >> "$GITHUB_OUTPUT"
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.36.0
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2.37.0
         with:
           php-version: ${{ steps.setup.outputs.PHP_VERSION }}
           extensions: ${{ steps.setup.outputs.PHP_EXTENSIONS }}
@@ -66,7 +66,7 @@ jobs:
           tools: composer:v2
 
       - name: Install composer dependencies
-        uses: ramsey/composer-install@3cf229dc2919194e9e36783941438d17239e8520 # v3.1.1
+        uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # v4.0.0
         with:
           composer-options: ${{ steps.setup.outputs.COMPOSER_FLAGS }}
           custom-cache-key: ${{ steps.cache.outputs.key }}

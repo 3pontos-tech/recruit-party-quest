@@ -35,20 +35,15 @@ class CandidatesTable
                     ->sortable(),
                 TextColumn::make('phone')
                     ->label(__('candidates::filament.fields.phone'))
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(),
                 TextColumn::make('headline')
                     ->label(__('candidates::filament.fields.headline'))
                     ->limit(30)
                     ->toggleable(),
-                TextColumn::make('availability_date')
-                    ->label(__('candidates::filament.fields.availability_date'))
-                    ->date()
-                    ->sortable()
-                    ->toggleable(),
-                TextColumn::make('expected_salary')
-                    ->label(__('candidates::filament.fields.expected_salary'))
-                    ->money(fn ($record): string => $record->expected_salary_currency ?? 'USD')
-                    ->sortable()
+                TextColumn::make('experience_level')
+                    ->label(__('candidates::filament.fields.experience_level'))
+                    ->badge()
                     ->toggleable(),
                 TextColumn::make('skills_count')
                     ->label(__('candidates::filament.fields.skills_count'))
@@ -60,6 +55,16 @@ class CandidatesTable
                     ->counts('applications')
                     ->badge()
                     ->sortable(),
+                TextColumn::make('availability_date')
+                    ->label(__('candidates::filament.fields.availability_date'))
+                    ->date()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('expected_salary')
+                    ->label(__('candidates::filament.fields.expected_salary'))
+                    ->money(fn ($record): string => $record->expected_salary_currency ?? 'USD')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->label(__('candidates::filament.fields.created_at'))
                     ->dateTime()

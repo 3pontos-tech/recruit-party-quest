@@ -35,6 +35,7 @@ return [
         'created_at' => 'Created At',
         'updated_at' => 'Updated At',
         'deleted_at' => 'Deleted At',
+        'experience_level' => 'Experience Level',
         'work_preferences' => 'Work Preferences',
     ],
     'filters' => [

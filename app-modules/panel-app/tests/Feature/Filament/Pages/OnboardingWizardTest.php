@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Enums\FilamentPanel;
 use He4rt\App\Filament\Pages\OnboardingWizard;
 use He4rt\Candidates\Models\Candidate;
+use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
@@ -141,9 +142,10 @@ describe('Complete Registration Flow', function (): void {
             ->set('data.availability_date', now()->addDays(30)->format('Y-m-d'))
             ->set('data.willing_to_relocate', true)
             ->set('data.is_open_to_remote', true)
-            ->set('data.experience_level', 'mid')
+            ->set('data.experience_level', ExperienceLevelEnum::MidLevel->value)
             ->set('data.timezone', 'America/New_York')
             ->set('data.preferred_language', 'en_US')
+            ->set('data.phone', '+5511987654321')
             ->set('data.confirm_submission', true)
             ->set('data.data_consent_given', true)
             ->set('data.work_experiences', [])
@@ -155,10 +157,11 @@ describe('Complete Registration Flow', function (): void {
 
         assertDatabaseHas(Candidate::class, [
             'user_id' => $this->user->id,
-            'experience_level' => 'mid',
+            'experience_level' => ExperienceLevelEnum::MidLevel->value,
             'expected_salary' => 75000,
             'is_open_to_remote' => 1,
             'willing_to_relocate' => 1,
+            'phone_number' => '+5511987654321',
             'is_onboarded' => true,
         ]);
     });
@@ -173,6 +176,7 @@ describe('Complete Registration Flow', function (): void {
             'experience_level' => 'senior',
             'timezone' => 'Europe/London',
             'preferred_language' => 'en_US',
+            'phone' => '+5511912345678',
             'confirm_submission' => true,
             'data_consent_given' => true,
             'work_experiences' => [],
@@ -190,7 +194,31 @@ describe('Complete Registration Flow', function (): void {
             'experience_level' => 'senior',
             'timezone' => 'Europe/London',
             'preferred_language' => 'en_US',
+            'phone_number' => '+5511912345678',
             'is_onboarded' => true,
+        ]);
+    });
+
+    it('should save phone number from onboarding data', function (): void {
+        livewire(OnboardingWizard::class)
+            ->set('data.expected_salary', '50000')
+            ->set('data.expected_salary_currency', 'BRL')
+            ->set('data.availability_date', now()->addDays(30)->format('Y-m-d'))
+            ->set('data.experience_level', 'junior')
+            ->set('data.timezone', 'America/Sao_Paulo')
+            ->set('data.preferred_language', 'pt_BR')
+            ->set('data.phone', '+5511987654321')
+            ->set('data.confirm_submission', true)
+            ->set('data.data_consent_given', true)
+            ->set('data.work_experiences', [])
+            ->set('data.education', [])
+            ->call('handleRegistration')
+            ->assertHasNoFormErrors()
+            ->assertRedirectToRoute('filament.app.pages.dashboard');
+
+        assertDatabaseHas(Candidate::class, [
+            'user_id' => $this->user->id,
+            'phone_number' => '+5511987654321',
         ]);
     });
 

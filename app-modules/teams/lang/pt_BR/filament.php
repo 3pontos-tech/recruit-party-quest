@@ -90,7 +90,8 @@ return [
             'introduction' => 'Você foi convidado a se juntar ao time :team_name.',
             'credentials_title' => 'Suas Credenciais de Acesso',
             'email_label' => 'E-mail',
-            'password_label' => 'Senha Temporária',
+            'password_setup_title' => 'Defina Sua Senha',
+            'password_recovery_instructions' => 'Uma senha temporária foi gerada para você. Use o botão "Esqueceu Sua Senha?" abaixo para definir sua própria senha antes do primeiro acesso.',
             'instructions' => 'Por favor, faça login usando estas credenciais. Recomendamos alterar sua senha após o primeiro acesso.',
             'login_button' => 'Entrar Agora',
             'forgot_password_button' => 'Esqueceu Sua Senha?',
@@ -100,6 +101,8 @@ return [
     'profile' => [
         'label' => 'Perfil da Organização',
         'sections' => [
+            'identity' => 'Identidade Visual',
+            'identity_description' => 'Faça upload da logo da sua empresa para ser exibida nas vagas.',
             'about' => 'Sobre',
             'about_description' => 'Conte ao candidato sobre a sua empresa, cultura, o que os faz único.',
             'work_environment' => 'Ambiente de Trabalho',
@@ -108,6 +111,7 @@ return [
             'team_links_description' => 'Adicione os perfis das redes sociais da sua empresa.',
         ],
         'fields' => [
+            'logo' => 'Logo da Empresa',
             'about' => 'Sobre',
             'work_schedule' => 'Horário de Serviço',
             'accessibility_accommodations' => 'Adaptações para acessibilidade',
