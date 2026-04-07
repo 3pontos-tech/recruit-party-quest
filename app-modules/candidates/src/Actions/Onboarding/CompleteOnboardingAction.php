@@ -13,6 +13,7 @@ use He4rt\Candidates\DTOs\CandidateWorkExperienceDTO;
 use He4rt\Candidates\Enums\ResumeErrorReasons;
 use He4rt\Candidates\Exceptions\OnboardingException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Prism\Prism\Exceptions\PrismException;
 use Prism\Prism\Exceptions\PrismRateLimitedException;
@@ -64,22 +65,41 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
         $lastException = null;
 
         foreach ($models as $model) {
+            $circuitKey = 'cb:gemini:'.$model;
+
+            if (Cache::has($circuitKey)) {
+                logger()->info('Circuit breaker active, skipping model', [
+                    'model' => $model,
+                    'circuit_key' => $circuitKey,
+                ]);
+
+                continue;
+            }
+
             try {
                 return $this->callPrism($file, $provider, $model);
             } catch (PrismRateLimitedException $e) {
-                logger()->warning('Gemini rate limit hit, trying next model', [
+                logger()->warning('Gemini rate limit hit, opening circuit breaker', [
                     'model' => $model,
                     'retry_after' => $e->retryAfter,
+                    'circuit_key' => $circuitKey,
+                    'error' => $e->getMessage(),
                 ]);
+                Cache::put($circuitKey, true, now()->addMinutes(3));
                 $lastException = $e;
 
                 continue;
             } catch (PrismException $e) {
-                logger()->error('Prism non-recoverable error during CV analysis', [
+                logger()->error('Prism error, opening circuit breaker', [
                     'model' => $model,
+                    'circuit_key' => $circuitKey,
                     'error' => $e->getMessage(),
+                    'exception' => $e::class,
                 ]);
-                throw OnboardingException::rateLimiting(previous: $e);
+                Cache::put($circuitKey, true, now()->addMinutes(3));
+                $lastException = $e;
+
+                continue;
             }
         }
 
