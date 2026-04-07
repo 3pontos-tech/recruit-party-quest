@@ -95,8 +95,8 @@ return [
     'provider' => [
         'gemini' => [
             'enum' => env('AI_PROVIDER', Provider::Gemini->name),
-            'model' => env('AI_MODEL', 'gemini-2.5-flash'),
-            'fallback_model' => env('AI_FALLBACK_MODEL', 'gemini-3.1-flash-lite-preview'),
+            'model' => env('AI_MODEL', 'gemini-3.1-flash-lite-preview'),
+            'fallback_model' => env('AI_FALLBACK_MODEL', 'gemini-3-flash-preview'),
         ],
     ],
 ];
