@@ -5,9 +5,13 @@ declare(strict_types=1);
 use He4rt\Candidates\Actions\Onboarding\CompleteOnboardingAction;
 use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\Exceptions\OnboardingException;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Prism\Prism\Enums\Provider as ProviderEnum;
+use Prism\Prism\Exceptions\PrismException;
+use Prism\Prism\Exceptions\PrismProviderOverloadedException;
 use Prism\Prism\Exceptions\PrismRateLimitedException;
+use Prism\Prism\Exceptions\PrismRequestTooLargeException;
 use Prism\Prism\Facades\Prism;
 use Prism\Prism\PrismManager;
 use Prism\Prism\Structured\Request as StructuredRequest;
@@ -115,6 +119,113 @@ function bindAlwaysRateLimit(): void
     });
 }
 
+/**
+ * Binds a custom PrismManager that throws PrismException on the first call
+ * and returns the given response on subsequent calls.
+ */
+function bindPrismExceptionOnPrimaryThenSuccessOnFallback(StructuredResponse $successResponse): PrismFake
+{
+    $fake = new class($successResponse) extends PrismFake
+    {
+        public int $callCount = 0;
+
+        public function __construct(private readonly StructuredResponse $successResponse) {}
+
+        public function structured(StructuredRequest $request): StructuredResponse
+        {
+            $this->callCount++;
+
+            throw_if($this->callCount === 1, PrismException::class, 'Connection timed out');
+
+            return $this->successResponse;
+        }
+    };
+
+    app()->instance(PrismManager::class, new class($fake) extends PrismManager
+    {
+        public function __construct(private readonly PrismFake $fake) {}
+
+        public function resolve(ProviderEnum|string $name, array $providerConfig = []): PrismFake
+        {
+            return $this->fake;
+        }
+    });
+
+    return $fake;
+}
+
+/** Binds a custom PrismManager that always throws PrismException. */
+function bindAlwaysPrismException(): void
+{
+    $fake = new class extends PrismFake
+    {
+        public function __construct() {}
+
+        public function structured(StructuredRequest $request): StructuredResponse
+        {
+            throw new PrismException('Connection timed out');
+        }
+    };
+
+    app()->instance(PrismManager::class, new class($fake) extends PrismManager
+    {
+        public function __construct(private readonly PrismFake $fake) {}
+
+        public function resolve(ProviderEnum|string $name, array $providerConfig = []): PrismFake
+        {
+            return $this->fake;
+        }
+    });
+}
+
+/** Binds a custom PrismManager that always throws PrismRequestTooLargeException. */
+function bindAlwaysRequestTooLarge(): void
+{
+    $fake = new class extends PrismFake
+    {
+        public function __construct() {}
+
+        public function structured(StructuredRequest $request): StructuredResponse
+        {
+            throw new PrismRequestTooLargeException('google');
+        }
+    };
+
+    app()->instance(PrismManager::class, new class($fake) extends PrismManager
+    {
+        public function __construct(private readonly PrismFake $fake) {}
+
+        public function resolve(ProviderEnum|string $name, array $providerConfig = []): PrismFake
+        {
+            return $this->fake;
+        }
+    });
+}
+
+/** Binds a custom PrismManager that always throws PrismProviderOverloadedException. */
+function bindAlwaysProviderOverloaded(): void
+{
+    $fake = new class extends PrismFake
+    {
+        public function __construct() {}
+
+        public function structured(StructuredRequest $request): StructuredResponse
+        {
+            throw new PrismProviderOverloadedException('Provider overloaded');
+        }
+    };
+
+    app()->instance(PrismManager::class, new class($fake) extends PrismManager
+    {
+        public function __construct(private readonly PrismFake $fake) {}
+
+        public function resolve(ProviderEnum|string $name, array $providerConfig = []): PrismFake
+        {
+            return $this->fake;
+        }
+    });
+}
+
 it('extracts work experiences and education from a valid CV', function (): void {
     Prism::fake([
         StructuredResponseFake::make()->withStructured(onboardingValidCvStructured()),
@@ -156,4 +267,75 @@ it('throws OnboardingException when the uploaded file is not a CV', function ():
 
     expect(fn () => resolve(CompleteOnboardingAction::class)->execute(onboardingMakeFakeFile()))
         ->toThrow(OnboardingException::class);
+});
+
+it('retries with fallback model when primary model throws PrismException', function (): void {
+    Cache::flush();
+
+    $successResponse = StructuredResponseFake::make()->withStructured(onboardingValidCvStructured());
+    $fake = bindPrismExceptionOnPrimaryThenSuccessOnFallback($successResponse);
+
+    $result = resolve(CompleteOnboardingAction::class)->execute(onboardingMakeFakeFile());
+
+    expect($result)->toBeInstanceOf(CandidateOnboardingDTO::class)
+        ->and($fake->callCount)->toBe(2);
+});
+
+it('does not open circuit breaker when primary model throws generic PrismException', function (): void {
+    Cache::flush();
+    $primaryModel = config('ai.provider.gemini.model');
+
+    bindAlwaysPrismException();
+
+    expect(fn () => resolve(CompleteOnboardingAction::class)->execute(onboardingMakeFakeFile()))
+        ->toThrow(OnboardingException::class);
+
+    expect(Cache::has('cb:gemini:'.$primaryModel))->toBeFalse();
+});
+
+it('opens circuit breaker when primary model throws PrismProviderOverloadedException', function (): void {
+    Cache::flush();
+    $primaryModel = config('ai.provider.gemini.model');
+
+    bindAlwaysProviderOverloaded();
+
+    expect(fn () => resolve(CompleteOnboardingAction::class)->execute(onboardingMakeFakeFile()))
+        ->toThrow(OnboardingException::class);
+
+    expect(Cache::has('cb:gemini:'.$primaryModel))->toBeTrue();
+});
+
+it('skips circuit-broken model and goes directly to fallback', function (): void {
+    Cache::flush();
+    $primaryModel = config('ai.provider.gemini.model');
+    $fallbackModel = config('ai.provider.gemini.fallback_model');
+
+    // Pre-activate the circuit breaker for the primary model
+    Cache::put('cb:gemini:'.$primaryModel, true, now()->addMinutes(3));
+
+    // With primary CB active, Prism is only called once (for the fallback).
+    // If primary were NOT skipped, it would throw PrismException and consume this response,
+    // leaving none for the fallback — causing an OnboardingException.
+    Prism::fake([
+        StructuredResponseFake::make()->withStructured(onboardingValidCvStructured()),
+    ]);
+
+    $result = resolve(CompleteOnboardingAction::class)->execute(onboardingMakeFakeFile());
+
+    // Primary CB remains active; fallback CB was never opened (it succeeded)
+    expect($result)->toBeInstanceOf(CandidateOnboardingDTO::class)
+        ->and(Cache::has('cb:gemini:'.$primaryModel))->toBeTrue()
+        ->and(Cache::has('cb:gemini:'.$fallbackModel))->toBeFalse();
+});
+
+it('does not open circuit breaker when primary model throws PrismRequestTooLargeException', function (): void {
+    Cache::flush();
+    $primaryModel = config('ai.provider.gemini.model');
+
+    bindAlwaysRequestTooLarge();
+
+    expect(fn () => resolve(CompleteOnboardingAction::class)->execute(onboardingMakeFakeFile()))
+        ->toThrow(OnboardingException::class);
+
+    expect(Cache::has('cb:gemini:'.$primaryModel))->toBeFalse();
 });

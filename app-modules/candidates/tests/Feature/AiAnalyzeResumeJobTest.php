@@ -12,6 +12,7 @@ use He4rt\Users\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Symfony\Component\HttpFoundation\Response;
 
 beforeEach(function (): void {
     $this->user = User::factory()->create();
@@ -39,20 +40,12 @@ it('broadcasts a Finished event when the CV analysis succeeds', function (): voi
         && $event->userId === (string) $this->user->id);
 });
 
-it('broadcasts an Error event when the CV analysis throws OnboardingException', function (): void {
-    $errorMessage = 'Something went wrong';
-    $errorCode = 503;
-
-    app()->bind(AiAutocompleteInterface::class, fn () => new readonly class($errorMessage, $errorCode) implements AiAutocompleteInterface
+it('broadcasts an Error event immediately for an invalid CV without retrying', function (): void {
+    app()->bind(AiAutocompleteInterface::class, fn () => new readonly class implements AiAutocompleteInterface
     {
-        public function __construct(
-            private string $message,
-            private int $code,
-        ) {}
-
         public function execute(TemporaryUploadedFile $file): CandidateOnboardingDTO
         {
-            throw new OnboardingException($this->message, $this->code);
+            throw new OnboardingException('File sent is not a curriculum.', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     });
 
@@ -60,6 +53,30 @@ it('broadcasts an Error event when the CV analysis throws OnboardingException', 
 
     Event::assertDispatched(fn (AnalyzeResumeEvent $event) => $event->status === ResumeAnalyzeStatus::Error
         && $event->userId === (string) $this->user->id
-        && $event->message === $errorMessage
-        && $event->code === $errorCode);
+        && $event->code === Response::HTTP_UNPROCESSABLE_ENTITY);
+});
+
+it('re-throws transient OnboardingException for queue retry', function (): void {
+    app()->bind(AiAutocompleteInterface::class, fn () => new readonly class implements AiAutocompleteInterface
+    {
+        public function execute(TemporaryUploadedFile $file): CandidateOnboardingDTO
+        {
+            throw new OnboardingException('Service unavailable.', Response::HTTP_SERVICE_UNAVAILABLE);
+        }
+    });
+
+    expect(fn () => new AiAnalyzeResumeJob($this->temporaryFilename, $this->user->id)->handle())
+        ->toThrow(OnboardingException::class);
+
+    Event::assertNotDispatched(AnalyzeResumeEvent::class);
+});
+
+it('broadcasts an Error event when failed() is called after all retries are exhausted', function (): void {
+    $exception = new RuntimeException('All retries exhausted.');
+
+    new AiAnalyzeResumeJob($this->temporaryFilename, $this->user->id)->failed($exception);
+
+    Event::assertDispatched(fn (AnalyzeResumeEvent $event) => $event->status === ResumeAnalyzeStatus::Error
+        && $event->userId === (string) $this->user->id
+        && $event->code === Response::HTTP_SERVICE_UNAVAILABLE);
 });

@@ -13,9 +13,12 @@ use He4rt\Candidates\DTOs\CandidateWorkExperienceDTO;
 use He4rt\Candidates\Enums\ResumeErrorReasons;
 use He4rt\Candidates\Exceptions\OnboardingException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Prism\Prism\Exceptions\PrismException;
+use Prism\Prism\Exceptions\PrismProviderOverloadedException;
 use Prism\Prism\Exceptions\PrismRateLimitedException;
+use Prism\Prism\Exceptions\PrismRequestTooLargeException;
 use Prism\Prism\Facades\Prism;
 use Prism\Prism\Structured\Response;
 use Prism\Prism\ValueObjects\Media\Document;
@@ -64,22 +67,59 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
         $lastException = null;
 
         foreach ($models as $model) {
+            $circuitKey = 'cb:gemini:'.$model;
+
+            if (Cache::has($circuitKey)) {
+                logger()->info('Circuit breaker active, skipping model', [
+                    'model' => $model,
+                    'circuit_key' => $circuitKey,
+                ]);
+
+                continue;
+            }
+
             try {
                 return $this->callPrism($file, $provider, $model);
             } catch (PrismRateLimitedException $e) {
-                logger()->warning('Gemini rate limit hit, trying next model', [
+                logger()->warning('Gemini rate limit hit, opening circuit breaker', [
                     'model' => $model,
                     'retry_after' => $e->retryAfter,
+                    'circuit_key' => $circuitKey,
+                    'error' => $e->getMessage(),
+                ]);
+                Cache::put($circuitKey, true, now()->addMinutes(3));
+                $lastException = $e;
+
+                continue;
+            } catch (PrismProviderOverloadedException $e) {
+                logger()->warning('Prism transient error, opening circuit breaker', [
+                    'model' => $model,
+                    'circuit_key' => $circuitKey,
+                    'error' => $e->getMessage(),
+                    'exception' => $e::class,
+                ]);
+                Cache::put($circuitKey, true, now()->addMinutes(3));
+                $lastException = $e;
+
+                continue;
+            } catch (PrismRequestTooLargeException $e) {
+                logger()->warning('Prism request too large, skipping model without opening circuit breaker', [
+                    'model' => $model,
+                    'error' => $e->getMessage(),
+                    'exception' => $e::class,
                 ]);
                 $lastException = $e;
 
                 continue;
             } catch (PrismException $e) {
-                logger()->error('Prism non-recoverable error during CV analysis', [
+                logger()->error('Prism permanent error, not opening circuit breaker', [
                     'model' => $model,
                     'error' => $e->getMessage(),
+                    'exception' => $e::class,
                 ]);
-                throw OnboardingException::rateLimiting(previous: $e);
+                $lastException = $e;
+
+                continue;
             }
         }
 
@@ -99,6 +139,7 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
         /** @var Response $response */
         $response = Prism::structured()
             ->using($provider, $model)
+            ->withClientOptions(['timeout' => 70, 'connect_timeout' => 10])
             ->withSchema(CvDataSchema::make($this->notAnCv))
             ->withPrompt(
                 CvAnalysisPrompt::make($this->notAnCv),
