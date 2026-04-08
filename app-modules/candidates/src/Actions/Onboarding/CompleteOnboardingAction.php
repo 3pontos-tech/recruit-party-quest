@@ -119,6 +119,7 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
         /** @var Response $response */
         $response = Prism::structured()
             ->using($provider, $model)
+            ->withClientOptions(['timeout' => 90, 'connect_timeout' => 10])
             ->withSchema(CvDataSchema::make($this->notAnCv))
             ->withPrompt(
                 CvAnalysisPrompt::make($this->notAnCv),
