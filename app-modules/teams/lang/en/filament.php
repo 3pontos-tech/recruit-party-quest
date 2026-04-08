@@ -39,6 +39,7 @@ return [
             'invite_heading' => 'Invite New Member',
             'invite_description' => 'Create a new user and add them to this team.',
             'invite_success' => 'Invitation sent successfully!',
+            'invite_already_member' => 'This user is already a member of this team.',
         ],
         'departments' => [
             'title' => 'Departments',
