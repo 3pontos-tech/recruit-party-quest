@@ -16,7 +16,9 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Prism\Prism\Exceptions\PrismException;
+use Prism\Prism\Exceptions\PrismProviderOverloadedException;
 use Prism\Prism\Exceptions\PrismRateLimitedException;
+use Prism\Prism\Exceptions\PrismRequestTooLargeException;
 use Prism\Prism\Facades\Prism;
 use Prism\Prism\Structured\Response;
 use Prism\Prism\ValueObjects\Media\Document;
@@ -89,14 +91,23 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
                 $lastException = $e;
 
                 continue;
-            } catch (PrismException $e) {
-                logger()->error('Prism error, opening circuit breaker', [
+            } catch (PrismProviderOverloadedException|PrismRequestTooLargeException $e) {
+                logger()->warning('Prism transient error, opening circuit breaker', [
                     'model' => $model,
                     'circuit_key' => $circuitKey,
                     'error' => $e->getMessage(),
                     'exception' => $e::class,
                 ]);
                 Cache::put($circuitKey, true, now()->addMinutes(3));
+                $lastException = $e;
+
+                continue;
+            } catch (PrismException $e) {
+                logger()->error('Prism permanent error, not opening circuit breaker', [
+                    'model' => $model,
+                    'error' => $e->getMessage(),
+                    'exception' => $e::class,
+                ]);
                 $lastException = $e;
 
                 continue;
@@ -119,7 +130,7 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
         /** @var Response $response */
         $response = Prism::structured()
             ->using($provider, $model)
-            ->withClientOptions(['timeout' => 90, 'connect_timeout' => 10])
+            ->withClientOptions(['timeout' => 70, 'connect_timeout' => 10])
             ->withSchema(CvDataSchema::make($this->notAnCv))
             ->withPrompt(
                 CvAnalysisPrompt::make($this->notAnCv),

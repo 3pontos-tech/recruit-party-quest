@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Prism\Prism\Enums\Provider as ProviderEnum;
 use Prism\Prism\Exceptions\PrismException;
+use Prism\Prism\Exceptions\PrismProviderOverloadedException;
 use Prism\Prism\Exceptions\PrismRateLimitedException;
 use Prism\Prism\Facades\Prism;
 use Prism\Prism\PrismManager;
@@ -176,6 +177,30 @@ function bindAlwaysPrismException(): void
     });
 }
 
+/** Binds a custom PrismManager that always throws PrismProviderOverloadedException. */
+function bindAlwaysProviderOverloaded(): void
+{
+    $fake = new class extends PrismFake
+    {
+        public function __construct() {}
+
+        public function structured(StructuredRequest $request): StructuredResponse
+        {
+            throw new PrismProviderOverloadedException('Provider overloaded');
+        }
+    };
+
+    app()->instance(PrismManager::class, new class($fake) extends PrismManager
+    {
+        public function __construct(private readonly PrismFake $fake) {}
+
+        public function resolve(ProviderEnum|string $name, array $providerConfig = []): PrismFake
+        {
+            return $this->fake;
+        }
+    });
+}
+
 it('extracts work experiences and education from a valid CV', function (): void {
     Prism::fake([
         StructuredResponseFake::make()->withStructured(onboardingValidCvStructured()),
@@ -231,11 +256,23 @@ it('retries with fallback model when primary model throws PrismException', funct
         ->and($fake->callCount)->toBe(2);
 });
 
-it('opens circuit breaker in cache when primary model throws PrismException', function (): void {
+it('does not open circuit breaker when primary model throws generic PrismException', function (): void {
     Cache::flush();
     $primaryModel = config('ai.provider.gemini.model');
 
     bindAlwaysPrismException();
+
+    expect(fn () => resolve(CompleteOnboardingAction::class)->execute(onboardingMakeFakeFile()))
+        ->toThrow(OnboardingException::class);
+
+    expect(Cache::has('cb:gemini:'.$primaryModel))->toBeFalse();
+});
+
+it('opens circuit breaker when primary model throws PrismProviderOverloadedException', function (): void {
+    Cache::flush();
+    $primaryModel = config('ai.provider.gemini.model');
+
+    bindAlwaysProviderOverloaded();
 
     expect(fn () => resolve(CompleteOnboardingAction::class)->execute(onboardingMakeFakeFile()))
         ->toThrow(OnboardingException::class);
