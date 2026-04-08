@@ -13,8 +13,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\Middleware\RateLimited;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Redis;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -44,23 +44,15 @@ final class AiAnalyzeResumeJob implements ShouldQueue
         return [15];
     }
 
+    /** @return array<int, object> */
+    public function middleware(): array
+    {
+        return [new RateLimited('gemini-cv-analysis')];
+    }
+
     public function handle(): void
     {
-        Redis::throttle('gemini-cv-analysis')
-            ->allow(3)
-            ->every(10)
-            ->then(
-                function (): void {
-                    $this->processAnalysis();
-                },
-                function (): void {
-                    logger()->info('Gemini CV analysis throttled, releasing job', [
-                        'userId' => $this->userId,
-                        'attempt' => $this->attempts(),
-                    ]);
-                    $this->release(5);
-                }
-            );
+        $this->processAnalysis();
     }
 
     public function failed(?Throwable $exception): void

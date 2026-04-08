@@ -9,7 +9,9 @@ use He4rt\Candidates\Models\Candidate;
 use He4rt\Candidates\Models\Education;
 use He4rt\Candidates\Models\Skill;
 use He4rt\Candidates\Models\WorkExperience;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class CandidatesServiceProvider extends ServiceProvider
@@ -20,6 +22,8 @@ class CandidatesServiceProvider extends ServiceProvider
     {
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'candidates');
         $this->loadRoutesFrom(__DIR__.'/../routes/channels.php');
+
+        RateLimiter::for('gemini-cv-analysis', fn () => new Limit(maxAttempts: 3, decaySeconds: 10));
 
         Relation::morphMap([
             'candidates' => Candidate::class,
