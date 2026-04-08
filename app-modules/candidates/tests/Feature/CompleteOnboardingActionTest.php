@@ -11,6 +11,7 @@ use Prism\Prism\Enums\Provider as ProviderEnum;
 use Prism\Prism\Exceptions\PrismException;
 use Prism\Prism\Exceptions\PrismProviderOverloadedException;
 use Prism\Prism\Exceptions\PrismRateLimitedException;
+use Prism\Prism\Exceptions\PrismRequestTooLargeException;
 use Prism\Prism\Facades\Prism;
 use Prism\Prism\PrismManager;
 use Prism\Prism\Structured\Request as StructuredRequest;
@@ -177,6 +178,30 @@ function bindAlwaysPrismException(): void
     });
 }
 
+/** Binds a custom PrismManager that always throws PrismRequestTooLargeException. */
+function bindAlwaysRequestTooLarge(): void
+{
+    $fake = new class extends PrismFake
+    {
+        public function __construct() {}
+
+        public function structured(StructuredRequest $request): StructuredResponse
+        {
+            throw new PrismRequestTooLargeException('google');
+        }
+    };
+
+    app()->instance(PrismManager::class, new class($fake) extends PrismManager
+    {
+        public function __construct(private readonly PrismFake $fake) {}
+
+        public function resolve(ProviderEnum|string $name, array $providerConfig = []): PrismFake
+        {
+            return $this->fake;
+        }
+    });
+}
+
 /** Binds a custom PrismManager that always throws PrismProviderOverloadedException. */
 function bindAlwaysProviderOverloaded(): void
 {
@@ -301,4 +326,16 @@ it('skips circuit-broken model and goes directly to fallback', function (): void
     expect($result)->toBeInstanceOf(CandidateOnboardingDTO::class)
         ->and(Cache::has('cb:gemini:'.$primaryModel))->toBeTrue()
         ->and(Cache::has('cb:gemini:'.$fallbackModel))->toBeFalse();
+});
+
+it('does not open circuit breaker when primary model throws PrismRequestTooLargeException', function (): void {
+    Cache::flush();
+    $primaryModel = config('ai.provider.gemini.model');
+
+    bindAlwaysRequestTooLarge();
+
+    expect(fn () => resolve(CompleteOnboardingAction::class)->execute(onboardingMakeFakeFile()))
+        ->toThrow(OnboardingException::class);
+
+    expect(Cache::has('cb:gemini:'.$primaryModel))->toBeFalse();
 });

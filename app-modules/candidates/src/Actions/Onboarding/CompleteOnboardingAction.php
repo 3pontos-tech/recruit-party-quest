@@ -91,7 +91,7 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
                 $lastException = $e;
 
                 continue;
-            } catch (PrismProviderOverloadedException|PrismRequestTooLargeException $e) {
+            } catch (PrismProviderOverloadedException $e) {
                 logger()->warning('Prism transient error, opening circuit breaker', [
                     'model' => $model,
                     'circuit_key' => $circuitKey,
@@ -99,6 +99,15 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
                     'exception' => $e::class,
                 ]);
                 Cache::put($circuitKey, true, now()->addMinutes(3));
+                $lastException = $e;
+
+                continue;
+            } catch (PrismRequestTooLargeException $e) {
+                logger()->warning('Prism request too large, skipping model without opening circuit breaker', [
+                    'model' => $model,
+                    'error' => $e->getMessage(),
+                    'exception' => $e::class,
+                ]);
                 $lastException = $e;
 
                 continue;
