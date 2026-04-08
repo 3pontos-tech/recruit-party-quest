@@ -39,6 +39,7 @@ return [
             'invite_heading' => 'Convidar Novo Membro',
             'invite_description' => 'Criar um novo usuário e adicioná-lo a este time.',
             'invite_success' => 'Convite enviado com sucesso!',
+            'invite_already_member' => 'Este usuário já é membro deste time.',
         ],
         'departments' => [
             'title' => 'Departamentos',
