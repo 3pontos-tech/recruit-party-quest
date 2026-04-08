@@ -9,14 +9,32 @@ use He4rt\Users\User;
 
 class InviteTeamMemberAction
 {
-    public function handle(InviteTeamMemberDTO $inviteTeamMemberDTO): void
+    public function handle(InviteTeamMemberDTO $dto): InviteTeamMemberResult
     {
-        $user = User::query()->create($inviteTeamMemberDTO->jsonSerialize());
+        $team = Team::query()->findOrFail($dto->teamId);
 
-        $team = Team::query()->findOrFail($inviteTeamMemberDTO->teamId);
+        /** @var User $user */
+        $user = User::query()->firstOrNew(['email' => $dto->email]);
+        $isNewUser = ! $user->exists;
+
+        if ($isNewUser) {
+            $user->fill($dto->jsonSerialize())->save();
+        }
+
+        $alreadyMember = $team->members()->where('user_id', $user->getKey())->exists();
+
+        if ($alreadyMember) {
+            return InviteTeamMemberResult::AlreadyMember;
+        }
 
         $team->members()->syncWithoutDetaching($user->getKey());
 
-        dispatch(new SendTeamInvitationJob($user, $team));
+        if ($isNewUser) {
+            dispatch(new SendTeamInvitationJob($user, $team));
+        }
+
+        return $isNewUser
+            ? InviteTeamMemberResult::NewUserInvited
+            : InviteTeamMemberResult::ExistingUserAdded;
     }
 }
