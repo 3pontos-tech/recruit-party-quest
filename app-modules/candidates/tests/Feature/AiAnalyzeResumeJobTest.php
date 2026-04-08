@@ -10,7 +10,6 @@ use He4rt\Candidates\Exceptions\OnboardingException;
 use He4rt\Candidates\Jobs\AiAnalyzeResumeJob;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,15 +23,6 @@ beforeEach(function (): void {
     Storage::disk('tmp-for-tests')->put('curriculum.pdf', 'fake pdf content');
 
     $this->temporaryFilename = 'curriculum.pdf';
-
-    // Mock Redis throttle to pass through immediately to the success callback
-    $throttle = Mockery::mock();
-    $throttle->shouldReceive('allow')->andReturnSelf();
-    $throttle->shouldReceive('every')->andReturnSelf();
-    $throttle->shouldReceive('then')->andReturnUsing(
-        fn (callable $success, callable $failure) => $success()
-    );
-    Redis::shouldReceive('throttle')->andReturn($throttle);
 });
 
 it('broadcasts a Finished event when the CV analysis succeeds', function (): void {
