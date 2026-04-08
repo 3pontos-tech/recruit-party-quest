@@ -17,6 +17,7 @@ use Filament\Tables\Table;
 use He4rt\Admin\Filament\Resources\Users\UserResource;
 use He4rt\Teams\Actions\NewMember\InviteTeamMemberAction;
 use He4rt\Teams\Actions\NewMember\InviteTeamMemberDTO;
+use He4rt\Teams\Actions\NewMember\InviteTeamMemberResult;
 use He4rt\Teams\Team;
 use Illuminate\Database\Eloquent\Model;
 
@@ -65,11 +66,21 @@ class MembersRelationManager extends RelationManager
 
                         return $data;
                     })
-                    ->action(function (array $data): void {
-
-                        resolve(InviteTeamMemberAction::class)->handle(
+                    ->action(function (array $data, Action $action): void {
+                        $result = resolve(InviteTeamMemberAction::class)->handle(
                             InviteTeamMemberDTO::fromArray($data)
                         );
+
+                        if ($result === InviteTeamMemberResult::AlreadyMember) {
+                            Notification::make()
+                                ->title(__('teams::filament.relation_managers.members.invite_already_member'))
+                                ->warning()
+                                ->send();
+
+                            $action->halt();
+
+                            return;
+                        }
 
                         Notification::make()
                             ->title(__('teams::filament.relation_managers.members.invite_success'))
