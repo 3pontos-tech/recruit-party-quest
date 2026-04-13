@@ -47,14 +47,7 @@ return [
             'preferred_language' => 'Select preferred language...',
         ],
         'options' => [
-            'experience_levels' => [
-                'intern' => 'Intern',
-                'entry_level' => 'Entry Level',
-                'mid_level' => 'Mid Level',
-                'senior' => 'Senior',
-                'lead' => 'Lead',
-                'principal' => 'Principal',
-            ],
+            'experience_levels' => [],
             'languages' => [
                 'pt_BR' => 'Portuguese (Brazil)',
                 'en_US' => 'English (United States)',

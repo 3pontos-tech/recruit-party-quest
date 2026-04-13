@@ -33,6 +33,9 @@ return [
         'intern' => [
             'label' => 'Intern',
         ],
+        'trainee' => [
+            'label' => 'Trainee',
+        ],
         'junior' => [
             'label' => 'Junior',
         ],

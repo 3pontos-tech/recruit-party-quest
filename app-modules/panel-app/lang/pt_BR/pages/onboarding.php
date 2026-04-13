@@ -126,14 +126,7 @@ return [
                 'employment_type_interests_helper' => 'Tempo integral, contratado, estagiário, etc.',
             ],
             'options' => [
-                'experience_levels' => [
-                    'intern' => 'Estagiário',
-                    'entry_level' => 'Nível Inicial',
-                    'mid_level' => 'Nível Pleno',
-                    'senior' => 'Sênior',
-                    'lead' => 'Líder',
-                    'principal' => 'Principal',
-                ],
+                'experience_levels' => [],
                 'languages' => [
                     'en' => 'Inglês',
                     'pt' => 'Português',

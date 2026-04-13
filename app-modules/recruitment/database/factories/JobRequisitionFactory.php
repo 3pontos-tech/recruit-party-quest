@@ -88,11 +88,12 @@ class JobRequisitionFactory extends Factory
     {
         $ranges = match ($experienceLevel->value ?? $experienceLevel) {
             'intern' => ['min' => fake()->numberBetween(2000, 3000), 'max' => fake()->numberBetween(3500, 4500)],
-            'entry_level' => ['min' => fake()->numberBetween(4000, 5000), 'max' => fake()->numberBetween(6000, 7500)],
+            'trainee', 'assistant' => ['min' => fake()->numberBetween(3000, 4000), 'max' => fake()->numberBetween(4500, 6000)],
+            'junior' => ['min' => fake()->numberBetween(4000, 5000), 'max' => fake()->numberBetween(6000, 7500)],
             'mid_level' => ['min' => fake()->numberBetween(6000, 8000), 'max' => fake()->numberBetween(9000, 12000)],
-            'senior' => ['min' => fake()->numberBetween(8000, 12000), 'max' => fake()->numberBetween(13000, 18000)],
-            'lead' => ['min' => fake()->numberBetween(12000, 15000), 'max' => fake()->numberBetween(18000, 25000)],
-            'principal' => ['min' => fake()->numberBetween(15000, 20000), 'max' => fake()->numberBetween(22000, 30000)],
+            'senior', 'specialist' => ['min' => fake()->numberBetween(8000, 12000), 'max' => fake()->numberBetween(13000, 18000)],
+            'coordinator', 'manager' => ['min' => fake()->numberBetween(12000, 15000), 'max' => fake()->numberBetween(18000, 25000)],
+            'head', 'c_level' => ['min' => fake()->numberBetween(15000, 20000), 'max' => fake()->numberBetween(22000, 30000)],
             default => ['min' => fake()->numberBetween(5000, 7000), 'max' => fake()->numberBetween(8000, 12000)],
         };
 
