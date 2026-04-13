@@ -50,6 +50,49 @@ test('invite action creates user, attaches to team and dispatches job', function
     );
 });
 
+test('invite action adds existing user to team without dispatching job', function (): void {
+    Bus::fake();
+
+    $team = Team::factory()->create();
+    $existingUser = User::factory()->create(['email' => 'existing@example.com']);
+
+    livewire(MembersRelationManager::class, [
+        'ownerRecord' => $team,
+        'pageClass' => EditTeam::class,
+    ])
+        ->callAction(TestAction::make('invite')->table(), data: [
+            'name' => $existingUser->name,
+            'email' => 'existing@example.com',
+        ])
+        ->assertHasNoActionErrors()
+        ->assertNotified(__('teams::filament.relation_managers.members.invite_success'));
+
+    expect($team->fresh()->members->contains($existingUser))->toBeTrue();
+
+    Bus::assertNotDispatched(SendTeamInvitationJob::class);
+});
+
+test('invite action shows warning and halts when user is already a member', function (): void {
+    Bus::fake();
+
+    $team = Team::factory()->create();
+    $existingMember = User::factory()->create(['email' => 'member@example.com']);
+    $team->members()->syncWithoutDetaching($existingMember->getKey());
+
+    livewire(MembersRelationManager::class, [
+        'ownerRecord' => $team,
+        'pageClass' => EditTeam::class,
+    ])
+        ->callAction(TestAction::make('invite')->table(), data: [
+            'name' => $existingMember->name,
+            'email' => 'member@example.com',
+        ])
+        ->assertActionHalted(TestAction::make('invite')->table())
+        ->assertNotified(__('teams::filament.relation_managers.members.invite_already_member'));
+
+    Bus::assertNotDispatched(SendTeamInvitationJob::class);
+});
+
 test('invite modal does not expose a password field', function (): void {
     $team = Team::factory()->create();
 

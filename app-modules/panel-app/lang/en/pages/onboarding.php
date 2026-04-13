@@ -126,14 +126,7 @@ return [
                 'employment_type_interests_helper' => 'Full time employee, contractor, intern, etc.',
             ],
             'options' => [
-                'experience_levels' => [
-                    'intern' => 'Intern',
-                    'entry_level' => 'Entry Level',
-                    'mid_level' => 'Mid Level',
-                    'senior' => 'Senior',
-                    'lead' => 'Lead',
-                    'principal' => 'Principal',
-                ],
+                'experience_levels' => [],
                 'languages' => [
                     'en' => 'English',
                     'pt' => 'Português',

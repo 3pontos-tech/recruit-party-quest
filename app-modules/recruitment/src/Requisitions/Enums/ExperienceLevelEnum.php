@@ -16,6 +16,7 @@ enum ExperienceLevelEnum: string implements HasColor, HasIcon, HasLabel
     use StringifyEnum;
 
     case Intern = 'intern';
+    case Trainee = 'trainee';
     case Junior = 'junior';
     case MidLevel = 'mid_level';
     case Senior = 'senior';
@@ -31,6 +32,7 @@ enum ExperienceLevelEnum: string implements HasColor, HasIcon, HasLabel
     {
         return match ($this) {
             self::Intern => Color::Blue,
+            self::Trainee => Color::Cyan,
             self::Junior => Color::Green,
             self::MidLevel => Color::Yellow,
             self::Senior => Color::Red,
@@ -46,6 +48,7 @@ enum ExperienceLevelEnum: string implements HasColor, HasIcon, HasLabel
     {
         return match ($this) {
             self::Intern => Heroicon::AcademicCap,
+            self::Trainee => Heroicon::BookOpen,
             self::Junior => Heroicon::User,
             self::MidLevel => Heroicon::Briefcase,
             self::Senior => Heroicon::Star,
