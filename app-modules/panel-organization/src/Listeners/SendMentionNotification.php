@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace He4rt\Organization\Listeners;
 
+use He4rt\Applications\Models\Application;
+use He4rt\Feedback\Models\Comment;
 use He4rt\Organization\Notifications\MentionedInCommentNotification;
 use He4rt\Users\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,8 +18,14 @@ final class SendMentionNotification implements ShouldQueue
 
     public function handle(UserWasMentionedEvent $event): void
     {
-        $comment = $event->comment->load(['author', 'commentable.candidate.user', 'commentable.team']);
-        $tenantSlug = $comment->commentable->team->slug;
+        $event->comment->load(['author', 'commentable.candidate.user', 'commentable.team']);
+
+        /** @var Comment $comment */
+        $comment = $event->comment;
+
+        /** @var Application $application */
+        $application = $comment->commentable;
+        $tenantSlug = $application->team->slug;
 
         /** @var User $mentionedUser */
         $mentionedUser = $event->user;

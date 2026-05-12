@@ -36,7 +36,7 @@ final class MentionedInCommentNotification extends Notification
             comment: $this->comment,
             mentionedUser: $this->mentionedUser,
             tenantSlug: $this->tenantSlug,
-        )->to($notifiable->email);
+        )->to($this->mentionedUser->email);
     }
 
     /**
@@ -46,16 +46,19 @@ final class MentionedInCommentNotification extends Notification
     {
         /** @var Application $application */
         $application = $this->comment->commentable;
-        $candidateName = $application->candidate->user->name;
+        $candidateName = $application->candidate?->user->name ?? '';
         $url = ApplicationResource::getUrl('view', [
             'record' => $application->getKey(),
             'tenant' => $this->tenantSlug,
             'tab' => 'comments',
         ], panel: 'organization');
 
+        /** @var User $author */
+        $author = $this->comment->author;
+
         return FilamentNotification::make()
             ->title(__('panel-organization::filament.notifications.mention.title', [
-                'author' => $this->comment->author->name,
+                'author' => $author->name,
             ]))
             ->body(__('panel-organization::filament.notifications.mention.body', [
                 'candidate' => $candidateName,

@@ -29,9 +29,12 @@ final class MentionedInCommentMail extends Mailable implements ShouldQueue
 
     public function envelope(): Envelope
     {
+        /** @var User $author */
+        $author = $this->comment->author;
+
         return new Envelope(
             subject: __('panel-organization::filament.emails.mention.subject', [
-                'author' => $this->comment->author->name,
+                'author' => $author->name,
             ]),
         );
     }
@@ -40,7 +43,7 @@ final class MentionedInCommentMail extends Mailable implements ShouldQueue
     {
         /** @var Application $application */
         $application = $this->comment->commentable;
-        $candidateName = $application->candidate->user->name;
+        $candidateName = $application->candidate?->user->name ?? '';
         $url = ApplicationResource::getUrl('view', [
             'record' => $application->getKey(),
             'tenant' => $this->tenantSlug,
