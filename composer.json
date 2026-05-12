@@ -35,6 +35,7 @@
         "he4rt/users": ">=1",
         "internachi/modular": "^3.0.2",
         "jeffgreco13/filament-breezy": "^3.1.1",
+        "kirschbaum-development/commentions": "^0.7.10",
         "laravel/framework": "^12.56.0",
         "laravel/nightwatch": "^1.26.0",
         "laravel/reverb": "^1.10.0",
