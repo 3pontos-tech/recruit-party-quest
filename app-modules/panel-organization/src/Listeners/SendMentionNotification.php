@@ -18,22 +18,25 @@ final class SendMentionNotification implements ShouldQueue
 
     public function handle(UserWasMentionedEvent $event): void
     {
-        $event->comment->load(['author', 'commentable.candidate.user', 'commentable.team']);
-
-        /** @var Comment $comment */
         $comment = $event->comment;
-
-        /** @var Application $application */
-        $application = $comment->commentable;
-        $tenantSlug = $application->team->slug;
-
-        /** @var User $mentionedUser */
         $mentionedUser = $event->user;
+
+        if (! $comment instanceof Comment || ! $mentionedUser instanceof User) {
+            return;
+        }
+
+        $comment->load(['author', 'commentable.candidate.user', 'commentable.team']);
+
+        $application = $comment->commentable;
+
+        if (! $application instanceof Application) {
+            return;
+        }
 
         $mentionedUser->notify(new MentionedInCommentNotification(
             comment: $comment,
             mentionedUser: $mentionedUser,
-            tenantSlug: $tenantSlug,
+            tenantSlug: $application->team->slug,
         ));
     }
 }

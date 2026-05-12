@@ -73,7 +73,7 @@ return [
     'notifications' => [
         'mentions' => [
             // Disabled: this project uses its own SendMentionNotification listener to avoid duplicates
-            'enabled' => env('COMMENTIONS_NOTIFICATIONS_MENTIONS_ENABLED', false),
+            'enabled' => false,
 
             'channels' => explode(',', (string) env('COMMENTIONS_NOTIFICATIONS_MENTIONS_CHANNELS', 'mail')),
 

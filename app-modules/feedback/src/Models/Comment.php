@@ -29,7 +29,6 @@ class Comment extends \Kirschbaum\Commentions\Comment
 
         return User::query()
             ->whereIn((new User)->getKeyName(), $ids)
-            ->get()
-            ->toBase();
+            ->get();
     }
 }
