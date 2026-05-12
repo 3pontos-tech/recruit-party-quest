@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Kirschbaum\Commentions\Contracts\Commenter;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
@@ -50,7 +51,7 @@ use Spatie\Permission\Traits\HasRoles;
 #[UsePolicy(UserPolicy::class)]
 #[UseFactory(UserFactory::class)]
 #[ObservedBy(UserObserver::class)]
-final class User extends Authenticatable implements FilamentUser, HasAvatar, HasMedia, HasTenants
+final class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar, HasMedia, HasTenants
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory;
