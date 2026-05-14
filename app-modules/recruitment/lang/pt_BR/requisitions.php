@@ -16,6 +16,9 @@ return [
         'full_time_employee' => [
             'label' => 'Tempo Integral',
         ],
+        'clt' => [
+            'label' => 'CLT',
+        ],
         'contractor' => [
             'label' => 'Prestador de Serviço (PJ)',
         ],
