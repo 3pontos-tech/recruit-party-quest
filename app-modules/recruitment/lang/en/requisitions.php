@@ -16,6 +16,9 @@ return [
         'full_time_employee' => [
             'label' => 'Full-time Employee',
         ],
+        'clt' => [
+            'label' => 'CLT (Brazilian Labor Contract)',
+        ],
         'contractor' => [
             'label' => 'Contractor',
         ],
