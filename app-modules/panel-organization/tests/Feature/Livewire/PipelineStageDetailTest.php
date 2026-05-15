@@ -30,6 +30,24 @@ beforeEach(function (): void {
     filament()->setCurrentPanel(FilamentPanel::Organization->value);
     filament()->setTenant($this->team);
 
+    // ApplicationFactory::configure() may attach a random stage_type to current_stage_id.
+    // Force current_stage_id to a non-terminal stage so tests start from a deterministic state.
+    $nonTerminalCurrent = $this->application
+        ->requisition
+        ->stages()
+        ->whereNotIn('stage_type', [
+            StageTypeEnum::Rejected->value,
+            StageTypeEnum::Declined->value,
+        ])
+        ->where('active', true)
+        ->orderBy('display_order')
+        ->first();
+
+    if ($nonTerminalCurrent !== null) {
+        $this->application->update(['current_stage_id' => $nonTerminalCurrent->id]);
+        $this->application->refresh();
+    }
+
     $this->stages = $this->application
         ->requisition
         ->stages()
