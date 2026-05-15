@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Organization\Filament\Resources\Recruitment\Applications\Schemas;
 
+use Filament\Actions\Action;
 use Filament\Infolists\Components\ViewEntry;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Grid;
@@ -11,10 +12,14 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\Width;
+use Filament\Support\Icons\Heroicon;
+use He4rt\Applications\Models\Application;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\CommentApplicationAction;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\RejectApplicationAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
 use He4rt\Permissions\Roles;
+use Illuminate\Contracts\View\View;
 
 class ApplicationInfolist
 {
@@ -87,6 +92,20 @@ class ApplicationInfolist
                                     StateTransitionAction::make(),
                                     CommentApplicationAction::make(),
                                     RejectApplicationAction::make(),
+                                    Action::make('viewStageDetails')
+                                        ->label(__('panel-organization::view.pipeline.view_details'))
+                                        ->icon(Heroicon::ChartBar)
+                                        ->slideOver()
+                                        ->outlined()
+                                        ->extraAttributes(fn () => ['class' => 'w-full'])
+                                        ->modalWidth(Width::Large)
+                                        ->modalSubmitAction(false)
+                                        ->modalCancelAction(false)
+                                        ->modalHeading(fn (Application $record): string => __('panel-organization::view.pipeline.stage_detail.title'))
+                                        ->modalContent(fn (Application $record): View => view(
+                                            'panel-organization::livewire.pipeline-stage-detail-wrapper',
+                                            ['application' => $record],
+                                        )),
                                 ]),
                             ]),
                         // Pipeline Progress
