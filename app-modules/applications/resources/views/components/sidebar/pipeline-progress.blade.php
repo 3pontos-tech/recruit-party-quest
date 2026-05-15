@@ -52,7 +52,8 @@
 
     $currentStageIndex = 0;
 
-    $showRejectionInfo = $record->status === ApplicationStatusEnum::Rejected || ($currentStage !== null && $currentStage->stage_type === StageTypeEnum::Rejected);
+    $showRejectionInfo =
+        $record->status === ApplicationStatusEnum::Rejected || ($currentStage !== null && in_array($currentStage->stage_type, $terminalStageTypes, true));
 
     if ($currentStage) {
         $index = $stages->search(fn ($stage) => $stage->id === $currentStage->id);
@@ -122,7 +123,7 @@
                         {{-- Timeline Line Segment --}}
                         @if (! $loop->last)
                             <div
-                                class="{{ $isCompleted ? 'bg-primary' : 'bg-outline-low/30' }} absolute top-8 left-4 z-10 h-15 w-0.5 -translate-x-1/2"
+                                class="{{ $isCompleted ? 'bg-primary' : 'bg-outline-low/30' }} absolute top-8 left-4 z-10 h-23 w-0.5 -translate-x-1/2"
                                 aria-hidden="true"
                             ></div>
                         @endif

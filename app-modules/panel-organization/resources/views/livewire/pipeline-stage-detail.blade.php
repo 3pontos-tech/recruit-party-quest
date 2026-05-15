@@ -163,7 +163,6 @@
                     </div>
                 @else
                     <ol class="relative space-y-4 pl-1">
-                        <div class="bg-outline-low absolute top-2 bottom-2 left-[7px] w-px" aria-hidden="true"></div>
                         @foreach ($this->timeline as $event)
                             <li class="relative pl-6">
                                 <div

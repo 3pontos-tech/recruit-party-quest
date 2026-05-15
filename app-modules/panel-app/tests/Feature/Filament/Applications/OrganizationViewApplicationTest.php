@@ -7,6 +7,7 @@ use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
+use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Users\User;
 
@@ -36,7 +37,7 @@ test('should see only stages that are not hidden', function (): void {
     $this->application->requisition->stages()->delete();
     $hiddenStages = Stage::factory(2)->for($this->application->requisition, 'requisition')->create(['hidden' => true]);
     $visibleStages = Stage::factory(2)->for($this->application->requisition, 'requisition')->create([
-        'active' => true, 'hidden' => false,
+        'active' => true, 'hidden' => false, 'stage_type' => StageTypeEnum::Screening,
     ]);
 
     livewire(ViewApplication::class, ['record' => $this->application->id])
