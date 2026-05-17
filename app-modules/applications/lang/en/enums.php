@@ -83,5 +83,8 @@ return [
         'other' => [
             'label' => 'Other',
         ],
+        'screening_knockout' => [
+            'label' => 'Automatic Screening',
+        ],
     ],
 ];

@@ -20,7 +20,7 @@ final class ApplicationStatusChanged
         public Application $application,
         public string $fromStatus,
         public string $toStatus,
-        public User $by,
+        public ?User $by,
         public array $meta = []
     ) {
         $this->occurredAt = Date::now();

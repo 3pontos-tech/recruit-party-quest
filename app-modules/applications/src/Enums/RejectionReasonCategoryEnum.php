@@ -19,6 +19,7 @@ enum RejectionReasonCategoryEnum: string implements HasLabel
     case Availability = 'availability';
     case PositionFilled = 'position_filled';
     case Other = 'other';
+    case ScreeningKnockout = 'screening_knockout';
 
     public function getLabel(): string
     {
