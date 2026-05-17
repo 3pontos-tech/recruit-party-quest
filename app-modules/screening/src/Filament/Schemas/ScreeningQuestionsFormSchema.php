@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace He4rt\Screening\Filament\Schemas;
 
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Schemas\Components\Group;
 use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\Pages\CreateJobRequisition;
 use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\Pages\EditJobRequisition;
 use He4rt\Screening\Enums\QuestionTypeEnum;
@@ -81,28 +79,10 @@ final class ScreeningQuestionsFormSchema
                     ->live()
                     ->inline(false),
 
-                Group::make()
-                    ->schema(function ($get): array {
-                        $typeValue = $get('question_type');
+                ...QuestionTypeRegistry::settingsSchemaComponents(),
 
-                        if ($typeValue === null) {
-                            return [];
-                        }
+                ...QuestionTypeRegistry::knockoutSchemaComponents(),
 
-                        $type = $typeValue instanceof QuestionTypeEnum
-                            ? $typeValue
-                            : QuestionTypeEnum::tryFrom($typeValue);
-
-                        return QuestionTypeRegistry::getSettingsSchema($type);
-                    })
-                    ->visible(fn ($get): bool => $get('question_type') !== null)
-                    ->columnSpanFull(),
-
-                KeyValue::make('knockout_criteria')
-                    ->label(__('screening::filament.question.fields.knockout_criteria'))
-                    ->helperText(__('screening::filament.question.fields.knockout_criteria_help'))
-                    ->visible(fn ($get): bool => $get('is_knockout') === true)
-                    ->columnSpanFull(),
                 Hidden::make('team_id')
                     ->default(fn (EditJobRequisition|CreateJobRequisition $livewire) => $livewire->data['team_id']),
             ])

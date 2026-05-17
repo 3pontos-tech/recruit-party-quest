@@ -59,7 +59,7 @@ it('should answer screening questions that are file upload', function (): void {
         ->call('submit')
         ->assertSessionHasNoErrors()
         ->assertDontSeeText('This question is required.')
-        ->assertNotified('Your application has been submitted');
+        ->assertNotified(__('screening::messages.application_submitted'));
 
     $application = Application::query()->first();
     $livewire->assertRedirect(route('filament.app.resources.applications.view', ['record' => $application->getKey()]));
@@ -97,7 +97,7 @@ it('should submit successfully when requisition has no screening questions', fun
         ->set('source', CandidateSourceEnum::LinkedIn)
         ->call('submit')
         ->assertHasNoErrors()
-        ->assertNotified('Your application has been submitted');
+        ->assertNotified(__('screening::messages.application_submitted'));
 
     $application = Application::query()->first();
     $livewire->assertRedirect(route('filament.app.resources.applications.view', ['record' => $application->getKey()]));
@@ -126,7 +126,7 @@ it('should submit successfully and save screening responses', function (): void 
         ->set('responses.'.$question->getKey(), 'Minha resposta')
         ->call('submit')
         ->assertHasNoErrors()
-        ->assertNotified('Your application has been submitted');
+        ->assertNotified(__('screening::messages.application_submitted'));
 
     $application = Application::query()->first();
     $livewire->assertRedirect(route('filament.app.resources.applications.view', ['record' => $application->getKey()]));
