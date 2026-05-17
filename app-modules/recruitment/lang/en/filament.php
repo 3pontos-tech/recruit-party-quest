@@ -138,6 +138,8 @@ return [
             'show_salary_to_candidates' => 'Show Salary To Candidates',
             'is_internal_only' => 'Internal Only',
             'is_confidential' => 'Confidential',
+            'auto_screening_transition' => 'Automatic candidate screening',
+            'auto_screening_transition_help' => 'Rejects candidates who fail the screening criteria and advances those who pass, based on their questionnaire answers.',
             'target_start_at' => 'Target Start Date',
             'post_title' => 'Job Title',
             'applications_count' => 'Applications',

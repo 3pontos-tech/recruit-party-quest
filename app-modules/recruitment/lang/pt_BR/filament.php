@@ -138,6 +138,8 @@ return [
             'show_salary_to_candidates' => 'Mostrar Salário aos Candidatos',
             'is_internal_only' => 'Apenas Interno',
             'is_confidential' => 'Confidencial',
+            'auto_screening_transition' => 'Triagem automática de candidatos',
+            'auto_screening_transition_help' => 'Reprova candidatos que não atendem aos critérios da triagem e avança quem atende, com base nas respostas do questionário.',
             'target_start_at' => 'Data de Início Prevista',
             'post_title' => 'Título da Vaga',
             'applications_count' => 'Candidaturas',

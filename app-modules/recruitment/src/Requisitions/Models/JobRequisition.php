@@ -60,6 +60,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $closed_at
  * @property bool $is_internal_only
  * @property bool $is_confidential
+ * @property bool $auto_screening_transition
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
@@ -196,6 +197,7 @@ class JobRequisition extends BaseModel implements HasActivityLogTitle
             'closed_at' => 'timestamp',
             'is_internal_only' => 'boolean',
             'is_confidential' => 'boolean',
+            'auto_screening_transition' => 'boolean',
             'status' => RequisitionStatusEnum::class,
             'priority' => RequisitionPriorityEnum::class,
             'work_arrangement' => WorkArrangementEnum::class,

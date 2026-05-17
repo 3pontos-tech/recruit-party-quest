@@ -298,6 +298,10 @@ class JobRequisitionForm
                                         Toggle::make('is_confidential')
                                             ->label(__('recruitment::filament.requisition.fields.is_confidential'))
                                             ->default(false),
+                                        Toggle::make('auto_screening_transition')
+                                            ->label(__('recruitment::filament.requisition.fields.auto_screening_transition'))
+                                            ->helperText(__('recruitment::filament.requisition.fields.auto_screening_transition_help'))
+                                            ->default(false),
                                         DateTimePicker::make('target_start_at')
                                             ->label(__('recruitment::filament.requisition.fields.target_start_at'))
                                             ->minDate(now()),
