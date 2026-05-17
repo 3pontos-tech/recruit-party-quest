@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Screening\QuestionTypes;
 
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use He4rt\Screening\Contracts\QuestionTypeContract;
 use He4rt\Screening\Enums\QuestionTypeEnum;
@@ -74,5 +75,51 @@ final class NumberType implements QuestionTypeContract
     public static function component(): string
     {
         return 'screening::questions.number';
+    }
+
+    public static function knockoutCriteriaSchema(): array
+    {
+        return [
+            Select::make('knockout_criteria.operator')
+                ->label(__('screening::filament.question.fields.knockout_operator'))
+                ->options([
+                    '>=' => '≥',
+                    '<=' => '≤',
+                    '=' => '=',
+                    '>' => '>',
+                    '<' => '<',
+                ])
+                ->default('>=')
+                ->required(),
+            TextInput::make('knockout_criteria.value')
+                ->label(__('screening::filament.question.fields.knockout_value'))
+                ->numeric()
+                ->required(),
+        ];
+    }
+
+    public static function evaluateKnockout(array $criteria, mixed $answer): bool
+    {
+        $operator = $criteria['operator'] ?? null;
+
+        if ($operator === null || ! array_key_exists('value', $criteria)) {
+            return true;
+        }
+
+        if (! is_numeric($answer) || ! is_numeric($criteria['value'])) {
+            return true;
+        }
+
+        $a = (float) $answer;
+        $t = (float) $criteria['value'];
+
+        return match ($operator) {
+            '>=' => $a >= $t,
+            '<=' => $a <= $t,
+            '=' => $a === $t,
+            '>' => $a > $t,
+            '<' => $a < $t,
+            default => true,
+        };
     }
 }

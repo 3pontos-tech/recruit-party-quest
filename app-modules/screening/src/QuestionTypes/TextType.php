@@ -41,14 +41,14 @@ final class TextType implements QuestionTypeContract
                 ->maxValue(10000)
                 ->placeholder('500'),
 
+            TextInput::make('settings.placeholder')
+                ->label(__('screening::question_types.text.settings.placeholder'))
+                ->placeholder(__('screening::question_types.text.settings.placeholder_example')),
+
             Toggle::make('settings.multiline')
                 ->label(__('screening::question_types.text.settings.multiline'))
                 ->helperText(__('screening::question_types.text.settings.multiline_help'))
                 ->default(false),
-
-            TextInput::make('settings.placeholder')
-                ->label(__('screening::question_types.text.settings.placeholder'))
-                ->placeholder(__('screening::question_types.text.settings.placeholder_example')),
         ];
     }
 
@@ -65,5 +65,15 @@ final class TextType implements QuestionTypeContract
     public static function component(): string
     {
         return 'screening::questions.text';
+    }
+
+    public static function knockoutCriteriaSchema(): array
+    {
+        return [];
+    }
+
+    public static function evaluateKnockout(array $criteria, mixed $answer): bool
+    {
+        return true;
     }
 }

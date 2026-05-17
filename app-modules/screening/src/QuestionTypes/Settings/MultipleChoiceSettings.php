@@ -31,7 +31,7 @@ readonly class MultipleChoiceSettings implements HasValidations
         return new self(
             minSelections: (int) ($data['min_selections'] ?? 0),
             maxSelections: isset($data['max_selections']) ? (int) $data['max_selections'] : null,
-            choices: $data['choices'] ?? [],
+            choices: self::normalizeChoices($data['choices'] ?? []),
         );
     }
 
@@ -73,5 +73,41 @@ readonly class MultipleChoiceSettings implements HasValidations
     public function initialValue(): array
     {
         return [];
+    }
+
+    /**
+     * Guarantee every choice carries a non-empty value mirroring its label.
+     *
+     * The admin form only asks the recruiter for a single "Option" text
+     * (stored as label); value is derived from it deterministically on every
+     * read, so the candidate-facing checkboxes and knockout evaluation stay
+     * consistent.
+     *
+     * @param  array<int|string, mixed>  $choices
+     * @return array<int, Choice>
+     */
+    private static function normalizeChoices(array $choices): array
+    {
+        $normalized = [];
+
+        foreach ($choices as $choice) {
+            if (! is_array($choice)) {
+                continue;
+            }
+
+            $label = mb_trim((string) ($choice['label'] ?? ''));
+            $value = mb_trim((string) ($choice['value'] ?? ''));
+
+            $value = $value !== '' ? $value : $label;
+            $label = $label !== '' ? $label : $value;
+
+            if ($value === '') {
+                continue;
+            }
+
+            $normalized[] = ['value' => $value, 'label' => $label];
+        }
+
+        return $normalized;
     }
 }
