@@ -40,13 +40,22 @@ return [
             'is_knockout' => 'Usar esta resposta como filtro eliminatório',
             'is_knockout_help' => 'Quando ligado, defina abaixo qual resposta aprova o candidato. Uma resposta reprovada pode reprovar o candidato automaticamente.',
             'knockout_criteria' => 'Critérios de Eliminação',
+            'knockout_criteria_help' => 'Defina os valores esperados (ex.: esperado: sim, mínimo: 3)',
             'knockout_expected' => 'Aprovar o candidato se a resposta for',
             'knockout_operator' => 'Aprovar se o número for',
             'knockout_value' => 'Valor de referência',
             'knockout_accepted' => 'Respostas que aprovam',
             'knockout_accepted_multi_help' => 'O candidato passa se marcar pelo menos uma destas.',
             'knockout_accepted_edit_warning' => 'Se você renomear ou remover uma opção, revise este critério — referências desatualizadas são ignoradas na triagem dos candidatos.',
+            'add_choice' => 'Adicionar Opção',
             'responses_count' => 'Respostas',
+        ],
+    ],
+    'form_schema' => [
+        'questions' => [
+            'label' => 'Perguntas de Triagem',
+            'new_question' => 'Nova Pergunta',
+            'add_question' => 'Adicionar Pergunta',
         ],
     ],
 ];
