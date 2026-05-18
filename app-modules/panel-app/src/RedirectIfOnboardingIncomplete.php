@@ -7,6 +7,7 @@ namespace He4rt\App;
 use Closure;
 use He4rt\App\Filament\Pages\OnboardingWizard;
 use He4rt\Candidates\Models\Candidate;
+use He4rt\Permissions\Roles;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,6 +20,10 @@ class RedirectIfOnboardingIncomplete
         }
 
         if ($request->routeIs('filament.app.auth.logout') || $request->routeIs('filament.app.auth.*')) {
+            return $next($request);
+        }
+
+        if ($request->user()->hasAnyRole([Roles::SuperAdmin, Roles::Admin])) {
             return $next($request);
         }
 
