@@ -34,7 +34,8 @@ class GenerateJobRequisition
                         - Título da Vaga: {$dto->title}
                         - Descrição da Vaga: {$dto->description}
                         - Nível de experiência: {$dto->experienceLevel->value}
-                        - Tipo de contratação: {$dto->employmentType->value}
+                        - Tipo de contratação (regime): {$dto->employmentType?->value}
+                        - Jornada de trabalho: {$dto->workSchedule?->value}
                         - Regime de trabalho: {$dto->workArrangement->value}
                         - Quantidade de vagas: 1
 
@@ -53,6 +54,7 @@ class GenerateJobRequisition
                 'recruiter_id' => $dto->recruiterId,
                 'experience_level' => $dto->experienceLevel,
                 'employment_type' => $dto->employmentType,
+                'work_schedule' => $dto->workSchedule,
                 'work_arrangement' => $dto->workArrangement,
                 'priority' => $dto->priority,
                 'status' => RequisitionStatusEnum::Draft,

@@ -20,6 +20,7 @@ final class StoreJobRequisitionAction
                 'department_id' => $dto->departmentId,
                 'work_arrangement' => $dto->workArrangement,
                 'employment_type' => $dto->employmentType,
+                'work_schedule' => $dto->workSchedule,
                 'experience_level' => $dto->experienceLevel,
                 'salary_currency' => 'BRL',
                 'positions_available' => 1,

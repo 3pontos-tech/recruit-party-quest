@@ -237,3 +237,27 @@ it('casts work_schedule and allows null employment_type', function (): void {
     expect($model->employment_type)->toBeNull()
         ->and($model->work_schedule)->toBe(WorkScheduleEnum::FullTime);
 });
+
+it('persists work_schedule and null employment_type via StoreJobRequisitionAction', function (): void {
+    $team = He4rt\Teams\Team::factory()->create();
+    $dept = He4rt\Teams\Department::factory()->create(['team_id' => $team->id]);
+    $recruiter = He4rt\Recruitment\Staff\Recruiter\Recruiter::factory()->create();
+    $user = He4rt\Users\User::factory()->create();
+
+    $dto = He4rt\Recruitment\Requisitions\DTOs\JobRequisitionDTO::make([
+        'title' => 'Dev Backend', 'department_id' => $dept->id, 'team_id' => $team->id,
+        'recruiter_id' => $recruiter->id, 'description' => 'desc',
+        'experience_level' => He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum::Senior,
+        'employment_type' => null,
+        'work_schedule' => He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum::PartTime,
+        'work_arrangement' => He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum::Remote,
+        'priority' => He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum::Medium,
+        'status' => He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum::Draft,
+        'summary' => 'sum', 'created_by' => $user->id, 'items' => [],
+    ]);
+
+    $req = resolve(He4rt\Recruitment\Requisitions\Actions\StoreJobRequisitionAction::class)->execute($dto);
+
+    expect($req->fresh()->work_schedule)->toBe(He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum::PartTime)
+        ->and($req->fresh()->employment_type)->toBeNull();
+});
