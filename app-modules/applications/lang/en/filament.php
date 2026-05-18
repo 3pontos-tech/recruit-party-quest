@@ -130,5 +130,21 @@ return [
             ],
         ],
 
+        'move_stage' => [
+            'label' => 'Move stage',
+            'modal_heading' => 'Move candidate stage',
+            'modal_submit' => 'Confirm',
+            'no_transitions_tooltip' => 'No available transitions',
+            'with_evaluation_label' => 'Record an evaluation for this move',
+            'notifications' => [
+                'moved' => [
+                    'title' => 'Candidate moved',
+                ],
+                'error' => [
+                    'title' => 'Could not move the candidate',
+                ],
+            ],
+        ],
+
     ],
 ];

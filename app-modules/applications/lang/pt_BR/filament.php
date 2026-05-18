@@ -132,5 +132,21 @@ return [
                 ],
             ],
         ],
+
+        'move_stage' => [
+            'label' => 'Mover etapa',
+            'modal_heading' => 'Mover etapa do candidato',
+            'modal_submit' => 'Confirmar',
+            'no_transitions_tooltip' => 'Nenhuma transição disponível',
+            'with_evaluation_label' => 'Registrar uma avaliação nesta movimentação',
+            'notifications' => [
+                'moved' => [
+                    'title' => 'Candidato movido',
+                ],
+                'error' => [
+                    'title' => 'Não foi possível mover o candidato',
+                ],
+            ],
+        ],
     ],
 ];
