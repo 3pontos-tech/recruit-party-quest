@@ -59,9 +59,18 @@
                         </x-he4rt::tag>
 
                         {{-- Contract Type --}}
-                        <x-he4rt::tag :icon="$jobRequisition->employment_type->getIcon()" variant="ghost">
-                            {{ $jobRequisition->employment_type->getLabel() }}
-                        </x-he4rt::tag>
+                        @if ($jobRequisition->employment_type)
+                            <x-he4rt::tag :icon="$jobRequisition->employment_type->getIcon()" variant="ghost">
+                                {{ $jobRequisition->employment_type->getLabel() }}
+                            </x-he4rt::tag>
+                        @endif
+
+                        {{-- Work Schedule --}}
+                        @if ($jobRequisition->work_schedule)
+                            <x-he4rt::tag :icon="$jobRequisition->work_schedule->getIcon()" variant="ghost">
+                                {{ $jobRequisition->work_schedule->getLabel() }}
+                            </x-he4rt::tag>
+                        @endif
 
                         {{-- Salary --}}
                         @if ($jobRequisition->show_salary_to_candidates)

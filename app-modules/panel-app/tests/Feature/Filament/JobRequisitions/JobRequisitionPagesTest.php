@@ -144,4 +144,21 @@ describe('ViewJobRequisition Page', function (): void {
         livewire(ViewJobRequisition::class, ['record' => $this->jobPosting->slug])
             ->assertOk();
     });
+
+    it('renders with null employment_type and shows the work_schedule', function (): void {
+        $requisition = JobRequisition::factory()
+            ->for($this->team)->for($this->department)
+            ->for($this->recruiter, 'recruiter')->for($this->user, 'createdBy')
+            ->create([
+                'is_confidential' => false,
+                'employment_type' => null,
+                'work_schedule' => He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum::FullTime,
+            ]);
+
+        $posting = JobPosting::factory()->for($requisition, 'jobRequisition')->create();
+
+        livewire(ViewJobRequisition::class, ['record' => $posting->slug])
+            ->assertOk()
+            ->assertSee(He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum::FullTime->getLabel());
+    });
 });
