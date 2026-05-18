@@ -118,6 +118,12 @@ return [
             'label' => 'Presencial',
         ],
     ],
+    'work_schedule' => [
+        'full_time' => ['label' => 'Tempo Integral'],
+        'part_time' => ['label' => 'Meio Período'],
+        'hourly' => ['label' => 'Por Hora'],
+        'shift' => ['label' => 'Escala (12x36, 6x1)'],
+    ],
     'job_category' => [
         'finance' => [
             'label' => 'Financeiro',

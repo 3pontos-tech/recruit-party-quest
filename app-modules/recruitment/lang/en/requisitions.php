@@ -118,6 +118,12 @@ return [
             'label' => 'On Site',
         ],
     ],
+    'work_schedule' => [
+        'full_time' => ['label' => 'Full-time'],
+        'part_time' => ['label' => 'Part-time'],
+        'hourly' => ['label' => 'Hourly'],
+        'shift' => ['label' => 'Shift (12x36, 6x1)'],
+    ],
     'job_category' => [
         'finance' => [
             'label' => 'Finance',
