@@ -78,6 +78,19 @@ return [
             'success_body' => 'The AI has generated your job requisition and posting. Review and edit as needed before publishing.',
             'error_title' => 'Generation Failed',
         ],
+        'duplicate_job_requisition' => [
+            'label' => 'Duplicate',
+            'modal_heading' => 'Duplicate Job',
+            'modal_description' => 'A new draft will be created with the same structure (posting, requirements, pipeline stages and screening questions). Applications, comments and evaluations will not be copied.',
+            'notification' => 'Job duplicated successfully',
+            'title_suffix' => '(Copy)',
+            'bulk' => [
+                'label' => 'Duplicate selected',
+                'modal_heading' => 'Duplicate selected jobs',
+                'modal_description' => 'A new draft will be created for each selected job, keeping the same structure. Applications, comments and evaluations will not be copied.',
+                'notification' => ':count job(s) duplicated successfully',
+            ],
+        ],
     ],
 
     'notifications' => [
