@@ -116,7 +116,7 @@ final class NumberType implements QuestionTypeContract
         return match ($operator) {
             '>=' => $a >= $t,
             '<=' => $a <= $t,
-            '=' => $a === $t,
+            '=' => abs($a - $t) < 1e-9,
             '>' => $a > $t,
             '<' => $a < $t,
             default => true,

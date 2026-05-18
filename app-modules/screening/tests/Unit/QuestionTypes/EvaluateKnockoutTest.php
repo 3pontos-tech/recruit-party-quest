@@ -37,6 +37,10 @@ describe('NumberType::evaluateKnockout', function (): void {
         expect(NumberType::evaluateKnockout(['operator' => '>='], 'abc'))->toBeTrue();
         expect(NumberType::evaluateKnockout(['minimum' => '3'], '2'))->toBeTrue();
     });
+    it('treats = with floating-point answers as equal within epsilon', function (): void {
+        // 0.1 + 0.2 === 0.30000000000000004 in IEEE-754; strict === would fail.
+        expect(NumberType::evaluateKnockout(['operator' => '=', 'value' => 0.3], 0.1 + 0.2))->toBeTrue();
+    });
 });
 
 describe('SingleChoiceType::evaluateKnockout', function (): void {
