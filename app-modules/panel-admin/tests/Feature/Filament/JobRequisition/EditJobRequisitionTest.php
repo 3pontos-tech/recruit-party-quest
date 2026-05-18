@@ -30,13 +30,13 @@ it('edit form is pre-populated with correct data', function (): void {
     $requisition = JobRequisition::factory()->create([
         'status' => RequisitionStatusEnum::Draft,
         'work_arrangement' => WorkArrangementEnum::Remote,
-        'employment_type' => EmploymentTypeEnum::FullTimeEmployee,
+        'employment_type' => EmploymentTypeEnum::Clt,
     ]);
 
     livewire(EditJobRequisition::class, ['record' => $requisition->getRouteKey()])
         ->assertFormSet([
             'status' => RequisitionStatusEnum::Draft,
             'work_arrangement' => WorkArrangementEnum::Remote,
-            'employment_type' => EmploymentTypeEnum::FullTimeEmployee,
+            'employment_type' => EmploymentTypeEnum::Clt,
         ]);
 });

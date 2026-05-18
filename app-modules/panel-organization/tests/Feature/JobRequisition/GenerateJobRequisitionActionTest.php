@@ -32,7 +32,7 @@ beforeEach(function (): void {
         'department_id' => $this->department->getKey(),
         'recruiter_id' => $this->recruiter->getKey(),
         'work_arrangement' => WorkArrangementEnum::Remote,
-        'employment_type' => EmploymentTypeEnum::FullTimeEmployee,
+        'employment_type' => EmploymentTypeEnum::Clt,
         'experience_level' => ExperienceLevelEnum::Senior,
         'priority' => RequisitionPriorityEnum::Medium,
     ];

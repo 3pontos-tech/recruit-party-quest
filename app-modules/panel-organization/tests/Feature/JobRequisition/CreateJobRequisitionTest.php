@@ -51,7 +51,7 @@ it('creates a job requisition and assigns team and creator automatically', funct
             'department_id' => $this->department->getKey(),
             'recruiter_id' => $this->recruiter->getKey(),
             'work_arrangement' => WorkArrangementEnum::Remote,
-            'employment_type' => EmploymentTypeEnum::FullTimeEmployee,
+            'employment_type' => EmploymentTypeEnum::Clt,
             'experience_level' => ExperienceLevelEnum::Senior,
             'status' => RequisitionStatusEnum::Draft,
             'priority' => RequisitionPriorityEnum::Medium,
@@ -69,7 +69,7 @@ it('creates a job requisition and assigns team and creator automatically', funct
         'created_by_id' => $this->recruiter->user->getKey(),
         'department_id' => $this->department->getKey(),
         'work_arrangement' => WorkArrangementEnum::Remote,
-        'employment_type' => EmploymentTypeEnum::FullTimeEmployee,
+        'employment_type' => EmploymentTypeEnum::Clt,
         'experience_level' => ExperienceLevelEnum::Senior,
     ]);
 });
@@ -85,7 +85,7 @@ it('generates a slug with the team initial and random suffix on creation', funct
             'department_id' => $this->department->getKey(),
             'recruiter_id' => $this->recruiter->getKey(),
             'work_arrangement' => WorkArrangementEnum::Remote,
-            'employment_type' => EmploymentTypeEnum::FullTimeEmployee,
+            'employment_type' => EmploymentTypeEnum::Clt,
             'experience_level' => ExperienceLevelEnum::Senior,
             'status' => RequisitionStatusEnum::Draft,
             'priority' => RequisitionPriorityEnum::Medium,
