@@ -80,7 +80,7 @@ final readonly class TransitionData
      *     offer_amount: float|null,
      *     offer_response_deadline: string|null,
      *     notes: string|null,
-     *     by_user_id: string,
+     *     by_user_id: string|null,
      * }
      */
     public function toArray(): array
