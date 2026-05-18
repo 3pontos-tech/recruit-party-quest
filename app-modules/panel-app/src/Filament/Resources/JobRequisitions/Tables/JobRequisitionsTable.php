@@ -34,7 +34,12 @@ class JobRequisitionsTable
                     ->searchable(),
                 TextColumn::make('employment_type')
                     ->badge()
+                    ->placeholder(__('recruitment::filament.requisition.fields.not_specified'))
                     ->searchable(),
+                TextColumn::make('work_schedule')
+                    ->label(__('recruitment::filament.requisition.fields.work_schedule'))
+                    ->badge()
+                    ->placeholder(__('recruitment::filament.requisition.fields.not_specified')),
                 TextColumn::make('experience_level')
                     ->badge()
                     ->searchable(),

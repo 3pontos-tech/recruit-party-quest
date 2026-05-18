@@ -25,7 +25,12 @@ class JobRequisitionInfolist
                     ->label(__('recruitment::filament.requisition.fields.work_arrangement'))
                     ->badge(),
                 TextEntry::make('employment_type')
-                    ->badge(),
+                    ->badge()
+                    ->placeholder(__('recruitment::filament.requisition.fields.not_specified')),
+                TextEntry::make('work_schedule')
+                    ->label(__('recruitment::filament.requisition.fields.work_schedule'))
+                    ->badge()
+                    ->placeholder(__('recruitment::filament.requisition.fields.not_specified')),
                 TextEntry::make('experience_level')
                     ->badge(),
                 TextEntry::make('positions_available'),

@@ -57,6 +57,13 @@ class JobRequisitionsTable
                     ->label(__('recruitment::filament.requisition.fields.employment_type'))
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->size(TextSize::Small)
+                    ->placeholder(__('recruitment::filament.requisition.fields.not_specified'))
+                    ->color('gray'),
+                TextColumn::make('work_schedule')
+                    ->label(__('recruitment::filament.requisition.fields.work_schedule'))
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->size(TextSize::Small)
+                    ->placeholder(__('recruitment::filament.requisition.fields.not_specified'))
                     ->color('gray'),
                 TextColumn::make('experience_level')
                     ->label(__('recruitment::filament.requisition.fields.experience_level'))
