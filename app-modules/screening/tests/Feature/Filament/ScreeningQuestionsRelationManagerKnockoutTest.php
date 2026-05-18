@@ -50,7 +50,9 @@ it('persists knockout_criteria.accepted for a single choice question (reproducti
         ->assertHasNoActionErrors();
 
     $question = ScreeningQuestion::query()
+        ->where('screenable_type', $this->requisition->getMorphClass())
         ->where('screenable_id', $this->requisition->id)
+        ->where('question_text', 'Qual sua senioridade?')
         ->firstOrFail();
 
     expect($question->is_knockout)->toBeTrue()
@@ -89,6 +91,7 @@ it('keeps the selected accepted answer when filled step-by-step (interactive ord
     $component->callMountedAction()->assertHasNoActionErrors();
 
     $question = ScreeningQuestion::query()
+        ->where('screenable_type', $this->requisition->getMorphClass())
         ->where('screenable_id', $this->requisition->id)
         ->where('question_text', 'Qual sua senioridade?')
         ->firstOrFail();
