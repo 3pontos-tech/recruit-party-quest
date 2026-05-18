@@ -85,7 +85,9 @@ it('casts work_arrangement to enum', function (): void {
 });
 
 it('casts employment_type to enum', function (): void {
-    $requisition = JobRequisition::factory()->create();
+    $requisition = JobRequisition::factory()->create([
+        'employment_type' => EmploymentTypeEnum::Clt,
+    ]);
 
     expect($requisition->employment_type)->toBeInstanceOf(EmploymentTypeEnum::class);
 });
@@ -239,20 +241,20 @@ it('casts work_schedule and allows null employment_type', function (): void {
 });
 
 it('persists work_schedule and null employment_type via StoreJobRequisitionAction', function (): void {
-    $team = He4rt\Teams\Team::factory()->create();
-    $dept = He4rt\Teams\Department::factory()->create(['team_id' => $team->id]);
-    $recruiter = He4rt\Recruitment\Staff\Recruiter\Recruiter::factory()->create();
-    $user = He4rt\Users\User::factory()->create();
+    $team = Team::factory()->create();
+    $dept = Department::factory()->create(['team_id' => $team->id]);
+    $recruiter = Recruiter::factory()->create();
+    $user = User::factory()->create();
 
     $dto = He4rt\Recruitment\Requisitions\DTOs\JobRequisitionDTO::make([
         'title' => 'Dev Backend', 'department_id' => $dept->id, 'team_id' => $team->id,
         'recruiter_id' => $recruiter->id, 'description' => 'desc',
-        'experience_level' => He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum::Senior,
+        'experience_level' => ExperienceLevelEnum::Senior,
         'employment_type' => null,
         'work_schedule' => He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum::PartTime,
-        'work_arrangement' => He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum::Remote,
-        'priority' => He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum::Medium,
-        'status' => He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum::Draft,
+        'work_arrangement' => WorkArrangementEnum::Remote,
+        'priority' => RequisitionPriorityEnum::Medium,
+        'status' => RequisitionStatusEnum::Draft,
         'summary' => 'sum', 'created_by' => $user->id, 'items' => [],
     ]);
 
@@ -263,8 +265,8 @@ it('persists work_schedule and null employment_type via StoreJobRequisitionActio
 });
 
 it('factory produces valid employment_type and work_schedule', function (): void {
-    He4rt\Recruitment\Requisitions\Models\JobRequisition::factory()->count(20)->create()->each(function ($r): void {
-        expect($r->employment_type === null || $r->employment_type instanceof He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum)->toBeTrue()
+    JobRequisition::factory()->count(20)->create()->each(function ($r): void {
+        expect($r->employment_type === null || $r->employment_type instanceof EmploymentTypeEnum)->toBeTrue()
             ->and($r->work_schedule === null || $r->work_schedule instanceof He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum)->toBeTrue();
     });
 });

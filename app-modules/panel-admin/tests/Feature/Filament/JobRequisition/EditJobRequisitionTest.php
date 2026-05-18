@@ -6,9 +6,9 @@ use App\Enums\FilamentPanel;
 use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\Pages\EditJobRequisition;
 use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\Pages\ListJobRequisitions;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
-use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Users\User;
 

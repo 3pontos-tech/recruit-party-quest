@@ -14,3 +14,10 @@ it('resolves label, color and icon for every case', function (WorkScheduleEnum $
         ->and($case->getColor())->not->toBeEmpty()
         ->and($case->getIcon())->not->toBeNull();
 })->with(WorkScheduleEnum::cases());
+
+it('does not alter WorkArrangement or ExperienceLevel enums', function (): void {
+    expect(array_map(fn ($c) => $c->value, He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum::cases()))
+        ->toBe(['remote', 'hybrid', 'on_site'])
+        ->and(He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum::tryFrom('trainee'))
+        ->not->toBeNull();
+});
