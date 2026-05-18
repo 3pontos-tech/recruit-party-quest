@@ -13,24 +13,10 @@ return [
         'label' => 'Archived',
     ],
     'employment_type' => [
-        'full_time_employee' => [
-            'label' => 'Full-time Employee',
-        ],
-        'clt' => [
-            'label' => 'CLT (Brazilian Labor Contract)',
-        ],
-        'contractor' => [
-            'label' => 'Contractor',
-        ],
-        'intern' => [
-            'label' => 'Intern',
-        ],
-        'temporary' => [
-            'label' => 'Temporary',
-        ],
-        'part_time' => [
-            'label' => 'Part-time',
-        ],
+        'clt' => ['label' => 'CLT (Brazilian Labor Contract)'],
+        'contractor' => ['label' => 'Contractor (PJ)'],
+        'temporary' => ['label' => 'Temporary'],
+        'freelancer' => ['label' => 'Freelancer'],
     ],
     'experience_level' => [
         'intern' => [

@@ -13,24 +13,10 @@ return [
         'label' => 'Arquivada',
     ],
     'employment_type' => [
-        'full_time_employee' => [
-            'label' => 'Tempo Integral',
-        ],
-        'clt' => [
-            'label' => 'CLT',
-        ],
-        'contractor' => [
-            'label' => 'Prestador de Serviço (PJ)',
-        ],
-        'intern' => [
-            'label' => 'Estagiário',
-        ],
-        'temporary' => [
-            'label' => 'Temporário',
-        ],
-        'part_time' => [
-            'label' => 'Meio Período',
-        ],
+        'clt' => ['label' => 'CLT'],
+        'contractor' => ['label' => 'Contrato/PJ'],
+        'temporary' => ['label' => 'Temporário'],
+        'freelancer' => ['label' => 'Freelancer/Autônomo'],
     ],
     'experience_level' => [
         'intern' => [
