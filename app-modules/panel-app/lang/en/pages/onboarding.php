@@ -122,8 +122,8 @@ return [
                 'is_open_to_remote' => 'Open to Remote Work',
                 'experience_level' => 'Experience Level',
                 'employment_type_interests' => 'Employment Types (comma-separated)',
-                'employment_type_interests_placeholder' => 'full_time_employee, contractor, intern',
-                'employment_type_interests_helper' => 'Full time employee, contractor, intern, etc.',
+                'employment_type_interests_placeholder' => 'clt, contractor, temporary',
+                'employment_type_interests_helper' => 'CLT, Contractor/PJ, Temporary, etc.',
             ],
             'options' => [
                 'experience_levels' => [],

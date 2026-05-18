@@ -261,3 +261,10 @@ it('persists work_schedule and null employment_type via StoreJobRequisitionActio
     expect($req->fresh()->work_schedule)->toBe(He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum::PartTime)
         ->and($req->fresh()->employment_type)->toBeNull();
 });
+
+it('factory produces valid employment_type and work_schedule', function (): void {
+    He4rt\Recruitment\Requisitions\Models\JobRequisition::factory()->count(20)->create()->each(function ($r): void {
+        expect($r->employment_type === null || $r->employment_type instanceof He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum)->toBeTrue()
+            ->and($r->work_schedule === null || $r->work_schedule instanceof He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum)->toBeTrue();
+    });
+});
