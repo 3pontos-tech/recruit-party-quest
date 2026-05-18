@@ -7,6 +7,7 @@ use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
@@ -223,4 +224,16 @@ it('creates default stages translated when the locale is pt_BR', function (): vo
         ->and($newStage->description)->toBe('Recebimento e registro inicial das candidaturas')
         ->and($screeningStage->name)->toBe('Triagem de Currículos')
         ->and($offerStage->name)->toBe('Proposta');
+});
+
+it('casts work_schedule and allows null employment_type', function (): void {
+    $model = JobRequisition::factory()->create([
+        'employment_type' => null,
+        'work_schedule' => WorkScheduleEnum::FullTime,
+    ]);
+
+    $model->refresh();
+
+    expect($model->employment_type)->toBeNull()
+        ->and($model->work_schedule)->toBe(WorkScheduleEnum::FullTime);
 });
