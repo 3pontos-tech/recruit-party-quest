@@ -12,6 +12,7 @@ use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\CommentApplicationAction;
+use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\MoveStageAction;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\RejectApplicationAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
 use He4rt\Permissions\Roles;
@@ -85,9 +86,10 @@ class ApplicationInfolist
                             ->schema([
                                 Actions::make([
                                     StateTransitionAction::make(),
+                                    MoveStageAction::make(),
                                     CommentApplicationAction::make(),
                                     RejectApplicationAction::make(),
-                                ]),
+                                ])->key('quick-actions'),
                             ]),
                         // Pipeline Progress
                         ViewEntry::make('pipeline_progress')

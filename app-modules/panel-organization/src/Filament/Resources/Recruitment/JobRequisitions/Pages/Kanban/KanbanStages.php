@@ -9,6 +9,7 @@ use Filament\Navigation\NavigationItem;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use He4rt\Applications\Models\Application;
+use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\MoveStageAction;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\RejectApplicationAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
@@ -98,6 +99,8 @@ class KanbanStages extends BoardResourcePage
             ->cardActions([
                 ViewCandidateAction::make()->model(Application::class),
                 StateTransitionAction::make()
+                    ->visible(fn (): bool => (bool) auth()->user()?->hasAnyRole([Roles::SuperAdmin, Roles::Admin])),
+                MoveStageAction::make()
                     ->visible(fn (): bool => (bool) auth()->user()?->hasAnyRole([Roles::SuperAdmin, Roles::Admin])),
                 RejectApplicationAction::make()
                     ->visible(fn (): bool => (bool) auth()->user()?->hasAnyRole([Roles::SuperAdmin, Roles::Admin])),
