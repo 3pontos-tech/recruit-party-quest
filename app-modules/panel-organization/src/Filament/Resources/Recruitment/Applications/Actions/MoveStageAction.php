@@ -6,11 +6,11 @@ namespace He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions
 
 use BackedEnum;
 use Filament\Actions\Action;
-use Filament\Forms\Components\Field;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
@@ -95,7 +95,7 @@ class MoveStageAction extends Action
             ->send();
     }
 
-    /** @return array<int, Field> */
+    /** @return array<int, Component> */
     private function buildSchema(Application $record): array
     {
         $choices = Arr::except($record->current_step->choices(), [
