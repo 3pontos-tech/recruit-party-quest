@@ -71,3 +71,8 @@ it('should be able to publish a job requisition', function (): void {
     ]);
 
 });
+
+it('exposes the work_schedule form field', function (): void {
+    livewire(CreateJobRequisition::class)
+        ->assertFormFieldExists('work_schedule');
+});

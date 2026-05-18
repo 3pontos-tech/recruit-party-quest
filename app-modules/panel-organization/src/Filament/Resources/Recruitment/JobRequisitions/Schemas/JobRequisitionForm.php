@@ -30,6 +30,7 @@ use He4rt\Recruitment\Requisitions\Enums\JobRequisitionItemTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Teams\Department;
 use Illuminate\Database\Eloquent\Builder;
@@ -154,10 +155,18 @@ class JobRequisitionForm
                                             ->label(__('recruitment::filament.requisition.fields.employment_type'))
                                             ->options(EmploymentTypeEnum::class)
                                             ->description(__('recruitment::filament.requisition.fields.employment_type_description'))
+                                            ->icon(Heroicon::DocumentText)
+                                            ->native(false)
+                                            ->iconColor('green')
+                                            ->placeholder(__('recruitment::filament.requisition.fields.not_specified')),
+                                        He4rtSelect::make('work_schedule')
+                                            ->label(__('recruitment::filament.requisition.fields.work_schedule'))
+                                            ->options(WorkScheduleEnum::class)
+                                            ->description(__('recruitment::filament.requisition.fields.work_schedule_description'))
                                             ->icon(Heroicon::Clock)
                                             ->native(false)
                                             ->iconColor('green')
-                                            ->required(),
+                                            ->placeholder(__('recruitment::filament.requisition.fields.not_specified')),
                                         He4rtSelect::make('experience_level')
                                             ->label(__('recruitment::filament.requisition.fields.experience_level'))
                                             ->options(ExperienceLevelEnum::class)

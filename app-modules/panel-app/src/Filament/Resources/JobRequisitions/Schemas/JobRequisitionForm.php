@@ -14,6 +14,7 @@ use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 
 class JobRequisitionForm
 {
@@ -31,8 +32,9 @@ class JobRequisitionForm
                     ->options(WorkArrangementEnum::class)
                     ->required(),
                 Select::make('employment_type')
-                    ->options(EmploymentTypeEnum::class)
-                    ->required(),
+                    ->options(EmploymentTypeEnum::class),
+                Select::make('work_schedule')
+                    ->options(WorkScheduleEnum::class),
                 Select::make('experience_level')
                     ->options(ExperienceLevelEnum::class)
                     ->required(),
