@@ -70,6 +70,27 @@ it('keeps is_knockout_fail false when the answer passes', function (): void {
     Event::assertDispatched(fn (ScreeningEvaluated $e): bool => $e->anyKnockoutFailed === false && $e->hadKnockoutCriteria);
 });
 
+it('clears a stale is_knockout_fail when a re-evaluation now passes', function (): void {
+    Event::fake([ScreeningEvaluated::class]);
+    $question = knockoutQuestion($this->requisition, ['expected' => 'yes']);
+
+    // The response previously failed and was persisted as a knockout fail.
+    $response = ScreeningResponse::query()->create([
+        'team_id' => $this->requisition->team_id,
+        'application_id' => $this->application->id,
+        'question_id' => $question->id,
+        'response_value' => ['value' => 'yes'],
+        'is_knockout_fail' => true,
+    ]);
+
+    resolve(EvaluateScreeningResponses::class)->execute($this->application);
+
+    // The answer now passes, so the stale failure flag must be cleared.
+    expect($response->refresh()->is_knockout_fail)->toBeFalse();
+
+    Event::assertDispatched(fn (ScreeningEvaluated $e): bool => $e->anyKnockoutFailed === false && $e->hadKnockoutCriteria);
+});
+
 it('reports hadKnockoutCriteria false when there are no knockout questions', function (): void {
     Event::fake([ScreeningEvaluated::class]);
 

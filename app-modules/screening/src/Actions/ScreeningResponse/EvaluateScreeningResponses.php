@@ -21,6 +21,12 @@ final class EvaluateScreeningResponses
 
         $responsesByQuestion = $application->screeningResponses->keyBy('question_id');
 
+        // Re-evaluation is point-in-time: clear any previously persisted
+        // knockout failures so a response that now passes is not left
+        // inconsistent with the current criteria/answers.
+        $application->screeningResponses()->update(['is_knockout_fail' => false]);
+        $application->screeningResponses->each->setAttribute('is_knockout_fail', false);
+
         $hadKnockoutCriteria = false;
         $anyKnockoutFailed = false;
 
