@@ -96,6 +96,21 @@ return [
     'notifications' => [
         'ok_title' => 'Done',
         'ok_body' => 'Action completed successfully.',
+        'mention' => [
+            'title' => ':author mentioned you',
+            'body' => "In a comment about :candidate's application.",
+            'view_button' => 'View Application',
+        ],
+    ],
+
+    'emails' => [
+        'mention' => [
+            'subject' => ':author mentioned you in a comment',
+            'greeting' => 'Hello, :name',
+            'intro' => ":author mentioned you in a comment about :candidate's application.",
+            'button' => 'View comment on application',
+            'footer' => 'This comment is internal and visible to the team only.',
+        ],
     ],
 
     'tables' => [

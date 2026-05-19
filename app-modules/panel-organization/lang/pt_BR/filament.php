@@ -97,6 +97,21 @@ return [
     'notifications' => [
         'ok_title' => 'Pronto',
         'ok_body' => 'Ação concluída com sucesso.',
+        'mention' => [
+            'title' => ':author mencionou você',
+            'body' => 'Em um comentário sobre a candidatura de :candidate.',
+            'view_button' => 'Ver Candidatura',
+        ],
+    ],
+
+    'emails' => [
+        'mention' => [
+            'subject' => ':author mencionou você em um comentário',
+            'greeting' => 'Olá, :name',
+            'intro' => ':author mencionou você em um comentário sobre a candidatura de :candidate.',
+            'button' => 'Ver comentário na candidatura',
+            'footer' => 'Este comentário é interno e visível apenas para a equipe.',
+        ],
     ],
 
     'tables' => [
