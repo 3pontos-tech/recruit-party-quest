@@ -27,9 +27,7 @@ return new class extends Migration
             DB::table('recruitment_job_requisitions')->where('employment_type', 'part_time')
                 ->update(['employment_type' => null, 'work_schedule' => 'part_time']);
 
-            DB::table('recruitment_job_requisitions')->where('employment_type', 'intern')
-                ->update(['employment_type' => null]);
-            // clt / contractor / temporary: preservados, work_schedule permanece NULL.
+            // clt / contractor / temporary / intern: regimes preservados, work_schedule permanece NULL.
         });
     }
 

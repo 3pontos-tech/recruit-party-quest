@@ -19,6 +19,7 @@ enum EmploymentTypeEnum: string implements HasColor, HasIcon, HasLabel
     case Contractor = 'contractor';
     case Temporary = 'temporary';
     case Freelancer = 'freelancer';
+    case Intern = 'intern';
 
     public function getColor(): array
     {
@@ -27,6 +28,7 @@ enum EmploymentTypeEnum: string implements HasColor, HasIcon, HasLabel
             self::Contractor => Color::Blue,
             self::Temporary => Color::Amber,
             self::Freelancer => Color::Violet,
+            self::Intern => Color::Lime,
         };
     }
 
@@ -37,6 +39,7 @@ enum EmploymentTypeEnum: string implements HasColor, HasIcon, HasLabel
             self::Contractor => Heroicon::DocumentText,
             self::Temporary => Heroicon::Calendar,
             self::Freelancer => Heroicon::Sparkles,
+            self::Intern => Heroicon::AcademicCap,
         };
     }
 

@@ -58,7 +58,7 @@ it('backfills legacy employment_type values into the two axes', function (string
 })->with([
     'full_time_employee' => ['full_time_employee', null, 'full_time'],
     'part_time' => ['part_time', null, 'part_time'],
-    'intern' => ['intern', null, null],
+    'intern' => ['intern', 'intern', null],
     'clt' => ['clt', 'clt', null],
     'contractor' => ['contractor', 'contractor', null],
     'temporary' => ['temporary', 'temporary', null],

@@ -17,6 +17,7 @@ return [
         'contractor' => ['label' => 'Contrato/PJ'],
         'temporary' => ['label' => 'Temporário'],
         'freelancer' => ['label' => 'Freelancer/Autônomo'],
+        'intern' => ['label' => 'Estágio'],
     ],
     'experience_level' => [
         'intern' => [
