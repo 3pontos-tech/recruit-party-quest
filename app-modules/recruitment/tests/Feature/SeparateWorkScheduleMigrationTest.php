@@ -42,6 +42,13 @@ function insertLegacyRequisition(string $legacyEmploymentType): string
 
 it('has the nullable work_schedule column after migration', function (): void {
     expect(Schema::hasColumn('recruitment_job_requisitions', 'work_schedule'))->toBeTrue();
+
+    $id = insertLegacyRequisition('clt');
+    DB::table('recruitment_job_requisitions')
+        ->where('id', $id)
+        ->update(['work_schedule' => null]);
+
+    expect(DB::table('recruitment_job_requisitions')->where('id', $id)->value('work_schedule'))->toBeNull();
 });
 
 it('backfills legacy employment_type values into the two axes', function (string $legacy, ?string $expectedType, ?string $expectedSchedule): void {
