@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 
 it('has exactly the four schedule cases', function (): void {
@@ -16,8 +18,8 @@ it('resolves label, color and icon for every case', function (WorkScheduleEnum $
 })->with(WorkScheduleEnum::cases());
 
 it('does not alter WorkArrangement or ExperienceLevel enums', function (): void {
-    expect(array_map(fn ($c) => $c->value, He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum::cases()))
+    expect(array_map(fn (WorkArrangementEnum $c) => $c->value, WorkArrangementEnum::cases()))
         ->toBe(['remote', 'hybrid', 'on_site'])
-        ->and(He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum::tryFrom('trainee'))
+        ->and(ExperienceLevelEnum::tryFrom('trainee'))
         ->not->toBeNull();
 });

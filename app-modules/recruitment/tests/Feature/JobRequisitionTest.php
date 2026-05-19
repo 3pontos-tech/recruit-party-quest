@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use He4rt\Recruitment\Requisitions\Actions\StoreJobRequisitionAction;
+use He4rt\Recruitment\Requisitions\DTOs\JobRequisitionDTO;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
@@ -246,27 +248,27 @@ it('persists work_schedule and null employment_type via StoreJobRequisitionActio
     $recruiter = Recruiter::factory()->create();
     $user = User::factory()->create();
 
-    $dto = He4rt\Recruitment\Requisitions\DTOs\JobRequisitionDTO::make([
+    $dto = JobRequisitionDTO::make([
         'title' => 'Dev Backend', 'department_id' => $dept->id, 'team_id' => $team->id,
         'recruiter_id' => $recruiter->id, 'description' => 'desc',
         'experience_level' => ExperienceLevelEnum::Senior,
         'employment_type' => null,
-        'work_schedule' => He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum::PartTime,
+        'work_schedule' => WorkScheduleEnum::PartTime,
         'work_arrangement' => WorkArrangementEnum::Remote,
         'priority' => RequisitionPriorityEnum::Medium,
         'status' => RequisitionStatusEnum::Draft,
         'summary' => 'sum', 'created_by' => $user->id, 'items' => [],
     ]);
 
-    $req = resolve(He4rt\Recruitment\Requisitions\Actions\StoreJobRequisitionAction::class)->execute($dto);
+    $req = resolve(StoreJobRequisitionAction::class)->execute($dto);
 
-    expect($req->fresh()->work_schedule)->toBe(He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum::PartTime)
+    expect($req->fresh()->work_schedule)->toBe(WorkScheduleEnum::PartTime)
         ->and($req->fresh()->employment_type)->toBeNull();
 });
 
 it('factory produces valid employment_type and work_schedule', function (): void {
     JobRequisition::factory()->count(20)->create()->each(function ($r): void {
         expect($r->employment_type === null || $r->employment_type instanceof EmploymentTypeEnum)->toBeTrue()
-            ->and($r->work_schedule === null || $r->work_schedule instanceof He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum)->toBeTrue();
+            ->and($r->work_schedule === null || $r->work_schedule instanceof WorkScheduleEnum)->toBeTrue();
     });
 });
