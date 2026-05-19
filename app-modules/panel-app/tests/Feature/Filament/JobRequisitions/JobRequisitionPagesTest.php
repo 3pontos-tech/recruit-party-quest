@@ -7,6 +7,7 @@ use He4rt\App\Filament\Resources\JobRequisitions\Pages\ViewJobRequisition;
 use He4rt\Applications\Actions\ApplyToJobRequisitionAction;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
+use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
@@ -152,13 +153,13 @@ describe('ViewJobRequisition Page', function (): void {
             ->create([
                 'is_confidential' => false,
                 'employment_type' => null,
-                'work_schedule' => He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum::FullTime,
+                'work_schedule' => WorkScheduleEnum::FullTime,
             ]);
 
         $posting = JobPosting::factory()->for($requisition, 'jobRequisition')->create();
 
         livewire(ViewJobRequisition::class, ['record' => $posting->slug])
             ->assertOk()
-            ->assertSee(He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum::FullTime->getLabel());
+            ->assertSee(WorkScheduleEnum::FullTime->getLabel());
     });
 });
