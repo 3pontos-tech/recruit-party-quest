@@ -133,10 +133,12 @@ class JobRequisitionForm
                     Select::make('employment_type')
                         ->label(__('recruitment::filament.requisition.fields.employment_type'))
                         ->options(EmploymentTypeEnum::class)
+                        ->required(fn (string $operation): bool => $operation === 'create')
                         ->placeholder(__('recruitment::filament.requisition.fields.not_specified')),
                     Select::make('work_schedule')
                         ->label(__('recruitment::filament.requisition.fields.work_schedule'))
                         ->options(WorkScheduleEnum::class)
+                        ->required(fn (string $operation): bool => $operation === 'create')
                         ->placeholder(__('recruitment::filament.requisition.fields.not_specified')),
                     Select::make('experience_level')
                         ->label(__('recruitment::filament.requisition.fields.experience_level'))

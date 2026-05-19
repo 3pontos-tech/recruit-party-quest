@@ -186,7 +186,7 @@ class GenerateJobRequisitionAction extends Action
                                 ->icon(Heroicon::DocumentText)
                                 ->iconColor('green')
                                 ->native(false)
-                                ->placeholder(__('recruitment::filament.requisition.fields.not_specified')),
+                                ->required(),
 
                             He4rtSelect::make('work_schedule')
                                 ->label(__('recruitment::filament.requisition.fields.work_schedule'))
@@ -195,7 +195,7 @@ class GenerateJobRequisitionAction extends Action
                                 ->icon(Heroicon::Clock)
                                 ->iconColor('green')
                                 ->native(false)
-                                ->placeholder(__('recruitment::filament.requisition.fields.not_specified')),
+                                ->required(),
                         ]),
 
                     Grid::make()

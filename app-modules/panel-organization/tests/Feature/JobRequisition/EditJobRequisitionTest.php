@@ -70,6 +70,24 @@ it('updates the job requisition priority', function (): void {
     expect($this->jobRequisition->refresh()->priority)->toBe(RequisitionPriorityEnum::Urgent);
 });
 
+it('allows saving a legacy requisition with null employment_type and work_schedule on edit', function (): void {
+    $this->recruiter->user->givePermissionTo('update_job_requisitions');
+
+    $legacy = JobRequisition::factory()
+        ->for($this->team)
+        ->for($this->department)
+        ->for($this->recruiter, 'recruiter')
+        ->for($this->recruiter->user, 'createdBy')
+        ->create(['employment_type' => null, 'work_schedule' => null]);
+
+    JobPosting::factory()->for($legacy, 'jobRequisition')->create();
+
+    Livewire::test(EditJobRequisition::class, ['record' => $legacy->getKey()])
+        ->fillForm(['priority' => RequisitionPriorityEnum::Urgent])
+        ->call('save')
+        ->assertHasNoFormErrors();
+});
+
 it('can soft delete the job requisition via the delete action', function (): void {
     $this->recruiter->user->givePermissionTo('update_job_requisitions');
     $this->recruiter->user->givePermissionTo('delete_job_requisitions');

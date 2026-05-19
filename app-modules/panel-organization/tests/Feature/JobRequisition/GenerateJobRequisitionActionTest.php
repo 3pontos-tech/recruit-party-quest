@@ -8,6 +8,7 @@ use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use He4rt\Recruitment\Requisitions\Jobs\GeneratePostJob;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Teams\Department;
@@ -33,6 +34,7 @@ beforeEach(function (): void {
         'recruiter_id' => $this->recruiter->getKey(),
         'work_arrangement' => WorkArrangementEnum::Remote,
         'employment_type' => EmploymentTypeEnum::Clt,
+        'work_schedule' => WorkScheduleEnum::FullTime,
         'experience_level' => ExperienceLevelEnum::Senior,
         'priority' => RequisitionPriorityEnum::Medium,
     ];
@@ -69,4 +71,19 @@ it('shows an error notification and does not dispatch the job when the queue con
         ->assertNotified();
 
     Bus::assertNotDispatched(GeneratePostJob::class);
+});
+
+it('requires employment_type and work_schedule in the generate action', function (): void {
+    Queue::fake();
+
+    $data = collect($this->actionData)->except(['employment_type', 'work_schedule'])->all();
+
+    Livewire::test(CreateJobRequisition::class)
+        ->callAction('generate-job-requisition-action', data: $data)
+        ->assertHasActionErrors([
+            'employment_type' => 'required',
+            'work_schedule' => 'required',
+        ]);
+
+    Queue::assertNotPushed(GeneratePostJob::class);
 });

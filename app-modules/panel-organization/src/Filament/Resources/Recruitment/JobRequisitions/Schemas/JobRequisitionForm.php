@@ -158,6 +158,7 @@ class JobRequisitionForm
                                             ->icon(Heroicon::DocumentText)
                                             ->native(false)
                                             ->iconColor('green')
+                                            ->required(fn (string $operation): bool => $operation === 'create')
                                             ->placeholder(__('recruitment::filament.requisition.fields.not_specified')),
                                         He4rtSelect::make('work_schedule')
                                             ->label(__('recruitment::filament.requisition.fields.work_schedule'))
@@ -166,6 +167,7 @@ class JobRequisitionForm
                                             ->icon(Heroicon::Clock)
                                             ->native(false)
                                             ->iconColor('green')
+                                            ->required(fn (string $operation): bool => $operation === 'create')
                                             ->placeholder(__('recruitment::filament.requisition.fields.not_specified')),
                                         He4rtSelect::make('experience_level')
                                             ->label(__('recruitment::filament.requisition.fields.experience_level'))
