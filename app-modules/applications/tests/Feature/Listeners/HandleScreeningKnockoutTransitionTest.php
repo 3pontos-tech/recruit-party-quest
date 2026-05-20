@@ -3,10 +3,11 @@
 declare(strict_types=1);
 
 use He4rt\Applications\Enums\ApplicationStatusEnum;
-use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
+use He4rt\Applications\Jobs\RejectScreeningKnockoutJob;
 use He4rt\Applications\Models\Application;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Screening\Events\ScreeningEvaluated;
+use Illuminate\Support\Facades\Queue;
 
 // JobRequisitionObserver::created() já cria 8 stages ordenados (display_order 1..8).
 // Não fabricar stages manualmente — usar os do observer evita display_order colidente.
@@ -31,17 +32,23 @@ it('does nothing when the flag is off', function (): void {
     expect($application->fresh()->status)->toBe(ApplicationStatusEnum::New);
 });
 
-it('rejects the candidate when the flag is on and a knockout failed', function (): void {
+it('queues a delayed rejection job when the flag is on and a knockout failed', function (): void {
+    Queue::fake();
+
     $req = JobRequisition::factory()->create(['auto_screening_transition' => true]);
     $application = newApplicationFor($req);
 
     event(new ScreeningEvaluated($application, anyKnockoutFailed: true, hadKnockoutCriteria: true));
 
-    $application->refresh();
+    expect($application->fresh()->status)->toBe(ApplicationStatusEnum::New);
 
-    expect($application->status)->toBe(ApplicationStatusEnum::Rejected)
-        ->and($application->rejection_reason_category)->toBe(RejectionReasonCategoryEnum::ScreeningKnockout)
-        ->and($application->rejected_by)->toBeNull();
+    Queue::assertPushed(
+        RejectScreeningKnockoutJob::class,
+        fn (RejectScreeningKnockoutJob $job): bool => $job->application->is($application)
+            && $job->delay instanceof DateTimeInterface
+            && $job->delay->getTimestamp() >= now()->addDay()->subMinute()->getTimestamp()
+            && $job->delay->getTimestamp() <= now()->addDay()->addMinute()->getTimestamp()
+    );
 });
 
 it('advances the candidate when the flag is on, has knockout questions and none failed', function (): void {
