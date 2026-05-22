@@ -11,7 +11,7 @@ use He4rt\Candidates\Models\Candidate;
 use He4rt\Candidates\Models\Education;
 use He4rt\Candidates\Models\Skill;
 use He4rt\Candidates\Models\WorkExperience;
-use He4rt\Feedback\Models\ApplicationComment;
+use He4rt\Feedback\Models\Comment;
 use He4rt\Feedback\Models\Evaluation;
 use He4rt\Location\Address;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
@@ -344,13 +344,11 @@ final class DevelopmentSeeder extends Seeder
 
     private function addApplicationFeedback(Application $application, Collection $stages, int $currentStageIndex): void
     {
-        ApplicationComment::factory()
+        Comment::factory()
             ->count(fake()->numberBetween(1, 2))
-            ->create([
-                'application_id' => $application->getKey(),
-                'team_id' => $application->team_id,
-                'author_id' => $this->adminUser->getKey(),
-            ]);
+            ->forApplication($application)
+            ->authoredBy($this->adminUser)
+            ->create();
 
         foreach ($stages->values()->slice(1, $currentStageIndex) as $stage) {
             Evaluation::factory()

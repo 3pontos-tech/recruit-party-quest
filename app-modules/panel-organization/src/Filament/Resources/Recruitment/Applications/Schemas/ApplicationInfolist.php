@@ -13,9 +13,13 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\CommentApplicationAction;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\MoveStageAction;
+use He4rt\Applications\Models\Application;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\RejectApplicationAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
 use He4rt\Permissions\Roles;
+use He4rt\Users\User;
+use Illuminate\Contracts\Database\Query\Builder;
+use Kirschbaum\Commentions\Filament\Infolists\Components\CommentsEntry;
 
 class ApplicationInfolist
 {
@@ -63,10 +67,18 @@ class ApplicationInfolist
                             ]),
 
                         Tab::make('Comments')
+                            ->id('comments')
                             ->label(__('panel-organization::filament.tabs.comments'))
                             ->schema([
-                                ViewEntry::make('comments')
-                                    ->view('panel-organization::components.applications.tabs.comments'),
+                                CommentsEntry::make('comments')
+                                    ->mentionables(fn (Application $record) => once(
+                                        fn () => User::query()
+                                            ->whereHas('teams', fn (Builder $q) => $q->where('teams.id', filament()->getTenant()->getKey()))
+                                            ->where('id', '!=', auth()->id())
+                                            ->orderBy('name')
+                                            ->get()
+                                    ))
+                                    ->columnSpanFull(),
                             ]),
 
                         Tab::make('Feedbacks')

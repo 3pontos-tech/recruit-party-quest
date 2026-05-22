@@ -19,6 +19,8 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Actions\DuplicateJobRequisitionAction;
+use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Actions\DuplicateJobRequisitionBulkAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
 use He4rt\Permissions\Roles;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
@@ -112,12 +114,15 @@ class JobRequisitionsTable
                     Action::make('kanban')
                         ->label(__('panel-organization::filament.tables.kanban'))
                         ->icon(Heroicon::OutlinedViewColumns)
-                        ->url(fn (JobRequisition $record): string => JobRequisitionResource::getUrl('kanban', ['record' => $record->id])),
+                        ->url(fn (JobRequisition $record): string => JobRequisitionResource::getUrl('kanban',
+                            ['record' => $record->id])),
+                    DuplicateJobRequisitionAction::make(),
                 ]),
             ])
             ->defaultSort('published_at', 'desc')
             ->toolbarActions([
                 BulkActionGroup::make([
+                    DuplicateJobRequisitionBulkAction::make(),
                     DeleteBulkAction::make(),
                     ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
