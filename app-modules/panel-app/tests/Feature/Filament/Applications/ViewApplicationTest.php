@@ -125,6 +125,39 @@ it('does not show details section when rejection details are absent', function (
         ->assertDontSee('Feedback');
 });
 
+it('shows neutral message and hides reason for screening knockout rejection', function (): void {
+    $application = Application::factory()
+        ->for($this->candidate, 'candidate')
+        ->create([
+            'status' => ApplicationStatusEnum::Rejected,
+            'rejection_reason_category' => RejectionReasonCategoryEnum::ScreeningKnockout,
+            'rejection_reason_details' => 'Automatically rejected: did not meet the screening criteria.',
+        ]);
+
+    livewire(ViewApplication::class, ['record' => $application->getKey()])
+        ->assertOk()
+        ->assertSee('your application will not proceed to the next stages')
+        ->assertDontSee('Rejection Reason')
+        ->assertDontSee(RejectionReasonCategoryEnum::ScreeningKnockout->getLabel())
+        ->assertDontSee('Automatically rejected: did not meet the screening criteria.');
+});
+
+it('does not show neutral screening message for non-knockout rejection', function (): void {
+    $application = Application::factory()
+        ->for($this->candidate, 'candidate')
+        ->create([
+            'status' => ApplicationStatusEnum::Rejected,
+            'rejection_reason_category' => RejectionReasonCategoryEnum::Qualifications,
+            'rejection_reason_details' => 'Did not meet the technical requirements.',
+        ]);
+
+    livewire(ViewApplication::class, ['record' => $application->getKey()])
+        ->assertOk()
+        ->assertSee('Rejection Reason')
+        ->assertSee('Did not meet the technical requirements.')
+        ->assertDontSee('your application will not proceed to the next stages');
+});
+
 it('allows candidate to view their own application when job is not published', function (): void {
     $application = Application::factory()
         ->for($this->candidate, 'candidate')

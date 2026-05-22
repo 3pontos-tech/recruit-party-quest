@@ -2,6 +2,7 @@
     use App\Enums\FilamentPanel;
     use Filament\Support\Icons\Heroicon;
     use He4rt\Applications\Enums\ApplicationStatusEnum;
+    use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
     use He4rt\Applications\Models\Application;
     use He4rt\Recruitment\Stages\Models\Stage;
     use Illuminate\Support\Collection;
@@ -33,6 +34,8 @@
     }
 
     $isRejected = ! $organizationPanel && $record->status === ApplicationStatusEnum::Rejected;
+
+    $isScreeningKnockout = $record->rejection_reason_category === RejectionReasonCategoryEnum::ScreeningKnockout;
 
     $currentStageIndex = 0;
 
@@ -78,24 +81,33 @@
         @if ($isRejected)
             {{-- Rejection Card (candidate panel only) --}}
             <div class="space-y-3">
-                @if ($record->rejection_reason_category)
-                    <div class="space-y-1">
-                        <span class="text-text-medium text-xs">
-                            {{ __('panel-organization::view.pipeline.rejected_reason') }}
-                        </span>
-                        <p class="text-text-high text-sm font-medium">
-                            {{ $record->rejection_reason_category->getLabel() }}
-                        </p>
-                    </div>
-                @endif
+                @if ($isScreeningKnockout)
+                    {{-- Screening knockout: show a neutral message and hide the internal reason/details --}}
+                    <p class="text-text-medium text-sm leading-relaxed">
+                        {{ __('panel-organization::view.pipeline.rejected_screening_message') }}
+                    </p>
+                @else
+                    @if ($record->rejection_reason_category)
+                        <div class="space-y-1">
+                            <span class="text-text-medium text-xs">
+                                {{ __('panel-organization::view.pipeline.rejected_reason') }}
+                            </span>
+                            <p class="text-text-high text-sm font-medium">
+                                {{ $record->rejection_reason_category->getLabel() }}
+                            </p>
+                        </div>
+                    @endif
 
-                @if ($record->rejection_reason_details)
-                    <div class="space-y-1">
-                        <span class="text-text-medium text-xs">
-                            {{ __('panel-organization::view.pipeline.rejected_details') }}
-                        </span>
-                        <p class="text-text-medium text-sm leading-relaxed">{{ $record->rejection_reason_details }}</p>
-                    </div>
+                    @if ($record->rejection_reason_details)
+                        <div class="space-y-1">
+                            <span class="text-text-medium text-xs">
+                                {{ __('panel-organization::view.pipeline.rejected_details') }}
+                            </span>
+                            <p class="text-text-medium text-sm leading-relaxed">
+                                {{ $record->rejection_reason_details }}
+                            </p>
+                        </div>
+                    @endif
                 @endif
             </div>
         @else

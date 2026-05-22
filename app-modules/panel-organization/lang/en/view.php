@@ -61,6 +61,7 @@ return [
         'rejected_title' => 'Application Not Progressed',
         'rejected_reason' => 'Rejection Reason',
         'rejected_details' => 'Feedback',
+        'rejected_screening_message' => 'Please note that, after evaluation, your application will not proceed to the next stages of the selection process.',
         'rejected_on' => 'Rejected on :date',
     ],
     'tabs' => [
