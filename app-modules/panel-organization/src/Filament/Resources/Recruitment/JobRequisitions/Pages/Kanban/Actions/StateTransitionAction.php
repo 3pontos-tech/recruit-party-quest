@@ -7,6 +7,7 @@ namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Page
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Enums\Width;
@@ -54,7 +55,18 @@ class StateTransitionAction extends Action
         $transitionData = TransitionData::fromArray($data, auth()->id());
         $record->current_step->handle($transitionData);
 
+        if ($data['with_evaluation'] ?? false) {
+            $this->recordEvaluation($record, $data, $evaluatedStageId);
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    private function recordEvaluation(Application $record, array $data, ?string $evaluatedStageId): void
+    {
         $criteria = $data['criteria_scores'];
+
         resolve(StoreEvaluationAction::class)->execute(new EvaluationDTO(
             teamId: $record->team_id,
             applicationId: $record->getKey(),
@@ -109,7 +121,14 @@ class StateTransitionAction extends Action
             Textarea::make('notes')
                 ->label(__('applications::filament.fields.transition_notes'))
                 ->rows(2),
-            EvaluationForm::section(),
+
+            Toggle::make('with_evaluation')
+                ->label(__('applications::filament.actions.change_status.with_evaluation_label'))
+                ->default(false)
+                ->live(),
+
+            EvaluationForm::section()
+                ->visible(fn (Get $get): bool => (bool) $get('with_evaluation')),
         ];
 
     }

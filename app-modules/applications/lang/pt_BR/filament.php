@@ -130,6 +130,7 @@ return [
             'modal_heading' => 'Alterar status da candidatura',
             'modal_submit' => 'Confirmar',
             'no_transitions_tooltip' => 'Nenhuma transição de status disponível',
+            'with_evaluation_label' => 'Registrar uma avaliação nesta transição',
             'notifications' => [
                 'updated' => [
                     'title' => 'Status atualizado',

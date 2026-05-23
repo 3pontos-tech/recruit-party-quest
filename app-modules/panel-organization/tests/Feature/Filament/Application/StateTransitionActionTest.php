@@ -52,7 +52,7 @@ it('shows the change-status action for admins', function (): void {
         ->assertActionVisible(TestAction::make('state-transition-action')->schemaComponent('quick-actions'));
 });
 
-it('moves the candidate stage and records the mandatory evaluation', function (): void {
+it('records the evaluation when the toggle is on', function (): void {
     $targetStage = Stage::factory()->create([
         'job_requisition_id' => $this->application->requisition_id,
         'display_order' => 999,
@@ -69,6 +69,7 @@ it('moves the candidate stage and records the mandatory evaluation', function ()
                 'to_status' => ApplicationStatusEnum::InProgress->value,
                 'to_stage_id' => $targetStage->id,
                 'notes' => 'moved forward',
+                'with_evaluation' => true,
                 'overall_rating' => EvaluationRatingEnum::cases()[0]->value,
                 'criteria_scores' => [
                     'technical_skills' => 5,
@@ -114,17 +115,6 @@ it('moves a New application to InReview auto-advancing the stage', function (): 
             data: [
                 'to_status' => ApplicationStatusEnum::InReview->value,
                 'notes' => 'starting review',
-                'overall_rating' => EvaluationRatingEnum::cases()[0]->value,
-                'criteria_scores' => [
-                    'technical_skills' => 4,
-                    'communication' => 4,
-                    'problem_solving' => 4,
-                    'culture_fit' => 4,
-                ],
-                'comments' => 'ok',
-                'recommendation' => 'hire',
-                'strengths' => 's',
-                'concerns' => 'c',
             ],
         )
         ->assertHasNoActionErrors();
@@ -133,7 +123,7 @@ it('moves a New application to InReview auto-advancing the stage', function (): 
         ->and($application->fresh()->current_stage_id)->toBe($stage->id);
 });
 
-it('requires every criterion score because the evaluation is mandatory', function (): void {
+it('does not create an evaluation when the toggle is off', function (): void {
     $targetStage = Stage::factory()->create([
         'job_requisition_id' => $this->application->requisition_id,
         'display_order' => 999,
@@ -149,6 +139,33 @@ it('requires every criterion score because the evaluation is mandatory', functio
             data: [
                 'to_status' => ApplicationStatusEnum::InProgress->value,
                 'to_stage_id' => $targetStage->id,
+                'with_evaluation' => false,
+            ],
+        )
+        ->assertHasNoActionErrors();
+
+    expect($this->application->fresh()->current_stage_id)->toBe($targetStage->id)
+        ->and(Evaluation::query()
+            ->where('application_id', $this->application->id)->count())->toBe(0);
+});
+
+it('requires every criterion score when the evaluation toggle is on', function (): void {
+    $targetStage = Stage::factory()->create([
+        'job_requisition_id' => $this->application->requisition_id,
+        'display_order' => 999,
+        'active' => true,
+    ]);
+
+    livewire(ViewApplication::class, [
+        'tenant' => $this->team,
+        'record' => $this->application->getKey(),
+    ])
+        ->callAction(
+            TestAction::make('state-transition-action')->schemaComponent('quick-actions'),
+            data: [
+                'to_status' => ApplicationStatusEnum::InProgress->value,
+                'to_stage_id' => $targetStage->id,
+                'with_evaluation' => true,
                 'overall_rating' => EvaluationRatingEnum::cases()[0]->value,
                 'criteria_scores' => [
                     'technical_skills' => 4,
