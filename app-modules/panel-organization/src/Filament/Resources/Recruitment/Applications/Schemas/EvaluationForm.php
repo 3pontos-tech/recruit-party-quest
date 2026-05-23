@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace He4rt\Organization\Filament\Resources\Recruitment\Applications\Schemas;
 
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\ToggleButtons;
@@ -12,7 +11,6 @@ use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Support\Icons\Heroicon;
-use He4rt\Applications\Models\Application;
 use He4rt\Feedback\Enums\EvaluationRatingEnum;
 
 final class EvaluationForm
@@ -34,12 +32,6 @@ final class EvaluationForm
         $scoreOptions = [1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5'];
 
         return [
-            Hidden::make('team_id')
-                ->default(filament()->getTenant()->getKey()),
-            Hidden::make('application_id')
-                ->default(fn (Application $record) => $record->getKey()),
-            Hidden::make('evaluator_id')
-                ->default(auth()->user()->getKey()),
             Select::make('overall_rating')
                 ->options(EvaluationRatingEnum::class)
                 ->enum(EvaluationRatingEnum::class)

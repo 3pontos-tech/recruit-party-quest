@@ -69,9 +69,6 @@ it('moves the candidate stage and records the mandatory evaluation', function ()
                 'to_status' => ApplicationStatusEnum::InProgress->value,
                 'to_stage_id' => $targetStage->id,
                 'notes' => 'moved forward',
-                'team_id' => $this->team->id,
-                'application_id' => $this->application->id,
-                'evaluator_id' => $this->admin->id,
                 'overall_rating' => EvaluationRatingEnum::cases()[0]->value,
                 'criteria_scores' => [
                     'technical_skills' => 5,
@@ -117,9 +114,6 @@ it('moves a New application to InReview auto-advancing the stage', function (): 
             data: [
                 'to_status' => ApplicationStatusEnum::InReview->value,
                 'notes' => 'starting review',
-                'team_id' => $this->team->id,
-                'application_id' => $application->id,
-                'evaluator_id' => $this->admin->id,
                 'overall_rating' => EvaluationRatingEnum::cases()[0]->value,
                 'criteria_scores' => [
                     'technical_skills' => 4,

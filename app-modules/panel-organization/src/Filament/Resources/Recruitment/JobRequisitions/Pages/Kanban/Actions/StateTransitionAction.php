@@ -49,23 +49,17 @@ class StateTransitionAction extends Action
      */
     private function processAction(Application $record, array $data): void
     {
-        // Etapa em que o candidato está sendo avaliado (a que ele deixa).
-        // Capturada antes da transição; se não houver (ex.: candidatura New),
-        // cai na etapa resultante após a transição.
         $evaluatedStageId = $record->current_stage_id;
 
-        // Transição primeiro: garante que a avaliação só é gravada se a
-        // movimentação for válida (sem avaliação órfã) e que há uma etapa
-        // válida mesmo quando o candidato ainda não estava em nenhuma.
         $transitionData = TransitionData::fromArray($data, auth()->id());
         $record->current_step->handle($transitionData);
 
         $criteria = $data['criteria_scores'];
         resolve(StoreEvaluationAction::class)->execute(new EvaluationDTO(
-            teamId: $data['team_id'],
+            teamId: $record->team_id,
             applicationId: $record->getKey(),
             stageId: $evaluatedStageId ?? $record->current_stage_id,
-            evaluatorId: $data['evaluator_id'],
+            evaluatorId: auth()->user()->getKey(),
             overallRating: $data['overall_rating'],
             recommendation: $data['recommendation'],
             strengths: $data['strengths'],
