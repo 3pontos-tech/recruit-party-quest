@@ -9,6 +9,7 @@ use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ViewApp
 use He4rt\Permissions\Roles;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
+use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Users\User;
 
@@ -43,7 +44,10 @@ test('only authorized user can see the application', function (): void {
 });
 
 test('should see the complete stage pipeline independent if its hidden', function (): void {
-    $stages = Stage::factory(5)->for($this->application->requisition, 'requisition')->create();
+    $stages = Stage::factory(5)
+        ->for($this->application->requisition, 'requisition')
+        ->state(['stage_type' => StageTypeEnum::Screening])
+        ->create();
 
     livewire(ViewApplication::class, ['record' => $this->application->getKey()])
         ->assertOk()

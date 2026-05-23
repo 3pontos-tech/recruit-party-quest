@@ -130,14 +130,28 @@ class ApplicationFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (Application $application): void {
-            if (! $application->requisition_id) {
-                return;
-            }
-
-            if (! $application->current_stage_id) {
-                $stage = Stage::factory()->create(['job_requisition_id' => $application->requisition_id]);
-                $application->update(['current_stage_id' => $stage->id]);
+            if ($application->requisition_id && ! $application->current_stage_id) {
+                $application->update(['current_stage_id' => $this->resolveInitialStageId($application)]);
             }
         });
+    }
+
+    /**
+     * Resolve the requisition's first pipeline stage (by display order), seeding one
+     * only when the requisition has none.
+     *
+     * Queries the relationship instead of using the `first_stage` accessor on purpose:
+     * the accessor caches the requisition's loaded stages, and later state callbacks
+     * (e.g. withNoStages/withIsolatedStages) mutate stages afterwards, which would leak
+     * stale data into the transitions that read them.
+     */
+    private function resolveInitialStageId(Application $application): string
+    {
+        $stage = $application->requisition->stages()->orderBy('display_order')->first()
+            ?? Stage::factory()->create([
+                'job_requisition_id' => $application->requisition_id, 'team_id' => $application->team_id,
+            ]);
+
+        return $stage->getKey();
     }
 }

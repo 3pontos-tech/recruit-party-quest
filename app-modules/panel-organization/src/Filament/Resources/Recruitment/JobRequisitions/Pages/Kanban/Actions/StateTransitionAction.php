@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions;
 
 use Filament\Actions\Action;
-use Filament\Forms\Components\Field;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Support\Enums\Width;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Applications\Services\Transitions\TransitionData;
@@ -29,6 +31,7 @@ class StateTransitionAction extends Action
             ->label(__('applications::filament.actions.change_status.label'))
             ->icon('heroicon-o-play')
             ->extraAttributes(fn () => ['class' => 'w-full'])
+            ->modalWidth(Width::FourExtraLarge)
             ->visible(fn (Application $record): bool => ! $record->is_last_stage)
             ->disabled(fn (Application $record): bool => ! $record->current_step->canChange() || $record->is_last_stage)
             ->tooltip(fn (Application $record): ?string => $record->current_step->canChange() ? null : __('applications::filament.actions.change_status.no_transitions_tooltip'))
@@ -47,12 +50,28 @@ class StateTransitionAction extends Action
      */
     private function processAction(Application $record, array $data): void
     {
+        $evaluatedStageId = $record->current_stage_id;
+
+        $transitionData = TransitionData::fromArray($data, auth()->id());
+        $record->current_step->handle($transitionData);
+
+        if ($data['with_evaluation'] ?? false) {
+            $this->recordEvaluation($record, $data, $evaluatedStageId);
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    private function recordEvaluation(Application $record, array $data, ?string $evaluatedStageId): void
+    {
         $criteria = $data['criteria_scores'];
+
         resolve(StoreEvaluationAction::class)->execute(new EvaluationDTO(
-            teamId: $data['team_id'],
+            teamId: $record->team_id,
             applicationId: $record->getKey(),
-            stageId: $record->current_stage_id,
-            evaluatorId: $data['evaluator_id'],
+            stageId: $evaluatedStageId ?? $record->current_stage_id,
+            evaluatorId: auth()->user()->getKey(),
             overallRating: $data['overall_rating'],
             recommendation: $data['recommendation'],
             strengths: $data['strengths'],
@@ -65,11 +84,9 @@ class StateTransitionAction extends Action
                 'culture_fit' => $criteria['culture_fit'],
             ]),
         ));
-        $transitionData = TransitionData::fromArray($data, auth()->id());
-        $record->current_step->handle($transitionData);
     }
 
-    /** @return array<int, Field> */
+    /** @return array<int, Component> */
     private function buildSchema(Application $record): array
     {
         $choices = $record->current_step->choices();
@@ -84,14 +101,16 @@ class StateTransitionAction extends Action
 
         return [
             Select::make('to_status')
-                ->label(__('applications::filament.fields.status'))
+                ->label(__('applications::filament.fields.target_status'))
+                ->helperText(__('applications::filament.fields.target_status_hint'))
                 ->options($choices)
                 ->enum(ApplicationStatusEnum::class)
                 ->required()
                 ->live(),
 
             Select::make('to_stage_id')
-                ->label(__('applications::filament.fields.current_stage'))
+                ->label(__('applications::filament.fields.target_stage'))
+                ->helperText(__('applications::filament.fields.target_stage_hint'))
                 ->options(fn () => ($record->requisition?->stages ?? collect()) // @phpstan-ignore nullsafe.neverNull
                     ->where('active', true)
                     ->where('display_order', '>', $record->currentStage?->display_order ?? 0) // @phpstan-ignore nullsafe.neverNull
@@ -102,7 +121,14 @@ class StateTransitionAction extends Action
             Textarea::make('notes')
                 ->label(__('applications::filament.fields.transition_notes'))
                 ->rows(2),
-            ...EvaluationForm::make(),
+
+            Toggle::make('with_evaluation')
+                ->label(__('applications::filament.actions.change_status.with_evaluation_label'))
+                ->default(false)
+                ->live(),
+
+            EvaluationForm::section()
+                ->visible(fn (Get $get): bool => (bool) $get('with_evaluation')),
         ];
 
     }

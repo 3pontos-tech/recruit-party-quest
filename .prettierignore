@@ -7,3 +7,7 @@ public/
 package-lock.json
 composer.lock
 storage/
+
+# Markdown mail templates: indentation is significant (4 spaces => code block),
+# and prettier-plugin-blade re-indents content inside @component(...).
+**/resources/views/emails/

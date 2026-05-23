@@ -3,11 +3,10 @@
 declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
+use Filament\Actions\Testing\TestAction;
 use He4rt\Applications\Models\Application;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\ApplicationResource;
-use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\EditApplication;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ListApplications;
-use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ViewApplication;
 use He4rt\Permissions\Roles;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Teams\Team;
@@ -32,28 +31,12 @@ beforeEach(function (): void {
     filament()->setTenant($this->team);
 });
 
-it('owner cannot edit an application in the organization panel', function (): void {
-    expect(ApplicationResource::canEdit($this->application))->toBeFalse();
-
-    livewire(EditApplication::class, [
-        'tenant' => $this->team,
-        'record' => $this->application->getKey(),
-    ])->assertForbidden();
+it('does not expose an edit route for applications', function (): void {
+    expect(array_keys(ApplicationResource::getPages()))->not->toContain('edit');
 });
 
-it('owner does not see the edit button in the applications table', function (): void {
+it('does not show an edit button in the applications table', function (): void {
     livewire(ListApplications::class, ['tenant' => $this->team])
         ->assertOk()
-        ->assertTableActionHidden('edit', $this->application);
+        ->assertActionDoesNotExist(TestAction::make('edit')->table($this->application));
 });
-
-it('owner cannot see quick actions when viewing an application', function (): void {
-    livewire(ViewApplication::class, [
-        'tenant' => $this->team,
-        'record' => $this->application->getKey(),
-    ])
-        ->assertOk()
-        ->assertActionHidden('state-transition-action')
-        ->assertActionHidden('comment_application-action')
-        ->assertActionHidden('reject_application-action');
-})->skip();

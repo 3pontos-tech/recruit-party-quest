@@ -6,6 +6,7 @@ namespace He4rt\App\Livewire;
 
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
+use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Contracts\View\View;
@@ -44,7 +45,10 @@ class JobRecommendations extends Component
             ->where('status', RequisitionStatusEnum::Published->value)
             ->when($this->search, fn ($q) => $q->whereHas('post', fn (Builder $p) => $p->where('title', 'like', sprintf('%%%s%%', $this->search))))
             ->unless($this->jobTypes === [], fn ($q) => $q->whereIn('employment_type', $this->normalizedJobTypes()))
-            ->latest()
+            ->orderBy(
+                JobPosting::query()->select('title')
+                    ->whereColumn('job_requisition_id', 'recruitment_job_requisitions.id')
+            )
             ->paginate(12);
     }
 

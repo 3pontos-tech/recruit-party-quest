@@ -79,11 +79,39 @@ return [
             'success_body' => 'A IA gerou sua requisição e anúncio de vaga. Revise e edite conforme necessário antes de publicar.',
             'error_title' => 'Falha na Geração',
         ],
+        'duplicate_job_requisition' => [
+            'label' => 'Duplicar',
+            'modal_heading' => 'Duplicar Vaga',
+            'modal_description' => 'Será criado um novo rascunho com a mesma estrutura (anúncio, requisitos, etapas do pipeline e perguntas de triagem). Candidaturas, comentários e avaliações não serão copiados.',
+            'notification' => 'Vaga duplicada com sucesso',
+            'title_suffix' => '(Cópia)',
+            'bulk' => [
+                'label' => 'Duplicar selecionadas',
+                'modal_heading' => 'Duplicar vagas selecionadas',
+                'modal_description' => 'Será criado um novo rascunho para cada vaga selecionada, mantendo a mesma estrutura. Candidaturas, comentários e avaliações não serão copiados.',
+                'notification' => ':count vaga(s) duplicada(s) com sucesso',
+            ],
+        ],
     ],
 
     'notifications' => [
         'ok_title' => 'Pronto',
         'ok_body' => 'Ação concluída com sucesso.',
+        'mention' => [
+            'title' => ':author mencionou você',
+            'body' => 'Em um comentário sobre a candidatura de :candidate.',
+            'view_button' => 'Ver Candidatura',
+        ],
+    ],
+
+    'emails' => [
+        'mention' => [
+            'subject' => ':author mencionou você em um comentário',
+            'greeting' => 'Olá, :name',
+            'intro' => ':author mencionou você em um comentário sobre a candidatura de :candidate.',
+            'button' => 'Ver comentário na candidatura',
+            'footer' => 'Este comentário é interno e visível apenas para a equipe.',
+        ],
     ],
 
     'tables' => [
@@ -136,8 +164,10 @@ return [
 
     'forms' => [
         'overall_rating' => 'Avaliação Geral',
-        'scores' => 'Pontuações',
-        'criteria_key_placeholder' => 'Critério',
+        'evaluation_section' => [
+            'heading' => 'Avaliação do candidato',
+            'description' => 'Registre seu parecer desta etapa.',
+        ],
         'comments' => 'Comentários',
         'comments_placeholder' => 'Digite seus comentários...',
         'recommendation' => 'Recomendação',

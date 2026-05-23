@@ -24,6 +24,10 @@ return [
         'source' => 'Origem',
         'source_details' => 'Detalhes da Origem',
         'current_stage' => 'Etapa Atual',
+        'target_stage' => 'Etapa de Destino',
+        'target_stage_hint' => 'Etapa dentro da fase "Em andamento" (ex.: entrevista técnica). Aparece apenas quando aplicável.',
+        'target_status' => 'Status de Destino',
+        'target_status_hint' => 'A fase do candidato no processo seletivo (ex.: Em análise, Em andamento).',
         'cover_letter' => 'Carta de Apresentação',
         'evaluations_count' => 'Avaliações',
         'rejected_at' => 'Rejeitado em',
@@ -126,6 +130,7 @@ return [
             'modal_heading' => 'Alterar status da candidatura',
             'modal_submit' => 'Confirmar',
             'no_transitions_tooltip' => 'Nenhuma transição de status disponível',
+            'with_evaluation_label' => 'Registrar uma avaliação nesta transição',
             'notifications' => [
                 'updated' => [
                     'title' => 'Status atualizado',

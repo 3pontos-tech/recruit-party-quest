@@ -9,6 +9,7 @@ use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Teams\Team;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Support\Facades\Date;
 
 /** @extends Factory<Stage> */
@@ -43,5 +44,18 @@ class StageFactory extends Factory
             'job_requisition_id' => JobRequisition::factory(),
             'team_id' => Team::factory(),
         ];
+    }
+
+    /**
+     * Assign incremental display_order values (start, start + 1, ...) across the
+     * created stages, so a pipeline built with this factory is deterministically
+     * ordered instead of relying on the random default — which can produce ties and
+     * make any "order by display_order" assertion flaky.
+     */
+    public function ordered(int $start = 1): static
+    {
+        return $this->sequence(fn (Sequence $sequence): array => [
+            'display_order' => $start + $sequence->index,
+        ]);
     }
 }
