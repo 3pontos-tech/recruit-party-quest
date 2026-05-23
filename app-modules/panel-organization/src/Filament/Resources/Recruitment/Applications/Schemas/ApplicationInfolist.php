@@ -15,11 +15,13 @@ use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use He4rt\Applications\Models\Application;
-use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\CommentApplicationAction;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\RejectApplicationAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
 use He4rt\Permissions\Roles;
+use He4rt\Users\User;
+use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Contracts\View\View;
+use Kirschbaum\Commentions\Filament\Infolists\Components\CommentsEntry;
 
 class ApplicationInfolist
 {
@@ -67,10 +69,18 @@ class ApplicationInfolist
                             ]),
 
                         Tab::make('Comments')
+                            ->id('comments')
                             ->label(__('panel-organization::filament.tabs.comments'))
                             ->schema([
-                                ViewEntry::make('comments')
-                                    ->view('panel-organization::components.applications.tabs.comments'),
+                                CommentsEntry::make('comments')
+                                    ->mentionables(fn (Application $record) => once(
+                                        fn () => User::query()
+                                            ->whereHas('teams', fn (Builder $q) => $q->where('teams.id', filament()->getTenant()->getKey()))
+                                            ->where('id', '!=', auth()->id())
+                                            ->orderBy('name')
+                                            ->get()
+                                    ))
+                                    ->columnSpanFull(),
                             ]),
 
                         Tab::make('Feedbacks')
@@ -83,14 +93,13 @@ class ApplicationInfolist
                 Grid::make(1)
                     ->columnSpan(1)
                     ->schema([
-                        // Quick Actions
+
                         Section::make(__('panel-organization::filament.section.quick_actions'))
                             ->icon('heroicon-o-bolt')
                             ->visible(fn (): bool => (bool) auth()->user()?->hasAnyRole([Roles::SuperAdmin, Roles::Admin]))
                             ->schema([
                                 Actions::make([
                                     StateTransitionAction::make(),
-                                    CommentApplicationAction::make(),
                                     RejectApplicationAction::make(),
                                     Action::make('viewStageDetails')
                                         ->label(__('panel-organization::view.pipeline.view_details'))
@@ -106,19 +115,11 @@ class ApplicationInfolist
                                             'panel-organization::livewire.pipeline-stage-detail-wrapper',
                                             ['application' => $record],
                                         )),
-                                ]),
+                                ])->key('quick-actions'),
                             ]),
-                        // Pipeline Progress
+
                         ViewEntry::make('pipeline_progress')
                             ->view('applications::components.sidebar.pipeline-progress'),
-
-                        // AI Match Score
-                        //                        ViewEntry::make('ai_match_score')
-                        //                            ->view('panel-organization::components.applications.sidebar.ai-match-score'),
-
-                        // Evaluation Summary
-                        //                        ViewEntry::make('evaluation_summary')
-                        //                            ->view('panel-organization::components.applications.sidebar.evaluation-summary'),
                     ]),
             ]);
     }

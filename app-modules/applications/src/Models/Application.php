@@ -12,7 +12,6 @@ use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Policies\ApplicationPolicy;
 use He4rt\Applications\Services\Transitions\AbstractApplicationTransition;
 use He4rt\Candidates\Models\Candidate;
-use He4rt\Feedback\Models\ApplicationComment;
 use He4rt\Feedback\Models\Evaluation;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Models\Concerns\InteractsWithStages;
@@ -28,6 +27,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Kirschbaum\Commentions\Contracts\Commentable;
+use Kirschbaum\Commentions\HasComments;
 
 /**
  * @property string $id
@@ -52,7 +53,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon $updated_at
  * @property-read Collection<int, ScreeningResponse> $screeningResponses
  * @property-read Collection<int, Evaluation> $evaluations
- * @property-read Collection<int, ApplicationComment> $comments
  * @property-read JobRequisition|null $requisition
  * @property-read Stage|null $currentStage
  *
@@ -60,9 +60,10 @@ use Illuminate\Support\Carbon;
  */
 #[UsePolicy(ApplicationPolicy::class)]
 #[UseFactory(ApplicationFactory::class)]
-class Application extends BaseModel
+class Application extends BaseModel implements Commentable
 {
     use BelongsToTeam;
+    use HasComments;
     use InteractsWithStages;
     use SoftDeletes;
 
@@ -128,14 +129,6 @@ class Application extends BaseModel
     public function evaluations(): HasMany
     {
         return $this->hasMany(Evaluation::class);
-    }
-
-    /**
-     * @return HasMany<ApplicationComment, $this>
-     */
-    public function comments(): HasMany
-    {
-        return $this->hasMany(ApplicationComment::class);
     }
 
     public function getNextStage(): ?Stage

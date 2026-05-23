@@ -7,7 +7,7 @@ use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
-use He4rt\Feedback\Models\ApplicationComment;
+use He4rt\Feedback\Models\Comment;
 use He4rt\Feedback\Models\Evaluation;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Models\Stage;
@@ -109,9 +109,11 @@ it('has many evaluations', function (): void {
 
 it('has many comments', function (): void {
     $application = Application::factory()->create();
-    ApplicationComment::factory()->count(4)->create(['application_id' => $application->id]);
+    $author = User::factory()->create();
 
-    expect($application->comments)->toHaveCount(4);
+    Comment::factory()->count(4)->forApplication($application)->authoredBy($author)->create();
+
+    expect($application->comments()->count())->toBe(4);
 });
 
 it('enforces unique requisition and candidate combination', function (): void {

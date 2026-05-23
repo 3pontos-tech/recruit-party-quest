@@ -6,17 +6,12 @@ namespace He4rt\Organization\Filament\Resources\Recruitment\Applications;
 
 use BackedEnum;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use He4rt\Applications\Models\Application;
-use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\EditApplication;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ListApplications;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ViewApplication;
-use He4rt\Organization\Filament\Resources\Recruitment\Applications\Schemas\ApplicationForm;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Tables\ApplicationsTable;
-use He4rt\Permissions\Roles;
-use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class ApplicationResource extends Resource
@@ -36,19 +31,9 @@ class ApplicationResource extends Resource
         return __('panel-organization::filament.group.recruitment');
     }
 
-    public static function canEdit(Model $record): bool
-    {
-        return (bool) auth()->user()?->hasAnyRole([Roles::SuperAdmin, Roles::Admin]);
-    }
-
     public static function canCreate(): bool
     {
         return false;
-    }
-
-    public static function form(Schema $schema): Schema
-    {
-        return ApplicationForm::configure($schema);
     }
 
     public static function table(Table $table): Table
@@ -60,7 +45,6 @@ class ApplicationResource extends Resource
     {
         return [
             'index' => ListApplications::route('/'),
-            'edit' => EditApplication::route('/{record}/edit'),
             'view' => ViewApplication::route('/{record}/view'),
         ];
     }

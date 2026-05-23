@@ -209,3 +209,18 @@ it('creates stages with expected names and descriptions', function (): void {
         ->and($offerStage->description)->toBe('Job offer preparation and negotiation')
         ->and($offerStage->expected_duration_days)->toBe(5);
 });
+
+it('creates default stages translated when the locale is pt_BR', function (): void {
+    app()->setLocale('pt_BR');
+
+    $requisition = JobRequisition::factory()->create();
+
+    $newStage = $requisition->stages->firstWhere('stage_type', StageTypeEnum::New);
+    $screeningStage = $requisition->stages->firstWhere('stage_type', StageTypeEnum::Screening);
+    $offerStage = $requisition->stages->firstWhere('stage_type', StageTypeEnum::Offer);
+
+    expect($newStage->name)->toBe('Novas Candidaturas')
+        ->and($newStage->description)->toBe('Recebimento e registro inicial das candidaturas')
+        ->and($screeningStage->name)->toBe('Triagem de Currículos')
+        ->and($offerStage->name)->toBe('Proposta');
+});

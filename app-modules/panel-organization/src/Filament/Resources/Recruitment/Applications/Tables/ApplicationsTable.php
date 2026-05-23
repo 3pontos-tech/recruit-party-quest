@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace He4rt\Organization\Filament\Resources\Recruitment\Applications\Tables;
 
-use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
@@ -14,7 +13,6 @@ use Filament\Tables\Table;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Models\Application;
-use He4rt\Organization\Filament\Resources\Recruitment\Applications\ApplicationResource;
 use Illuminate\Database\Eloquent\Builder;
 
 class ApplicationsTable
@@ -116,7 +114,6 @@ class ApplicationsTable
             ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make()->visible(fn (Application $record): bool => ApplicationResource::canEdit($record)),
             ]);
     }
 }

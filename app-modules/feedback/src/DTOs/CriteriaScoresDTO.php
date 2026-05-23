@@ -9,32 +9,32 @@ use JsonSerializable;
 final readonly class CriteriaScoresDTO implements JsonSerializable
 {
     public function __construct(
-        public string $technicalSkills,
-        public string $communication,
-        public string $problemSolving,
-        public string $cultureFit,
+        public int $technicalSkills,
+        public int $communication,
+        public int $problemSolving,
+        public int $cultureFit,
     ) {}
 
     /**
      * @param array{
-     *   technical_skills: string,
-     *   communication: string,
-     *   problem_solving: string,
-     *   culture_fit: string
+     *   technical_skills: int|string,
+     *   communication: int|string,
+     *   problem_solving: int|string,
+     *   culture_fit: int|string
      * } $data
      */
     public static function make(array $data): self
     {
         return new self(
-            technicalSkills: $data['technical_skills'],
-            communication: $data['communication'],
-            problemSolving: $data['problem_solving'],
-            cultureFit: $data['culture_fit']
+            technicalSkills: (int) $data['technical_skills'],
+            communication: (int) $data['communication'],
+            problemSolving: (int) $data['problem_solving'],
+            cultureFit: (int) $data['culture_fit']
         );
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, int>
      */
     public function jsonSerialize(): array
     {
