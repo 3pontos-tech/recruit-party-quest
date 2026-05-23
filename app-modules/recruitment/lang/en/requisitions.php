@@ -13,24 +13,11 @@ return [
         'label' => 'Archived',
     ],
     'employment_type' => [
-        'full_time_employee' => [
-            'label' => 'Full-time Employee',
-        ],
-        'clt' => [
-            'label' => 'CLT (Brazilian Labor Contract)',
-        ],
-        'contractor' => [
-            'label' => 'Contractor',
-        ],
-        'intern' => [
-            'label' => 'Intern',
-        ],
-        'temporary' => [
-            'label' => 'Temporary',
-        ],
-        'part_time' => [
-            'label' => 'Part-time',
-        ],
+        'clt' => ['label' => 'CLT (Brazilian Labor Contract)'],
+        'contractor' => ['label' => 'Contractor (PJ)'],
+        'temporary' => ['label' => 'Temporary'],
+        'freelancer' => ['label' => 'Freelancer'],
+        'intern' => ['label' => 'Internship'],
     ],
     'experience_level' => [
         'intern' => [
@@ -117,6 +104,12 @@ return [
         'on_site' => [
             'label' => 'On Site',
         ],
+    ],
+    'work_schedule' => [
+        'full_time' => ['label' => 'Full-time'],
+        'part_time' => ['label' => 'Part-time'],
+        'hourly' => ['label' => 'Hourly'],
+        'shift' => ['label' => 'Shift (12x36, 6x1)'],
     ],
     'job_category' => [
         'finance' => [

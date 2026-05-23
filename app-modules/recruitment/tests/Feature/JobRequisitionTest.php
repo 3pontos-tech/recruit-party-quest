@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
+use He4rt\Recruitment\Requisitions\Actions\StoreJobRequisitionAction;
+use He4rt\Recruitment\Requisitions\DTOs\JobRequisitionDTO;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
@@ -84,7 +87,9 @@ it('casts work_arrangement to enum', function (): void {
 });
 
 it('casts employment_type to enum', function (): void {
-    $requisition = JobRequisition::factory()->create();
+    $requisition = JobRequisition::factory()->create([
+        'employment_type' => EmploymentTypeEnum::Clt,
+    ]);
 
     expect($requisition->employment_type)->toBeInstanceOf(EmploymentTypeEnum::class);
 });
@@ -223,4 +228,47 @@ it('creates default stages translated when the locale is pt_BR', function (): vo
         ->and($newStage->description)->toBe('Recebimento e registro inicial das candidaturas')
         ->and($screeningStage->name)->toBe('Triagem de Currículos')
         ->and($offerStage->name)->toBe('Proposta');
+});
+
+it('casts work_schedule and allows null employment_type', function (): void {
+    $model = JobRequisition::factory()->create([
+        'employment_type' => null,
+        'work_schedule' => WorkScheduleEnum::FullTime,
+    ]);
+
+    $model->refresh();
+
+    expect($model->employment_type)->toBeNull()
+        ->and($model->work_schedule)->toBe(WorkScheduleEnum::FullTime);
+});
+
+it('persists work_schedule and null employment_type via StoreJobRequisitionAction', function (): void {
+    $team = Team::factory()->create();
+    $dept = Department::factory()->create(['team_id' => $team->id]);
+    $recruiter = Recruiter::factory()->create();
+    $user = User::factory()->create();
+
+    $dto = JobRequisitionDTO::make([
+        'title' => 'Dev Backend', 'department_id' => $dept->id, 'team_id' => $team->id,
+        'recruiter_id' => $recruiter->id, 'description' => 'desc',
+        'experience_level' => ExperienceLevelEnum::Senior,
+        'employment_type' => null,
+        'work_schedule' => WorkScheduleEnum::PartTime,
+        'work_arrangement' => WorkArrangementEnum::Remote,
+        'priority' => RequisitionPriorityEnum::Medium,
+        'status' => RequisitionStatusEnum::Draft,
+        'summary' => 'sum', 'created_by' => $user->id, 'items' => [],
+    ]);
+
+    $req = resolve(StoreJobRequisitionAction::class)->execute($dto);
+
+    expect($req->fresh()->work_schedule)->toBe(WorkScheduleEnum::PartTime)
+        ->and($req->fresh()->employment_type)->toBeNull();
+});
+
+it('factory produces valid employment_type and work_schedule', function (): void {
+    JobRequisition::factory()->count(20)->create()->each(function ($r): void {
+        expect($r->employment_type === null || $r->employment_type instanceof EmploymentTypeEnum)->toBeTrue()
+            ->and($r->work_schedule === null || $r->work_schedule instanceof WorkScheduleEnum)->toBeTrue();
+    });
 });

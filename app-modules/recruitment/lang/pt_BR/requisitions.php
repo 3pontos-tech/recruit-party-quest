@@ -13,24 +13,11 @@ return [
         'label' => 'Arquivada',
     ],
     'employment_type' => [
-        'full_time_employee' => [
-            'label' => 'Tempo Integral',
-        ],
-        'clt' => [
-            'label' => 'CLT',
-        ],
-        'contractor' => [
-            'label' => 'Prestador de Serviço (PJ)',
-        ],
-        'intern' => [
-            'label' => 'Estagiário',
-        ],
-        'temporary' => [
-            'label' => 'Temporário',
-        ],
-        'part_time' => [
-            'label' => 'Meio Período',
-        ],
+        'clt' => ['label' => 'CLT'],
+        'contractor' => ['label' => 'Contrato/PJ'],
+        'temporary' => ['label' => 'Temporário'],
+        'freelancer' => ['label' => 'Freelancer/Autônomo'],
+        'intern' => ['label' => 'Estágio'],
     ],
     'experience_level' => [
         'intern' => [
@@ -117,6 +104,12 @@ return [
         'on_site' => [
             'label' => 'Presencial',
         ],
+    ],
+    'work_schedule' => [
+        'full_time' => ['label' => 'Tempo Integral'],
+        'part_time' => ['label' => 'Meio Período'],
+        'hourly' => ['label' => 'Por Hora'],
+        'shift' => ['label' => 'Escala (12x36, 6x1)'],
     ],
     'job_category' => [
         'finance' => [

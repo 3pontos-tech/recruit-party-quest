@@ -9,6 +9,7 @@ use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\JobCategoryEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Users\User;
 use Illuminate\Contracts\Database\Query\Builder;
@@ -41,6 +42,12 @@ class SearchJobs extends Component
      */
     #[Url]
     public array $employmentTypes = [];
+
+    /**
+     * @var array<int, WorkScheduleEnum|string>
+     */
+    #[Url]
+    public array $workSchedules = [];
 
     #[Url]
     public ?ExperienceLevelEnum $experienceLevel = null;
@@ -82,6 +89,9 @@ class SearchJobs extends Component
             ->when($this->employmentTypes, function ($query): void {
                 $query->whereIn('employment_type', $this->employmentTypes);
             })
+            ->when($this->workSchedules, function ($query): void {
+                $query->whereIn('work_schedule', $this->workSchedules);
+            })
             ->when($this->experienceLevel, function ($query): void {
                 $query->where('experience_level', $this->experienceLevel);
             })
@@ -117,6 +127,11 @@ class SearchJobs extends Component
     }
 
     public function updatingEmploymentTypes(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatingWorkSchedules(): void
     {
         $this->resetPage();
     }

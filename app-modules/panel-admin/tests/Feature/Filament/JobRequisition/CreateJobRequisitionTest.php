@@ -7,6 +7,7 @@ use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\Pages\CreateJobRe
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Teams\Department;
@@ -55,6 +56,7 @@ it('should be able to publish a job requisition', function (): void {
         ->assertSet('data.work_arrangement', $workArrangement->value)
         ->set('data.employment_type', $employmentType)
         ->assertSet('data.employment_type', $employmentType->value)
+        ->set('data.work_schedule', WorkScheduleEnum::FullTime)
         ->set('data.experience_level', $experienceLevel)
         ->assertSet('data.experience_level', $experienceLevel->value)
         ->call('create')
@@ -70,4 +72,23 @@ it('should be able to publish a job requisition', function (): void {
         'experience_level' => $experienceLevel->value,
     ]);
 
+});
+
+it('exposes the work_schedule form field', function (): void {
+    livewire(CreateJobRequisition::class)
+        ->assertFormFieldExists('work_schedule');
+});
+
+it('requires employment_type and work_schedule when creating', function (): void {
+    livewire(CreateJobRequisition::class)
+        ->set('data.team_id', $this->team->getKey())
+        ->set('data.recruiter_id', $this->recruiter->getKey())
+        ->set('data.department_id', $this->department->getKey())
+        ->set('data.work_arrangement', WorkArrangementEnum::Hybrid)
+        ->set('data.experience_level', ExperienceLevelEnum::Head)
+        ->call('create')
+        ->assertHasFormErrors([
+            'employment_type' => 'required',
+            'work_schedule' => 'required',
+        ]);
 });

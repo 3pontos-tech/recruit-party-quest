@@ -22,6 +22,7 @@ use He4rt\Recruitment\Requisitions\Enums\JobCategoryEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use He4rt\Screening\Filament\Schemas\ScreeningQuestionsFormSchema;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
@@ -132,7 +133,13 @@ class JobRequisitionForm
                     Select::make('employment_type')
                         ->label(__('recruitment::filament.requisition.fields.employment_type'))
                         ->options(EmploymentTypeEnum::class)
-                        ->required(),
+                        ->required(fn (string $operation): bool => $operation === 'create')
+                        ->placeholder(__('recruitment::filament.requisition.fields.not_specified')),
+                    Select::make('work_schedule')
+                        ->label(__('recruitment::filament.requisition.fields.work_schedule'))
+                        ->options(WorkScheduleEnum::class)
+                        ->required(fn (string $operation): bool => $operation === 'create')
+                        ->placeholder(__('recruitment::filament.requisition.fields.not_specified')),
                     Select::make('experience_level')
                         ->label(__('recruitment::filament.requisition.fields.experience_level'))
                         ->options(ExperienceLevelEnum::class)

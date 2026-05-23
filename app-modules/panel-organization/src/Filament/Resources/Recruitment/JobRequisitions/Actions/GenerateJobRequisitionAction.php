@@ -21,6 +21,7 @@ use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\JobGenerationStatus;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use He4rt\Recruitment\Requisitions\Events\JobRequisitionGenerationEvent;
 use He4rt\Recruitment\Requisitions\Jobs\GeneratePostJob;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
@@ -57,7 +58,8 @@ class GenerateJobRequisitionAction extends Action
                     'title' => $data['title'],
                     'description' => $data['description'],
                     'work_arrangement' => $data['work_arrangement']->value,
-                    'employment_type' => $data['employment_type']->value,
+                    'employment_type' => $data['employment_type']?->value,
+                    'work_schedule' => $data['work_schedule']?->value,
                     'experience_level' => $data['experience_level']->value,
                     'priority' => $data['priority']->value,
                     'recruiter_id' => $data['recruiter_id'],
@@ -181,6 +183,15 @@ class GenerateJobRequisitionAction extends Action
                                 ->label(__('recruitment::filament.requisition.fields.employment_type'))
                                 ->options(EmploymentTypeEnum::class)
                                 ->description(__('recruitment::filament.requisition.fields.employment_type_description'))
+                                ->icon(Heroicon::DocumentText)
+                                ->iconColor('green')
+                                ->native(false)
+                                ->required(),
+
+                            He4rtSelect::make('work_schedule')
+                                ->label(__('recruitment::filament.requisition.fields.work_schedule'))
+                                ->options(WorkScheduleEnum::class)
+                                ->description(__('recruitment::filament.requisition.fields.work_schedule_description'))
                                 ->icon(Heroicon::Clock)
                                 ->iconColor('green')
                                 ->native(false)

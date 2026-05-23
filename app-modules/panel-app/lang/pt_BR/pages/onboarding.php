@@ -121,9 +121,9 @@ return [
                 'willing_to_relocate' => 'Disponível para Realocação',
                 'is_open_to_remote' => 'Aberto a Trabalho Remoto',
                 'experience_level' => 'Nível de Experiência',
-                'employment_type_interests' => 'Tipos de Emprego (separados por vírgula)',
-                'employment_type_interests_placeholder' => 'full_time_employee, contractor, intern',
-                'employment_type_interests_helper' => 'Tempo integral, contratado, estagiário, etc.',
+                'employment_type_interests' => 'Tipos de Contratação (separados por vírgula)',
+                'employment_type_interests_placeholder' => 'clt, contractor, temporary',
+                'employment_type_interests_helper' => 'CLT, Contrato/PJ, Temporário, etc.',
             ],
             'options' => [
                 'experience_levels' => [],

@@ -9,6 +9,7 @@ use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Teams\Department;
@@ -51,7 +52,8 @@ it('creates a job requisition and assigns team and creator automatically', funct
             'department_id' => $this->department->getKey(),
             'recruiter_id' => $this->recruiter->getKey(),
             'work_arrangement' => WorkArrangementEnum::Remote,
-            'employment_type' => EmploymentTypeEnum::FullTimeEmployee,
+            'employment_type' => EmploymentTypeEnum::Clt,
+            'work_schedule' => WorkScheduleEnum::FullTime,
             'experience_level' => ExperienceLevelEnum::Senior,
             'status' => RequisitionStatusEnum::Draft,
             'priority' => RequisitionPriorityEnum::Medium,
@@ -69,7 +71,7 @@ it('creates a job requisition and assigns team and creator automatically', funct
         'created_by_id' => $this->recruiter->user->getKey(),
         'department_id' => $this->department->getKey(),
         'work_arrangement' => WorkArrangementEnum::Remote,
-        'employment_type' => EmploymentTypeEnum::FullTimeEmployee,
+        'employment_type' => EmploymentTypeEnum::Clt,
         'experience_level' => ExperienceLevelEnum::Senior,
     ]);
 });
@@ -85,7 +87,8 @@ it('generates a slug with the team initial and random suffix on creation', funct
             'department_id' => $this->department->getKey(),
             'recruiter_id' => $this->recruiter->getKey(),
             'work_arrangement' => WorkArrangementEnum::Remote,
-            'employment_type' => EmploymentTypeEnum::FullTimeEmployee,
+            'employment_type' => EmploymentTypeEnum::Clt,
+            'work_schedule' => WorkScheduleEnum::FullTime,
             'experience_level' => ExperienceLevelEnum::Senior,
             'status' => RequisitionStatusEnum::Draft,
             'priority' => RequisitionPriorityEnum::Medium,
@@ -115,4 +118,27 @@ it('shows validation errors for required fields when submitting without data', f
     Livewire::test(CreateJobRequisition::class)
         ->call('create')
         ->assertHasFormErrors(['post.title', 'post.summary', 'department_id', 'recruiter_id']);
+});
+
+it('requires employment_type and work_schedule when creating', function (): void {
+    Livewire::test(CreateJobRequisition::class)
+        ->fillForm([
+            'post' => [
+                'title' => 'Dev PHP Sênior',
+                'summary' => 'Sumário do cargo.',
+                'description' => 'Descrição completa do cargo.',
+            ],
+            'department_id' => $this->department->getKey(),
+            'recruiter_id' => $this->recruiter->getKey(),
+            'work_arrangement' => WorkArrangementEnum::Remote,
+            'experience_level' => ExperienceLevelEnum::Senior,
+            'status' => RequisitionStatusEnum::Draft,
+            'priority' => RequisitionPriorityEnum::Medium,
+            'positions_available' => 1,
+        ])
+        ->call('create')
+        ->assertHasFormErrors([
+            'employment_type' => 'required',
+            'work_schedule' => 'required',
+        ]);
 });

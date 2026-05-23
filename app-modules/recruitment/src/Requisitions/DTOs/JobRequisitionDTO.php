@@ -10,6 +10,7 @@ use He4rt\Recruitment\Requisitions\Enums\JobRequisitionItemTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use Illuminate\Support\Str;
 
 final readonly class JobRequisitionDTO
@@ -22,7 +23,8 @@ final readonly class JobRequisitionDTO
         public string $recruiterId,
         public string $description,
         public ExperienceLevelEnum $experienceLevel,
-        public EmploymentTypeEnum $employmentType,
+        public ?EmploymentTypeEnum $employmentType,
+        public ?WorkScheduleEnum $workSchedule,
         public WorkArrangementEnum $workArrangement,
         public ?RequisitionPriorityEnum $priority,
         public RequisitionStatusEnum $status,
@@ -50,7 +52,8 @@ final readonly class JobRequisitionDTO
             recruiterId: $data['recruiter_id'],
             description: $data['description'],
             experienceLevel: $data['experience_level'],
-            employmentType: $data['employment_type'],
+            employmentType: $data['employment_type'] ?? null,
+            workSchedule: $data['work_schedule'] ?? null,
             workArrangement: $data['work_arrangement'],
             priority: $data['priority'] ?? null,
             status: $data['status'],

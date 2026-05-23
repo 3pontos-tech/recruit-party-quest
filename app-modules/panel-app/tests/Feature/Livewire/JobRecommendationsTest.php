@@ -23,15 +23,15 @@ it('renders all published public jobs when no filter is applied', function (): v
 
 it('filters jobs by employment type when jobTypes is an array of strings', function (): void {
     $fullTime = JobRequisition::factory()->available()->create([
-        'employment_type' => EmploymentTypeEnum::FullTimeEmployee,
+        'employment_type' => EmploymentTypeEnum::Clt,
     ]);
 
     $partTime = JobRequisition::factory()->available()->create([
-        'employment_type' => EmploymentTypeEnum::PartTime,
+        'employment_type' => EmploymentTypeEnum::Contractor,
     ]);
 
     livewire(JobRecommendations::class)
-        ->set('jobTypes', [EmploymentTypeEnum::FullTimeEmployee->value])
+        ->set('jobTypes', [EmploymentTypeEnum::Clt->value])
         ->assertOk()
         ->assertSee($fullTime->getKey())
         ->assertDontSee($partTime->getKey());
@@ -39,17 +39,17 @@ it('filters jobs by employment type when jobTypes is an array of strings', funct
 
 it('filters jobs when jobTypes contains EnumSynth nested array format', function (): void {
     $fullTime = JobRequisition::factory()->available()->create([
-        'employment_type' => EmploymentTypeEnum::FullTimeEmployee,
+        'employment_type' => EmploymentTypeEnum::Clt,
     ]);
 
     $partTime = JobRequisition::factory()->available()->create([
-        'employment_type' => EmploymentTypeEnum::PartTime,
+        'employment_type' => EmploymentTypeEnum::Contractor,
     ]);
 
     // Simula o formato que o EnumSynth do Livewire produz ao desserializar o snapshot
     livewire(JobRecommendations::class)
         ->set('jobTypes', [
-            ['value' => EmploymentTypeEnum::FullTimeEmployee->value, 'class' => EmploymentTypeEnum::class],
+            ['value' => EmploymentTypeEnum::Clt->value, 'class' => EmploymentTypeEnum::class],
         ])
         ->assertOk()
         ->assertSee($fullTime->getKey())
@@ -58,7 +58,7 @@ it('filters jobs when jobTypes contains EnumSynth nested array format', function
 
 it('returns no jobs when jobTypes filter matches no employment type in the database', function (): void {
     $job = JobRequisition::factory()->available()->create([
-        'employment_type' => EmploymentTypeEnum::FullTimeEmployee,
+        'employment_type' => EmploymentTypeEnum::Clt,
     ]);
 
     livewire(JobRecommendations::class)

@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use He4rt\App\Livewire\SearchJobs;
+use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Users\User;
 
@@ -13,7 +15,9 @@ use function Pest\Livewire\livewire;
 it('should only render jobs that has stages and are available', function (): void {
     actingAs(User::factory()->createOne());
 
-    $jobs = JobRequisition::factory(2)->available()->create();
+    $jobs = JobRequisition::factory(2)->available()->create([
+        'employment_type' => EmploymentTypeEnum::Clt,
+    ]);
 
     $anotherJobs = JobRequisition::factory(2)->create([
         'status' => RequisitionStatusEnum::Draft,
@@ -81,4 +85,23 @@ it('should render confidential jobs but hide company name', function (): void {
     $livewire->assertDontSee($confidentialJob->team->name);
     // Texto genérico é exibido
     $livewire->assertSee(__('panel-app::filament.confidential.company_name'));
+});
+
+it('filters jobs by work_schedule', function (): void {
+    actingAs(User::factory()->createOne());
+
+    $fullTime = JobRequisition::factory()->available()->create([
+        'work_schedule' => WorkScheduleEnum::FullTime,
+    ]);
+
+    $partTime = JobRequisition::factory()->available()->create([
+        'work_schedule' => WorkScheduleEnum::PartTime,
+    ]);
+
+    $livewire = livewire(SearchJobs::class)
+        ->set('workSchedules', [WorkScheduleEnum::PartTime->value])
+        ->assertOk();
+
+    $livewire->assertSee($partTime->getKey());
+    $livewire->assertDontSee($fullTime->getKey());
 });

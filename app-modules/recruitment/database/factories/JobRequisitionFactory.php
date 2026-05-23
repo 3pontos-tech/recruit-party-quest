@@ -9,6 +9,7 @@ use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
@@ -42,6 +43,7 @@ class JobRequisitionFactory extends Factory
             'slug' => (string) Str::uuid(),
             'work_arrangement' => $this->getRealisticWorkArrangement(),
             'employment_type' => $this->getRealisticEmploymentType(),
+            'work_schedule' => $this->getRealisticWorkSchedule(),
             'experience_level' => $experienceLevel,
             'positions_available' => $this->getRealisticPositionsCount(),
             'salary_range_min' => $salaryRange['min'],
@@ -125,11 +127,18 @@ class JobRequisitionFactory extends Factory
         return fake()->randomElement(WorkArrangementEnum::cases());
     }
 
-    private function getRealisticEmploymentType()
+    private function getRealisticEmploymentType(): ?EmploymentTypeEnum
     {
         return fake()->boolean(85)
-            ? EmploymentTypeEnum::FullTimeEmployee
-            : fake()->randomElement(EmploymentTypeEnum::cases());
+            ? EmploymentTypeEnum::Clt
+            : fake()->randomElement([...EmploymentTypeEnum::cases(), null]);
+    }
+
+    private function getRealisticWorkSchedule(): ?WorkScheduleEnum
+    {
+        return fake()->boolean(80)
+            ? WorkScheduleEnum::FullTime
+            : fake()->randomElement([...WorkScheduleEnum::cases(), null]);
     }
 
     private function getRealisticPositionsCount(): int

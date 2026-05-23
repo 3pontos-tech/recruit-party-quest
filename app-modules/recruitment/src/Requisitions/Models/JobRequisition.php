@@ -14,6 +14,7 @@ use He4rt\Recruitment\Requisitions\Enums\JobCategoryEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use He4rt\Recruitment\Requisitions\Observers\JobRequisitionObserver;
 use He4rt\Recruitment\Requisitions\Policies\JobRequisitionPolicy;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
@@ -42,7 +43,8 @@ use Illuminate\Support\Carbon;
  * @property string $team_id
  * @property string $department_id
  * @property WorkArrangementEnum $work_arrangement
- * @property EmploymentTypeEnum $employment_type
+ * @property EmploymentTypeEnum|null $employment_type
+ * @property WorkScheduleEnum|null $work_schedule
  * @property ExperienceLevelEnum $experience_level
  * @property JobCategoryEnum|null $category
  * @property int $positions_available
@@ -200,6 +202,7 @@ class JobRequisition extends BaseModel implements HasActivityLogTitle
             'priority' => RequisitionPriorityEnum::class,
             'work_arrangement' => WorkArrangementEnum::class,
             'employment_type' => EmploymentTypeEnum::class,
+            'work_schedule' => WorkScheduleEnum::class,
             'experience_level' => ExperienceLevelEnum::class,
             'category' => JobCategoryEnum::class,
         ];
