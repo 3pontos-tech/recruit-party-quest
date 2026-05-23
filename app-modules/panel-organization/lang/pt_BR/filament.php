@@ -164,8 +164,10 @@ return [
 
     'forms' => [
         'overall_rating' => 'Avaliação Geral',
-        'scores' => 'Pontuações',
-        'criteria_key_placeholder' => 'Critério',
+        'evaluation_section' => [
+            'heading' => 'Avaliação do candidato',
+            'description' => 'Registre seu parecer desta etapa.',
+        ],
         'comments' => 'Comentários',
         'comments_placeholder' => 'Digite seus comentários...',
         'recommendation' => 'Recomendação',
