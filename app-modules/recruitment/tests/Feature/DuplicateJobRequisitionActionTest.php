@@ -25,11 +25,7 @@ beforeEach(function (): void {
     $this->stages = Stage::factory()
         ->count(3)
         ->for($this->original, 'requisition')
-        ->sequence(
-            ['display_order' => 1],
-            ['display_order' => 2],
-            ['display_order' => 3],
-        )
+        ->ordered()
         ->create(['team_id' => $this->original->team_id]);
 
     $this->stageWithExtras = $this->stages->first();

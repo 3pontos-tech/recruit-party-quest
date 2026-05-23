@@ -9,6 +9,7 @@ use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
+use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 use He4rt\Recruitment\Stages\Models\Stage;
 
 use function Pest\Laravel\actingAs;
@@ -47,9 +48,9 @@ it('renders pipeline progress sidebar for active application', function (): void
 it('shows stage counter badge with correct position', function (): void {
     $this->application->update(['status' => ApplicationStatusEnum::InReview]);
 
-    $stage1 = Stage::factory()->create(['job_requisition_id' => $this->application->requisition_id, 'hidden' => false, 'active' => true, 'display_order' => 1]);
-    $stage2 = Stage::factory()->create(['job_requisition_id' => $this->application->requisition_id, 'hidden' => false, 'active' => true, 'display_order' => 2]);
-    $stage3 = Stage::factory()->create(['job_requisition_id' => $this->application->requisition_id, 'hidden' => false, 'active' => true, 'display_order' => 3]);
+    $stage1 = Stage::factory()->create(['job_requisition_id' => $this->application->requisition_id, 'stage_type' => StageTypeEnum::Screening, 'hidden' => false, 'active' => true, 'display_order' => 1]);
+    $stage2 = Stage::factory()->create(['job_requisition_id' => $this->application->requisition_id, 'stage_type' => StageTypeEnum::Assessment, 'hidden' => false, 'active' => true, 'display_order' => 2]);
+    $stage3 = Stage::factory()->create(['job_requisition_id' => $this->application->requisition_id, 'stage_type' => StageTypeEnum::Interview, 'hidden' => false, 'active' => true, 'display_order' => 3]);
 
     $this->application->update(['current_stage_id' => $stage2->id]);
 
@@ -72,7 +73,7 @@ it('shows submission date and last updated in footer', function (): void {
         ->assertSee($this->application->created_at->format('M j, Y'));
 });
 
-it('shows rejection card instead of pipeline for rejected application', function (): void {
+it('shows pipeline alongside rejection details for rejected application', function (): void {
     $application = Application::factory()
         ->rejected()
         ->for($this->candidate, 'candidate')
@@ -80,8 +81,9 @@ it('shows rejection card instead of pipeline for rejected application', function
 
     livewire(ViewApplication::class, ['record' => $application->getKey()])
         ->assertOk()
-        ->assertSee('Application Not Progressed')
-        ->assertDontSee('Overall Progress');
+        ->assertSee('Pipeline Progress')
+        ->assertSee('Rejection Reason')
+        ->assertSee($application->rejection_reason_category->getLabel());
 });
 
 it('shows rejection reason category when present', function (): void {
