@@ -63,9 +63,6 @@ class KanbanStages extends BoardResourcePage
 
     public function board(Board $board): Board
     {
-        // 1. Columns precisam de identificação única. (usar stage->getKey())
-        //
-        // 2. Applications with some validations.
 
         $jobRequisition = JobRequisition::query()
             ->with([

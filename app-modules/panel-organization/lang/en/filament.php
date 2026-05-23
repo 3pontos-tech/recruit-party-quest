@@ -163,8 +163,10 @@ return [
 
     'forms' => [
         'overall_rating' => 'Overall Rating',
-        'scores' => 'Scores',
-        'criteria_key_placeholder' => 'Criterion',
+        'evaluation_section' => [
+            'heading' => 'Candidate evaluation',
+            'description' => 'Record your assessment for this stage.',
+        ],
         'comments' => 'Comments',
         'comments_placeholder' => 'Enter your comments...',
         'recommendation' => 'Recommendation',

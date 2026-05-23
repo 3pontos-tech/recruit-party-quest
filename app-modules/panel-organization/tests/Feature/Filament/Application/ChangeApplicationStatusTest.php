@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
 use He4rt\Applications\Actions\RejectApplicationAction;
-use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Models\Application;
-use He4rt\Feedback\Enums\EvaluationRatingEnum;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ViewApplication;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
@@ -34,39 +32,6 @@ it('should render', function (): void {
         'record' => $this->application->getKey(),
     ])->assertOk();
 });
-
-it('should pass user to review stage', function (): void {
-
-    $data = [
-        'to_status' => ApplicationStatusEnum::InReview->value,
-        'notes' => '123',
-        'team_id' => filament()->getTenant()->getKey(),
-        'application_id' => $this->application->getKey(),
-        'evaluator_id' => $this->evaluator->getKey(),
-        'overall_rating' => EvaluationRatingEnum::Maybe,
-        'criteria_scores' => [
-            'technical_skills' => '1',
-            'communication' => '2',
-            'problem_solving' => '3',
-            'culture_fit' => '4',
-        ],
-        'comments' => 'comments',
-        'recommendation' => 'reccom',
-        'strengths' => 'stdhauda',
-        'concerns' => 'fuedase',
-    ];
-
-    livewire(ViewApplication::class, [
-        'tenant' => filament()->getTenant(),
-        'record' => $this->application->getKey(),
-    ])
-        ->assertOk()
-        ->mountAction('state-transition-action')
-        ->assertActionVisible('state-transition-action')
-        ->setActionData($data)
-        ->callMountedAction()
-        ->assertHasNoActionErrors();
-})->skip();
 
 it('should be able to reject an application', function (): void {
     $sut = new RejectApplicationAction();

@@ -25,63 +25,26 @@ final class JobRequisitionObserver
 
     public function created(JobRequisition $jobRequisition): void
     {
+
         $stagesConfig = [
-            [
-                'type' => StageTypeEnum::New,
-                'name' => 'New Applications',
-                'description' => 'Initial application submission and registration',
-                'duration' => 1,
-            ],
-            [
-                'type' => StageTypeEnum::Screening,
-                'name' => 'Resume Screening',
-                'description' => 'Review of resume and basic qualifications',
-                'duration' => 3,
-            ],
-            [
-                'type' => StageTypeEnum::Assessment,
-                'name' => 'Technical Assessment',
-                'description' => 'Technical skills evaluation and coding challenge',
-                'duration' => 7,
-            ],
-            [
-                'type' => StageTypeEnum::Interview,
-                'name' => 'Technical Interview',
-                'description' => 'In-depth technical discussion with the team',
-                'duration' => 5,
-            ],
-            [
-                'type' => StageTypeEnum::Offer,
-                'name' => 'Offer',
-                'description' => 'Job offer preparation and negotiation',
-                'duration' => 5,
-            ],
-            [
-                'type' => StageTypeEnum::Hired,
-                'name' => 'Hired',
-                'description' => 'Candidate accepted the offer',
-                'duration' => 1,
-            ],
-            [
-                'type' => StageTypeEnum::Declined,
-                'name' => 'Declined',
-                'description' => 'Candidate declined the offer',
-                'duration' => 1,
-            ],
-            [
-                'type' => StageTypeEnum::Rejected,
-                'name' => 'Rejected',
-                'description' => 'Candidates not selected for the position',
-                'duration' => 1,
-            ],
+            ['type' => StageTypeEnum::New, 'duration' => 1],
+            ['type' => StageTypeEnum::Screening, 'duration' => 3],
+            ['type' => StageTypeEnum::Assessment, 'duration' => 7],
+            ['type' => StageTypeEnum::Interview, 'duration' => 5],
+            ['type' => StageTypeEnum::Offer, 'duration' => 5],
+            ['type' => StageTypeEnum::Hired, 'duration' => 1],
+            ['type' => StageTypeEnum::Declined, 'duration' => 1],
+            ['type' => StageTypeEnum::Rejected, 'duration' => 1],
         ];
 
         foreach ($stagesConfig as $index => $config) {
+            $stageType = $config['type'];
+
             $jobRequisition->stages()->create([
                 'team_id' => $jobRequisition->team_id,
-                'stage_type' => $config['type'],
-                'name' => $config['name'],
-                'description' => $config['description'],
+                'stage_type' => $stageType,
+                'name' => __('recruitment::default_stages.'.$stageType->value.'.name'),
+                'description' => __('recruitment::default_stages.'.$stageType->value.'.description'),
                 'expected_duration_days' => $config['duration'],
                 'display_order' => $index + 1,
                 'active' => true,
