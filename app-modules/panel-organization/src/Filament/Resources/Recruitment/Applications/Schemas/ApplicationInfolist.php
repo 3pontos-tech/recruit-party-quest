@@ -11,8 +11,6 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
-use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\CommentApplicationAction;
-use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\MoveStageAction;
 use He4rt\Applications\Models\Application;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\RejectApplicationAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
@@ -91,29 +89,19 @@ class ApplicationInfolist
                 Grid::make(1)
                     ->columnSpan(1)
                     ->schema([
-                        // Quick Actions
+
                         Section::make(__('panel-organization::filament.section.quick_actions'))
                             ->icon('heroicon-o-bolt')
                             ->visible(fn (): bool => (bool) auth()->user()?->hasAnyRole([Roles::SuperAdmin, Roles::Admin]))
                             ->schema([
                                 Actions::make([
                                     StateTransitionAction::make(),
-                                    MoveStageAction::make(),
-                                    CommentApplicationAction::make(),
                                     RejectApplicationAction::make(),
                                 ])->key('quick-actions'),
                             ]),
-                        // Pipeline Progress
+
                         ViewEntry::make('pipeline_progress')
                             ->view('applications::components.sidebar.pipeline-progress'),
-
-                        // AI Match Score
-                        //                        ViewEntry::make('ai_match_score')
-                        //                            ->view('panel-organization::components.applications.sidebar.ai-match-score'),
-
-                        // Evaluation Summary
-                        //                        ViewEntry::make('evaluation_summary')
-                        //                            ->view('panel-organization::components.applications.sidebar.evaluation-summary'),
                     ]),
             ]);
     }

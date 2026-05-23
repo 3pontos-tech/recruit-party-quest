@@ -24,6 +24,10 @@ return [
         'source' => 'Source',
         'source_details' => 'Source Details',
         'current_stage' => 'Current Stage',
+        'target_stage' => 'Target Stage',
+        'target_stage_hint' => 'Step within the "In Progress" phase (e.g., technical interview). Shown only when applicable.',
+        'target_status' => 'Target Status',
+        'target_status_hint' => 'The candidate\'s phase in the hiring process (e.g., In Review, In Progress).',
         'cover_letter' => 'Cover Letter',
         'evaluations_count' => 'Evaluations',
         'rejected_at' => 'Rejected At',
@@ -126,22 +130,6 @@ return [
             'notifications' => [
                 'updated' => [
                     'title' => 'Status updated',
-                ],
-            ],
-        ],
-
-        'move_stage' => [
-            'label' => 'Move stage',
-            'modal_heading' => 'Move candidate stage',
-            'modal_submit' => 'Confirm',
-            'no_transitions_tooltip' => 'No available transitions',
-            'with_evaluation_label' => 'Record an evaluation for this move',
-            'notifications' => [
-                'moved' => [
-                    'title' => 'Candidate moved',
-                ],
-                'error' => [
-                    'title' => 'Could not move the candidate',
                 ],
             ],
         ],
