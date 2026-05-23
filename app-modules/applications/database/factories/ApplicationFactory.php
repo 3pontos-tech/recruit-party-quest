@@ -148,7 +148,9 @@ class ApplicationFactory extends Factory
     private function resolveInitialStageId(Application $application): string
     {
         $stage = $application->requisition->stages()->orderBy('display_order')->first()
-            ?? Stage::factory()->create(['job_requisition_id' => $application->requisition_id]);
+            ?? Stage::factory()->create([
+                'job_requisition_id' => $application->requisition_id, 'team_id' => $application->team_id,
+            ]);
 
         return $stage->getKey();
     }
