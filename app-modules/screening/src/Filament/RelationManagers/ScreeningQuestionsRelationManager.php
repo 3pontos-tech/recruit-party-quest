@@ -9,14 +9,15 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -38,69 +39,73 @@ class ScreeningQuestionsRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                Textarea::make('question_text')
-                    ->label(__('screening::filament.question.fields.question_text'))
-                    ->required()
-                    ->rows(3)
-                    ->columnSpanFull(),
-                Select::make('question_type')
-                    ->label(__('screening::filament.question.fields.question_type'))
-                    ->options(QuestionTypeEnum::class)
-                    ->required()
-                    ->live()
-                    ->afterStateUpdated(function ($set, $state): void {
-                        if ($state === null) {
-                            $set('settings', null);
+                Section::make(__('screening::filament.question.sections.question.title'))
+                    ->description(__('screening::filament.question.sections.question.description'))
+                    ->icon(Heroicon::OutlinedChatBubbleLeftEllipsis)
+                    ->schema([
+                        Textarea::make('question_text')
+                            ->label(__('screening::filament.question.fields.question_text'))
+                            ->placeholder(__('screening::filament.question.fields.question_text_placeholder'))
+                            ->required()
+                            ->rows(3)
+                            ->columnSpanFull(),
+                        Select::make('question_type')
+                            ->label(__('screening::filament.question.fields.question_type'))
+                            ->helperText(__('screening::filament.question.fields.question_type_help'))
+                            ->options(QuestionTypeEnum::class)
+                            ->native(false)
+                            ->required()
+                            ->live()
+                            ->afterStateUpdated(function (callable $set, $state): void {
+                                if ($state === null) {
+                                    $set('settings', null);
 
-                            return;
-                        }
+                                    return;
+                                }
 
-                        $type = $state instanceof QuestionTypeEnum
-                            ? $state
-                            : QuestionTypeEnum::tryFrom($state);
+                                $type = $state instanceof QuestionTypeEnum
+                                    ? $state
+                                    : QuestionTypeEnum::tryFrom($state);
 
-                        if ($type === null) {
-                            $set('settings', null);
+                                if ($type === null) {
+                                    $set('settings', null);
 
-                            return;
-                        }
+                                    return;
+                                }
 
-                        $typeClass = QuestionTypeRegistry::get($type);
-                        $set('settings', $typeClass::defaultSettings()->toArray());
-                    }),
-                TextInput::make('display_order')
-                    ->label(__('screening::filament.question.fields.display_order'))
-                    ->numeric()
-                    ->default(0)
-                    ->required(),
-                Group::make()
-                    ->schema(function ($get): array {
-                        $typeValue = $get('question_type');
+                                $typeClass = QuestionTypeRegistry::get($type);
+                                $set('settings', $typeClass::defaultSettings()->toArray());
+                            }),
+                        Hidden::make('display_order')
+                            ->default(0),
+                    ]),
 
-                        if ($typeValue === null) {
-                            return [];
-                        }
+                Section::make(__('screening::filament.question.sections.answer.title'))
+                    ->description(__('screening::filament.question.sections.answer.description'))
+                    ->icon(Heroicon::OutlinedAdjustmentsHorizontal)
+                    ->visible(fn (Get $get): bool => $get('question_type') !== null)
+                    ->schema([
+                        ...QuestionTypeRegistry::settingsSchemaComponents(),
+                        Toggle::make('is_required')
+                            ->label(__('screening::filament.question.fields.is_required'))
+                            ->helperText(__('screening::filament.question.fields.is_required_help'))
+                            ->default(true)
+                            ->inline(false),
+                    ]),
 
-                        $type = $typeValue instanceof QuestionTypeEnum
-                            ? $typeValue
-                            : QuestionTypeEnum::tryFrom($typeValue);
-
-                        return QuestionTypeRegistry::getSettingsSchema($type);
-                    })
-                    ->visible(fn ($get): bool => $get('question_type') !== null)
-                    ->columnSpanFull(),
-                Toggle::make('is_required')
-                    ->label(__('screening::filament.question.fields.is_required'))
-                    ->default(true),
-                Toggle::make('is_knockout')
-                    ->label(__('screening::filament.question.fields.is_knockout'))
-                    ->default(false)
-                    ->live(),
-                KeyValue::make('knockout_criteria')
-                    ->label(__('screening::filament.question.fields.knockout_criteria'))
-                    ->visible(fn ($get): bool => $get('is_knockout') === true)
-                    ->columnSpanFull(),
-            ]);
+                Section::make(__('screening::filament.question.sections.knockout.title'))
+                    ->description(__('screening::filament.question.sections.knockout.description'))
+                    ->icon(Heroicon::OutlinedShieldExclamation)
+                    ->schema([
+                        Toggle::make('is_knockout')
+                            ->label(__('screening::filament.question.fields.is_knockout'))
+                            ->helperText(__('screening::filament.question.fields.is_knockout_help'))
+                            ->default(false)
+                            ->live()
+                            ->inline(false),
+                        ...QuestionTypeRegistry::knockoutSchemaComponents(),
+                    ]),
+            ])->columns(1);
     }
 
     public function table(Table $table): Table

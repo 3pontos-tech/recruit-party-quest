@@ -12,16 +12,19 @@ use He4rt\Applications\Models\Application;
 use He4rt\Applications\Services\Applications\StoreApplication;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use He4rt\Screening\Actions\ScreeningResponse\EvaluateScreeningResponses;
 use He4rt\Screening\Actions\ScreeningResponse\StoreScreeningResponse;
 use He4rt\Screening\Collections\ScreeningResponseCollection;
 use He4rt\Screening\DTOs\ScreeningResponseDTO;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 use Livewire\Features\SupportRedirects\Redirector;
+use Throwable;
 
 class JobApplicationForm extends Component
 {
@@ -95,8 +98,22 @@ class JobApplicationForm extends Component
 
         resolve(StoreScreeningResponse::class)->execute($screeningCollection);
 
+        // The application is already persisted. Screening evaluation and the
+        // automatic stage transition it triggers are a best-effort side-effect
+        // for recruiters — a failure here must never break the candidate's
+        // successful submission. Failures are logged for operators instead.
+        try {
+            resolve(EvaluateScreeningResponses::class)->execute($this->application);
+        } catch (Throwable $throwable) {
+            Log::error('Screening evaluation failed after application submission', [
+                'application_id' => $this->application->getKey(),
+                'requisition_id' => $this->requisition->getKey(),
+                'exception' => $throwable,
+            ]);
+        }
+
         Notification::make()
-            ->title('Your application has been submitted')
+            ->title(__('screening::messages.application_submitted'))
             ->success()
             ->send();
 

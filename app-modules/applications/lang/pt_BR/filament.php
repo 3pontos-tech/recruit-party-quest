@@ -19,7 +19,7 @@ return [
         'tracking_code' => 'Código de Rastreamento',
         'requisition' => 'Requisição de Vaga',
         'candidate' => 'Candidato',
-        'pipeline_progress' => 'Progresso no Pipeline',
+        'pipeline_progress' => 'Etapas do Processo Seletivo',
         'status' => 'Status',
         'source' => 'Origem',
         'source_details' => 'Detalhes da Origem',

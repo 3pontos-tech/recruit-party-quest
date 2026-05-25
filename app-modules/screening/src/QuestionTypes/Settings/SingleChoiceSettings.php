@@ -28,7 +28,7 @@ readonly class SingleChoiceSettings implements HasValidations
     {
         return new self(
             layout: $data['layout'] ?? 'radio',
-            choices: $data['choices'] ?? [],
+            choices: self::normalizeChoices($data['choices'] ?? []),
         );
     }
 
@@ -64,5 +64,41 @@ readonly class SingleChoiceSettings implements HasValidations
         return [
             $attribute.'.required' => __('screening::question_validations.required'),
         ];
+    }
+
+    /**
+     * Guarantee every choice carries a non-empty value mirroring its label.
+     *
+     * The admin form only asks the recruiter for a single "Option" text
+     * (stored as label). The candidate-facing radio and the knockout
+     * evaluation rely on `value`, so it is derived from the label here,
+     * deterministically on every read.
+     *
+     * @param  array<int|string, mixed>  $choices
+     * @return array<int, Choice>
+     */
+    private static function normalizeChoices(array $choices): array
+    {
+        $normalized = [];
+
+        foreach ($choices as $choice) {
+            if (! is_array($choice)) {
+                continue;
+            }
+
+            $label = mb_trim((string) ($choice['label'] ?? ''));
+            $value = mb_trim((string) ($choice['value'] ?? ''));
+
+            $value = $value !== '' ? $value : $label;
+            $label = $label !== '' ? $label : $value;
+
+            if ($value === '') {
+                continue;
+            }
+
+            $normalized[] = ['value' => $value, 'label' => $label];
+        }
+
+        return $normalized;
     }
 }

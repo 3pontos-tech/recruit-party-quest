@@ -301,13 +301,17 @@ class JobRequisitionForm
                             ->icon('heroicon-o-cog-6-tooth')
                             ->schema([
                                 Section::make(__('recruitment::filament.requisition.sections.settings'))
-                                    ->columns(3)
+                                    ->columns(1)
                                     ->schema([
                                         Toggle::make('is_internal_only')
                                             ->label(__('recruitment::filament.requisition.fields.is_internal_only'))
                                             ->default(false),
                                         Toggle::make('is_confidential')
                                             ->label(__('recruitment::filament.requisition.fields.is_confidential'))
+                                            ->default(false),
+                                        Toggle::make('auto_screening_transition')
+                                            ->label(__('recruitment::filament.requisition.fields.auto_screening_transition'))
+                                            ->helperText(__('recruitment::filament.requisition.fields.auto_screening_transition_help'))
                                             ->default(false),
                                         DateTimePicker::make('target_start_at')
                                             ->label(__('recruitment::filament.requisition.fields.target_start_at'))

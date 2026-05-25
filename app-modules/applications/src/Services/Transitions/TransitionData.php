@@ -21,7 +21,7 @@ final readonly class TransitionData
         public ?float $offerAmount,
         public ?CarbonInterface $offerResponseDeadline,
         public ?string $notes,
-        public string $byUserId,
+        public ?string $byUserId,
     ) {}
 
     /**
@@ -41,7 +41,7 @@ final readonly class TransitionData
      *     notes?: string|null,
      * } $data
      */
-    public static function fromArray(array $data, string $byUserId): self
+    public static function fromArray(array $data, ?string $byUserId = null): self
     {
         $toStatus = $data['to_status'] ?? $data['status'] ?? null;
 
@@ -80,7 +80,7 @@ final readonly class TransitionData
      *     offer_amount: float|null,
      *     offer_response_deadline: string|null,
      *     notes: string|null,
-     *     by_user_id: string,
+     *     by_user_id: string|null,
      * }
      */
     public function toArray(): array

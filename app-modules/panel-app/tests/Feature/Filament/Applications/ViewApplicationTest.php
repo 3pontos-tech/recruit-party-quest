@@ -39,7 +39,7 @@ it('renders pipeline progress sidebar for active application', function (): void
 
     livewire(ViewApplication::class, ['record' => $this->application->getKey()])
         ->assertOk()
-        ->assertSee('Pipeline Progress')
+        ->assertSee('Selection Process Stages')
         ->assertSee('Overall Progress')
         ->assertSee($stage->name)
         ->assertSee('Current');
@@ -73,15 +73,20 @@ it('shows submission date and last updated in footer', function (): void {
         ->assertSee($this->application->created_at->format('M j, Y'));
 });
 
-it('shows pipeline alongside rejection details for rejected application', function (): void {
+it('shows neutral title and rejection details for rejected application', function (): void {
     $application = Application::factory()
         ->rejected()
         ->for($this->candidate, 'candidate')
-        ->create();
+        ->create([
+            // Pin a non-knockout category: ScreeningKnockout renders a neutral message
+            // and hides the reason, so relying on ->rejected()'s random category is flaky.
+            'rejection_reason_category' => RejectionReasonCategoryEnum::Qualifications,
+        ]);
 
     livewire(ViewApplication::class, ['record' => $application->getKey()])
         ->assertOk()
-        ->assertSee('Pipeline Progress')
+        ->assertSee('Application Not Progressed')
+        ->assertDontSee('Selection Process Stages')
         ->assertSee('Rejection Reason')
         ->assertSee($application->rejection_reason_category->getLabel());
 });
@@ -125,6 +130,39 @@ it('does not show details section when rejection details are absent', function (
     livewire(ViewApplication::class, ['record' => $application->getKey()])
         ->assertOk()
         ->assertDontSee('Feedback');
+});
+
+it('shows neutral message and hides reason for screening knockout rejection', function (): void {
+    $application = Application::factory()
+        ->for($this->candidate, 'candidate')
+        ->create([
+            'status' => ApplicationStatusEnum::Rejected,
+            'rejection_reason_category' => RejectionReasonCategoryEnum::ScreeningKnockout,
+            'rejection_reason_details' => 'Automatically rejected: did not meet the screening criteria.',
+        ]);
+
+    livewire(ViewApplication::class, ['record' => $application->getKey()])
+        ->assertOk()
+        ->assertSee('your application will not proceed to the next stages')
+        ->assertDontSee('Rejection Reason')
+        ->assertDontSee(RejectionReasonCategoryEnum::ScreeningKnockout->getLabel())
+        ->assertDontSee('Automatically rejected: did not meet the screening criteria.');
+});
+
+it('does not show neutral screening message for non-knockout rejection', function (): void {
+    $application = Application::factory()
+        ->for($this->candidate, 'candidate')
+        ->create([
+            'status' => ApplicationStatusEnum::Rejected,
+            'rejection_reason_category' => RejectionReasonCategoryEnum::Qualifications,
+            'rejection_reason_details' => 'Did not meet the technical requirements.',
+        ]);
+
+    livewire(ViewApplication::class, ['record' => $application->getKey()])
+        ->assertOk()
+        ->assertSee('Rejection Reason')
+        ->assertSee('Did not meet the technical requirements.')
+        ->assertDontSee('your application will not proceed to the next stages');
 });
 
 it('allows candidate to view their own application when job is not published', function (): void {

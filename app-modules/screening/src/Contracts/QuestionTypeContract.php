@@ -55,4 +55,21 @@ interface QuestionTypeContract
      * Used with x-dynamic-component for public-facing forms.
      */
     public static function component(): string;
+
+    /**
+     * Filament form components for the typed knockout criteria.
+     * Returns [] for types that do not support knockout.
+     *
+     * @return array<int, Component>
+     */
+    public static function knockoutCriteriaSchema(): array;
+
+    /**
+     * Whether the candidate's answer PASSES the knockout criteria.
+     * true = approved (no knockout), false = failed (knockout).
+     * Must be defensive: incomplete/legacy criteria return true.
+     *
+     * @param  array<string, mixed>  $criteria
+     */
+    public static function evaluateKnockout(array $criteria, mixed $answer): bool;
 }
