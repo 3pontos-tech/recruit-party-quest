@@ -77,7 +77,11 @@ it('shows neutral title and rejection details for rejected application', functio
     $application = Application::factory()
         ->rejected()
         ->for($this->candidate, 'candidate')
-        ->create();
+        ->create([
+            // Pin a non-knockout category: ScreeningKnockout renders a neutral message
+            // and hides the reason, so relying on ->rejected()'s random category is flaky.
+            'rejection_reason_category' => RejectionReasonCategoryEnum::Qualifications,
+        ]);
 
     livewire(ViewApplication::class, ['record' => $application->getKey()])
         ->assertOk()
