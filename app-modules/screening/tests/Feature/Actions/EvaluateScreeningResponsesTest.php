@@ -19,30 +19,16 @@ beforeEach(function (): void {
     ]);
 });
 
-function knockoutQuestion(JobRequisition $req, array $criteria): ScreeningQuestion
-{
-    return ScreeningQuestion::factory()
-        ->for($req, 'screenable')
-        ->state([
-            'team_id' => $req->team_id,
-            'question_type' => QuestionTypeEnum::YesNo,
-            'settings' => [],
-            'is_required' => true,
-            'is_knockout' => true,
-            'knockout_criteria' => $criteria,
-        ])
-        ->create();
-}
-
 it('marks is_knockout_fail true when the answer fails the criteria', function (): void {
     Event::fake([ScreeningEvaluated::class]);
-    $question = knockoutQuestion($this->requisition, ['expected' => 'yes']);
+    $question = ScreeningQuestion::factory()->yesNo()->knockout(['expected' => 'yes'])
+        ->for($this->requisition, 'screenable')
+        ->create(['team_id' => $this->requisition->team_id]);
 
-    $response = ScreeningResponse::query()->create([
+    $response = ScreeningResponse::factory()->yesNoResponse(false)->create([
         'team_id' => $this->requisition->team_id,
         'application_id' => $this->application->id,
         'question_id' => $question->id,
-        'response_value' => ['value' => 'no'],
     ]);
 
     resolve(EvaluateScreeningResponses::class)->execute($this->application);
@@ -54,13 +40,14 @@ it('marks is_knockout_fail true when the answer fails the criteria', function ()
 
 it('keeps is_knockout_fail false when the answer passes', function (): void {
     Event::fake([ScreeningEvaluated::class]);
-    $question = knockoutQuestion($this->requisition, ['expected' => 'yes']);
+    $question = ScreeningQuestion::factory()->yesNo()->knockout(['expected' => 'yes'])
+        ->for($this->requisition, 'screenable')
+        ->create(['team_id' => $this->requisition->team_id]);
 
-    $response = ScreeningResponse::query()->create([
+    $response = ScreeningResponse::factory()->yesNoResponse(true)->create([
         'team_id' => $this->requisition->team_id,
         'application_id' => $this->application->id,
         'question_id' => $question->id,
-        'response_value' => ['value' => 'yes'],
     ]);
 
     resolve(EvaluateScreeningResponses::class)->execute($this->application);
@@ -72,15 +59,15 @@ it('keeps is_knockout_fail false when the answer passes', function (): void {
 
 it('clears a stale is_knockout_fail when a re-evaluation now passes', function (): void {
     Event::fake([ScreeningEvaluated::class]);
-    $question = knockoutQuestion($this->requisition, ['expected' => 'yes']);
+    $question = ScreeningQuestion::factory()->yesNo()->knockout(['expected' => 'yes'])
+        ->for($this->requisition, 'screenable')
+        ->create(['team_id' => $this->requisition->team_id]);
 
-    // The response previously failed and was persisted as a knockout fail.
-    $response = ScreeningResponse::query()->create([
+    // The response previously failed and was persisted as a knockout fail, but now passes.
+    $response = ScreeningResponse::factory()->knockoutFailed()->yesNoResponse(true)->create([
         'team_id' => $this->requisition->team_id,
         'application_id' => $this->application->id,
         'question_id' => $question->id,
-        'response_value' => ['value' => 'yes'],
-        'is_knockout_fail' => true,
     ]);
 
     resolve(EvaluateScreeningResponses::class)->execute($this->application);
@@ -94,16 +81,13 @@ it('clears a stale is_knockout_fail when a re-evaluation now passes', function (
 it('reports hadKnockoutCriteria false when there are no knockout questions', function (): void {
     Event::fake([ScreeningEvaluated::class]);
 
-    ScreeningQuestion::factory()
+    ScreeningQuestion::factory()->text()
         ->for($this->requisition, 'screenable')
-        ->state([
+        ->create([
             'team_id' => $this->requisition->team_id,
-            'question_type' => QuestionTypeEnum::Text,
-            'settings' => [],
             'is_knockout' => false,
             'knockout_criteria' => null,
-        ])
-        ->create();
+        ]);
 
     resolve(EvaluateScreeningResponses::class)->execute($this->application);
 
@@ -112,7 +96,9 @@ it('reports hadKnockoutCriteria false when there are no knockout questions', fun
 
 it('treats a missing answer to a knockout question as a pass', function (): void {
     Event::fake([ScreeningEvaluated::class]);
-    knockoutQuestion($this->requisition, ['expected' => 'yes']);
+    ScreeningQuestion::factory()->yesNo()->knockout(['expected' => 'yes'])
+        ->for($this->requisition, 'screenable')
+        ->create(['team_id' => $this->requisition->team_id]);
 
     resolve(EvaluateScreeningResponses::class)->execute($this->application);
 
@@ -123,9 +109,9 @@ it('does not knock out a candidate when accepted criteria references options tha
     Event::fake([ScreeningEvaluated::class]);
 
     // Recruiter set accepted=['Senior'] then renamed the option to 'jr'.
-    $question = ScreeningQuestion::factory()
+    $question = ScreeningQuestion::factory()->knockout(['accepted' => ['Senior']]) // stale
         ->for($this->requisition, 'screenable')
-        ->state([
+        ->create([
             'team_id' => $this->requisition->team_id,
             'question_type' => QuestionTypeEnum::SingleChoice,
             'settings' => [
@@ -135,17 +121,14 @@ it('does not knock out a candidate when accepted criteria references options tha
                 ],
             ],
             'is_required' => true,
-            'is_knockout' => true,
-            'knockout_criteria' => ['accepted' => ['Senior']], // stale
-        ])
-        ->create();
+        ]);
 
-    $response = ScreeningResponse::query()->create([
-        'team_id' => $this->requisition->team_id,
-        'application_id' => $this->application->id,
-        'question_id' => $question->id,
-        'response_value' => ['value' => 'jr'], // valid current choice
-    ]);
+    $response = ScreeningResponse::factory()->singleChoiceResponse('jr') // valid current choice
+        ->create([
+            'team_id' => $this->requisition->team_id,
+            'application_id' => $this->application->id,
+            'question_id' => $question->id,
+        ]);
 
     resolve(EvaluateScreeningResponses::class)->execute($this->application);
 
@@ -158,9 +141,9 @@ it('does not knock out a candidate when accepted criteria references options tha
 it('still evaluates against the accepted options that remain valid (EC-2 partial)', function (): void {
     Event::fake([ScreeningEvaluated::class]);
 
-    $question = ScreeningQuestion::factory()
+    $question = ScreeningQuestion::factory()->knockout(['accepted' => ['a', 'gone']]) // 'gone' stale, 'a' valid
         ->for($this->requisition, 'screenable')
-        ->state([
+        ->create([
             'team_id' => $this->requisition->team_id,
             'question_type' => QuestionTypeEnum::SingleChoice,
             'settings' => [
@@ -171,17 +154,14 @@ it('still evaluates against the accepted options that remain valid (EC-2 partial
                 ],
             ],
             'is_required' => true,
-            'is_knockout' => true,
-            'knockout_criteria' => ['accepted' => ['a', 'gone']], // 'gone' stale, 'a' valid
-        ])
-        ->create();
+        ]);
 
-    $response = ScreeningResponse::query()->create([
-        'team_id' => $this->requisition->team_id,
-        'application_id' => $this->application->id,
-        'question_id' => $question->id,
-        'response_value' => ['value' => 'b'], // not in remaining valid accepted ['a'] → fails
-    ]);
+    $response = ScreeningResponse::factory()->singleChoiceResponse('b') // not in remaining valid accepted ['a'] → fails
+        ->create([
+            'team_id' => $this->requisition->team_id,
+            'application_id' => $this->application->id,
+            'question_id' => $question->id,
+        ]);
 
     resolve(EvaluateScreeningResponses::class)->execute($this->application);
 

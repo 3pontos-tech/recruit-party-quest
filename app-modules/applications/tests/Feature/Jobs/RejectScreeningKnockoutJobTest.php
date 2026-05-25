@@ -8,63 +8,52 @@ use He4rt\Applications\Jobs\RejectScreeningKnockoutJob;
 use He4rt\Applications\Models\Application;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 
-function newApplicationForRejectJob(JobRequisition $req): Application
-{
-    $first = $req->stages()->orderBy('display_order')->first();
-
-    return Application::factory()->create([
-        'requisition_id' => $req->id,
-        'team_id' => $req->team_id,
-        'status' => ApplicationStatusEnum::New,
-        'current_stage_id' => $first->id,
-    ]);
-}
+beforeEach(function (): void {
+    // ApplicationFactory::configure() posiciona o current_stage na primeira etapa
+    // (criada pelo JobRequisitionObserver) quando requisition_id está setado.
+    $this->requisition = JobRequisition::factory()->create(['auto_screening_transition' => true]);
+    $this->application = Application::factory()
+        ->withStatus(ApplicationStatusEnum::New)
+        ->create([
+            'requisition_id' => $this->requisition->id,
+            'team_id' => $this->requisition->team_id,
+        ]);
+});
 
 it('rejects a New application when the flag is still on', function (): void {
-    $req = JobRequisition::factory()->create(['auto_screening_transition' => true]);
-    $application = newApplicationForRejectJob($req);
+    new RejectScreeningKnockoutJob($this->application)->handle();
 
-    new RejectScreeningKnockoutJob($application)->handle();
+    $this->application->refresh();
 
-    $application->refresh();
-
-    expect($application->status)->toBe(ApplicationStatusEnum::Rejected)
-        ->and($application->rejection_reason_category)->toBe(RejectionReasonCategoryEnum::ScreeningKnockout)
-        ->and($application->rejected_by)->toBeNull();
+    expect($this->application->status)->toBe(ApplicationStatusEnum::Rejected)
+        ->and($this->application->rejection_reason_category)->toBe(RejectionReasonCategoryEnum::ScreeningKnockout)
+        ->and($this->application->rejected_by)->toBeNull();
 });
 
 it('is a no-op when status is no longer New', function (): void {
-    $req = JobRequisition::factory()->create(['auto_screening_transition' => true]);
-    $application = newApplicationForRejectJob($req);
-    $application->update(['status' => ApplicationStatusEnum::InReview]);
+    $this->application->update(['status' => ApplicationStatusEnum::InReview]);
 
-    new RejectScreeningKnockoutJob($application)->handle();
+    new RejectScreeningKnockoutJob($this->application)->handle();
 
-    expect($application->fresh()->status)->toBe(ApplicationStatusEnum::InReview);
+    expect($this->application->fresh()->status)->toBe(ApplicationStatusEnum::InReview);
 });
 
 it('is a no-op when the requisition flag has been turned off', function (): void {
-    $req = JobRequisition::factory()->create(['auto_screening_transition' => true]);
-    $application = newApplicationForRejectJob($req);
+    $this->requisition->update(['auto_screening_transition' => false]);
 
-    $req->update(['auto_screening_transition' => false]);
+    new RejectScreeningKnockoutJob($this->application)->handle();
 
-    new RejectScreeningKnockoutJob($application)->handle();
-
-    expect($application->fresh()->status)->toBe(ApplicationStatusEnum::New);
+    expect($this->application->fresh()->status)->toBe(ApplicationStatusEnum::New);
 });
 
 it('is idempotent: a second job execution does not change anything', function (): void {
-    $req = JobRequisition::factory()->create(['auto_screening_transition' => true]);
-    $application = newApplicationForRejectJob($req);
+    new RejectScreeningKnockoutJob($this->application)->handle();
+    $rejectedAt = $this->application->fresh()->rejected_at;
 
-    new RejectScreeningKnockoutJob($application)->handle();
-    $rejectedAt = $application->fresh()->rejected_at;
+    new RejectScreeningKnockoutJob($this->application->fresh())->handle();
 
-    new RejectScreeningKnockoutJob($application->fresh())->handle();
+    $this->application->refresh();
 
-    $application->refresh();
-
-    expect($application->status)->toBe(ApplicationStatusEnum::Rejected)
-        ->and($application->rejected_at?->equalTo($rejectedAt))->toBeTrue();
+    expect($this->application->status)->toBe(ApplicationStatusEnum::Rejected)
+        ->and($this->application->rejected_at?->equalTo($rejectedAt))->toBeTrue();
 });

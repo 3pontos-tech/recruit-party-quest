@@ -9,76 +9,63 @@ use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Screening\Events\ScreeningEvaluated;
 use Illuminate\Support\Facades\Queue;
 
-// JobRequisitionObserver::created() já cria 8 stages ordenados (display_order 1..8).
-// Não fabricar stages manualmente — usar os do observer evita display_order colidente.
-function newApplicationFor(JobRequisition $req): Application
-{
-    $first = $req->stages()->orderBy('display_order')->first();
-
-    return Application::factory()->create([
-        'requisition_id' => $req->id,
-        'team_id' => $req->team_id,
-        'status' => ApplicationStatusEnum::New,
-        'current_stage_id' => $first->id,
-    ]);
-}
+beforeEach(function (): void {
+    // ApplicationFactory::configure() posiciona o current_stage na primeira etapa
+    // (criada pelo JobRequisitionObserver) — sem fabricar stages manualmente.
+    $this->requisition = JobRequisition::factory()->create(['auto_screening_transition' => true]);
+    $this->application = Application::factory()
+        ->withStatus(ApplicationStatusEnum::New)
+        ->create([
+            'requisition_id' => $this->requisition->id,
+            'team_id' => $this->requisition->team_id,
+        ]);
+});
 
 it('does nothing when the flag is off', function (): void {
-    $req = JobRequisition::factory()->create(['auto_screening_transition' => false]);
-    $application = newApplicationFor($req);
+    $this->requisition->update(['auto_screening_transition' => false]);
 
-    event(new ScreeningEvaluated($application, anyKnockoutFailed: true, hadKnockoutCriteria: true));
+    event(new ScreeningEvaluated($this->application, anyKnockoutFailed: true, hadKnockoutCriteria: true));
 
-    expect($application->fresh()->status)->toBe(ApplicationStatusEnum::New);
+    expect($this->application->fresh()->status)->toBe(ApplicationStatusEnum::New);
 });
 
 it('queues a delayed rejection job when the flag is on and a knockout failed', function (): void {
     Queue::fake();
+    $this->freezeTime();
 
-    $req = JobRequisition::factory()->create(['auto_screening_transition' => true]);
-    $application = newApplicationFor($req);
+    event(new ScreeningEvaluated($this->application, anyKnockoutFailed: true, hadKnockoutCriteria: true));
 
-    event(new ScreeningEvaluated($application, anyKnockoutFailed: true, hadKnockoutCriteria: true));
-
-    expect($application->fresh()->status)->toBe(ApplicationStatusEnum::New);
+    expect($this->application->fresh()->status)->toBe(ApplicationStatusEnum::New);
 
     Queue::assertPushed(
         RejectScreeningKnockoutJob::class,
-        fn (RejectScreeningKnockoutJob $job): bool => $job->application->is($application)
+        fn (RejectScreeningKnockoutJob $job): bool => $job->application->is($this->application)
             && $job->delay instanceof DateTimeInterface
-            && $job->delay->getTimestamp() >= now()->addDay()->subMinute()->getTimestamp()
-            && $job->delay->getTimestamp() <= now()->addDay()->addMinute()->getTimestamp()
+            && $job->delay->getTimestamp() === now()->addDay()->getTimestamp()
     );
 });
 
 it('advances the candidate when the flag is on, has knockout questions and none failed', function (): void {
-    $req = JobRequisition::factory()->create(['auto_screening_transition' => true]);
-    $application = newApplicationFor($req);
-    $secondStageId = $req->stages()->orderBy('display_order')->skip(1)->first()->id;
+    $secondStageId = $this->requisition->stages()->orderBy('display_order')->skip(1)->first()->id;
 
-    event(new ScreeningEvaluated($application, anyKnockoutFailed: false, hadKnockoutCriteria: true));
+    event(new ScreeningEvaluated($this->application, anyKnockoutFailed: false, hadKnockoutCriteria: true));
 
-    $application->refresh();
+    $this->application->refresh();
 
-    expect($application->status)->toBe(ApplicationStatusEnum::InReview)
-        ->and($application->current_stage_id)->toBe($secondStageId);
+    expect($this->application->status)->toBe(ApplicationStatusEnum::InReview)
+        ->and($this->application->current_stage_id)->toBe($secondStageId);
 });
 
 it('does nothing when there were no knockout questions', function (): void {
-    $req = JobRequisition::factory()->create(['auto_screening_transition' => true]);
-    $application = newApplicationFor($req);
+    event(new ScreeningEvaluated($this->application, anyKnockoutFailed: false, hadKnockoutCriteria: false));
 
-    event(new ScreeningEvaluated($application, anyKnockoutFailed: false, hadKnockoutCriteria: false));
-
-    expect($application->fresh()->status)->toBe(ApplicationStatusEnum::New);
+    expect($this->application->fresh()->status)->toBe(ApplicationStatusEnum::New);
 });
 
 it('ignores applications not in New status', function (): void {
-    $req = JobRequisition::factory()->create(['auto_screening_transition' => true]);
-    $application = newApplicationFor($req);
-    $application->update(['status' => ApplicationStatusEnum::InProgress]);
+    $this->application->update(['status' => ApplicationStatusEnum::InProgress]);
 
-    event(new ScreeningEvaluated($application, anyKnockoutFailed: true, hadKnockoutCriteria: true));
+    event(new ScreeningEvaluated($this->application, anyKnockoutFailed: true, hadKnockoutCriteria: true));
 
-    expect($application->fresh()->status)->toBe(ApplicationStatusEnum::InProgress);
+    expect($this->application->fresh()->status)->toBe(ApplicationStatusEnum::InProgress);
 });

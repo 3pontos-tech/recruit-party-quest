@@ -9,7 +9,6 @@ use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
-use He4rt\Screening\Enums\QuestionTypeEnum;
 use He4rt\Screening\Events\ScreeningEvaluated;
 use He4rt\Screening\Livewire\JobApplicationForm;
 use He4rt\Screening\Models\ScreeningQuestion;
@@ -29,16 +28,11 @@ beforeEach(function (): void {
     $this->requisition = JobRequisition::factory()->create(['auto_screening_transition' => true]);
 
     $this->question = ScreeningQuestion::factory()
+        ->yesNo()
+        ->required()
+        ->knockout(['expected' => 'yes'])
         ->for($this->requisition, 'screenable')
-        ->state([
-            'team_id' => $this->requisition->team_id,
-            'question_type' => QuestionTypeEnum::YesNo,
-            'settings' => [],
-            'is_required' => true,
-            'is_knockout' => true,
-            'knockout_criteria' => ['expected' => 'yes'],
-        ])
-        ->create();
+        ->create(['team_id' => $this->requisition->team_id]);
 });
 
 it('auto-rejects the candidate who fails the knockout on submit', function (): void {
