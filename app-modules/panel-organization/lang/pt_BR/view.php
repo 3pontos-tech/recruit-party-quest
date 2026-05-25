@@ -50,7 +50,7 @@ return [
         'schedule_button' => 'Agendar nova avaliação',
     ],
     'pipeline' => [
-        'title' => 'Progresso da Pipeline',
+        'title' => 'Etapas do Processo Seletivo',
         'overall_progress' => 'Progresso geral',
         'no_stages' => 'Sem etapas',
         'application_submitted' => 'Aplicação enviada',

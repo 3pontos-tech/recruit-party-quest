@@ -19,7 +19,7 @@ return [
         'tracking_code' => 'Tracking Code',
         'requisition' => 'Job Requisition',
         'candidate' => 'Candidate',
-        'pipeline_progress' => 'Pipeline Progress',
+        'pipeline_progress' => 'Selection Process Stages',
         'status' => 'Status',
         'source' => 'Source',
         'source_details' => 'Source Details',

@@ -39,7 +39,7 @@ it('renders pipeline progress sidebar for active application', function (): void
 
     livewire(ViewApplication::class, ['record' => $this->application->getKey()])
         ->assertOk()
-        ->assertSee('Pipeline Progress')
+        ->assertSee('Selection Process Stages')
         ->assertSee('Overall Progress')
         ->assertSee($stage->name)
         ->assertSee('Current');
@@ -73,7 +73,7 @@ it('shows submission date and last updated in footer', function (): void {
         ->assertSee($this->application->created_at->format('M j, Y'));
 });
 
-it('shows pipeline alongside rejection details for rejected application', function (): void {
+it('shows neutral title and rejection details for rejected application', function (): void {
     $application = Application::factory()
         ->rejected()
         ->for($this->candidate, 'candidate')
@@ -81,7 +81,8 @@ it('shows pipeline alongside rejection details for rejected application', functi
 
     livewire(ViewApplication::class, ['record' => $application->getKey()])
         ->assertOk()
-        ->assertSee('Pipeline Progress')
+        ->assertSee('Application Not Progressed')
+        ->assertDontSee('Selection Process Stages')
         ->assertSee('Rejection Reason')
         ->assertSee($application->rejection_reason_category->getLabel());
 });

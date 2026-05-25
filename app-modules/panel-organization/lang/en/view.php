@@ -50,7 +50,7 @@ return [
         'schedule_button' => 'Schedule New Evaluation',
     ],
     'pipeline' => [
-        'title' => 'Pipeline Progress',
+        'title' => 'Selection Process Stages',
         'overall_progress' => 'Overall Progress',
         'no_stages' => 'No stages',
         'application_submitted' => 'Application submitted',
