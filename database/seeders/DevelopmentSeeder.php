@@ -28,6 +28,7 @@ use He4rt\Users\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
+use RuntimeException;
 
 final class DevelopmentSeeder extends Seeder
 {
@@ -61,7 +62,7 @@ final class DevelopmentSeeder extends Seeder
         $this->adminTeam = $adminData['team'];
         $this->departments = $adminData['departments'];
 
-        $this->skills = $this->createFocusedSkills();
+        $this->skills = $this->loadCatalogSkills();
 
         $candidates = $this->createCandidates(25);
 
@@ -80,57 +81,22 @@ final class DevelopmentSeeder extends Seeder
         $this->command->info('Development Seeder completed.');
     }
 
-    private function createFocusedSkills(): Collection
+    /**
+     * Loads the canonical skill catalog seeded by
+     * `2026_05_26_120000_seed_candidate_skills_catalog` migration.
+     *
+     * The catalog used to be created here, but that meant production (where
+     * DevelopmentSeeder never runs) had no skills. Now the migration is the
+     * single source of truth and this seeder only consumes it.
+     */
+    private function loadCatalogSkills(): Collection
     {
-        $this->command->info('Creating focused skills...');
+        $this->command->info('Loading skill catalog...');
 
-        $skills = collect();
+        $skills = Skill::query()->get();
 
-        $hardSkills = [
-            'PHP', 'Laravel', 'Symfony', 'Node.js', 'Python', 'Java', 'C#', '.NET',
-            'JavaScript', 'TypeScript', 'React', 'Vue.js', 'Angular', 'HTML', 'CSS', 'Tailwind',
-            'Flutter', 'React Native', 'Swift', 'Kotlin', 'Dart',
-            'Docker', 'AWS', 'Azure', 'Kubernetes', 'CI/CD', 'Jenkins', 'GitLab',
-            'MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'ElasticSearch',
-            'Git', 'REST API', 'GraphQL',
-        ];
-
-        $softSkills = [
-            'Leadership', 'Communication', 'Teamwork', 'Problem Solving',
-            'Critical Thinking', 'Time Management', 'Adaptability',
-            'Project Management', 'Agile', 'Scrum',
-        ];
-
-        $languages = [
-            'English', 'Portuguese', 'Spanish', 'French', 'German',
-        ];
-
-        foreach ($hardSkills as $skillName) {
-            $skill = Skill::factory()->create([
-                'name' => $skillName,
-                'category' => 'hard_skill',
-            ]);
-
-            $skills->push($skill);
-        }
-
-        foreach ($softSkills as $skillName) {
-            $skill = Skill::factory()->create([
-                'name' => $skillName,
-                'category' => 'soft_skill',
-            ]);
-
-            $skills->push($skill);
-        }
-
-        foreach ($languages as $skillName) {
-            $skill = Skill::factory()->create([
-                'name' => $skillName,
-                'category' => 'language',
-            ]);
-
-            $skills->push($skill);
-        }
+        throw_if($skills->isEmpty(), RuntimeException::class, 'Skill catalog is empty. Run `php artisan migrate` before seeding — '
+        .'the catalog is populated by the candidate skills catalog migration.');
 
         return $skills;
     }
