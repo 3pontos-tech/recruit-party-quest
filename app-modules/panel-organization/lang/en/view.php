@@ -3,6 +3,13 @@
 declare(strict_types=1);
 
 return [
+    'navigation' => [
+        'aria_label' => 'Application navigation',
+        'previous' => 'Previous',
+        'next' => 'Next',
+        'of' => 'of',
+        'jump_to' => 'Jump to',
+    ],
     'candidate_header' => [
         'position' => 'Position',
         'department' => 'Department',
