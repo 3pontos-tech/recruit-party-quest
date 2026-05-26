@@ -128,6 +128,12 @@
                                         </x-he4rt::tag>
                                     @endif
 
+                                    @if ($job['workSchedule'])
+                                        <x-he4rt::tag variant="ghost" icon="heroicon-o-calendar-days" size="xs">
+                                            {{ $job['workSchedule'] }}
+                                        </x-he4rt::tag>
+                                    @endif
+
                                     @if ($job['experienceLevel'])
                                         <x-he4rt::tag variant="ghost" icon="heroicon-o-chart-bar" size="xs">
                                             {{ $job['experienceLevel'] }}
@@ -289,6 +295,12 @@
                                             @if ($job['employmentType'])
                                                 <x-he4rt::tag variant="ghost" icon="heroicon-o-clock" size="xs">
                                                     {{ $job['employmentType'] }}
+                                                </x-he4rt::tag>
+                                            @endif
+
+                                            @if ($job['workSchedule'])
+                                                <x-he4rt::tag variant="ghost" icon="heroicon-o-calendar-days" size="xs">
+                                                    {{ $job['workSchedule'] }}
                                                 </x-he4rt::tag>
                                             @endif
 

@@ -9,6 +9,7 @@ use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Teams\Team;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Str;
 
 /** @extends Factory<JobPosting> */
 class JobPostingFactory extends Factory
@@ -34,7 +35,7 @@ class JobPostingFactory extends Factory
 
         return [
             'title' => $title,
-            'slug' => str($title)->slug()->toString(),
+            'slug' => str($title)->slug()->toString().'-'.Str::uuid()->toString(),
             'summary' => 'Join our team as a '.$title.' and help us build amazing products using modern technologies.',
             'description' => sprintf(
                 'Join our team as a %s and become part of an environment focused on collaboration, continuous learning, and technical excellence.

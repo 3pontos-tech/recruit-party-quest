@@ -5,6 +5,7 @@ declare(strict_types=1);
 use He4rt\App\Livewire\Jobs\SavedJobsWidget;
 use He4rt\Candidates\Models\CandidateJobSaved;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
+use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Users\User;
 
@@ -183,4 +184,51 @@ it('does not show a soft-deleted job in the saved list and does not count it', f
 
     expect($component->get('savedJobs'))->toBeEmpty()
         ->and($component->get('savedJobsCount'))->toBe(0);
+});
+
+it('renders saved jobs when employment_type and work_schedule are null', function (): void {
+    $job = JobRequisition::factory()
+        ->available()
+        ->create([
+            'employment_type' => null,
+            'work_schedule' => null,
+        ]);
+
+    CandidateJobSaved::factory()->create([
+        'candidate_id' => $this->candidate->getKey(),
+        'job_requisition_id' => $job->getKey(),
+    ]);
+
+    $component = livewire(SavedJobsWidget::class)
+        ->call('loadJobs')
+        ->assertOk();
+
+    expect($component->get('savedJobs'))->toHaveCount(1);
+
+    $jobData = $component->get('savedJobs')[0];
+
+    expect($jobData['employmentType'])->toBeNull()
+        ->and($jobData['workSchedule'])->toBeNull()
+        ->and($jobData['workArrangement'])->not->toBeNull()
+        ->and($jobData['experienceLevel'])->not->toBeNull();
+});
+
+it('exposes the work_schedule label when present', function (): void {
+    $job = JobRequisition::factory()
+        ->available()
+        ->create([
+            'work_schedule' => WorkScheduleEnum::FullTime,
+        ]);
+
+    CandidateJobSaved::factory()->create([
+        'candidate_id' => $this->candidate->getKey(),
+        'job_requisition_id' => $job->getKey(),
+    ]);
+
+    $component = livewire(SavedJobsWidget::class)
+        ->call('loadJobs');
+
+    $jobData = $component->get('savedJobs')[0];
+
+    expect($jobData['workSchedule'])->toBe(WorkScheduleEnum::FullTime->getLabel());
 });
