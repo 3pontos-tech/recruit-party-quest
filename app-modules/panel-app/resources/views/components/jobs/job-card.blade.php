@@ -38,7 +38,7 @@
         </div>
     </x-slot>
 
-    <x-slot:description class="mt-3 leading-relaxed">
+    <x-slot:description class="mt-3 line-clamp-2 leading-relaxed break-words">
         {{ $job->post?->summary }}
     </x-slot>
 
@@ -62,7 +62,7 @@
             variant="ghost"
             class="group-hover:text-text-high transition duration-500"
         >
-            {{ $job->employment_type?->getLabel() ?? $job->work_schedule?->getLabel() ?? __('recruitment::filament.requisition.fields.not_specified') }}
+            {{ $job->employment_type?->getLabel() ?? ($job->work_schedule?->getLabel() ?? __('recruitment::filament.requisition.fields.not_specified')) }}
         </x-he4rt::tag>
         @if ($job->show_salary_to_candidates && ! is_null($job->salary_range_min) && ! is_null($job->salary_range_max))
             <x-he4rt::tag
