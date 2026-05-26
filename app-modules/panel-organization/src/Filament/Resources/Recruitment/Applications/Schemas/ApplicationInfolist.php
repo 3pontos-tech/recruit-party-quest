@@ -16,6 +16,7 @@ use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use He4rt\Applications\Models\Application;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Actions\RejectApplicationAction;
+use He4rt\Organization\Filament\Resources\Recruitment\Applications\Support\ApplicationNavigationContext;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions\StateTransitionAction;
 use He4rt\Permissions\Roles;
 use He4rt\Users\User;
@@ -30,6 +31,16 @@ class ApplicationInfolist
         return $schema
             ->columns(4)
             ->components([
+                ViewEntry::make('navigation_bar')
+                    ->view('panel-organization::components.applications.navigation-bar')
+                    ->viewData(fn (Application $record): array => [
+                        'context' => once(fn () => ApplicationNavigationContext::forApplication($record)),
+                    ])
+                    ->visible(fn (Application $record): bool => once(
+                        fn () => ApplicationNavigationContext::forApplication($record)
+                    )->shouldRender())
+                    ->columnSpanFull(),
+
                 ViewEntry::make('header')
                     ->view('panel-organization::components.applications.candidate-header')
                     ->columnSpanFull(),
