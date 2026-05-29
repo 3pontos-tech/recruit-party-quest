@@ -102,9 +102,10 @@ it('should preserve form state across interactions', function (): void {
 
 it('should display appropriate error messages for failures', function (): void {
     livewire(OnboardingWizard::class)
+        ->set('wizardVisible', true)
         ->set('data.data_consent_given', false)
         ->call('handleRegistration')
-        ->assertNotified(__('panel-app::pages/onboarding.notifications.consent_required.title'));
+        ->assertHasFormErrors(['data_consent_given'], 'content');
 });
 
 describe('Resume Analysis Error Handling', function (): void {
@@ -134,9 +135,83 @@ describe('Resume Analysis Error Handling', function (): void {
     });
 });
 
+describe('Finalization validation (issue #166)', function (): void {
+    it('blocks finalization when phone is invalid for BR and does not persist', function (): void {
+        livewire(OnboardingWizard::class)
+            ->set('wizardVisible', true)
+            ->set('data.timezone', 'America/Sao_Paulo')
+            ->set('data.preferred_language', 'pt_BR')
+            ->set('data.phone', '+551198765432100')
+            ->set('data.data_consent_given', true)
+            ->set('data.expected_salary', '50000')
+            ->set('data.expected_salary_currency', 'BRL')
+            ->set('data.availability_date', now()->addDays(30)->format('Y-m-d'))
+            ->set('data.experience_level', ExperienceLevelEnum::Junior->value)
+            ->set('data.confirm_submission', true)
+            ->set('data.work_experiences', [])
+            ->set('data.education', [])
+            ->call('handleRegistration')
+            ->assertHasFormErrors(['phone'], 'content')
+            ->assertNoRedirect();
+
+        expect($this->candidate->fresh()->is_onboarded)->toBeFalse();
+    });
+
+    it('blocks finalization when a work experience is missing company_name without TypeError', function (): void {
+        livewire(OnboardingWizard::class)
+            ->set('wizardVisible', true)
+            ->set('data.timezone', 'America/Sao_Paulo')
+            ->set('data.preferred_language', 'pt_BR')
+            ->set('data.phone', '+5511987654321')
+            ->set('data.data_consent_given', true)
+            ->set('data.expected_salary', '50000')
+            ->set('data.expected_salary_currency', 'BRL')
+            ->set('data.availability_date', now()->addDays(30)->format('Y-m-d'))
+            ->set('data.experience_level', ExperienceLevelEnum::Junior->value)
+            ->set('data.confirm_submission', true)
+            ->set('data.work_experiences', [
+                'item-1' => [
+                    'company_name' => null,
+                    'description' => 'Some description',
+                    'start_date' => '2020-01-01',
+                    'end_date' => null,
+                    'is_currently_working_here' => true,
+                ],
+            ])
+            ->set('data.education', [])
+            ->call('handleRegistration')
+            ->assertHasFormErrors(['work_experiences.item-1.company_name'], 'content')
+            ->assertNoRedirect();
+
+        expect($this->candidate->fresh()->is_onboarded)->toBeFalse();
+    });
+
+    it('blocks finalization when data consent is not given', function (): void {
+        livewire(OnboardingWizard::class)
+            ->set('wizardVisible', true)
+            ->set('data.timezone', 'America/Sao_Paulo')
+            ->set('data.preferred_language', 'pt_BR')
+            ->set('data.phone', '+5511987654321')
+            ->set('data.data_consent_given', false)
+            ->set('data.expected_salary', '50000')
+            ->set('data.expected_salary_currency', 'BRL')
+            ->set('data.availability_date', now()->addDays(30)->format('Y-m-d'))
+            ->set('data.experience_level', ExperienceLevelEnum::Junior->value)
+            ->set('data.confirm_submission', true)
+            ->set('data.work_experiences', [])
+            ->set('data.education', [])
+            ->call('handleRegistration')
+            ->assertHasFormErrors(['data_consent_given'], 'content')
+            ->assertNoRedirect();
+
+        expect($this->candidate->fresh()->is_onboarded)->toBeFalse();
+    });
+});
+
 describe('Complete Registration Flow', function (): void {
     it('should complete full onboarding successfully', function (): void {
         livewire(OnboardingWizard::class)
+            ->set('wizardVisible', true)
             ->set('data.expected_salary', '75000')
             ->set('data.expected_salary_currency', 'USD')
             ->set('data.availability_date', now()->addDays(30)->format('Y-m-d'))
@@ -184,6 +259,7 @@ describe('Complete Registration Flow', function (): void {
         ];
 
         livewire(OnboardingWizard::class)
+            ->set('wizardVisible', true)
             ->set('data', $testData)
             ->call('handleRegistration');
 
@@ -201,6 +277,7 @@ describe('Complete Registration Flow', function (): void {
 
     it('should save phone number from onboarding data', function (): void {
         livewire(OnboardingWizard::class)
+            ->set('wizardVisible', true)
             ->set('data.expected_salary', '50000')
             ->set('data.expected_salary_currency', 'BRL')
             ->set('data.availability_date', now()->addDays(30)->format('Y-m-d'))
@@ -224,12 +301,14 @@ describe('Complete Registration Flow', function (): void {
 
     it('should mark candidate as onboarded with timestamp', function (): void {
         livewire(OnboardingWizard::class)
+            ->set('wizardVisible', true)
             ->set('data.expected_salary', '50000')
             ->set('data.expected_salary_currency', 'USD')
             ->set('data.availability_date', now()->addMonth()->format('Y-m-d'))
             ->set('data.experience_level', 'junior')
             ->set('data.timezone', 'UTC')
             ->set('data.preferred_language', 'en_US')
+            ->set('data.phone', '+5511987654321')
             ->set('data.confirm_submission', true)
             ->set('data.data_consent_given', true)
             ->set('data.work_experiences', [])
@@ -243,9 +322,10 @@ describe('Complete Registration Flow', function (): void {
 
     it('should handle registration without data consent', function (): void {
         livewire(OnboardingWizard::class)
+            ->set('wizardVisible', true)
             ->set('data.data_consent_given', false)
             ->call('handleRegistration')
-            ->assertNotified(__('panel-app::pages/onboarding.notifications.consent_required.title'));
+            ->assertHasFormErrors(['data_consent_given'], 'content');
 
         $candidate = $this->candidate->fresh();
         expect($candidate->is_onboarded)->toBeFalse();
