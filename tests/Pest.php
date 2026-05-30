@@ -25,7 +25,6 @@ pest()->extend(TestCase::class)
     ->use(LazilyRefreshDatabase::class)
     ->beforeEach(function (): void {
         resolve(PermissionRegistrar::class)->forgetCachedPermissions();
-        app()->setLocale(config('app.fallback_locale'));
     })
     ->group('feature')
     ->in('Feature', '../app-modules/*/tests/Feature', '../app-modules/*/tests/Features');

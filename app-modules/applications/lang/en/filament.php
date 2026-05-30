@@ -109,10 +109,6 @@ return [
             'modal_description' => 'Are you sure you want to reject this application? This action cannot be undone.',
             'modal_submit' => 'Reject Application',
             'notification' => 'Application rejected.',
-            'fields' => [
-                'reason_category' => 'Rejection Reason',
-                'reason_details' => 'Rejection Details',
-            ],
         ],
         'withdraw' => [
             'label' => 'Withdraw',

@@ -95,7 +95,6 @@ return [
             'external_posting' => 'Postagem Externa',
             'compensation' => 'Remuneração',
             'settings' => 'Configurações',
-            'job_posting_details' => 'Detalhes da Vaga',
             'job_description' => 'Descrição da Vaga',
             'required_qualifications' => 'Qualificações Obrigatórias',
             'required_qualifications_description' => 'Habilidades, experiência e qualificações exigidas para esta posição',
