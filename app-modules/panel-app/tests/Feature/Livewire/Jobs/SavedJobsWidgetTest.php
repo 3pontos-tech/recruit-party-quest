@@ -127,6 +127,40 @@ it('shows only published jobs when mixing published and closed', function (): vo
         ->assertMountedActionModalDontSee($closed->post->title);
 });
 
+it('shows the empty state when there are no saved jobs', function (): void {
+    livewire(SavedJobsWidget::class)
+        ->mountAction('viewSavedJobs')
+        ->assertMountedActionModalSee(__('panel-app::filament.components.saved_jobs_widget.empty_title'));
+});
+
+it('does not remove a saved job that belongs to another candidate', function (): void {
+    $otherUser = User::factory()->create();
+    $otherUser->refresh();
+
+    $otherCandidate = $otherUser->candidate;
+
+    $job = JobRequisition::factory()->available()->create();
+    saveJobForCandidate($job, $otherCandidate);
+
+    livewire(SavedJobsWidget::class)
+        ->call('removeSavedJob', $job->getKey());
+
+    $this->assertDatabaseHas('job_requisition_bookmarks', [
+        'candidate_id' => $otherCandidate->getKey(),
+        'job_requisition_id' => $job->getKey(),
+    ]);
+});
+
+it('masks the company name for confidential saved jobs', function (): void {
+    $job = JobRequisition::factory()->available()->create(['is_confidential' => true]);
+    saveJobForCandidate($job, $this->candidate);
+
+    livewire(SavedJobsWidget::class)
+        ->mountAction('viewSavedJobs')
+        ->assertMountedActionModalSee(__('panel-app::filament.confidential.company_name'))
+        ->assertMountedActionModalDontSee($job->team->name);
+});
+
 it('renders saved jobs when employment_type and work_schedule are null', function (): void {
     $job = JobRequisition::factory()->available()->create([
         'employment_type' => null,
