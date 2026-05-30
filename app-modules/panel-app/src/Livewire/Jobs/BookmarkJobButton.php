@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\App\Livewire\Jobs;
 
+use Filament\Notifications\Notification;
 use He4rt\Candidates\Models\CandidateJobSaved;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use Illuminate\Contracts\View\Factory;
@@ -52,6 +53,11 @@ class BookmarkJobButton extends Component
                 'job_requisition_id' => $this->job->id,
             ]);
             $this->isSaved = true;
+
+            Notification::make()
+                ->success()
+                ->title(__('panel-app::filament.components.bookmark_button.saved_notification'))
+                ->send();
         }
 
         $this->dispatch('saved-job-toggled');

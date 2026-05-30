@@ -40,10 +40,11 @@ it('starts with isSaved true when job is already bookmarked', function (): void 
         ->assertSet('isSaved', true);
 });
 
-it('saves the job when toggled and not yet bookmarked', function (): void {
+it('saves the job and notifies when toggled and not yet bookmarked', function (): void {
     livewire(BookmarkJobButton::class, ['job' => $this->job])
         ->call('toggle')
-        ->assertSet('isSaved', true);
+        ->assertSet('isSaved', true)
+        ->assertNotified();
 
     $this->assertDatabaseHas('job_requisition_bookmarks', [
         'candidate_id' => $this->candidate->id,
@@ -51,7 +52,7 @@ it('saves the job when toggled and not yet bookmarked', function (): void {
     ]);
 });
 
-it('removes the bookmark when toggled and already saved', function (): void {
+it('removes the bookmark without notifying when toggled and already saved', function (): void {
     CandidateJobSaved::factory()->create([
         'candidate_id' => $this->candidate->id,
         'job_requisition_id' => $this->job->id,
@@ -59,7 +60,8 @@ it('removes the bookmark when toggled and already saved', function (): void {
 
     livewire(BookmarkJobButton::class, ['job' => $this->job])
         ->call('toggle')
-        ->assertSet('isSaved', false);
+        ->assertSet('isSaved', false)
+        ->assertNotNotified();
 
     $this->assertDatabaseMissing('job_requisition_bookmarks', [
         'candidate_id' => $this->candidate->id,
