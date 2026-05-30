@@ -117,14 +117,6 @@ return [
             'modal_submit' => 'Retirar Candidatura',
             'notification' => 'Candidatura retirada.',
         ],
-        'fields' => [
-            'stage' => 'Etapa',
-            'notes' => 'Notas',
-            'reason_category' => 'Motivo da Rejeição',
-            'reason_details' => 'Detalhes da Rejeição',
-            'offer_amount' => 'Valor da Proposta',
-            'response_deadline' => 'Prazo de Resposta (dias)',
-        ],
         'change_status' => [
             'label' => 'Alterar status',
             'modal_heading' => 'Alterar status da candidatura',

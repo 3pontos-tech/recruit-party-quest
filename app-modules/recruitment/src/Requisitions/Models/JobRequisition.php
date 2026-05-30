@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -167,6 +168,27 @@ class JobRequisition extends BaseModel implements HasActivityLogTitle
     public function getActivityLogTitle(): string
     {
         return 'Job Requisition'.$this->team_id;
+    }
+
+    /**
+     * @return Attribute<string|null, never>
+     */
+    protected function salaryRangeForCandidates(): Attribute
+    {
+        return Attribute::make(get: function (): ?string {
+            if (! $this->show_salary_to_candidates
+                || is_null($this->salary_range_min)
+                || is_null($this->salary_range_max)) {
+                return null;
+            }
+
+            return sprintf(
+                '%s %s - %s',
+                $this->salary_currency,
+                number_format($this->salary_range_min, 0, ',', '.'),
+                number_format($this->salary_range_max, 0, ',', '.'),
+            );
+        });
     }
 
     /**
