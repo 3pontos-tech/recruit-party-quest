@@ -97,6 +97,7 @@ it('should be able to onboard', function (): void {
         ->set('data.is_open_to_remote', true)
         ->set('data.experience_level', 'intern')
         ->set('data.employment_type_interests', 'whatever')
+        ->set('data.phone', '+5511987654321')
         ->set('data.confirm_submission', true)
         ->set('data.data_consent_given', true)
         ->call('onResumeAnalyzed', $this->dto)

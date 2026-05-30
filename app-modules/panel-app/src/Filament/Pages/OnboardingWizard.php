@@ -168,20 +168,15 @@ class OnboardingWizard extends Page
 
     public function handleRegistration(): void
     {
-        $data = $this->data;
-        if (! ($data['data_consent_given'] ?? false)) {
-            Notification::make()
-                ->title(__('panel-app::pages/onboarding.notifications.consent_required.title'))->danger()
-                ->send();
+        $data = $this->content->getState();
 
-            return;
-        }
-
-        $experiences = CandidateWorkExperienceCollection::fromArray($data['work_experiences']);
+        $experiences = CandidateWorkExperienceCollection::fromArray($data['work_experiences'] ?? []);
         resolve(StoreCandidateWorkExperiences::class)->execute($experiences);
 
-        $education = CandidateEducationCollection::fromArray($data['education']);
+        $education = CandidateEducationCollection::fromArray($data['education'] ?? []);
         resolve(StoreCandidateEducation::class)->execute($education);
+
+        $experienceLevel = $data['experience_level'] ?? null;
 
         resolve(UpdateCandidateAction::class)->execute(new CandidateDTO(
             userID: auth()->user()->id,
@@ -193,7 +188,7 @@ class OnboardingWizard extends Page
             is_open_to_remote: $data['is_open_to_remote'] ?? true,
             expectedSalary: (float) $data['expected_salary'],
             expectedSalaryCurrency: $data['expected_salary_currency'] ?? 'USD',
-            experienceLevel: $data['experience_level'] ?? null,
+            experienceLevel: $experienceLevel instanceof BackedEnum ? $experienceLevel->value : $experienceLevel,
             selfIdentifiedGender: null,
             source: null,
             isOnboarded: true,
@@ -228,7 +223,6 @@ class OnboardingWizard extends Page
         return He4rtWizard::make()
             ->steps($steps)
             ->visible(fn () => $this->wizardVisible)
-            ->persistStepInQueryString()
             ->submitAction(new HtmlString(Blade::render(<<<'BLADE'
                         <x-filament::button
                             type="submit"
