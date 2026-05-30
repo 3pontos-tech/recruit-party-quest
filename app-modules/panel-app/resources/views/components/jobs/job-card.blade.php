@@ -64,14 +64,13 @@
         >
             {{ $job->employment_type?->getLabel() ?? ($job->work_schedule?->getLabel() ?? __('recruitment::filament.requisition.fields.not_specified')) }}
         </x-he4rt::tag>
-        @if ($job->show_salary_to_candidates && ! is_null($job->salary_range_min) && ! is_null($job->salary_range_max))
+        @if ($job->salary_range_for_candidates)
             <x-he4rt::tag
                 :icon="\Filament\Support\Icons\Heroicon::CurrencyDollar"
                 variant="ghost"
                 class="group-hover:text-text-high transition duration-500"
             >
-                {{ $job->salary_currency }}&nbsp;{{ number_format($job->salary_range_min, 0, ',', '.') }} -
-                {{ number_format($job->salary_range_max, 0, ',', '.') }}
+                {{ $job->salary_range_for_candidates }}
             </x-he4rt::tag>
         @endif
 
