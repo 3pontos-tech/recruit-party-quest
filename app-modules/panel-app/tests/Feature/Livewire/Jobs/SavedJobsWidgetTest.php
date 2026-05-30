@@ -114,8 +114,12 @@ it('does not count nor show a soft-deleted job', function (): void {
 
 it('shows only published jobs when mixing published and closed', function (): void {
     $published = JobRequisition::factory()->available()->create();
+    $published->post()->update(['title' => 'Visible Published Role']);
+
     $closed = JobRequisition::factory()->available()->create();
+    $closed->post()->update(['title' => 'Hidden Closed Role']);
     $closed->update(['status' => RequisitionStatusEnum::Closed]);
+
     saveJobForCandidate($published, $this->candidate);
     saveJobForCandidate($closed, $this->candidate);
 
@@ -123,8 +127,8 @@ it('shows only published jobs when mixing published and closed', function (): vo
 
     expect($component->get('savedJobsCount'))->toBe(1);
     $component->mountAction('viewSavedJobs')
-        ->assertMountedActionModalSee($published->post->title)
-        ->assertMountedActionModalDontSee($closed->post->title);
+        ->assertMountedActionModalSee('Visible Published Role')
+        ->assertMountedActionModalDontSee('Hidden Closed Role');
 });
 
 it('shows the empty state when there are no saved jobs', function (): void {
@@ -153,12 +157,13 @@ it('does not remove a saved job that belongs to another candidate', function ():
 
 it('masks the company name for confidential saved jobs', function (): void {
     $job = JobRequisition::factory()->available()->create(['is_confidential' => true]);
+    $job->team->update(['name' => 'Strictly Confidential Employer']);
     saveJobForCandidate($job, $this->candidate);
 
     livewire(SavedJobsWidget::class)
         ->mountAction('viewSavedJobs')
         ->assertMountedActionModalSee(__('panel-app::filament.confidential.company_name'))
-        ->assertMountedActionModalDontSee($job->team->name);
+        ->assertMountedActionModalDontSee('Strictly Confidential Employer');
 });
 
 it('renders saved jobs when employment_type and work_schedule are null', function (): void {
