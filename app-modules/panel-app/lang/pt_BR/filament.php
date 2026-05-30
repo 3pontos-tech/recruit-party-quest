@@ -91,11 +91,9 @@ return [
         'saved_jobs_widget' => [
             'title' => 'Vagas Salvas',
             'aria_label' => 'Vagas salvas',
-            'close' => 'Fechar',
             'empty_title' => 'Nenhuma vaga salva ainda',
             'empty_description' => 'Clique no ícone de bookmark em uma vaga para salvá-la',
             'applications' => 'candidaturas',
-            'view' => 'Visualizar',
             'remove' => 'Remover',
         ],
         'bookmark_button' => [
@@ -103,6 +101,7 @@ return [
             'saved' => 'Salvo',
             'save_job' => 'Salvar vaga',
             'remove_saved' => 'Remover vaga salva',
+            'saved_notification' => 'Vaga salva nos favoritos',
         ],
         'share_button' => [
             'share' => 'Compartilhar',
