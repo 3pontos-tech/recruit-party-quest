@@ -15,17 +15,11 @@ function makeSalaryJob(bool $visible, ?int $min, ?int $max): JobRequisition
     return $job;
 }
 
-it('formats the salary range when visible and both bounds are set', function (): void {
-    expect(makeSalaryJob(true, 8000, 12000)->salary_range_for_candidates)
-        ->toBe('BRL 8.000 - 12.000');
-});
-
-it('returns null when salary is hidden from candidates', function (): void {
-    expect(makeSalaryJob(false, 8000, 12000)->salary_range_for_candidates)
-        ->toBeNull();
-});
-
-it('returns null when a salary bound is missing', function (): void {
-    expect(makeSalaryJob(true, null, 12000)->salary_range_for_candidates)->toBeNull();
-    expect(makeSalaryJob(true, 8000, null)->salary_range_for_candidates)->toBeNull();
-});
+it('exposes the salary range only when visible to candidates with both bounds set', function (bool $visible, ?int $min, ?int $max, ?string $expected): void {
+    expect(makeSalaryJob($visible, $min, $max)->salary_range_for_candidates)->toBe($expected);
+})->with([
+    'visible with both bounds' => [true, 8000, 12000, 'BRL 8.000 - 12.000'],
+    'hidden from candidates' => [false, 8000, 12000, null],
+    'missing minimum bound' => [true, null, 12000, null],
+    'missing maximum bound' => [true, 8000, null, null],
+]);
