@@ -33,8 +33,6 @@ final class JobRequisitionObserver
             ['type' => StageTypeEnum::Interview, 'duration' => 5],
             ['type' => StageTypeEnum::Offer, 'duration' => 5],
             ['type' => StageTypeEnum::Hired, 'duration' => 1],
-            ['type' => StageTypeEnum::Declined, 'duration' => 1],
-            ['type' => StageTypeEnum::Rejected, 'duration' => 1],
         ];
 
         foreach ($stagesConfig as $index => $config) {

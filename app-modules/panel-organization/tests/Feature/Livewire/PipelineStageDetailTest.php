@@ -17,6 +17,33 @@ use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
 
+/**
+ * Terminal stages (Rejected/Declined) are no longer auto-created for requisitions,
+ * so tests covering the component's terminal handling must create them explicitly.
+ *
+ * @return array{0: Stage, 1: Stage}
+ */
+function makeTerminalStagesFor(Application $application): array
+{
+    $requisition = $application->requisition;
+
+    $rejected = Stage::factory()->create([
+        'stage_type' => StageTypeEnum::Rejected,
+        'job_requisition_id' => $requisition->getKey(),
+        'team_id' => $requisition->team_id,
+        'active' => true,
+    ]);
+
+    $declined = Stage::factory()->create([
+        'stage_type' => StageTypeEnum::Declined,
+        'job_requisition_id' => $requisition->getKey(),
+        'team_id' => $requisition->team_id,
+        'active' => true,
+    ]);
+
+    return [$rejected, $declined];
+}
+
 beforeEach(function (): void {
     $this->candidate = Candidate::factory()->create();
     $this->application = Application::factory()
@@ -260,20 +287,7 @@ it('handles application without current stage gracefully', function (): void {
 });
 
 it('excludes both terminal stages when current is not terminal', function (): void {
-    $rejected = $this->application
-        ->requisition
-        ->stages()
-        ->where('stage_type', StageTypeEnum::Rejected->value)
-        ->first();
-
-    $declined = $this->application
-        ->requisition
-        ->stages()
-        ->where('stage_type', StageTypeEnum::Declined->value)
-        ->first();
-
-    expect($rejected)->not->toBeNull()
-        ->and($declined)->not->toBeNull();
+    [$rejected, $declined] = makeTerminalStagesFor($this->application);
 
     Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
         ->call('goToStage', $rejected->id)
@@ -283,17 +297,7 @@ it('excludes both terminal stages when current is not terminal', function (): vo
 });
 
 it('includes Rejected in the pipeline when current_stage is Rejected', function (): void {
-    $rejected = $this->application
-        ->requisition
-        ->stages()
-        ->where('stage_type', StageTypeEnum::Rejected->value)
-        ->first();
-
-    $declined = $this->application
-        ->requisition
-        ->stages()
-        ->where('stage_type', StageTypeEnum::Declined->value)
-        ->first();
+    [$rejected, $declined] = makeTerminalStagesFor($this->application);
 
     $this->application->update(['current_stage_id' => $rejected->id]);
 
@@ -304,17 +308,7 @@ it('includes Rejected in the pipeline when current_stage is Rejected', function 
 });
 
 it('includes Declined in the pipeline when current_stage is Declined', function (): void {
-    $rejected = $this->application
-        ->requisition
-        ->stages()
-        ->where('stage_type', StageTypeEnum::Rejected->value)
-        ->first();
-
-    $declined = $this->application
-        ->requisition
-        ->stages()
-        ->where('stage_type', StageTypeEnum::Declined->value)
-        ->first();
+    [$rejected, $declined] = makeTerminalStagesFor($this->application);
 
     $this->application->update(['current_stage_id' => $declined->id]);
 
