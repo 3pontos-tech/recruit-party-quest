@@ -163,3 +163,28 @@ describe('ViewJobRequisition Page', function (): void {
             ->assertSee(WorkScheduleEnum::FullTime->getLabel());
     });
 });
+
+describe('ViewJobRequisition Page — Share button visibility', function (): void {
+    it('shows the share button for public jobs', function (): void {
+        livewire(ViewJobRequisition::class, ['record' => $this->jobPosting->slug])
+            ->assertOk()
+            ->assertSee(__('panel-app::filament.components.share_button.share_job'));
+    });
+
+    it('hides the share button for internal-only jobs', function (): void {
+        $internalRequisition = JobRequisition::factory()
+            ->for($this->team)
+            ->for($this->department)
+            ->for($this->recruiter, 'recruiter')
+            ->for($this->user, 'createdBy')
+            ->create(['is_confidential' => false, 'is_internal_only' => true]);
+
+        $internalPosting = JobPosting::factory()
+            ->for($internalRequisition, 'jobRequisition')
+            ->create(['slug' => 'internal-share-'.str()->uuid()]);
+
+        livewire(ViewJobRequisition::class, ['record' => $internalPosting->slug])
+            ->assertOk()
+            ->assertDontSee(__('panel-app::filament.components.share_button.share_job'));
+    });
+});
