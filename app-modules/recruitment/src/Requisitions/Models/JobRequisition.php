@@ -74,7 +74,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, ScreeningQuestion> $screeningQuestions
  * @property-read Collection<int, Stage> $stages
  * @property-read Collection<int, JobRequisitionItem> $items
- * @property-read JobPosting $post
+ * @property-read JobPosting|null $post
  *
  * @extends BaseModel<JobRequisitionFactory>
  */

@@ -25,7 +25,7 @@ class CopyJobShareLinkAction extends Action
             ->tooltip(fn (JobRequisition $record): ?string => blank(self::shareUrlFor($record))
                 ? __('panel-organization::filament.actions.copy_share_link.tooltip_unavailable')
                 : null)
-            ->actionJs(fn (JobRequisition $record): string => self::clipboardJs($record));
+            ->actionJs(fn (JobRequisition $record): string => $this->clipboardJs($record));
     }
 
     public static function shareUrlFor(JobRequisition $record): ?string
@@ -48,7 +48,7 @@ class CopyJobShareLinkAction extends Action
         return 'copyShareLink';
     }
 
-    private static function clipboardJs(JobRequisition $record): string
+    private function clipboardJs(JobRequisition $record): string
     {
         $url = json_encode(self::shareUrlFor($record), JSON_THROW_ON_ERROR);
         $message = json_encode(
