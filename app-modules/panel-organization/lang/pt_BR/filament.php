@@ -31,6 +31,11 @@ return [
     ],
 
     'actions' => [
+        'copy_share_link' => [
+            'label' => 'Copiar link de compartilhamento',
+            'tooltip_unavailable' => 'Publique um anúncio antes de compartilhar esta vaga',
+            'notification_copied' => 'Link copiado para a área de transferência',
+        ],
         'advance_stage' => [
             'label' => 'Avançar Etapa',
             'modal_heading' => 'Avançar para a Próxima Etapa',
