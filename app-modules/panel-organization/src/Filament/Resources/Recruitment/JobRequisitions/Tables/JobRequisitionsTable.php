@@ -19,6 +19,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Actions\CopyJobShareLinkAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Actions\DuplicateJobRequisitionAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Actions\DuplicateJobRequisitionBulkAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
@@ -123,6 +124,7 @@ class JobRequisitionsTable
                         ->icon(Heroicon::OutlinedViewColumns)
                         ->url(fn (JobRequisition $record): string => JobRequisitionResource::getUrl('kanban',
                             ['record' => $record->id])),
+                    CopyJobShareLinkAction::make(),
                     DuplicateJobRequisitionAction::make(),
                 ]),
             ])

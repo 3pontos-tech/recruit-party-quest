@@ -3,11 +3,14 @@
 declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
+use Filament\Actions\Testing\TestAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Actions\CopyJobShareLinkAction;
+use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\ListJobRequisitions;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Teams\Department;
+use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
 
@@ -43,4 +46,27 @@ it('returns null when the requisition has no job posting', function (): void {
     $requisition = ($this->makeRequisition)();
 
     expect(CopyJobShareLinkAction::shareUrlFor($requisition->fresh()))->toBeNull();
+});
+
+it('shows the copy share link action enabled when the job has a posting', function (): void {
+    $requisition = ($this->makeRequisition)();
+    JobPosting::factory()->for($requisition, 'jobRequisition')->create();
+
+    Livewire::test(ListJobRequisitions::class)
+        ->assertActionEnabled(TestAction::make('copyShareLink')->table($requisition));
+});
+
+it('keeps the copy share link action enabled for internal jobs that have a posting', function (): void {
+    $requisition = ($this->makeRequisition)(['is_internal_only' => true]);
+    JobPosting::factory()->for($requisition, 'jobRequisition')->create();
+
+    Livewire::test(ListJobRequisitions::class)
+        ->assertActionEnabled(TestAction::make('copyShareLink')->table($requisition));
+});
+
+it('disables the copy share link action when the job has no posting', function (): void {
+    $requisition = ($this->makeRequisition)();
+
+    Livewire::test(ListJobRequisitions::class)
+        ->assertActionDisabled(TestAction::make('copyShareLink')->table($requisition));
 });
