@@ -6,6 +6,7 @@ use App\Enums\FilamentPanel;
 use Filament\Actions\Testing\TestAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Actions\CopyJobShareLinkAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\ListJobRequisitions;
+use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\ViewJobRequisition;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
@@ -69,4 +70,13 @@ it('disables the copy share link action when the job has no posting', function (
 
     Livewire::test(ListJobRequisitions::class)
         ->assertActionDisabled(TestAction::make('copyShareLink')->table($requisition));
+});
+
+it('shows the copy share link action in the view page header', function (): void {
+    $requisition = ($this->makeRequisition)();
+    JobPosting::factory()->for($requisition, 'jobRequisition')->create();
+
+    Livewire::test(ViewJobRequisition::class, ['record' => $requisition->getKey()])
+        ->assertActionExists('copyShareLink')
+        ->assertActionEnabled('copyShareLink');
 });
