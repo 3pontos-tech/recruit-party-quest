@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 use He4rt\Recruitment\Stages\Models\Stage;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Migrations\Migration;
@@ -22,10 +21,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $terminalTypes = [
-            StageTypeEnum::Rejected->value,
-            StageTypeEnum::Declined->value,
-        ];
+        // Valores legados gravados antes da #168 remover os cases terminais do
+        // StageTypeEnum. A migração é auto-contida e não depende do enum (que
+        // deixou de ter esses cases), então usa as strings históricas direto.
+        $terminalTypes = ['rejected', 'declined'];
 
         $terminalIds = DB::table('recruitment_pipeline_stages')
             ->whereIn('stage_type', $terminalTypes)
