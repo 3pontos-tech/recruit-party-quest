@@ -8,7 +8,6 @@ use He4rt\Applications\Models\Application;
 use He4rt\Applications\Models\ApplicationStageHistory;
 use He4rt\Feedback\Models\Evaluation;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
-use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 use He4rt\Recruitment\Stages\Models\Stage;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -81,21 +80,7 @@ class PipelineStageDetail extends Component
             return collect();
         }
 
-        $terminalTypes = [StageTypeEnum::Rejected, StageTypeEnum::Declined];
-        $currentStageType = $this->application->currentStage?->stage_type;
-        $isCurrentTerminal = $currentStageType !== null
-            && in_array($currentStageType, $terminalTypes, true);
-
         return $this->application->requisition->stages
-            ->reject(function (Stage $stage) use ($currentStageType, $isCurrentTerminal, $terminalTypes): bool {
-                $stageIsTerminal = in_array($stage->stage_type, $terminalTypes, true);
-
-                if (! $stageIsTerminal) {
-                    return false;
-                }
-
-                return ! $isCurrentTerminal || $stage->stage_type !== $currentStageType;
-            })
             ->sortBy('display_order')
             ->values();
     }

@@ -24,8 +24,6 @@ enum StageTypeEnum: string implements HasColor, HasIcon, HasLabel
     case Interview = 'interview';
     case Offer = 'offer';
     case Hired = 'hired';
-    case Rejected = 'rejected';
-    case Declined = 'declined';
 
     public function getColor(): array
     {
@@ -36,7 +34,7 @@ enum StageTypeEnum: string implements HasColor, HasIcon, HasLabel
             self::Interview => Color::Emerald,
             self::Offer => Color::Green,
             self::Hired => Color::Emerald,
-            self::HiddenStage, self::Rejected, self::Declined => Color::Red,
+            self::HiddenStage => Color::Red,
         };
     }
 
@@ -49,7 +47,6 @@ enum StageTypeEnum: string implements HasColor, HasIcon, HasLabel
             self::Interview => Heroicon::BuildingOffice2,
             self::Offer => Heroicon::Briefcase,
             self::Hired => Heroicon::CheckCircle,
-            self::Rejected, self::Declined => Heroicon::XCircle,
         };
     }
 
@@ -66,7 +63,7 @@ enum StageTypeEnum: string implements HasColor, HasIcon, HasLabel
             self::Assessment => 'bg-blue-500',
             self::Interview, self::Hired => 'bg-emerald-500',
             self::Offer => 'bg-green-500',
-            self::HiddenStage, self::Rejected, self::Declined => 'bg-red-500',
+            self::HiddenStage => 'bg-red-500',
         };
     }
 
@@ -78,7 +75,7 @@ enum StageTypeEnum: string implements HasColor, HasIcon, HasLabel
             self::Assessment => 'bg-blue-500/10 text-blue-500',
             self::Interview, self::Hired => 'bg-emerald-500/10 text-emerald-500',
             self::Offer => 'bg-green-500/10 text-green-500',
-            self::HiddenStage, self::Rejected, self::Declined => 'bg-red-500/10 text-red-500',
+            self::HiddenStage => 'bg-red-500/10 text-red-500',
         };
     }
 }

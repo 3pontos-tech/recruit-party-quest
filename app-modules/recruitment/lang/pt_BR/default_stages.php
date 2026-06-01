@@ -27,12 +27,4 @@ return [
         'name' => 'Contratado',
         'description' => 'Candidato aceitou a proposta',
     ],
-    'declined' => [
-        'name' => 'Recusado',
-        'description' => 'Candidato recusou a proposta',
-    ],
-    'rejected' => [
-        'name' => 'Reprovado',
-        'description' => 'Candidatos não selecionados para a vaga',
-    ],
 ];

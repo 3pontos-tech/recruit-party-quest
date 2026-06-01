@@ -14,7 +14,7 @@
         StageTypeEnum::Interview => 'bg-emerald-500/10 text-emerald-600 ring-emerald-500/20',
         StageTypeEnum::Offer => 'bg-green-500/10 text-green-600 ring-green-500/20',
         StageTypeEnum::Hired => 'bg-emerald-500/10 text-emerald-600 ring-emerald-500/20',
-        StageTypeEnum::HiddenStage, StageTypeEnum::Rejected, StageTypeEnum::Declined => 'bg-red-500/10 text-red-600 ring-red-500/20',
+        StageTypeEnum::HiddenStage => 'bg-red-500/10 text-red-600 ring-red-500/20',
     };
 
     $ratingClasses = fn (EvaluationRatingEnum $rating): string => match ($rating) {

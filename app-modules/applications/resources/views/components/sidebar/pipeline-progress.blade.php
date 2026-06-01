@@ -4,7 +4,6 @@
     use He4rt\Applications\Enums\ApplicationStatusEnum;
     use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
     use He4rt\Applications\Models\Application;
-    use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
     use He4rt\Recruitment\Stages\Models\Stage;
     use Illuminate\Support\Collection;
 @endphp
@@ -23,31 +22,15 @@
     /** @var Collection<int, Stage>  $stages */
     $pipelineStages = $record->getPipelineStages();
 
-    $terminalStageTypes = [StageTypeEnum::Rejected, StageTypeEnum::Declined];
-    $currentStageType = $currentStage?->stage_type;
-    $isCurrentTerminal = $currentStageType !== null && in_array($currentStageType, $terminalStageTypes, true);
-
-    $keepStage = function (Stage $stage) use ($currentStageType, $isCurrentTerminal, $terminalStageTypes): bool {
-        $stageIsTerminal = in_array($stage->stage_type, $terminalStageTypes, true);
-
-        if (! $stageIsTerminal) {
-            return true;
-        }
-
-        return $isCurrentTerminal && $stage->stage_type === $currentStageType;
-    };
-
     if ($organizationPanel) {
         $pipelineStages->loadMissing('screeningQuestions');
         $stages = $pipelineStages
             ->where('active', true)
-            ->filter($keepStage)
             ->values();
     } else {
         $stages = $pipelineStages
             ->where('hidden', false)
             ->where('active', true)
-            ->filter($keepStage)
             ->values();
     }
 
@@ -57,7 +40,7 @@
 
     $currentStageIndex = 0;
 
-    $showRejectionInfo = $record->status === ApplicationStatusEnum::Rejected || ($currentStage !== null && in_array($currentStage->stage_type, $terminalStageTypes, true));
+    $showRejectionInfo = $record->status === ApplicationStatusEnum::Rejected;
 
     if ($currentStage) {
         $index = $stages->search(fn ($stage) => $stage->id === $currentStage->id);

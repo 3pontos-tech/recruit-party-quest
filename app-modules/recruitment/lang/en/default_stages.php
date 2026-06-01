@@ -27,12 +27,4 @@ return [
         'name' => 'Hired',
         'description' => 'Candidate accepted the offer',
     ],
-    'declined' => [
-        'name' => 'Declined',
-        'description' => 'Candidate declined the offer',
-    ],
-    'rejected' => [
-        'name' => 'Rejected',
-        'description' => 'Candidates not selected for the position',
-    ],
 ];

@@ -70,3 +70,12 @@ it('uses soft deletes', function (): void {
     expect($stage->deleted_at)->not->toBeNull()
         ->and(Stage::withTrashed()->find($stage->id))->not->toBeNull();
 });
+
+it('does not define terminal stage types', function (): void {
+    $values = array_map(fn (StageTypeEnum $type): string => $type->value, StageTypeEnum::cases());
+
+    expect($values)->not->toContain('rejected')
+        ->and($values)->not->toContain('declined')
+        ->and(StageTypeEnum::tryFrom('rejected'))->toBeNull()
+        ->and(StageTypeEnum::tryFrom('declined'))->toBeNull();
+});
