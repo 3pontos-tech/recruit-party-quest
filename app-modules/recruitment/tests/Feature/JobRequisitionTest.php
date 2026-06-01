@@ -139,15 +139,6 @@ it('creates stages with correct stage types', function (): void {
         ->and($stageTypes)->toContain(StageTypeEnum::Hired);
 });
 
-it('does not create terminal pseudo-stages', function (): void {
-    $requisition = JobRequisition::factory()->create();
-
-    $stageTypes = $requisition->stages->pluck('stage_type')->toArray();
-
-    expect($stageTypes)->not->toContain(StageTypeEnum::Declined)
-        ->and($stageTypes)->not->toContain(StageTypeEnum::Rejected);
-});
-
 it('creates stages with correct display order', function (): void {
     $requisition = JobRequisition::factory()->create();
 

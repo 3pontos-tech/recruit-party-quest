@@ -17,33 +17,6 @@ use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
 
-/**
- * Terminal stages (Rejected/Declined) are no longer auto-created for requisitions,
- * so tests covering the component's terminal handling must create them explicitly.
- *
- * @return array{0: Stage, 1: Stage}
- */
-function makeTerminalStagesFor(Application $application): array
-{
-    $requisition = $application->requisition;
-
-    $rejected = Stage::factory()->create([
-        'stage_type' => StageTypeEnum::Rejected,
-        'job_requisition_id' => $requisition->getKey(),
-        'team_id' => $requisition->team_id,
-        'active' => true,
-    ]);
-
-    $declined = Stage::factory()->create([
-        'stage_type' => StageTypeEnum::Declined,
-        'job_requisition_id' => $requisition->getKey(),
-        'team_id' => $requisition->team_id,
-        'active' => true,
-    ]);
-
-    return [$rejected, $declined];
-}
-
 beforeEach(function (): void {
     $this->candidate = Candidate::factory()->create();
     $this->application = Application::factory()
@@ -57,21 +30,17 @@ beforeEach(function (): void {
     filament()->setCurrentPanel(FilamentPanel::Organization->value);
     filament()->setTenant($this->team);
 
-    // ApplicationFactory::configure() may attach a random stage_type to current_stage_id.
-    // Force current_stage_id to a non-terminal stage so tests start from a deterministic state.
-    $nonTerminalCurrent = $this->application
+    // ApplicationFactory::configure() may attach a random stage to current_stage_id.
+    // Force it to the first stage so tests start from a deterministic state.
+    $firstStage = $this->application
         ->requisition
         ->stages()
-        ->whereNotIn('stage_type', [
-            StageTypeEnum::Rejected->value,
-            StageTypeEnum::Declined->value,
-        ])
         ->where('active', true)
         ->orderBy('display_order')
         ->first();
 
-    if ($nonTerminalCurrent !== null) {
-        $this->application->update(['current_stage_id' => $nonTerminalCurrent->id]);
+    if ($firstStage !== null) {
+        $this->application->update(['current_stage_id' => $firstStage->id]);
         $this->application->refresh();
     }
 
@@ -284,38 +253,6 @@ it('handles application without current stage gracefully', function (): void {
     Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
         ->assertOk()
         ->assertSet('currentStageId', '');
-});
-
-it('excludes both terminal stages when current is not terminal', function (): void {
-    [$rejected, $declined] = makeTerminalStagesFor($this->application);
-
-    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
-        ->call('goToStage', $rejected->id)
-        ->assertSet('currentStageId', $this->application->current_stage_id)
-        ->call('goToStage', $declined->id)
-        ->assertSet('currentStageId', $this->application->current_stage_id);
-});
-
-it('includes Rejected in the pipeline when current_stage is Rejected', function (): void {
-    [$rejected, $declined] = makeTerminalStagesFor($this->application);
-
-    $this->application->update(['current_stage_id' => $rejected->id]);
-
-    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
-        ->assertSet('currentStageId', $rejected->id)
-        ->call('goToStage', $declined->id)
-        ->assertSet('currentStageId', $rejected->id);
-});
-
-it('includes Declined in the pipeline when current_stage is Declined', function (): void {
-    [$rejected, $declined] = makeTerminalStagesFor($this->application);
-
-    $this->application->update(['current_stage_id' => $declined->id]);
-
-    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
-        ->assertSet('currentStageId', $declined->id)
-        ->call('goToStage', $rejected->id)
-        ->assertSet('currentStageId', $declined->id);
 });
 
 it('blocks access for applications from a different tenant', function (): void {

@@ -18,12 +18,6 @@ return [
     'hired' => [
         'label' => 'Contratado',
     ],
-    'rejected' => [
-        'label' => 'Reprovado',
-    ],
-    'declined' => [
-        'label' => 'Recusado',
-    ],
     'new' => [
         'label' => 'Nova Aplicação',
     ],
