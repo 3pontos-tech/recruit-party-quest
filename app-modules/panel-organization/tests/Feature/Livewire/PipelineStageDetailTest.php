@@ -203,6 +203,70 @@ it('marks a declined offer as a terminal point', function (): void {
         ->assertSee(ApplicationStatusEnum::OfferDeclined->getLabel());
 });
 
+it('paints the stopped stage red and the reached stages green for a rejected application', function (): void {
+    $stoppedAt = $this->stages->get(2);
+
+    $this->application->update([
+        'current_stage_id' => $stoppedAt->id,
+        'status' => ApplicationStatusEnum::Rejected,
+        'rejection_reason_category' => RejectionReasonCategoryEnum::Qualifications,
+    ]);
+
+    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->assertOk()
+        // banner + caret use the red terminal palette (exclusive to terminal states)
+        ->assertSeeHtml('border-red-500/40')
+        ->assertSeeHtml('text-red-500')
+        // reached stages keep the valid success scale (regression for the bg-success typo)
+        ->assertSeeHtml('bg-success-500');
+});
+
+it('paints the stopped stage orange for a withdrawn application', function (): void {
+    $stoppedAt = $this->stages->get(2);
+
+    $this->application->update([
+        'current_stage_id' => $stoppedAt->id,
+        'status' => ApplicationStatusEnum::Withdrawn,
+    ]);
+
+    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->assertOk()
+        ->assertSeeHtml('border-orange-500/40')
+        ->assertSeeHtml('text-orange-500')
+        ->assertDontSeeHtml('border-red-500/40');
+});
+
+it('does not show any terminal banner or color for an in-progress application', function (): void {
+    $this->application->update([
+        'current_stage_id' => $this->stages->get(2)->id,
+        'status' => ApplicationStatusEnum::InProgress,
+    ]);
+
+    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->assertOk()
+        // the stepper still renders with the active (green) palette...
+        ->assertSeeHtml('bg-success-500')
+        // ...but no terminal overlay leaks in
+        ->assertDontSeeHtml('border-red-500/40')
+        ->assertDontSeeHtml('border-orange-500/40')
+        ->assertDontSee(ApplicationStatusEnum::Rejected->getLabel())
+        ->assertDontSee(ApplicationStatusEnum::Withdrawn->getLabel());
+});
+
+it('shows the rejection banner without a reason line when no category was recorded', function (): void {
+    $stoppedAt = $this->stages->get(2);
+
+    $this->application->update([
+        'current_stage_id' => $stoppedAt->id,
+        'status' => ApplicationStatusEnum::Rejected,
+        'rejection_reason_category' => null,
+    ]);
+
+    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->assertOk()
+        ->assertSee(ApplicationStatusEnum::Rejected->getLabel());
+});
+
 it('treats the current stage as reached for a fresh application without history', function (): void {
     // beforeEach leaves the application on the first stage with no stage history
     $first = $this->stages->first();
