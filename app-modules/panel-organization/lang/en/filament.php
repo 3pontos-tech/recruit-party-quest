@@ -31,8 +31,8 @@ return [
 
     'actions' => [
         'copy_share_link' => [
-            'label' => 'Copy share link',
-            'tooltip_unavailable' => 'Publish a posting before sharing this job',
+            'label' => 'Share',
+            'tooltip_unavailable' => 'Publish this job before sharing it',
             'notification_copied' => 'Link copied to clipboard',
         ],
         'advance_stage' => [
