@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Organization\Livewire;
 
+use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Applications\Models\ApplicationStageHistory;
 use He4rt\Feedback\Models\Evaluation;
@@ -54,6 +55,7 @@ class PipelineStageDetail extends Component
         /** @var Application $application */
         $application = Application::query()
             ->with([
+                'currentStage',
                 'requisition.stages' => fn ($query) => $query
                     ->where('active', true)
                     ->orderBy('display_order'),
@@ -155,7 +157,9 @@ class PipelineStageDetail extends Component
             return null;
         }
 
-        return $this->stages->get($index + 1);
+        $next = $this->stages->get($index + 1);
+
+        return ($next instanceof Stage && $this->isReached($next)) ? $next : null;
     }
 
     #[Computed]
@@ -177,27 +181,112 @@ class PipelineStageDetail extends Component
 
     public function goToStage(string $stageId): void
     {
-        if ($this->stages->contains(fn (Stage $stage) => $stage->id === $stageId)) {
+        $target = $this->stages->firstWhere('id', $stageId);
+
+        if ($target instanceof Stage && $this->isReached($target)) {
             $this->currentStageId = $stageId;
+            $this->forgetStageComputeds();
         }
     }
 
     public function goToNextStage(): void
     {
-        if ($this->nextStage) {
-            $this->currentStageId = $this->nextStage->id;
+        $next = $this->nextStage;
+
+        if ($next instanceof Stage) {
+            $this->currentStageId = $next->id;
+            $this->forgetStageComputeds();
         }
     }
 
     public function goToPreviousStage(): void
     {
-        if ($this->prevStage) {
-            $this->currentStageId = $this->prevStage->id;
+        $prev = $this->prevStage;
+
+        if ($prev instanceof Stage) {
+            $this->currentStageId = $prev->id;
+            $this->forgetStageComputeds();
         }
+    }
+
+    /**
+     * A stage is "reached" when it is at or before the application's current stage
+     * (by display_order). Régua: o current_stage da candidatura — não depende de
+     * stageHistory (candidato recém-inscrito já alcançou seu stage atual).
+     */
+    public function isReached(Stage $stage): bool
+    {
+        $current = $this->application->currentStage;
+
+        return $current instanceof Stage && $stage->display_order <= $current->display_order;
+    }
+
+    public function isApplicationCurrent(Stage $stage): bool
+    {
+        $current = $this->application->currentStage;
+
+        return $current instanceof Stage && $stage->id === $current->id;
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->application->status === ApplicationStatusEnum::Rejected;
+    }
+
+    public function rejectionReason(): ?string
+    {
+        if (! $this->isRejected()) {
+            return null;
+        }
+
+        return $this->application->rejection_reason_category?->getLabel();
+    }
+
+    /**
+     * The terminal status that "freezes" the application on its current stage as
+     * an overlay — rejection, withdrawal or a declined offer — or null when the
+     * application is still progressing through the journey.
+     */
+    public function terminalStatus(): ?ApplicationStatusEnum
+    {
+        return $this->application->status->isTerminal()
+            ? $this->application->status
+            : null;
+    }
+
+    /**
+     * Semantic color for the terminal marker: 'red' for negative exits (rejected
+     * or offer declined) and 'orange' for a candidate-initiated withdrawal.
+     */
+    public function terminalColor(): ?string
+    {
+        return match ($this->terminalStatus()) {
+            ApplicationStatusEnum::Rejected, ApplicationStatusEnum::OfferDeclined => 'red',
+            ApplicationStatusEnum::Withdrawn => 'orange',
+            default => null,
+        };
     }
 
     public function render(): Factory|View
     {
         return view('panel-organization::livewire.pipeline-stage-detail');
+    }
+
+    /**
+     * Invalidate the cached computeds that depend on the selected stage. Livewire
+     * memoizes #[Computed] for the whole request; without this, reading nextStage
+     * before mutating currentStageId re-renders the footer with a stale value.
+     */
+    private function forgetStageComputeds(): void
+    {
+        unset(
+            $this->stage,
+            $this->stageIndex,
+            $this->timeline,
+            $this->interviewers,
+            $this->evaluations,
+            $this->prevStage,
+            $this->nextStage,
+        );
     }
 }
