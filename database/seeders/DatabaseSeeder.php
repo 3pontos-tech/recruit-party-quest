@@ -12,6 +12,7 @@ use He4rt\Teams\Team;
 use He4rt\Users\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
+use RuntimeException;
 
 use function Laravel\Prompts\note;
 use function Laravel\Prompts\warning;
@@ -41,7 +42,9 @@ final class DatabaseSeeder extends Seeder
 
         $admin = User::factory()
             ->admin()
-            ->create();
+            ->create([
+                'password' => $this->resolveAdminPassword(),
+            ]);
 
         $admin->assignRole(Roles::SuperAdmin);
 
@@ -64,6 +67,19 @@ final class DatabaseSeeder extends Seeder
             'team' => $team,
             'departments' => $departments,
         ];
+    }
+
+    private function resolveAdminPassword(): string
+    {
+        $password = config('app.dev_admin_password');
+
+        if (filled($password)) {
+            return (string) $password;
+        }
+
+        throw_unless(app()->isLocal(), RuntimeException::class, 'DEV_ADMIN_PASSWORD não está definido. Configure-o no ambiente para semear o admin fora de local.');
+
+        return 'password';
     }
 
     private function syncPermissions(): void
