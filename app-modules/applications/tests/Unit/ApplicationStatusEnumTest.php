@@ -31,3 +31,22 @@ it('does not flag in-progress states as terminal', function (ApplicationStatusEn
     ApplicationStatusEnum::OfferAccepted,
     ApplicationStatusEnum::Hired,
 ]);
+
+it('allows rejection only while the process is still open', function (ApplicationStatusEnum $status): void {
+    expect($status->allowsRejection())->toBeTrue();
+})->with([
+    ApplicationStatusEnum::New,
+    ApplicationStatusEnum::InReview,
+    ApplicationStatusEnum::InProgress,
+    ApplicationStatusEnum::OfferExtended,
+]);
+
+it('forbids rejection once the process has a final outcome', function (ApplicationStatusEnum $status): void {
+    expect($status->allowsRejection())->toBeFalse();
+})->with([
+    ApplicationStatusEnum::Rejected,
+    ApplicationStatusEnum::Withdrawn,
+    ApplicationStatusEnum::OfferDeclined,
+    ApplicationStatusEnum::OfferAccepted,
+    ApplicationStatusEnum::Hired,
+]);

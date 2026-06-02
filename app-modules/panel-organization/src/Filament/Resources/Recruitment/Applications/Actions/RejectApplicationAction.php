@@ -26,7 +26,7 @@ class RejectApplicationAction extends Action
             ->extraAttributes(fn () => ['class' => 'w-full'])
             ->outlined()
             ->requiresConfirmation()
-            ->disabled(fn (Application $record): bool => $record->status->isTerminal())
+            ->disabled(fn (Application $record): bool => ! $record->status->allowsRejection())
             ->modalHeading(__('panel-organization::filament.actions.reject_application.modal_heading'))
             ->modalDescription(__('panel-organization::filament.actions.reject_application.modal_description'))
             ->schema($this->formSchema())

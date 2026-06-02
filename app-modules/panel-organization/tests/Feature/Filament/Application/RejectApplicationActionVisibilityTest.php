@@ -41,9 +41,9 @@ function viewApplicationFor(Application $application): Testable
     ]);
 }
 
-it('shows the reject action enabled for an in-progress application', function (): void {
+it('shows the reject action enabled while the application is still in progress', function (ApplicationStatusEnum $status): void {
     $application = Application::factory()
-        ->withStatus(ApplicationStatusEnum::InProgress)
+        ->withStatus($status)
         ->create(['team_id' => $this->team->id]);
     JobPosting::factory()->for($application->requisition)->create();
 
@@ -51,9 +51,14 @@ it('shows the reject action enabled for an in-progress application', function ()
         ->assertOk()
         ->assertActionVisible(rejectAction())
         ->assertActionEnabled(rejectAction());
-});
+})->with([
+    'new' => ApplicationStatusEnum::New,
+    'in review' => ApplicationStatusEnum::InReview,
+    'in progress' => ApplicationStatusEnum::InProgress,
+    'offer extended' => ApplicationStatusEnum::OfferExtended,
+]);
 
-it('keeps the reject action visible but disabled for terminal applications', function (ApplicationStatusEnum $status): void {
+it('keeps the reject action visible but disabled once the process reaches a final outcome', function (ApplicationStatusEnum $status): void {
     $application = Application::factory()
         ->withStatus($status)
         ->create(['team_id' => $this->team->id]);
@@ -67,4 +72,6 @@ it('keeps the reject action visible but disabled for terminal applications', fun
     'rejected' => ApplicationStatusEnum::Rejected,
     'withdrawn' => ApplicationStatusEnum::Withdrawn,
     'offer declined' => ApplicationStatusEnum::OfferDeclined,
+    'offer accepted' => ApplicationStatusEnum::OfferAccepted,
+    'hired' => ApplicationStatusEnum::Hired,
 ]);
