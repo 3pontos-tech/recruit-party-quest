@@ -67,7 +67,21 @@ enum ApplicationStatusEnum: string implements HasColor, HasIcon, HasLabel
             self::OfferDeclined => Heroicon::XMark,
             self::Hired => Heroicon::User,
             self::Rejected => Heroicon::XCircle,
-            self::Withdrawn => Heroicon::ArrowLeft,
+            self::Withdrawn => Heroicon::NoSymbol,
+        };
+    }
+
+    /**
+     * Whether the application has reached a terminal outcome that freezes it on
+     * its current stage as an overlay — rejection, candidate withdrawal or a
+     * declined offer. Terminal states no longer admit a rejection action and are
+     * signalled with a distinct colour in the pipeline stepper.
+     */
+    public function isTerminal(): bool
+    {
+        return match ($this) {
+            self::Rejected, self::Withdrawn, self::OfferDeclined => true,
+            default => false,
         };
     }
 
