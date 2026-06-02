@@ -182,13 +182,19 @@ Principal  → Expert/Architect level
 ### StageTypeEnum
 
 ```
+New        → New application submission (🔵)
 Screening  → Initial review (🟡)
 Assessment → Skills assessment (🔵)
 Interview  → Interview round (🟢)
 Offer      → Offer stage (🟣)
 Hired      → Successfully hired (✅)
-Rejected   → Not selected (❌)
+HiddenStage→ Internal stage, staff-only (🔒)
 ```
+
+> **There are no "terminal" stages.** Rejection, withdrawal and a declined offer
+> are **status overlays** on `ApplicationStatusEnum` (see the Applications
+> module) — they freeze the application on its current stage and never consume a
+> pipeline stage. The `Rejected`/`Declined` stage types were removed in #168.
 
 ## Requisition Lifecycle
 
@@ -221,23 +227,28 @@ stateDiagram-v2
 
 ## Pipeline Configuration
 
+When a `JobRequisition` is created, `JobRequisitionObserver` seeds **6 default
+stages** (durations in days). Each stage is fully customizable per requisition.
+
 ```mermaid
 graph LR
-    subgraph Pipeline Stages
-        S1[Screening]
-        S2[Phone Screen]
-        S3[Technical Interview]
-        S4[Manager Interview]
-        S5[Offer]
+    subgraph Default Pipeline
+        S1["New (1d)"]
+        S2["Screening (3d)"]
+        S3["Assessment (7d)"]
+        S4["Interview (5d)"]
+        S5["Offer (5d)"]
+        S6["Hired (1d)"]
     end
 
-    S1 --> S2 --> S3 --> S4 --> S5
+    S1 --> S2 --> S3 --> S4 --> S5 --> S6
 
-    style S1 stroke:#f6ad55
-    style S2 stroke:#4299e1
+    style S1 stroke:#4299e1
+    style S2 stroke:#f6ad55
     style S3 stroke:#4299e1
     style S4 stroke:#38b2ac
     style S5 stroke:#9f7aea
+    style S6 stroke:#48bb78
 ```
 
 ## Entity Relationship Diagram
