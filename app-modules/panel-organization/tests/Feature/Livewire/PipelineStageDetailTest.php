@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
+use He4rt\Applications\Enums\ApplicationStatusEnum;
+use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Applications\Models\ApplicationStageHistory;
 use He4rt\Candidates\Models\Candidate;
@@ -59,15 +61,27 @@ it('mounts with current_stage_id from application', function (): void {
         ->assertSet('currentStageId', $this->application->current_stage_id);
 });
 
-it('navigates to the next stage in display_order', function (): void {
+it('does not navigate to a future (not yet reached) stage', function (): void {
+    // beforeEach leaves current at the first stage, so the rest are in the future
+    $futureStage = $this->stages->get(1);
+
+    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->call('goToStage', $futureStage->id)
+        ->assertSet('currentStageId', $this->application->current_stage_id);
+});
+
+it('navigates to the next reached stage', function (): void {
     expect($this->stages->count())->toBeGreaterThan(1);
+
+    // application advanced to the last stage, so every stage is reached
+    $last = $this->stages->last();
+    $this->application->update(['current_stage_id' => $last->id]);
 
     $first = $this->stages->first();
     $second = $this->stages->get(1);
 
-    $this->application->update(['current_stage_id' => $first->id]);
-
     Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->call('goToStage', $first->id)
         ->call('goToNextStage')
         ->assertSet('currentStageId', $second->id);
 });
@@ -118,7 +132,7 @@ it('excludes inactive stages from navigation', function (): void {
         ->assertSet('currentStageId', $this->application->fresh()->current_stage_id);
 });
 
-it('includes hidden stages in navigation for staff users', function (): void {
+it('allows navigating to a reached hidden stage for staff users', function (): void {
     $hiddenStage = Stage::factory()
         ->for($this->application->requisition, 'requisition')
         ->state([
@@ -130,9 +144,156 @@ it('includes hidden stages in navigation for staff users', function (): void {
         ])
         ->create();
 
+    // application sits on the hidden stage, so it (and everything before) is reached
+    $this->application->update(['current_stage_id' => $hiddenStage->id]);
+
     Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->call('goToStage', $this->stages->first()->id)
+        ->assertSet('currentStageId', $this->stages->first()->id)
         ->call('goToStage', $hiddenStage->id)
         ->assertSet('currentStageId', $hiddenStage->id);
+});
+
+it('renders the stepper with the journey stages', function (): void {
+    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->assertOk()
+        ->assertSee(__('panel-organization::view.pipeline.stage_detail.stepper_title'))
+        ->assertSee($this->stages->first()->name)
+        ->assertSee($this->stages->last()->name);
+});
+
+it('marks the rejection point and shows the banner when the application is rejected', function (): void {
+    $stoppedAt = $this->stages->get(2);
+
+    $this->application->update([
+        'current_stage_id' => $stoppedAt->id,
+        'status' => ApplicationStatusEnum::Rejected,
+        'rejection_reason_category' => RejectionReasonCategoryEnum::Qualifications,
+    ]);
+
+    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->assertOk()
+        ->assertSee(ApplicationStatusEnum::Rejected->getLabel())
+        ->assertSee(RejectionReasonCategoryEnum::Qualifications->getLabel());
+});
+
+it('marks the withdrawal point when the candidate withdrew', function (): void {
+    $stoppedAt = $this->stages->get(2);
+
+    $this->application->update([
+        'current_stage_id' => $stoppedAt->id,
+        'status' => ApplicationStatusEnum::Withdrawn,
+    ]);
+
+    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->assertOk()
+        ->assertSee(ApplicationStatusEnum::Withdrawn->getLabel());
+});
+
+it('marks a declined offer as a terminal point', function (): void {
+    $stoppedAt = $this->stages->get(4);
+
+    $this->application->update([
+        'current_stage_id' => $stoppedAt->id,
+        'status' => ApplicationStatusEnum::OfferDeclined,
+    ]);
+
+    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->assertOk()
+        ->assertSee(ApplicationStatusEnum::OfferDeclined->getLabel());
+});
+
+it('paints the stopped stage red and the reached stages green for a rejected application', function (): void {
+    $stoppedAt = $this->stages->get(2);
+
+    $this->application->update([
+        'current_stage_id' => $stoppedAt->id,
+        'status' => ApplicationStatusEnum::Rejected,
+        'rejection_reason_category' => RejectionReasonCategoryEnum::Qualifications,
+    ]);
+
+    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->assertOk()
+        // banner + caret use the red terminal palette (exclusive to terminal states)
+        ->assertSeeHtml('border-red-500/40')
+        ->assertSeeHtml('text-red-500')
+        // reached stages keep the valid success scale (regression for the bg-success typo)
+        ->assertSeeHtml('bg-success-500');
+});
+
+it('paints the stopped stage orange for a withdrawn application', function (): void {
+    $stoppedAt = $this->stages->get(2);
+
+    $this->application->update([
+        'current_stage_id' => $stoppedAt->id,
+        'status' => ApplicationStatusEnum::Withdrawn,
+    ]);
+
+    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->assertOk()
+        ->assertSeeHtml('border-orange-500/40')
+        ->assertSeeHtml('text-orange-500')
+        ->assertDontSeeHtml('border-red-500/40');
+});
+
+it('does not show any terminal banner or color for an in-progress application', function (): void {
+    $this->application->update([
+        'current_stage_id' => $this->stages->get(2)->id,
+        'status' => ApplicationStatusEnum::InProgress,
+    ]);
+
+    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->assertOk()
+        // the stepper still renders with the active (green) palette...
+        ->assertSeeHtml('bg-success-500')
+        // ...but no terminal overlay leaks in
+        ->assertDontSeeHtml('border-red-500/40')
+        ->assertDontSeeHtml('border-orange-500/40')
+        ->assertDontSee(ApplicationStatusEnum::Rejected->getLabel())
+        ->assertDontSee(ApplicationStatusEnum::Withdrawn->getLabel());
+});
+
+it('shows the rejection banner without a reason line when no category was recorded', function (): void {
+    $stoppedAt = $this->stages->get(2);
+
+    $this->application->update([
+        'current_stage_id' => $stoppedAt->id,
+        'status' => ApplicationStatusEnum::Rejected,
+        'rejection_reason_category' => null,
+    ]);
+
+    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->assertOk()
+        ->assertSee(ApplicationStatusEnum::Rejected->getLabel());
+});
+
+it('treats the current stage as reached for a fresh application without history', function (): void {
+    // beforeEach leaves the application on the first stage with no stage history
+    $first = $this->stages->first();
+
+    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->assertOk()
+        ->call('goToStage', $first->id)
+        ->assertSet('currentStageId', $first->id)
+        ->assertDontSee(__('panel-organization::view.pipeline.stage_detail.empty_future'));
+});
+
+it('refreshes the footer navigation after a single goToNextStage click', function (): void {
+    // application stopped at Offer (index 4): Interview is reached, Hired is future
+    $interview = $this->stages->get(3);
+    $offer = $this->stages->get(4);
+    $this->application->update([
+        'current_stage_id' => $offer->id,
+        'status' => ApplicationStatusEnum::OfferExtended,
+    ]);
+
+    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->call('goToStage', $interview->id)
+        ->call('goToNextStage')
+        ->assertSet('currentStageId', $offer->id)
+        // Offer is the current stage, so there is no reached "next" — the footer
+        // "next" button must disappear after ONE click (no stale computed cache).
+        ->assertDontSee(__('panel-organization::view.pipeline.stage_detail.next'));
 });
 
 it('shows movedBy user name in timeline for the current stage', function (): void {

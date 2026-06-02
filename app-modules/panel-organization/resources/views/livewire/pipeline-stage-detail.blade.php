@@ -4,30 +4,104 @@
     use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 
     $stagesCount = $this->stages->count();
-    $progressPct = $stagesCount > 0 ? ($this->stageIndex / $stagesCount) * 100 : 0;
     $isCurrentRealStage = $this->application->currentStage?->id === $this->stage?->id;
 
+    // Status terminal (rejeitado/desistiu/recusou) congela a candidatura na etapa atual.
+    $terminal = $this->terminalStatus();
+    $terminalColor = $this->terminalColor();
+    $terminalBg = $terminalColor === "orange" ? "bg-orange-500" : "bg-red-500";
+    $terminalBorder = $terminalColor === "orange" ? "border-b-orange-500" : "border-b-red-500";
+    $terminalText = $terminalColor === "orange" ? "text-orange-500" : "text-red-500";
+    $terminalBanner = $terminalColor === "orange" ? "border-orange-500/40 bg-orange-500/10" : "border-red-500/40 bg-red-500/10";
+    $selectedIsTerminal = $this->stage && $this->isApplicationCurrent($this->stage) && $terminal !== null;
+
     $stageTypeClasses = fn (StageTypeEnum $type): string => match ($type) {
-        StageTypeEnum::New => 'bg-gray-500/10 text-gray-500 ring-gray-500/20',
-        StageTypeEnum::Screening => 'bg-yellow-500/10 text-yellow-600 ring-yellow-500/20',
-        StageTypeEnum::Assessment => 'bg-blue-500/10 text-blue-600 ring-blue-500/20',
-        StageTypeEnum::Interview => 'bg-emerald-500/10 text-emerald-600 ring-emerald-500/20',
-        StageTypeEnum::Offer => 'bg-green-500/10 text-green-600 ring-green-500/20',
-        StageTypeEnum::Hired => 'bg-emerald-500/10 text-emerald-600 ring-emerald-500/20',
-        StageTypeEnum::HiddenStage => 'bg-red-500/10 text-red-600 ring-red-500/20',
+        StageTypeEnum::New => "bg-gray-500/10 text-gray-500 ring-gray-500/20",
+        StageTypeEnum::Screening => "bg-yellow-500/10 text-yellow-600 ring-yellow-500/20",
+        StageTypeEnum::Assessment => "bg-blue-500/10 text-blue-600 ring-blue-500/20",
+        StageTypeEnum::Interview => "bg-emerald-500/10 text-emerald-600 ring-emerald-500/20",
+        StageTypeEnum::Offer => "bg-green-500/10 text-green-600 ring-green-500/20",
+        StageTypeEnum::Hired => "bg-emerald-500/10 text-emerald-600 ring-emerald-500/20",
+        StageTypeEnum::HiddenStage => "bg-red-500/10 text-red-600 ring-red-500/20",
     };
 
     $ratingClasses = fn (EvaluationRatingEnum $rating): string => match ($rating) {
-        EvaluationRatingEnum::StrongYes => 'bg-emerald-500/10 text-emerald-600 ring-emerald-500/20',
-        EvaluationRatingEnum::Yes => 'bg-green-500/10 text-green-600 ring-green-500/20',
-        EvaluationRatingEnum::Maybe => 'bg-amber-500/10 text-amber-600 ring-amber-500/20',
-        EvaluationRatingEnum::No => 'bg-orange-500/10 text-orange-600 ring-orange-500/20',
-        EvaluationRatingEnum::StrongNo => 'bg-red-500/10 text-red-600 ring-red-500/20',
+        EvaluationRatingEnum::StrongYes => "bg-emerald-500/10 text-emerald-600 ring-emerald-500/20",
+        EvaluationRatingEnum::Yes => "bg-green-500/10 text-green-600 ring-green-500/20",
+        EvaluationRatingEnum::Maybe => "bg-amber-500/10 text-amber-600 ring-amber-500/20",
+        EvaluationRatingEnum::No => "bg-orange-500/10 text-orange-600 ring-orange-500/20",
+        EvaluationRatingEnum::StrongNo => "bg-red-500/10 text-red-600 ring-red-500/20",
     };
 @endphp
 
 <div class="space-y-5">
+    {{-- =========================== STEPPER =========================== --}}
+    @if ($this->stages->isNotEmpty())
+        <div class="border-outline-low bg-elevation-01dp rounded-xl border p-4">
+            <h4 class="text-text-medium mb-4 flex items-center gap-2 text-xs font-semibold tracking-wider uppercase">
+                <x-he4rt::icon :icon="Heroicon::Squares2x2" size="xs" class="text-icon-medium" />
+                {{ __("panel-organization::view.pipeline.stage_detail.stepper_title") }}
+            </h4>
+            {{--
+                Barra de progresso segmentada: UMA barra contínua dividida em blocos (um por
+                etapa), pontas arredondadas. Verde = concluída, verde-claro = futura; se a
+                candidatura encerrou, a etapa onde parou fica vermelha (rejeitada/recusou) ou
+                laranja (desistiu). O caret aponta a etapa selecionada (nome no rótulo).
+            --}}
+            <div class="relative">
+                <div class="flex h-3 gap-px overflow-hidden rounded-full">
+                    @foreach ($this->stages as $st)
+                        @php
+                            $reached = $this->isReached($st);
+                            $isCurr = $this->isApplicationCurrent($st);
+                            $isTerminalPoint = $isCurr && $terminal !== null;
+                        @endphp
+
+                        <button
+                            type="button"
+                            title="{{ $st->name }}"
+                            @if ($reached) wire:click="goToStage('{{ $st->id }}')" @else disabled @endif
+                            class="{{ $isTerminalPoint ? $terminalBg : ($reached ? 'bg-success-500' : 'bg-success-500/25') }} {{ $isCurr && ! $isTerminalPoint ? 'animate-pulse' : '' }} {{ $reached ? 'cursor-pointer hover:brightness-110' : 'cursor-not-allowed' }} h-full flex-1 transition"
+                        >
+                            <span class="sr-only">{{ $st->name }}@if ($isTerminalPoint)· {{ $terminal->getLabel() }}
+                            @endif</span>
+                        </button>
+                    @endforeach
+                </div>
+                @if ($this->stage)
+                    <div
+                        class="{{ $selectedIsTerminal ? $terminalBorder : 'border-b-success-500' }} absolute top-full mt-1 h-0 w-0 -translate-x-1/2 border-x-[5px] border-b-[5px] border-x-transparent"
+                        style="left: {{ (($this->stageIndex - 0.5) / $this->stages->count()) * 100 }}%"
+                    ></div>
+                @endif
+            </div>
+            <div class="mt-3 flex items-center justify-between gap-2 text-xs">
+                <span class="{{ $selectedIsTerminal ? $terminalText : 'text-text-high' }} truncate font-medium">
+                    {{ $this->stage?->name }}
+                </span>
+                <span class="text-text-low shrink-0 font-mono tabular-nums">
+                    {{ $this->stageIndex }}/{{ $this->stages->count() }}
+                </span>
+            </div>
+        </div>
+    @endif
+
     @if ($this->stage)
+        {{-- =========================== TERMINAL STATUS BANNER =========================== --}}
+        @if ($selectedIsTerminal)
+            <div class="{{ $terminalBanner }} flex items-start gap-2.5 rounded-xl border p-3">
+                <x-he4rt::icon :icon="$terminal->getIcon()" size="sm" class="mt-0.5 shrink-0 {{ $terminalText }}" />
+                <div>
+                    <p class="{{ $terminalText }} text-sm font-semibold">
+                        {{ $terminal->getLabel() }}
+                    </p>
+                    @if ($this->rejectionReason())
+                        <p class="text-text-medium text-sm leading-relaxed">{{ $this->rejectionReason() }}</p>
+                    @endif
+                </div>
+            </div>
+        @endif
+
         {{-- =========================== HEADER =========================== --}}
         <div class="border-outline-low bg-elevation-01dp relative overflow-hidden rounded-xl border">
             <div class="from-primary via-primary/40 absolute inset-x-0 top-0 h-1 bg-gradient-to-r to-transparent"></div>
@@ -62,7 +136,7 @@
                                         ></span>
                                         <span class="bg-success relative inline-flex h-1.5 w-1.5 rounded-full"></span>
                                     </span>
-                                    {{ __('panel-organization::view.pipeline.stage_detail.current_stage') }}
+                                    {{ __("panel-organization::view.pipeline.stage_detail.current_stage") }}
                                 </span>
                             @endif
 
@@ -72,16 +146,6 @@
                                 </span>
                             @endif
                         </div>
-                    </div>
-                </div>
-
-                {{-- progresso no pipeline --}}
-                <div class="space-y-1.5">
-                    <div class="bg-elevation-03dp h-1.5 w-full overflow-hidden rounded-full">
-                        <div
-                            class="bg-primary h-full rounded-full transition-all duration-500"
-                            style="width: {{ $progressPct }}%"
-                        ></div>
                     </div>
                 </div>
 
@@ -96,7 +160,7 @@
                         class="bg-elevation-02dp text-text-medium inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-sm"
                     >
                         <x-he4rt::icon :icon="Heroicon::Clock" size="xs" class="text-icon-medium" />
-                        {{ trans_choice('panel-organization::view.pipeline.duration_days', $this->stage->expected_duration_days, ['count' => $this->stage->expected_duration_days]) }}
+                        {{ trans_choice("panel-organization::view.pipeline.duration_days", $this->stage->expected_duration_days, ["count" => $this->stage->expected_duration_days]) }}
                     </span>
                     @if ($this->stage->screeningQuestions->isNotEmpty())
                         <span
@@ -107,7 +171,7 @@
                                 size="xs"
                                 class="text-icon-medium"
                             />
-                            {{ trans_choice('panel-organization::view.pipeline.screening_questions', $this->stage->screeningQuestions->count(), ['count' => $this->stage->screeningQuestions->count()]) }}
+                            {{ trans_choice("panel-organization::view.pipeline.screening_questions", $this->stage->screeningQuestions->count(), ["count" => $this->stage->screeningQuestions->count()]) }}
                         </span>
                     @endif
                 </div>
@@ -119,7 +183,7 @@
             <div class="border-warning/40 bg-warning/10 flex items-start gap-2.5 rounded-xl border p-3">
                 <x-he4rt::icon :icon="Heroicon::LockClosed" size="sm" class="text-warning mt-0.5 shrink-0" />
                 <p class="text-warning text-sm leading-relaxed">
-                    {{ __('panel-organization::view.pipeline.stage_detail.hidden_warning') }}
+                    {{ __("panel-organization::view.pipeline.stage_detail.hidden_warning") }}
                 </p>
             </div>
         @endif
@@ -135,7 +199,7 @@
                     <x-he4rt::icon :icon="Heroicon::Clock" size="md" class="text-icon-low" />
                 </div>
                 <p class="text-text-medium text-base">
-                    {{ __('panel-organization::view.pipeline.stage_detail.empty_future') }}
+                    {{ __("panel-organization::view.pipeline.stage_detail.empty_future") }}
                 </p>
             </div>
         @else
@@ -144,7 +208,7 @@
                 <div class="flex items-center justify-between">
                     <h4 class="text-text-high flex items-center gap-2 text-base font-semibold">
                         <x-he4rt::icon :icon="Heroicon::ListBullet" size="sm" class="text-icon-medium" />
-                        {{ __('panel-organization::view.pipeline.stage_detail.timeline') }}
+                        {{ __("panel-organization::view.pipeline.stage_detail.timeline") }}
                     </h4>
                     @if ($this->timeline->isNotEmpty())
                         <span
@@ -158,7 +222,7 @@
                 @if ($this->timeline->isEmpty())
                     <div class="border-outline-low bg-elevation-01dp/50 rounded-lg border px-3 py-4 text-center">
                         <p class="text-text-low text-sm italic">
-                            {{ __('panel-organization::view.pipeline.stage_detail.empty_notes') }}
+                            {{ __("panel-organization::view.pipeline.stage_detail.empty_notes") }}
                         </p>
                     </div>
                 @else
@@ -173,7 +237,7 @@
                                 <div class="space-y-1.5">
                                     <div class="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                                         <time class="text-text-high text-sm font-medium tabular-nums">
-                                            {{ $event->created_at->translatedFormat('d M Y · H:i') }}
+                                            {{ $event->created_at->translatedFormat("d M Y · H:i") }}
                                         </time>
                                         <span class="text-text-low text-xs">
                                             {{ $event->created_at->diffForHumans() }}
@@ -224,7 +288,7 @@
                 <div class="flex items-center justify-between">
                     <h4 class="text-text-high flex items-center gap-2 text-base font-semibold">
                         <x-he4rt::icon :icon="Heroicon::UserGroup" size="sm" class="text-icon-medium" />
-                        {{ __('panel-organization::view.pipeline.stage_detail.interviewers') }}
+                        {{ __("panel-organization::view.pipeline.stage_detail.interviewers") }}
                     </h4>
                     @if ($this->interviewers->isNotEmpty())
                         <span
@@ -238,7 +302,7 @@
                 @if ($this->interviewers->isEmpty())
                     <div class="border-outline-low bg-elevation-01dp/50 rounded-lg border px-3 py-4 text-center">
                         <p class="text-text-low text-sm italic">
-                            {{ __('panel-organization::view.pipeline.stage_detail.empty_interviewers') }}
+                            {{ __("panel-organization::view.pipeline.stage_detail.empty_interviewers") }}
                         </p>
                     </div>
                 @else
@@ -250,7 +314,7 @@
                                 <div
                                     class="bg-primary/15 text-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-base font-semibold"
                                 >
-                                    {{ mb_strtoupper(mb_substr($interviewer->user?->name ?? '?', 0, 1)) }}
+                                    {{ mb_strtoupper(mb_substr($interviewer->user?->name ?? "?", 0, 1)) }}
                                 </div>
                                 <div class="min-w-0 flex-1">
                                     <div class="text-text-high truncate text-sm font-medium">
@@ -273,7 +337,7 @@
                 <div class="flex items-center justify-between">
                     <h4 class="text-text-high flex items-center gap-2 text-base font-semibold">
                         <x-he4rt::icon :icon="Heroicon::Star" size="sm" class="text-icon-medium" />
-                        {{ __('panel-organization::view.pipeline.stage_detail.evaluations') }}
+                        {{ __("panel-organization::view.pipeline.stage_detail.evaluations") }}
                     </h4>
                     @if ($this->evaluations->isNotEmpty())
                         <span
@@ -287,7 +351,7 @@
                 @if ($this->evaluations->isEmpty())
                     <div class="border-outline-low bg-elevation-01dp/50 rounded-lg border px-3 py-4 text-center">
                         <p class="text-text-low text-sm italic">
-                            {{ __('panel-organization::view.pipeline.stage_detail.empty_evaluations') }}
+                            {{ __("panel-organization::view.pipeline.stage_detail.empty_evaluations") }}
                         </p>
                     </div>
                 @else
@@ -379,7 +443,7 @@
                             />
                             <div class="min-w-0 flex-1">
                                 <div class="text-text-low text-xs font-semibold tracking-wider uppercase">
-                                    {{ __('panel-organization::view.pipeline.stage_detail.previous') }}
+                                    {{ __("panel-organization::view.pipeline.stage_detail.previous") }}
                                 </div>
                                 <div class="text-text-high mt-0.5 flex items-center gap-1.5">
                                     <x-he4rt::icon
@@ -402,7 +466,7 @@
                         >
                             <div class="min-w-0 flex-1">
                                 <div class="text-text-low text-right text-xs font-semibold tracking-wider uppercase">
-                                    {{ __('panel-organization::view.pipeline.stage_detail.next') }}
+                                    {{ __("panel-organization::view.pipeline.stage_detail.next") }}
                                 </div>
                                 <div class="text-text-high mt-0.5 flex items-center justify-end gap-1.5">
                                     <x-he4rt::icon
@@ -425,7 +489,7 @@
         @endif
     @else
         <p class="text-text-medium py-4 text-center text-base">
-            {{ __('panel-organization::view.pipeline.stage_detail.empty_future') }}
+            {{ __("panel-organization::view.pipeline.stage_detail.empty_future") }}
         </p>
     @endif
 </div>

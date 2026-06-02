@@ -87,6 +87,7 @@ return [
             'empty_interviewers' => 'Nenhum entrevistador atribuído',
             'empty_evaluations' => 'Sem avaliações registradas nesta etapa',
             'hidden_warning' => 'Etapa interna — visível apenas para a equipe',
+            'stepper_title' => 'Etapas do processo',
         ],
     ],
     'tabs' => [

@@ -87,6 +87,7 @@ return [
             'empty_interviewers' => 'No interviewers assigned',
             'empty_evaluations' => 'No evaluations recorded in this stage',
             'hidden_warning' => 'Internal stage — visible to staff only',
+            'stepper_title' => 'Process stages',
         ],
     ],
     'tabs' => [

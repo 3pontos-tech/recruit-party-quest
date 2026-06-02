@@ -118,7 +118,7 @@ class ApplicationInfolist
                                         ->slideOver()
                                         ->outlined()
                                         ->extraAttributes(fn () => ['class' => 'w-full'])
-                                        ->modalWidth(Width::Large)
+                                        ->modalWidth(Width::Medium)
                                         ->modalSubmitAction(false)
                                         ->modalCancelAction(false)
                                         ->modalHeading(fn (Application $record): string => __('panel-organization::view.pipeline.stage_detail.title'))
