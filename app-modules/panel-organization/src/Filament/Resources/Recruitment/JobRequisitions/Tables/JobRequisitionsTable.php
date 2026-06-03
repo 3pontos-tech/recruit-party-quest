@@ -117,6 +117,7 @@ class JobRequisitionsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
+                CopyJobShareLinkAction::make()->tableIconButton(),
                 ActionGroup::make([
                     EditAction::make(),
                     Action::make('kanban')
@@ -124,7 +125,6 @@ class JobRequisitionsTable
                         ->icon(Heroicon::OutlinedViewColumns)
                         ->url(fn (JobRequisition $record): string => JobRequisitionResource::getUrl('kanban',
                             ['record' => $record->id])),
-                    CopyJobShareLinkAction::make(),
                     DuplicateJobRequisitionAction::make(),
                 ]),
             ])
