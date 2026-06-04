@@ -90,6 +90,11 @@ enum ApplicationStatusEnum: string implements HasColor, HasIcon, HasLabel
      * a final outcome — be it negative (rejected, withdrawn, declined) or positive
      * (offer accepted, hired) — no longer admits a rejection, while only the
      * negative outcomes are painted as a terminal stop in the pipeline stepper.
+     *
+     * Once an offer is extended, the negative path is a declined offer, not a
+     * rejection: the state machine (OfferExtendedTransition) only models
+     * OfferAccepted/OfferDeclined/Withdrawn, so this guard is aligned to it and
+     * forbids rejecting an OfferExtended application.
      */
     public function allowsRejection(): bool
     {
@@ -97,6 +102,7 @@ enum ApplicationStatusEnum: string implements HasColor, HasIcon, HasLabel
             self::Rejected,
             self::Withdrawn,
             self::OfferDeclined,
+            self::OfferExtended,
             self::OfferAccepted,
             self::Hired => false,
             default => true,
