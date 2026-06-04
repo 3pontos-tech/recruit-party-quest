@@ -38,12 +38,12 @@ it('allows rejection only while the process is still open', function (Applicatio
     ApplicationStatusEnum::New,
     ApplicationStatusEnum::InReview,
     ApplicationStatusEnum::InProgress,
-    ApplicationStatusEnum::OfferExtended,
 ]);
 
 it('forbids rejection once the process has a final outcome', function (ApplicationStatusEnum $status): void {
     expect($status->allowsRejection())->toBeFalse();
 })->with([
+    ApplicationStatusEnum::OfferExtended,
     ApplicationStatusEnum::Rejected,
     ApplicationStatusEnum::Withdrawn,
     ApplicationStatusEnum::OfferDeclined,

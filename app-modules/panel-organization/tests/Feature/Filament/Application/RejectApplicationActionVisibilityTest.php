@@ -55,7 +55,6 @@ it('shows the reject action enabled while the application is still in progress',
     'new' => ApplicationStatusEnum::New,
     'in review' => ApplicationStatusEnum::InReview,
     'in progress' => ApplicationStatusEnum::InProgress,
-    'offer extended' => ApplicationStatusEnum::OfferExtended,
 ]);
 
 it('keeps the reject action visible but disabled once the process reaches a final outcome', function (ApplicationStatusEnum $status): void {
@@ -69,6 +68,7 @@ it('keeps the reject action visible but disabled once the process reaches a fina
         ->assertActionVisible(rejectAction())
         ->assertActionDisabled(rejectAction());
 })->with([
+    'offer extended' => ApplicationStatusEnum::OfferExtended,
     'rejected' => ApplicationStatusEnum::Rejected,
     'withdrawn' => ApplicationStatusEnum::Withdrawn,
     'offer declined' => ApplicationStatusEnum::OfferDeclined,
