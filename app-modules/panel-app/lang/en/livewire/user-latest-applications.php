@@ -28,7 +28,7 @@ return [
         'default_title' => 'Job Title',
         'no_stage' => '-',
         'activity_fallback' => 'Application submitted',
-        'stage' => 'Stage :current/:total:',
+        'stage' => 'Stage :current/:total ·',
         'unknown_stage' => 'Unknown',
     ],
 
