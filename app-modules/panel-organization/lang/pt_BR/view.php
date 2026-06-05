@@ -69,6 +69,7 @@ return [
         'rejected_reason' => 'Motivo da Reprovação',
         'rejected_details' => 'Feedback',
         'rejected_screening_message' => 'Informamos que, após avaliação, sua candidatura não seguirá para as próximas etapas do processo seletivo.',
+        'closed_message' => 'Esta candidatura foi encerrada e não está mais em andamento.',
         'rejected_on' => 'Reprovado em :date',
         'view_details' => 'Ver detalhes do progresso',
         'duration_days' => '{0} mesmo dia|{1} :count dia|[2,*] :count dias',

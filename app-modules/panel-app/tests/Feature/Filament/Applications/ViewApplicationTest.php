@@ -165,6 +165,49 @@ it('does not show neutral screening message for non-knockout rejection', functio
         ->assertDontSee('your application will not proceed to the next stages');
 });
 
+it('treats a declined offer as terminal in the candidate pipeline sidebar', function (): void {
+    $application = Application::factory()
+        ->for($this->candidate, 'candidate')
+        ->create(['status' => ApplicationStatusEnum::OfferDeclined]);
+
+    $stage = Stage::factory()->create([
+        'job_requisition_id' => $application->requisition_id,
+        'hidden' => false,
+        'active' => true,
+        'display_order' => 1,
+    ]);
+    $application->update(['current_stage_id' => $stage->id]);
+    $application->requisition->stages()->whereNot('id', $stage->id)->update(['hidden' => true]);
+
+    livewire(ViewApplication::class, ['record' => $application->getKey()])
+        ->assertOk()
+        ->assertSee('This application has been closed') // neutral terminal note
+        ->assertSee(ApplicationStatusEnum::OfferDeclined->getLabel()) // header shows the status, kept for candidate's own action
+        ->assertDontSee('Overall Progress') // not the active, in-progress timeline
+        ->assertDontSee('Selection Process Stages');
+});
+
+it('treats a withdrawal as terminal in the candidate pipeline sidebar', function (): void {
+    $application = Application::factory()
+        ->for($this->candidate, 'candidate')
+        ->create(['status' => ApplicationStatusEnum::Withdrawn]);
+
+    $stage = Stage::factory()->create([
+        'job_requisition_id' => $application->requisition_id,
+        'hidden' => false,
+        'active' => true,
+        'display_order' => 1,
+    ]);
+    $application->update(['current_stage_id' => $stage->id]);
+    $application->requisition->stages()->whereNot('id', $stage->id)->update(['hidden' => true]);
+
+    livewire(ViewApplication::class, ['record' => $application->getKey()])
+        ->assertOk()
+        ->assertSee('This application has been closed')
+        ->assertSee(ApplicationStatusEnum::Withdrawn->getLabel())
+        ->assertDontSee('Overall Progress');
+});
+
 it('allows candidate to view their own application when job is not published', function (): void {
     $application = Application::factory()
         ->for($this->candidate, 'candidate')

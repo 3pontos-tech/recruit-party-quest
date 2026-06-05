@@ -69,6 +69,7 @@ return [
         'rejected_reason' => 'Rejection Reason',
         'rejected_details' => 'Feedback',
         'rejected_screening_message' => 'Please note that, after evaluation, your application will not proceed to the next stages of the selection process.',
+        'closed_message' => 'This application has been closed and is no longer in progress.',
         'rejected_on' => 'Rejected on :date',
         'view_details' => 'View progress details',
         'duration_days' => '{0} same day|{1} :count day|[2,*] :count days',

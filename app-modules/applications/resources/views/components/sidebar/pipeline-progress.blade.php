@@ -24,9 +24,7 @@
 
     if ($organizationPanel) {
         $pipelineStages->loadMissing('screeningQuestions');
-        $stages = $pipelineStages
-            ->where('active', true)
-            ->values();
+        $stages = $pipelineStages->where('active', true)->values();
     } else {
         $stages = $pipelineStages
             ->where('hidden', false)
@@ -34,6 +32,9 @@
             ->values();
     }
 
+    // Any terminal outcome (rejection, withdrawal, declined offer) freezes the candidate's
+    // timeline; $isRejected still gates the rejection-specific reason/feedback content.
+    $isTerminal = ! $organizationPanel && $record->status->isTerminal();
     $isRejected = ! $organizationPanel && $record->status === ApplicationStatusEnum::Rejected;
 
     $isScreeningKnockout = $record->rejection_reason_category === RejectionReasonCategoryEnum::ScreeningKnockout;
@@ -64,51 +65,64 @@
         <div class="flex items-center justify-between gap-2">
             <div class="flex min-w-0 items-center gap-2">
                 <x-he4rt::icon
-                    :icon="$isRejected ? Heroicon::InformationCircle : Heroicon::ChartBar"
+                    :icon="$isTerminal ? Heroicon::InformationCircle : Heroicon::ChartBar"
                     size="sm"
                     class="text-icon-medium shrink-0"
                 />
                 <h3 class="text-text-high text-sm font-semibold">
-                    {{ __('panel-organization::view.pipeline.' . ($isRejected ? 'rejected_title' : 'title')) }}
+                    @if ($isRejected)
+                        {{ __('panel-organization::view.pipeline.rejected_title') }}
+                    @elseif ($isTerminal)
+                        {{ $record->status->getLabel() }}
+                    @else
+                        {{ __('panel-organization::view.pipeline.title') }}
+                    @endif
                 </h3>
             </div>
-            @if (! $isRejected && $currentStage)
+            @if (! $isTerminal && $currentStage)
                 <x-he4rt::tag size="sm" class="shrink-0 whitespace-nowrap">
                     {{ $currentStageIndex + 1 }} / {{ max($stages->count(), 1) }}
                 </x-he4rt::tag>
             @endif
         </div>
 
-        @if ($isRejected)
-            {{-- Rejection Card (candidate panel only) --}}
+        @if ($isTerminal)
+            {{-- Terminal Card (candidate panel only) --}}
             <div class="space-y-3">
-                @if ($isScreeningKnockout)
-                    {{-- Screening knockout: show a neutral message and hide the internal reason/details --}}
-                    <p class="text-text-medium text-sm leading-relaxed">
-                        {{ __('panel-organization::view.pipeline.rejected_screening_message') }}
-                    </p>
-                @else
-                    @if ($record->rejection_reason_category)
-                        <div class="space-y-1">
-                            <span class="text-text-medium text-xs">
-                                {{ __('panel-organization::view.pipeline.rejected_reason') }}
-                            </span>
-                            <p class="text-text-high text-sm font-medium">
-                                {{ $record->rejection_reason_category->getLabel() }}
-                            </p>
-                        </div>
-                    @endif
+                @if ($isRejected)
+                    @if ($isScreeningKnockout)
+                        {{-- Screening knockout: show a neutral message and hide the internal reason/details --}}
+                        <p class="text-text-medium text-sm leading-relaxed">
+                            {{ __('panel-organization::view.pipeline.rejected_screening_message') }}
+                        </p>
+                    @else
+                        @if ($record->rejection_reason_category)
+                            <div class="space-y-1">
+                                <span class="text-text-medium text-xs">
+                                    {{ __('panel-organization::view.pipeline.rejected_reason') }}
+                                </span>
+                                <p class="text-text-high text-sm font-medium">
+                                    {{ $record->rejection_reason_category->getLabel() }}
+                                </p>
+                            </div>
+                        @endif
 
-                    @if ($record->rejection_reason_details)
-                        <div class="space-y-1">
-                            <span class="text-text-medium text-xs">
-                                {{ __('panel-organization::view.pipeline.rejected_details') }}
-                            </span>
-                            <p class="text-text-medium text-sm leading-relaxed">
-                                {{ $record->rejection_reason_details }}
-                            </p>
-                        </div>
+                        @if ($record->rejection_reason_details)
+                            <div class="space-y-1">
+                                <span class="text-text-medium text-xs">
+                                    {{ __('panel-organization::view.pipeline.rejected_details') }}
+                                </span>
+                                <p class="text-text-medium text-sm leading-relaxed">
+                                    {{ $record->rejection_reason_details }}
+                                </p>
+                            </div>
+                        @endif
                     @endif
+                @else
+                    {{-- Withdrawal or declined offer: candidate's own action, neutral closure note. --}}
+                    <p class="text-text-medium text-sm leading-relaxed">
+                        {{ __('panel-organization::view.pipeline.closed_message') }}
+                    </p>
                 @endif
             </div>
         @else
