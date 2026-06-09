@@ -457,6 +457,54 @@ it('renders multiple evaluations on the same stage', function (): void {
         ->assertSee('Second reviewer feedback');
 });
 
+it('renders the status transition in the timeline for a status-only change', function (): void {
+    $offer = $this->stages->firstWhere('stage_type', StageTypeEnum::Offer);
+    $this->application->update([
+        'current_stage_id' => $offer->id,
+        'status' => ApplicationStatusEnum::OfferAccepted,
+    ]);
+
+    ApplicationStageHistory::factory()
+        ->for($this->application, 'application')
+        ->state([
+            'team_id' => $this->team->id,
+            'from_stage_id' => $offer->id,
+            'to_stage_id' => $offer->id, // status-only: same stage on both sides
+            'from_status' => ApplicationStatusEnum::OfferExtended,
+            'to_status' => ApplicationStatusEnum::OfferAccepted,
+            'moved_by' => $this->recruiter->user->getKey(),
+        ])
+        ->create();
+
+    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->assertOk()
+        ->assertSee(ApplicationStatusEnum::OfferExtended->getLabel())
+        ->assertSee(ApplicationStatusEnum::OfferAccepted->getLabel());
+});
+
+it('falls back to stage names in the timeline for legacy rows without status', function (): void {
+    $first = $this->stages->first();
+    $second = $this->stages->get(1);
+    $this->application->update(['current_stage_id' => $second->id]);
+
+    ApplicationStageHistory::factory()
+        ->for($this->application, 'application')
+        ->state([
+            'team_id' => $this->team->id,
+            'from_stage_id' => $first->id,
+            'to_stage_id' => $second->id,
+            'from_status' => null,
+            'to_status' => null,
+            'moved_by' => $this->recruiter->user->getKey(),
+        ])
+        ->create();
+
+    Livewire::test(PipelineStageDetail::class, ['application' => $this->application->fresh()])
+        ->assertOk()
+        ->assertSee($first->name)
+        ->assertSee($second->name);
+});
+
 it('renders timeline entry when from_stage_id is null (initial application)', function (): void {
     $first = $this->stages->first();
     $this->application->update(['current_stage_id' => $first->id]);

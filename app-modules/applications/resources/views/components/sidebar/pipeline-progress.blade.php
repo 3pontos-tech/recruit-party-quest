@@ -4,6 +4,7 @@
     use He4rt\Applications\Enums\ApplicationStatusEnum;
     use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
     use He4rt\Applications\Models\Application;
+    use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
     use He4rt\Recruitment\Stages\Models\Stage;
     use Illuminate\Support\Collection;
 @endphp
@@ -24,9 +25,7 @@
 
     if ($organizationPanel) {
         $pipelineStages->loadMissing('screeningQuestions');
-        $stages = $pipelineStages
-            ->where('active', true)
-            ->values();
+        $stages = $pipelineStages->where('active', true)->values();
     } else {
         $stages = $pipelineStages
             ->where('hidden', false)
@@ -34,7 +33,32 @@
             ->values();
     }
 
-    $isRejected = ! $organizationPanel && $record->status === ApplicationStatusEnum::Rejected;
+    // Negative terminal outcome that freezes the application on its current stage as
+    // an overlay (rejected, withdrawn or declined). Mirrors PipelineStageDetail::terminalStatus().
+    $terminalStatus = $record->status->isTerminal() ? $record->status : null;
+
+    // The candidate panel replaces the whole timeline with a closure card on a terminal
+    // outcome; the organization panel keeps the timeline and marks the exit stage.
+    $showTerminalCard = ! $organizationPanel && $terminalStatus !== null;
+
+    // Translation suffix + Tailwind classes for the terminal marker, aligned with
+    // PipelineStageDetail's red (rejected/declined) vs orange (withdrawal) semantics.
+    $terminalKey = match ($terminalStatus) {
+        ApplicationStatusEnum::Withdrawn => 'withdrawn',
+        ApplicationStatusEnum::OfferDeclined => 'declined',
+        ApplicationStatusEnum::Rejected => 'rejected',
+        default => null,
+    };
+    $terminalRingClass = match ($terminalStatus) {
+        ApplicationStatusEnum::Withdrawn => 'border-orange-500 bg-orange-500',
+        ApplicationStatusEnum::Rejected, ApplicationStatusEnum::OfferDeclined => 'border-red-500 bg-red-500',
+        default => '',
+    };
+    $terminalBadgeClass = match ($terminalStatus) {
+        ApplicationStatusEnum::Withdrawn => 'border-orange-500/40 text-orange-600',
+        ApplicationStatusEnum::Rejected, ApplicationStatusEnum::OfferDeclined => 'border-red-500/40 text-red-600',
+        default => '',
+    };
 
     $isScreeningKnockout = $record->rejection_reason_category === RejectionReasonCategoryEnum::ScreeningKnockout;
 
@@ -64,51 +88,66 @@
         <div class="flex items-center justify-between gap-2">
             <div class="flex min-w-0 items-center gap-2">
                 <x-he4rt::icon
-                    :icon="$isRejected ? Heroicon::InformationCircle : Heroicon::ChartBar"
+                    :icon="$showTerminalCard ? Heroicon::InformationCircle : Heroicon::ChartBar"
                     size="sm"
                     class="text-icon-medium shrink-0"
                 />
                 <h3 class="text-text-high text-sm font-semibold">
-                    {{ __('panel-organization::view.pipeline.' . ($isRejected ? 'rejected_title' : 'title')) }}
+                    {{
+                        $showTerminalCard
+                            ? __('panel-organization::view.pipeline.' . $terminalKey . '_title')
+                            : __('panel-organization::view.pipeline.title')
+                    }}
                 </h3>
             </div>
-            @if (! $isRejected && $currentStage)
+            @if (! $showTerminalCard && $currentStage)
                 <x-he4rt::tag size="sm" class="shrink-0 whitespace-nowrap">
                     {{ $currentStageIndex + 1 }} / {{ max($stages->count(), 1) }}
                 </x-he4rt::tag>
             @endif
         </div>
 
-        @if ($isRejected)
-            {{-- Rejection Card (candidate panel only) --}}
+        @if ($showTerminalCard)
+            {{-- Terminal closure card (candidate panel only): replaces the timeline --}}
             <div class="space-y-3">
-                @if ($isScreeningKnockout)
-                    {{-- Screening knockout: show a neutral message and hide the internal reason/details --}}
-                    <p class="text-text-medium text-sm leading-relaxed">
-                        {{ __('panel-organization::view.pipeline.rejected_screening_message') }}
-                    </p>
-                @else
-                    @if ($record->rejection_reason_category)
-                        <div class="space-y-1">
-                            <span class="text-text-medium text-xs">
-                                {{ __('panel-organization::view.pipeline.rejected_reason') }}
-                            </span>
-                            <p class="text-text-high text-sm font-medium">
-                                {{ $record->rejection_reason_category->getLabel() }}
-                            </p>
-                        </div>
-                    @endif
+                @if ($terminalStatus === ApplicationStatusEnum::Rejected)
+                    @if ($isScreeningKnockout)
+                        {{-- Screening knockout: show a neutral message and hide the internal reason/details --}}
+                        <p class="text-text-medium text-sm leading-relaxed">
+                            {{ __('panel-organization::view.pipeline.rejected_screening_message') }}
+                        </p>
+                    @else
+                        @if ($record->rejection_reason_category)
+                            <div class="space-y-1">
+                                <span class="text-text-medium text-xs">
+                                    {{ __('panel-organization::view.pipeline.rejected_reason') }}
+                                </span>
+                                <p class="text-text-high text-sm font-medium">
+                                    {{ $record->rejection_reason_category->getLabel() }}
+                                </p>
+                            </div>
+                        @endif
 
-                    @if ($record->rejection_reason_details)
-                        <div class="space-y-1">
-                            <span class="text-text-medium text-xs">
-                                {{ __('panel-organization::view.pipeline.rejected_details') }}
-                            </span>
-                            <p class="text-text-medium text-sm leading-relaxed">
-                                {{ $record->rejection_reason_details }}
-                            </p>
-                        </div>
+                        @if ($record->rejection_reason_details)
+                            <div class="space-y-1">
+                                <span class="text-text-medium text-xs">
+                                    {{ __('panel-organization::view.pipeline.rejected_details') }}
+                                </span>
+                                <p class="text-text-medium text-sm leading-relaxed">
+                                    {{ $record->rejection_reason_details }}
+                                </p>
+                            </div>
+                        @endif
                     @endif
+                @else
+                    {{-- Candidate-initiated close (withdrawal) or declined offer: neutral message + date --}}
+                    <p class="text-text-medium text-sm leading-relaxed">
+                        {{ __('panel-organization::view.pipeline.' . $terminalKey . '_message') }}
+                    </p>
+                    <div class="text-text-low flex items-center gap-2 text-xs">
+                        <x-he4rt::icon :icon="$record->status->getIcon()" size="xs" />
+                        {{ __('panel-organization::view.pipeline.' . $terminalKey . '_on', ['date' => $record->updated_at->translatedFormat('M j, Y')]) }}
+                    </div>
                 @endif
             </div>
         @else
@@ -139,6 +178,15 @@
                             $isCompleted = $index < $currentStageIndex;
                             $isCurrent = $index === $currentStageIndex;
                             $isFuture = $index > $currentStageIndex;
+                            // Positive terminal: hired candidate sitting on the hired stage.
+                            // Reads as a completed outcome, not an ongoing "current" stage.
+                            $isHired =
+                                $isCurrent &&
+                                $record->status === ApplicationStatusEnum::Hired &&
+                                $stage->stage_type === StageTypeEnum::Hired;
+                            // Negative terminal stop (organization panel keeps the timeline):
+                            // the exit stage reads as a halted overlay, never as "active".
+                            $isTerminalStop = $isCurrent && $terminalStatus !== null;
                         @endphp
 
                         <div class="group relative flex items-start gap-3">
@@ -152,14 +200,16 @@
 
                             {{-- Indicator Dot --}}
                             <div
-                                class="{{ $isCompleted || $isCurrent ? 'bg-outline-medium border-outline-medium' : 'bg-elevation-surface border-outline-low' }} relative z-20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 transition-colors duration-300"
+                                class="{{ $isTerminalStop ? $terminalRingClass : ($isCompleted || $isCurrent ? 'bg-outline-medium border-outline-medium' : 'bg-elevation-surface border-outline-low') }} relative z-20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 transition-colors duration-300"
                             >
-                                @if ($isCompleted)
+                                @if ($isCompleted || $isHired)
                                     <x-he4rt::icon
                                         :icon="$organizationPanel ? $stage->stage_type->getIcon() : Heroicon::Check"
                                         size="sm"
                                         class="text-white"
                                     />
+                                @elseif ($isTerminalStop)
+                                    <x-he4rt::icon :icon="$record->status->getIcon()" size="sm" class="text-white" />
                                 @elseif ($isCurrent)
                                     <div class="h-2.5 w-2.5 animate-pulse rounded-full bg-white"></div>
                                 @else
@@ -177,7 +227,15 @@
                                     </h4>
 
                                     {{-- Stage Status Badge --}}
-                                    @if ($isCurrent)
+                                    @if ($isHired)
+                                        <x-he4rt::tag size="xs" class="border-green-500/40 text-green-600">
+                                            {{ __('panel-organization::view.pipeline.hired') }}
+                                        </x-he4rt::tag>
+                                    @elseif ($isTerminalStop)
+                                        <x-he4rt::tag size="xs" class="{{ $terminalBadgeClass }}">
+                                            {{ $record->status->getLabel() }}
+                                        </x-he4rt::tag>
+                                    @elseif ($isCurrent)
                                         <x-he4rt::tag size="xs">
                                             {{ __('panel-organization::view.pipeline.current') }}
                                         </x-he4rt::tag>
@@ -215,9 +273,28 @@
                                 @if ($isCurrent)
                                     <div class="mt-2 space-y-1">
                                         <div class="text-text-medium flex items-center gap-2 text-xs">
-                                            <x-he4rt::tag :icon="Heroicon::Clock" size="xs" variant="ghost">
-                                                {{ __('panel-organization::view.pipeline.active_since', ['date' => $record->updated_at->translatedFormat('M j, Y')]) }}
-                                            </x-he4rt::tag>
+                                            @if ($isTerminalStop)
+                                                <x-he4rt::tag
+                                                    :icon="$record->status->getIcon()"
+                                                    size="xs"
+                                                    variant="ghost"
+                                                    class="{{ $terminalBadgeClass }}"
+                                                >
+                                                    {{ __('panel-organization::view.pipeline.' . $terminalKey . '_on', ['date' => $record->updated_at->translatedFormat('M j, Y')]) }}
+                                                </x-he4rt::tag>
+                                            @else
+                                                <x-he4rt::tag
+                                                    :icon="$isHired ? Heroicon::CheckCircle : Heroicon::Clock"
+                                                    size="xs"
+                                                    variant="ghost"
+                                                >
+                                                    {{
+                                                        $isHired
+                                                            ? __('panel-organization::view.pipeline.hired_on', ['date' => $record->updated_at->translatedFormat('M j, Y')])
+                                                            : __('panel-organization::view.pipeline.active_since', ['date' => $record->updated_at->translatedFormat('M j, Y')])
+                                                    }}
+                                                </x-he4rt::tag>
+                                            @endif
                                         </div>
                                     </div>
                                 @endif

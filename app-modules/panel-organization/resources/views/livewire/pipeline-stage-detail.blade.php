@@ -244,7 +244,41 @@
                                         </span>
                                     </div>
 
-                                    @if ($event->fromStage)
+                                    @php
+                                        $statusChanged = $event->to_status && $event->from_status !== $event->to_status;
+                                    @endphp
+
+                                    @if ($statusChanged)
+                                        {{-- Status transition: the meaningful change. --}}
+                                        <div class="text-text-medium flex items-center gap-1.5 text-sm">
+                                            <span class="truncate">{{ $event->from_status?->getLabel() }}</span>
+                                            <x-he4rt::icon
+                                                :icon="Heroicon::ArrowLongRight"
+                                                size="xs"
+                                                class="text-icon-low shrink-0"
+                                            />
+                                            <span class="text-text-high truncate font-medium">
+                                                {{ $event->to_status->getLabel() }}
+                                            </span>
+                                        </div>
+
+                                        @if ($event->from_stage_id !== $event->to_stage_id && $event->toStage)
+                                            {{-- The status change also moved the stage. --}}
+                                            <div class="text-text-low flex items-center gap-1.5 text-xs">
+                                                <span>
+                                                    {{ __("panel-organization::view.pipeline.stage_detail.stage_sub") }}:
+                                                </span>
+                                                <span class="truncate">{{ $event->fromStage?->name }}</span>
+                                                <x-he4rt::icon
+                                                    :icon="Heroicon::ArrowLongRight"
+                                                    size="xs"
+                                                    class="text-icon-low shrink-0"
+                                                />
+                                                <span class="truncate">{{ $event->toStage->name }}</span>
+                                            </div>
+                                        @endif
+                                    @elseif ($event->fromStage)
+                                        {{-- Stage-only move, or a legacy row without status. --}}
                                         <div class="text-text-medium flex items-center gap-1.5 text-sm">
                                             <span class="truncate">{{ $event->fromStage->name }}</span>
                                             <x-he4rt::icon

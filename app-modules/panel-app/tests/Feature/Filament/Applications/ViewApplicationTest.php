@@ -165,6 +165,32 @@ it('does not show neutral screening message for non-knockout rejection', functio
         ->assertDontSee('your application will not proceed to the next stages');
 });
 
+it('shows a closure card and hides the timeline for a withdrawn application', function (): void {
+    $application = Application::factory()
+        ->withStatus(ApplicationStatusEnum::Withdrawn)
+        ->for($this->candidate, 'candidate')
+        ->create();
+
+    livewire(ViewApplication::class, ['record' => $application->getKey()])
+        ->assertOk()
+        ->assertSee(__('panel-organization::view.pipeline.withdrawn_title'))
+        ->assertSee(__('panel-organization::view.pipeline.withdrawn_message'))
+        ->assertDontSee('Selection Process Stages');
+});
+
+it('shows a closure card and hides the timeline for a declined offer', function (): void {
+    $application = Application::factory()
+        ->withStatus(ApplicationStatusEnum::OfferDeclined)
+        ->for($this->candidate, 'candidate')
+        ->create();
+
+    livewire(ViewApplication::class, ['record' => $application->getKey()])
+        ->assertOk()
+        ->assertSee(__('panel-organization::view.pipeline.declined_title'))
+        ->assertSee(__('panel-organization::view.pipeline.declined_message'))
+        ->assertDontSee('Selection Process Stages');
+});
+
 it('allows candidate to view their own application when job is not published', function (): void {
     $application = Application::factory()
         ->for($this->candidate, 'candidate')
