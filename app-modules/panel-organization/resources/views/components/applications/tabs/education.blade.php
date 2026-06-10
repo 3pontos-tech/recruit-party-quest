@@ -114,7 +114,7 @@
                         <div class="text-right">
                             <p class="text-text-high text-sm font-semibold">
                                 {{ $degree->start_date->format('Y') }} -
-                                {{ $degree->is_enrolled ? __('panel-organization::view.tabs.work_experience.present') : $degree->end_date->format('Y') }}
+                                {{ $degree->is_enrolled ? __('panel-organization::view.tabs.work_experience.present') : $degree->end_date?->format('Y') ?? '—' }}
                             </p>
                             <p class="text-text-medium text-xs">
                                 @if ($durationYears > 0)
@@ -147,7 +147,7 @@
                                 <span class="flex items-center gap-1">
                                     <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::CalendarDays" size="xs" />
                                     {{ $degree->start_date->format('M Y') }} -
-                                    {{ $degree->is_enrolled ? __('panel-organization::view.tabs.work_experience.present') : $degree->end_date->format('M Y') }}
+                                    {{ $degree->is_enrolled ? __('panel-organization::view.tabs.work_experience.present') : $degree->end_date?->format('M Y') ?? '—' }}
                                 </span>
                                 @if (! $degree->is_enrolled)
                                     <span class="flex items-center gap-1">

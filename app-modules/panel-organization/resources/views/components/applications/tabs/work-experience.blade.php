@@ -143,7 +143,7 @@
                                     <span class="flex items-center gap-1">
                                         <x-he4rt::icon :icon="\Filament\Support\Icons\Heroicon::Calendar" size="xs" />
                                         {{ $startDate->format('M Y') }} -
-                                        {{ $isCurrent ? __('panel-organization::view.tabs.work_experience.present') : $endDate->format('M Y') }}
+                                        {{ $isCurrent ? __('panel-organization::view.tabs.work_experience.present') : $endDate?->format('M Y') ?? '—' }}
                                     </span>
                                     <span>{{ $durationText }}</span>
                                 </div>
