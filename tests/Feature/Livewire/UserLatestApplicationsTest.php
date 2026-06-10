@@ -8,6 +8,7 @@ use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Users\User;
 
@@ -117,15 +118,40 @@ it('displays empty state when no applications', function (): void {
         ->assertSee('No applications found');
 });
 
-it('shows status badge for rejected application', function (): void {
+it('shows a neutral label to the candidate for a rejected application', function (): void {
     $user = User::factory()->create();
     $candidate = Candidate::factory()->create(['user_id' => $user->id]);
-    $application = Application::factory()->rejected()->for($candidate)->create();
+    Application::factory()->rejected()->for($candidate)->create();
+
+    $this->actingAs($user);
+
+    // Rejection is the recruiter's call: the candidate sees a neutral label, never the raw "Rejected".
+    livewire(UserLatestApplications::class)
+        ->assertSee(__('panel-organization::view.pipeline.rejected_title'))
+        ->assertDontSee(ApplicationStatusEnum::Rejected->getLabel());
+});
+
+it('treats a declined offer as a terminal card instead of an in-progress one', function (): void {
+    $user = User::factory()->create();
+    $candidate = Candidate::factory()->create(['user_id' => $user->id]);
+    $application = Application::factory()->for($candidate)->create(['status' => ApplicationStatusEnum::OfferDeclined]);
+
+    $stage = Stage::factory()->create([
+        'job_requisition_id' => $application->requisition_id,
+        'name' => 'Confidential Recruiter Stage',
+        'hidden' => false,
+        'active' => true,
+        'display_order' => 1,
+    ]);
+    $application->update(['current_stage_id' => $stage->id]);
+    $application->requisition->stages()->where('id', '!=', $stage->id)->update(['hidden' => true]);
 
     $this->actingAs($user);
 
     livewire(UserLatestApplications::class)
-        ->assertSee($application->status->getLabel());
+        ->assertSeeHtml('opacity-60') // terminal outcome => dimmed card
+        ->assertSee(ApplicationStatusEnum::OfferDeclined->getLabel()) // "Offer Declined" badge, not a progress bar
+        ->assertDontSee('Confidential Recruiter Stage'); // active stage line must not render
 });
 
 it('shows status badge for withdrawn application', function (): void {
@@ -152,13 +178,15 @@ it('shows status badge when application has no visible stages', function (): voi
         ->assertSee($application->status->getLabel());
 });
 
-it('shows pipeline progress bar for active application', function (): void {
+it('shows the generic stage type instead of the internal stage name for an active application', function (): void {
     $user = User::factory()->create();
     $candidate = Candidate::factory()->create(['user_id' => $user->id]);
     $application = Application::factory()->for($candidate)->create(['status' => ApplicationStatusEnum::InReview]);
 
     $stage = Stage::factory()->create([
         'job_requisition_id' => $application->requisition_id,
+        'stage_type' => StageTypeEnum::Screening,
+        'name' => 'Confidential Recruiter Stage',
         'hidden' => false,
         'active' => true,
         'display_order' => 1,
@@ -170,7 +198,8 @@ it('shows pipeline progress bar for active application', function (): void {
     $this->actingAs($user);
 
     livewire(UserLatestApplications::class)
-        ->assertSee($stage->name);
+        ->assertSee(StageTypeEnum::Screening->getLabel()) // generic, org-independent label
+        ->assertDontSee('Confidential Recruiter Stage'); // internal stage name stays hidden from the candidate
 });
 
 it('shows correct stage position in pipeline progress', function (): void {

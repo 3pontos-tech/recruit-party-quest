@@ -28,7 +28,7 @@ return [
         'default_title' => 'Título da Vaga',
         'no_stage' => '-',
         'activity_fallback' => 'Candidatura enviada',
-        'stage' => 'Estágio :current/:total:',
+        'stage' => 'Etapa :current/:total ·',
         'unknown_stage' => 'Desconhecido',
     ],
 
