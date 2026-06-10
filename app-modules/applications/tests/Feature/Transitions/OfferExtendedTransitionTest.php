@@ -30,31 +30,35 @@ describe('OfferExtendedTransition', function (): void {
         );
     });
 
-    it('processStep() sets status to OfferAccepted', function (): void {
+    it('processStep() sets status to OfferAccepted without moving the stage', function (): void {
         $user = User::factory()->create();
         $application = Application::factory()->withOffer()->create();
+        $stageBefore = $application->current_stage_id;
 
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::OfferAccepted,
-            'to_stage_id' => Stage::factory()->create(['job_requisition_id' => $application->requisition_id])->id,
         ], $user->id);
 
         $application->current_step->handle($data);
 
-        expect($application->fresh()->status)->toBe(ApplicationStatusEnum::OfferAccepted);
+        $fresh = $application->fresh();
+        expect($fresh->status)->toBe(ApplicationStatusEnum::OfferAccepted)
+            ->and($fresh->current_stage_id)->toBe($stageBefore);
     });
 
-    it('OfferExtended → OfferAccepted without to_stage_id throws MissingTransitionDataException', function (): void {
+    it('OfferExtended → OfferAccepted no longer requires to_stage_id (status-only)', function (): void {
         $user = User::factory()->create();
         $application = Application::factory()->withOffer()->create();
 
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::OfferAccepted,
-            // no to_stage_id
+            // no to_stage_id — accepting an offer is status-only now
         ], $user->id);
 
         expect(fn () => $application->current_step->handle($data))
-            ->toThrow(MissingTransitionDataException::class);
+            ->not->toThrow(MissingTransitionDataException::class);
+
+        expect($application->fresh()->status)->toBe(ApplicationStatusEnum::OfferAccepted);
     });
 
     it('OfferExtended → OfferAccepted with to_stage_id succeeds validation', function (): void {
@@ -103,19 +107,17 @@ describe('OfferExtendedTransition', function (): void {
         expect(fn () => $application->current_step->handle($data))->toThrow(InvalidTransitionException::class);
     });
 
-    it('offer fields are updated when processStep re-runs with new offer data', function (): void {
+    it('OfferExtended → OfferAccepted does not overwrite the offer fields (status-only)', function (): void {
         $user = User::factory()->create();
-        $application = Application::factory()->withOffer()->create();
-        $stage = Stage::factory()->create(['job_requisition_id' => $application->requisition_id]);
+        $application = Application::factory()->withOffer()->create(['offer_amount' => 50000]);
 
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::OfferAccepted,
-            'to_stage_id' => $stage->id,
             'offer_amount' => '95000',
         ], $user->id);
 
         $application->current_step->handle($data);
 
-        expect((float) $application->fresh()->offer_amount)->toBe(95000.0);
+        expect((float) $application->fresh()->offer_amount)->toBe(50000.0);
     });
 });
