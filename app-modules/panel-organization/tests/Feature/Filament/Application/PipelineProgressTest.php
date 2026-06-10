@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
+use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Permissions\Roles;
 use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
@@ -109,4 +110,35 @@ it('marks the current stage as a terminal stop for a declined offer', function (
     expect($html)->toContain(ApplicationStatusEnum::OfferDeclined->getLabel())
         ->and($html)->toContain($declinedOnPrefix)
         ->and($html)->not->toContain($activeSincePrefix);
+});
+
+it('keeps the timeline and surfaces the rejection reason for a rejected application (issue #171)', function (): void {
+    $application = Application::factory()
+        ->rejected()
+        ->create([
+            'team_id' => $this->team->id,
+            'rejection_reason_category' => RejectionReasonCategoryEnum::Experience,
+            'rejection_reason_details' => 'Faltou experiência prática com a stack da vaga.',
+        ]);
+
+    $interviewStage = $application->requisition->stages()
+        ->where('stage_type', StageTypeEnum::Interview)->firstOrFail();
+    $application->update(['current_stage_id' => $interviewStage->id]);
+
+    $html = renderPipelineProgress($application);
+
+    $rejectedOnPrefix = Str::before(__('panel-organization::view.pipeline.rejected_on'), ':date');
+    $activeSincePrefix = Str::before(__('panel-organization::view.pipeline.active_since'), ':date');
+
+    // The organization panel deliberately KEEPS the full timeline (it does not collapse
+    // into a closure card like the candidate panel) — the exit stage instead reads as a
+    // terminal stop: status label + rejection date, never an ongoing "active" stage.
+    expect($html)->toContain(__('panel-organization::view.pipeline.title'))
+        ->and($html)->toContain(ApplicationStatusEnum::Rejected->getLabel())
+        ->and($html)->toContain($rejectedOnPrefix)
+        ->and($html)->not->toContain($activeSincePrefix)
+        // ...and the rejection reason (category + details) is surfaced below the timeline.
+        ->and($html)->toContain(__('panel-organization::view.pipeline.rejected_reason'))
+        ->and($html)->toContain(RejectionReasonCategoryEnum::Experience->getLabel())
+        ->and($html)->toContain('Faltou experiência prática com a stack da vaga.');
 });
