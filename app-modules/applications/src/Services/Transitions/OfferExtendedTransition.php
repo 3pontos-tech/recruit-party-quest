@@ -30,6 +30,16 @@ final class OfferExtendedTransition extends AbstractApplicationTransition
         }
     }
 
+    /**
+     * Post-offer transitions (accepted/declined/withdrawn) are status-only by design.
+     *
+     * The offer fields (offer_extended_at, offer_extended_by, offer_amount,
+     * offer_response_deadline) are persisted earlier, when the offer is created in
+     * InProgressTransition::processOfferExtension() on the InProgress -> OfferExtended
+     * step. This step intentionally updates only the status so it never overwrites
+     * those values. Fields are collected in StateTransitionAction and carried by
+     * TransitionData.
+     */
     public function processStep(TransitionData $data): void
     {
         $this->application->update(['status' => $data->toStatus]);
