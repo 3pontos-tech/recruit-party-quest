@@ -6,6 +6,7 @@ namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Page
 
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Schema;
+use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Actions\CopyJobShareLinkAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Actions\DuplicateJobRequisitionAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Schemas\JobRequisitionInfolist;
@@ -32,6 +33,7 @@ class ViewJobRequisition extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            CopyJobShareLinkAction::make(),
             DuplicateJobRequisitionAction::make(),
         ];
     }

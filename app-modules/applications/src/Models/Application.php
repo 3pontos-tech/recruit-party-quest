@@ -14,6 +14,7 @@ use He4rt\Applications\Services\Transitions\AbstractApplicationTransition;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Feedback\Models\Evaluation;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
+use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 use He4rt\Recruitment\Stages\Models\Concerns\InteractsWithStages;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Screening\Models\ScreeningResponse;
@@ -129,6 +130,21 @@ class Application extends BaseModel implements Commentable
     public function evaluations(): HasMany
     {
         return $this->hasMany(Evaluation::class);
+    }
+
+    /**
+     * The first active stage of the given type in this requisition (by display_order),
+     * or null when the requisition has no stage of that type. Used to mirror the
+     * status onto the stage at the funnel ends (offer/hired) — see
+     * AbstractApplicationTransition::advanceToStageType().
+     */
+    public function firstStageOfType(StageTypeEnum $type): ?Stage
+    {
+        return ($this->requisition?->stages ?? collect()) // @phpstan-ignore nullsafe.neverNull
+            ->where('active', true)
+            ->where('stage_type', $type)
+            ->sortBy('display_order')
+            ->first();
     }
 
     public function getNextStage(): ?Stage

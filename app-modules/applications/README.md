@@ -104,6 +104,20 @@ Rejected      → Application rejected
 Withdrawn     → Candidate withdrew
 ```
 
+**Behavioral helpers:**
+
+- **`isTerminal(): bool`** — `true` for `Rejected`, `Withdrawn`, `OfferDeclined`.
+  These are the _negative_ final outcomes that freeze the application on its
+  current stage as an overlay (they do **not** move `current_stage_id`) and are
+  painted with a distinct colour in the pipeline stepper.
+- **`allowsRejection(): bool`** — `false` for `Rejected`, `Withdrawn`,
+  `OfferDeclined`, `OfferExtended`, `OfferAccepted` **and** `Hired`. Distinct from
+  `isTerminal()`: the _positive_ finals (`OfferAccepted`/`Hired`) also forbid a
+  rejection without being a terminal stop. Once an offer is extended the negative
+  path is a _declined_ offer, not a rejection — the state machine
+  (`OfferExtendedTransition`) only models `OfferAccepted`/`OfferDeclined`/`Withdrawn`,
+  so this guard is aligned to it. Drives the disabled state of the reject action.
+
 ### CandidateSourceEnum
 
 ```

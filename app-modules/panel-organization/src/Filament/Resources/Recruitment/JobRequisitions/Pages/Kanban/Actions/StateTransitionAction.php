@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\Kanban\Actions;
 
 use Filament\Actions\Action;
-use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Utilities\Get;
@@ -17,6 +18,8 @@ use He4rt\Applications\Services\Transitions\TransitionData;
 use He4rt\Feedback\Actions\StoreEvaluationAction;
 use He4rt\Feedback\DTOs\CriteriaScoresDTO;
 use He4rt\Feedback\DTOs\EvaluationDTO;
+use He4rt\Organization\Filament\Forms\Components\StageTimeline;
+use He4rt\Organization\Filament\Forms\Components\StatusHeroBand;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Schemas\EvaluationForm;
 use Illuminate\Support\Arr;
 
@@ -32,8 +35,7 @@ class StateTransitionAction extends Action
             ->icon('heroicon-o-play')
             ->extraAttributes(fn () => ['class' => 'w-full'])
             ->modalWidth(Width::FourExtraLarge)
-            ->visible(fn (Application $record): bool => ! $record->is_last_stage)
-            ->disabled(fn (Application $record): bool => ! $record->current_step->canChange() || $record->is_last_stage)
+            ->disabled(fn (Application $record): bool => ! $record->current_step->canChange())
             ->tooltip(fn (Application $record): ?string => $record->current_step->canChange() ? null : __('applications::filament.actions.change_status.no_transitions_tooltip'))
             ->schema($this->buildSchema(...))
             ->action($this->processAction(...))
@@ -89,18 +91,13 @@ class StateTransitionAction extends Action
     /** @return array<int, Component> */
     private function buildSchema(Application $record): array
     {
-        $choices = $record->current_step->choices();
-
-        $choices = Arr::except($choices, [
-            ApplicationStatusEnum::OfferAccepted->value,
-            ApplicationStatusEnum::OfferDeclined->value,
-            ApplicationStatusEnum::Hired->value,
-            ApplicationStatusEnum::Rejected->value,
-            ApplicationStatusEnum::OfferExtended->value,
-        ]);
+        $choices = Arr::except(
+            $record->current_step->choices(),
+            [ApplicationStatusEnum::Rejected->value],
+        );
 
         return [
-            Select::make('to_status')
+            StatusHeroBand::make('to_status')
                 ->label(__('applications::filament.fields.target_status'))
                 ->helperText(__('applications::filament.fields.target_status_hint'))
                 ->options($choices)
@@ -108,15 +105,26 @@ class StateTransitionAction extends Action
                 ->required()
                 ->live(),
 
-            Select::make('to_stage_id')
+            TextInput::make('offer_amount')
+                ->label(__('applications::filament.fields.offer_amount'))
+                ->numeric()
+                ->prefix('R$')
+                ->visible(fn (Get $get): bool => $get('to_status') === ApplicationStatusEnum::OfferExtended),
+
+            DatePicker::make('offer_response_deadline')
+                ->label(__('applications::filament.fields.offer_response_deadline'))
+                ->visible(fn (Get $get): bool => $get('to_status') === ApplicationStatusEnum::OfferExtended),
+
+            StageTimeline::make('to_stage_id')
                 ->label(__('applications::filament.fields.target_stage'))
                 ->helperText(__('applications::filament.fields.target_stage_hint'))
+                ->fromStageLabel($record->currentStage?->name)
                 ->options(fn () => ($record->requisition?->stages ?? collect()) // @phpstan-ignore nullsafe.neverNull
                     ->where('active', true)
                     ->where('display_order', '>', $record->currentStage?->display_order ?? 0) // @phpstan-ignore nullsafe.neverNull
                     ->pluck('name', 'id'))
                 ->default($record->getNextStage()?->id)
-                ->visible(fn (Get $get) => in_array($get('to_status'), [ApplicationStatusEnum::InProgress, ApplicationStatusEnum::OfferExtended])),
+                ->visible(fn (Get $get): bool => $get('to_status') === ApplicationStatusEnum::InProgress),
 
             Textarea::make('notes')
                 ->label(__('applications::filament.fields.transition_notes'))

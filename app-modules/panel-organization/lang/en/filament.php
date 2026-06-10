@@ -30,6 +30,11 @@ return [
     ],
 
     'actions' => [
+        'copy_share_link' => [
+            'label' => 'Share',
+            'tooltip_unavailable' => 'Publish this job before sharing it',
+            'notification_copied' => 'Link copied to clipboard',
+        ],
         'advance_stage' => [
             'label' => 'Advance Stage',
             'modal_heading' => 'Advance to Next Stage',

@@ -120,10 +120,10 @@ it('uses soft deletes', function (): void {
         ->and(JobRequisition::withTrashed()->find($requisition->getKey()))->not->toBeNull();
 });
 
-it('automatically creates 8 default stages when created', function (): void {
+it('automatically creates 6 default stages when created', function (): void {
     $requisition = JobRequisition::factory()->create();
 
-    expect($requisition->stages)->toHaveCount(8);
+    expect($requisition->stages)->toHaveCount(6);
 });
 
 it('creates stages with correct stage types', function (): void {
@@ -136,9 +136,7 @@ it('creates stages with correct stage types', function (): void {
         ->and($stageTypes)->toContain(StageTypeEnum::Assessment)
         ->and($stageTypes)->toContain(StageTypeEnum::Interview)
         ->and($stageTypes)->toContain(StageTypeEnum::Offer)
-        ->and($stageTypes)->toContain(StageTypeEnum::Hired)
-        ->and($stageTypes)->toContain(StageTypeEnum::Declined)
-        ->and($stageTypes)->toContain(StageTypeEnum::Rejected);
+        ->and($stageTypes)->toContain(StageTypeEnum::Hired);
 });
 
 it('creates stages with correct display order', function (): void {
@@ -146,7 +144,7 @@ it('creates stages with correct display order', function (): void {
 
     $displayOrders = $requisition->stages->pluck('display_order')->sort()->values()->toArray();
 
-    expect($displayOrders)->toBe([1, 2, 3, 4, 5, 6, 7, 8]);
+    expect($displayOrders)->toBe([1, 2, 3, 4, 5, 6]);
 });
 
 it('creates stages with correct team_id', function (): void {

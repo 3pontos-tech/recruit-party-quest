@@ -17,11 +17,14 @@ describe('OfferAcceptedTransition', function (): void {
         expect($transition->canChange())->toBeTrue();
     });
 
-    it('choices() contains only Hired', function (): void {
+    it('choices() contains Hired and Withdrawn', function (): void {
         $application = Application::factory()->create(['status' => ApplicationStatusEnum::OfferAccepted]);
         $transition = new OfferAcceptedTransition($application);
 
-        expect(array_keys($transition->choices()))->toBe([ApplicationStatusEnum::Hired->value]);
+        expect(array_keys($transition->choices()))->toContain(
+            ApplicationStatusEnum::Hired->value,
+            ApplicationStatusEnum::Withdrawn->value,
+        );
     });
 
     it('processStep() sets status to Hired', function (): void {
@@ -52,16 +55,21 @@ describe('OfferAcceptedTransition', function (): void {
         expect(fn () => $application->current_step->handle($data))->toThrow(InvalidTransitionException::class);
     });
 
-    it('throws InvalidTransitionException for Withdrawn target status', function (): void {
+    it('OfferAccepted → Withdrawn succeeds and is status-only', function (): void {
         $user = User::factory()->create();
         $application = Application::factory()->create([
             'status' => ApplicationStatusEnum::OfferAccepted,
         ]);
+        $stageBefore = $application->current_stage_id;
 
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::Withdrawn,
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))->toThrow(InvalidTransitionException::class);
+        $application->current_step->handle($data);
+
+        $fresh = $application->fresh();
+        expect($fresh->status)->toBe(ApplicationStatusEnum::Withdrawn)
+            ->and($fresh->current_stage_id)->toBe($stageBefore);
     });
 });

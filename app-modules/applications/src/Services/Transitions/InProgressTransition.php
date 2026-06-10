@@ -8,6 +8,7 @@ use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Exceptions\InvalidTransitionException;
 use He4rt\Applications\Exceptions\MissingTransitionDataException;
+use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 
 final class InProgressTransition extends AbstractApplicationTransition
 {
@@ -59,6 +60,8 @@ final class InProgressTransition extends AbstractApplicationTransition
             'offer_amount' => $data->offerAmount ?? $this->application->offer_amount,
             'offer_response_deadline' => $data->offerResponseDeadline ?? $this->application->offer_response_deadline,
         ]);
+
+        $this->advanceToStageType(StageTypeEnum::Offer);
     }
 
     private function processRejection(TransitionData $data): void

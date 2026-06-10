@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
 use Filament\Actions\Testing\TestAction;
+use Filament\Forms\Components\ToggleButtons;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Feedback\Enums\EvaluationRatingEnum;
 use He4rt\Feedback\Models\Evaluation;
+use He4rt\Organization\Filament\Forms\Components\ScoreMeter;
+use He4rt\Organization\Filament\Forms\Components\StageTimeline;
+use He4rt\Organization\Filament\Forms\Components\StatusHeroBand;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ViewApplication;
 use He4rt\Permissions\Roles;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
+use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Teams\Team;
 use He4rt\Users\User;
@@ -212,7 +217,7 @@ it('does not expose the change-status action to non-admin users', function (): v
         ->assertActionDoesNotExist(TestAction::make('state-transition-action')->schemaComponent('quick-actions'));
 });
 
-it('hides the change-status action when the application is on the last stage', function (): void {
+it('remains available on the last stage (gated by canChange, not stage position)', function (): void {
     [$application, $stage] = Application::factory()
         ->withStatus(ApplicationStatusEnum::InProgress)
         ->withIsolatedStages()
@@ -228,5 +233,130 @@ it('hides the change-status action when the application is on the last stage', f
         'record' => $application->getKey(),
     ])
         ->assertOk()
-        ->assertActionDoesNotExist(TestAction::make('state-transition-action')->schemaComponent('quick-actions'));
+        ->assertActionVisible(TestAction::make('state-transition-action')->schemaComponent('quick-actions'));
+});
+
+it('exposes the offer and hiring statuses in the picker and excludes Rejected', function (): void {
+    $application = Application::factory()
+        ->withOffer()
+        ->create(['team_id' => $this->team->id]);
+    Stage::factory()->create([
+        'job_requisition_id' => $application->requisition_id,
+        'display_order' => 9999,
+        'active' => true,
+    ]);
+    JobPosting::factory()->for($application->requisition)->create();
+
+    livewire(ViewApplication::class, [
+        'tenant' => $this->team,
+        'record' => $application->getKey(),
+    ])
+        ->mountAction(TestAction::make('state-transition-action')->schemaComponent('quick-actions'))
+        ->assertSchemaComponentExists('to_status', checkComponentUsing: function ($component): bool {
+            $keys = array_keys($component->getOptions());
+
+            return in_array(ApplicationStatusEnum::OfferAccepted->value, $keys, true)
+                && in_array(ApplicationStatusEnum::OfferDeclined->value, $keys, true)
+                && ! in_array(ApplicationStatusEnum::Rejected->value, $keys, true);
+        });
+});
+
+it('reveals the offer fields only when extending an offer', function (): void {
+    livewire(ViewApplication::class, [
+        'tenant' => $this->team,
+        'record' => $this->application->getKey(),
+    ])
+        ->mountAction(TestAction::make('state-transition-action')->schemaComponent('quick-actions'))
+        ->setActionData(['to_status' => ApplicationStatusEnum::OfferExtended->value])
+        ->assertSchemaComponentExists('offer_amount', checkComponentUsing: fn ($c): bool => $c->isVisible())
+        ->assertSchemaComponentExists('offer_response_deadline', checkComponentUsing: fn ($c): bool => $c->isVisible())
+        ->assertSchemaComponentExists('to_stage_id', checkComponentUsing: fn ($c): bool => ! $c->isVisible())
+        ->setActionData(['to_status' => ApplicationStatusEnum::InProgress->value])
+        ->assertSchemaComponentExists('offer_amount', checkComponentUsing: fn ($c): bool => ! $c->isVisible());
+});
+
+it('extends an offer (InProgress → OfferExtended) and advances to the offer stage', function (): void {
+    livewire(ViewApplication::class, [
+        'tenant' => $this->team,
+        'record' => $this->application->getKey(),
+    ])
+        ->callAction(
+            TestAction::make('state-transition-action')->schemaComponent('quick-actions'),
+            data: [
+                'to_status' => ApplicationStatusEnum::OfferExtended->value,
+                'offer_amount' => 9500,
+                'offer_response_deadline' => now()->addDays(7)->toDateString(),
+            ],
+        )
+        ->assertHasNoActionErrors();
+
+    $fresh = $this->application->fresh()->load('currentStage');
+    expect($fresh->status)->toBe(ApplicationStatusEnum::OfferExtended)
+        ->and((float) $fresh->offer_amount)->toBe(9500.0)
+        ->and($fresh->currentStage->stage_type)->toBe(StageTypeEnum::Offer);
+});
+
+it('renders the status picker as a custom hero band', function (): void {
+    livewire(ViewApplication::class, [
+        'tenant' => $this->team,
+        'record' => $this->application->getKey(),
+    ])
+        ->mountAction(TestAction::make('state-transition-action')->schemaComponent('quick-actions'))
+        ->assertSchemaComponentExists(
+            'to_status',
+            checkComponentUsing: fn ($component): bool => $component instanceof StatusHeroBand,
+        );
+});
+
+it('renders the target stage as a custom timeline field instead of a select', function (): void {
+    livewire(ViewApplication::class, [
+        'tenant' => $this->team,
+        'record' => $this->application->getKey(),
+    ])
+        ->mountAction(TestAction::make('state-transition-action')->schemaComponent('quick-actions'))
+        ->setActionData(['to_status' => ApplicationStatusEnum::InProgress->value])
+        ->assertSchemaComponentExists(
+            'to_stage_id',
+            checkComponentUsing: fn ($component): bool => $component instanceof StageTimeline,
+        );
+});
+
+it('renders the overall rating as colored toggle buttons instead of a select', function (): void {
+    livewire(ViewApplication::class, [
+        'tenant' => $this->team,
+        'record' => $this->application->getKey(),
+    ])
+        ->mountAction(TestAction::make('state-transition-action')->schemaComponent('quick-actions'))
+        ->setActionData(['with_evaluation' => true])
+        ->assertSchemaComponentExists(
+            'overall_rating',
+            checkComponentUsing: fn ($component): bool => $component instanceof ToggleButtons,
+        );
+});
+
+it('renders each evaluation criterion as a score-meter field', function (): void {
+    livewire(ViewApplication::class, [
+        'tenant' => $this->team,
+        'record' => $this->application->getKey(),
+    ])
+        ->mountAction(TestAction::make('state-transition-action')->schemaComponent('quick-actions'))
+        ->setActionData(['with_evaluation' => true])
+        ->assertSchemaComponentExists(
+            'criteria_scores.technical_skills',
+            checkComponentUsing: fn ($component): bool => $component instanceof ScoreMeter,
+        );
+});
+
+it('shows all four feedback note fields without hiding them in tabs', function (): void {
+    livewire(ViewApplication::class, [
+        'tenant' => $this->team,
+        'record' => $this->application->getKey(),
+    ])
+        ->mountAction(TestAction::make('state-transition-action')->schemaComponent('quick-actions'))
+        ->setActionData(['with_evaluation' => true])
+        ->assertSchemaComponentExists('strengths')
+        ->assertSchemaComponentExists('concerns')
+        ->assertSchemaComponentExists('recommendation')
+        ->assertSchemaComponentExists('comments')
+        ->assertSchemaComponentDoesNotExist('evaluation_feedback');
 });

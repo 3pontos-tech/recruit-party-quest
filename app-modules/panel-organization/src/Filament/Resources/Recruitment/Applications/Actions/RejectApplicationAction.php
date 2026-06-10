@@ -9,7 +9,6 @@ use Filament\Forms\Components\Field;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
-use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Models\Application;
 use Illuminate\Routing\Redirector;
@@ -27,7 +26,7 @@ class RejectApplicationAction extends Action
             ->extraAttributes(fn () => ['class' => 'w-full'])
             ->outlined()
             ->requiresConfirmation()
-            ->visible(fn (Application $record) => $record->status !== ApplicationStatusEnum::Rejected)
+            ->disabled(fn (Application $record): bool => ! $record->status->allowsRejection())
             ->modalHeading(__('panel-organization::filament.actions.reject_application.modal_heading'))
             ->modalDescription(__('panel-organization::filament.actions.reject_application.modal_description'))
             ->schema($this->formSchema())

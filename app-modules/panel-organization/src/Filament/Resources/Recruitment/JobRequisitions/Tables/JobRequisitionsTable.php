@@ -19,6 +19,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Actions\CopyJobShareLinkAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Actions\DuplicateJobRequisitionAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Actions\DuplicateJobRequisitionBulkAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
@@ -116,6 +117,7 @@ class JobRequisitionsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
+                CopyJobShareLinkAction::make()->tableIconButton(),
                 ActionGroup::make([
                     EditAction::make(),
                     Action::make('kanban')

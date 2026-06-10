@@ -31,6 +31,11 @@ return [
     ],
 
     'actions' => [
+        'copy_share_link' => [
+            'label' => 'Compartilhar',
+            'tooltip_unavailable' => 'Publique a vaga antes de compartilhar',
+            'notification_copied' => 'Link copiado para a área de transferência',
+        ],
         'advance_stage' => [
             'label' => 'Avançar Etapa',
             'modal_heading' => 'Avançar para a Próxima Etapa',

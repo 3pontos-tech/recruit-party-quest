@@ -6,6 +6,7 @@ namespace He4rt\Applications\Services\Transitions;
 
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Exceptions\InvalidTransitionException;
+use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 
 final class OfferAcceptedTransition extends AbstractApplicationTransition
 {
@@ -13,6 +14,7 @@ final class OfferAcceptedTransition extends AbstractApplicationTransition
     {
         return [
             ApplicationStatusEnum::Hired->value => ApplicationStatusEnum::Hired->getLabel(),
+            ApplicationStatusEnum::Withdrawn->value => ApplicationStatusEnum::Withdrawn->getLabel(),
         ];
     }
 
@@ -34,6 +36,10 @@ final class OfferAcceptedTransition extends AbstractApplicationTransition
         $this->application->update([
             'status' => $data->toStatus,
         ]);
+
+        if ($data->toStatus === ApplicationStatusEnum::Hired) {
+            $this->advanceToStageType(StageTypeEnum::Hired);
+        }
     }
 
     public function notify(TransitionData $data): void {}

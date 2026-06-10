@@ -1,4 +1,5 @@
 @php
+    use Filament\Support\Icons\Heroicon;
     use He4rt\Applications\Enums\ApplicationStatusEnum;
 @endphp
 
@@ -56,8 +57,10 @@
     <div class="flex flex-col gap-8" wire:transition>
         @forelse ($this->applications as $application)
             @php
+                // Terminal outcomes (rejected, withdrawn, declined) come from the single
+                // source of truth on the enum; $isRejected only gates the neutral copy.
+                $isTerminal = $application->status->isTerminal();
                 $isRejected = $application->status === ApplicationStatusEnum::Rejected;
-                $isWithdrawn = $application->status === ApplicationStatusEnum::Withdrawn;
 
                 $visibleStages = $application->requisition->stages
                     ->where('hidden', false)
@@ -66,64 +69,61 @@
                 $totalStages = $visibleStages->count();
                 $currentStage = $application->currentStage;
 
-                if ($totalStages > 0 && ! $isRejected && ! $isWithdrawn) {
+                $currentPosition = 0;
+                $stageType = null;
+
+                if ($totalStages > 0 && ! $isTerminal) {
                     if ($currentStage && ! $currentStage->hidden) {
                         $idx = $visibleStages->search(fn ($s) => $s->id === $currentStage->id);
                         $currentPosition = $idx + 1;
-                        $stageName = $currentStage->name;
-                        $stageColor = $currentStage;
+                        $stageType = $currentStage->stage_type;
                     } else {
                         $currentDisplayOrder = $currentStage?->display_order ?? 0;
                         $lastVisibleStage = $visibleStages->filter(fn ($s) => $s->display_order <= $currentDisplayOrder)->last();
                         if ($lastVisibleStage) {
                             $idx = $visibleStages->search(fn ($s) => $s->id === $lastVisibleStage->id);
                             $currentPosition = $idx + 1;
-                            $stageName = $lastVisibleStage->name;
-                            $stageColor = $lastVisibleStage;
+                            $stageType = $lastVisibleStage->stage_type;
                         } else {
-                            $currentPosition = 0;
-                            $stageName = $visibleStages->first()->name;
-                            $stageColor = null;
+                            $stageType = $visibleStages->first()->stage_type;
                         }
                     }
-                } else {
-                    $currentPosition = 0;
-                    $stageName = null;
-                    $stageColor = null;
                 }
             @endphp
 
-            <div @class(['opacity-60' => $isRejected || $isWithdrawn])>
+            <div @class(['opacity-60' => $isTerminal])>
                 <x-panel-app::jobs.job-card :job="$application->requisition">
                     <x-slot:footer>
                         <div
                             class="flex flex-col items-start justify-start gap-4 lg:flex-row lg:items-center lg:justify-between"
                         >
-                            @if ($isRejected || $isWithdrawn || $totalStages === 0)
+                            @if ($isTerminal || $totalStages === 0)
                                 <div class="flex items-center gap-2">
                                     <x-he4rt::icon
-                                        :icon="$application->status->getIcon()"
+                                        :icon="$isRejected ? Heroicon::InformationCircle : $application->status->getIcon()"
                                         @class([$application->status->getTailwindBadgeClass()])
                                     />
                                     <x-he4rt::text
                                         size="sm"
                                         @class(['font-semibold', $application->status->getTailwindBadgeClass()])
                                     >
-                                        {{ $application->status->getLabel() }}
+                                        {{-- Rejection is the recruiter's call: the candidate sees a neutral label, never the raw "Rejected". --}}
+                                        {{ $isRejected ? __('panel-organization::view.pipeline.rejected_title') : $application->status->getLabel() }}
                                     </x-he4rt::text>
                                 </div>
                             @else
                                 <div class="flex items-center gap-2">
                                     <x-he4rt::icon
                                         icon="fas-spinner"
-                                        @class(['bg-transparent! group-hover:scale-110 group-hover:rotate-360 transition duration-1000', $stageColor?->stage_type->getBadgeClasses() ?? 'bg-gray-500/10 text-gray-500'])
+                                        @class(['bg-transparent! group-hover:scale-110 group-hover:rotate-360 transition duration-1000', $stageType?->getBadgeClasses() ?? 'bg-gray-500/10 text-gray-500'])
                                     />
                                     <x-he4rt::text
                                         size="sm"
-                                        @class(['bg-transparent! font-semibold', $stageColor?->stage_type->getBadgeClasses() ?? 'bg-gray-500/10 text-gray-500'])
+                                        @class(['bg-transparent! font-semibold', $stageType?->getBadgeClasses() ?? 'bg-gray-500/10 text-gray-500'])
                                     >
+                                        {{-- Show the generic stage type (Screening/Interview/…), not the org's internal stage name. --}}
                                         {{ __('panel-app::livewire/user-latest-applications.application_card.stage', ['current' => $currentPosition, 'total' => $totalStages]) }}
-                                        {{ $stageName }}
+                                        {{ $stageType?->getLabel() }}
                                     </x-he4rt::text>
                                 </div>
 
@@ -133,7 +133,7 @@
                                             @class([
                                                 'h-1 w-12 rounded-full',
                                                 'group-hover:animate-pulse' => $index < $currentPosition,
-                                                $stageColor?->stage_type->getTailwindColorClass() ?? 'bg-gray-500' => $index < $currentPosition,
+                                                $stageType?->getTailwindColorClass() ?? 'bg-gray-500' => $index < $currentPosition,
                                                 'border-outline-light dark:border-outline-dark bg-elevation-02dp border' => $index >= $currentPosition,
                                             ])
                                         ></div>
