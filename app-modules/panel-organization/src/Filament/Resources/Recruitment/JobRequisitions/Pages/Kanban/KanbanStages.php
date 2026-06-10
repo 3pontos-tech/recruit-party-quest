@@ -61,6 +61,23 @@ class KanbanStages extends BoardResourcePage
         $this->js('$store.sidebar.close()');
     }
 
+    /**
+     * The Kanban is a read-only, VISUAL board. Stage and status only change through
+     * the StateTransitionAction — the single write path that runs the state machine
+     * (validation, history, status⇄stage coherence). Flowforge wires drag-and-drop at
+     * the DOM level, and its default moveCard() performs a RAW current_stage_id update
+     * that bypasses the state machine and desyncs status from stage. We override it to
+     * an inert no-op so a stray drag snaps back instead of corrupting the funnel.
+     */
+    public function moveCard(
+        string $cardId,
+        string $targetColumnId,
+        ?string $afterCardId = null,
+        ?string $beforeCardId = null
+    ): void {
+        // Intentionally inert — see docblock. Use the StateTransitionAction to move a candidate.
+    }
+
     public function board(Board $board): Board
     {
 

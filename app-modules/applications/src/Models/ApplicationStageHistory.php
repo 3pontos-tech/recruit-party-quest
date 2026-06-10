@@ -6,6 +6,7 @@ namespace He4rt\Applications\Models;
 
 use App\Models\BaseModel;
 use He4rt\Applications\Database\Factories\ApplicationStageHistoryFactory;
+use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Policies\ApplicationStageHistoryPolicy;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Teams\Concerns\BelongsToTeam;
@@ -20,6 +21,8 @@ use Illuminate\Support\Carbon;
  * @property string $application_id
  * @property string|null $from_stage_id
  * @property string|null $to_stage_id
+ * @property ApplicationStatusEnum|null $from_status
+ * @property ApplicationStatusEnum|null $to_status
  * @property string|null $moved_by
  * @property string|null $notes
  * @property Carbon $created_at
@@ -64,5 +67,16 @@ class ApplicationStageHistory extends BaseModel
     public function movedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'moved_by');
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'from_status' => ApplicationStatusEnum::class,
+            'to_status' => ApplicationStatusEnum::class,
+        ];
     }
 }

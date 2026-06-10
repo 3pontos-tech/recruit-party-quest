@@ -6,6 +6,8 @@ namespace He4rt\Applications\Services\Transitions;
 
 use He4rt\Applications\Events\ApplicationStatusChanged;
 use He4rt\Applications\Models\Application;
+use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
+use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\DB;
 
@@ -48,7 +50,7 @@ abstract class AbstractApplicationTransition
         $fromStatus = $this->application->status->value;
         $fromStage = $this->application->current_stage_id;
 
-        DB::transaction(function () use ($data, $fromStage): void {
+        DB::transaction(function () use ($data, $fromStage, $fromStatus): void {
             $this->validate($data);
             $this->processStep($data);
             $this->notify($data);
@@ -56,6 +58,8 @@ abstract class AbstractApplicationTransition
             $this->application->stageHistory()->create([
                 'from_stage_id' => $fromStage,
                 'to_stage_id' => $this->application->current_stage_id,
+                'from_status' => $fromStatus,
+                'to_status' => $this->application->status->value,
                 'moved_by' => $data->byUserId,
                 'notes' => $data->notes,
                 'team_id' => $this->application->team_id,
@@ -78,6 +82,27 @@ abstract class AbstractApplicationTransition
                 $by,
                 $data->toArray()
             ));
+        }
+    }
+
+    /**
+     * Mirror the status onto the stage at the funnel ends: move the application to
+     * the requisition's stage of the given type (offer/hired). Deterministic and
+     * null-safe:
+     *  - already on a stage of that type → no move (covers duplicate stages);
+     *  - a matching stage exists → move to the first active one (by display_order);
+     *  - no matching stage (admin removed it) → status-only, never throws.
+     */
+    protected function advanceToStageType(StageTypeEnum $type): void
+    {
+        if ($this->application->currentStage?->stage_type === $type) {
+            return;
+        }
+
+        $target = $this->application->firstStageOfType($type);
+
+        if ($target instanceof Stage) {
+            $this->application->update(['current_stage_id' => $target->getKey()]);
         }
     }
 }

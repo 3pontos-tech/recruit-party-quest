@@ -6,9 +6,6 @@ namespace He4rt\Applications\Services\Transitions;
 
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Exceptions\InvalidTransitionException;
-use He4rt\Applications\Exceptions\MissingTransitionDataException;
-
-use function now;
 
 final class OfferExtendedTransition extends AbstractApplicationTransition
 {
@@ -28,27 +25,24 @@ final class OfferExtendedTransition extends AbstractApplicationTransition
 
     public function validate(TransitionData $data): void
     {
-        match (true) {
-            ! in_array($data->toStatus->value, array_keys($this->choices()), true) => throw InvalidTransitionException::notAllowed($data->toStatus),
-            $data->toStatus === ApplicationStatusEnum::OfferAccepted && $data->toStageId === null => throw MissingTransitionDataException::forField('to_stage_id'),
-            default => null,
-        };
+        if (! in_array($data->toStatus->value, array_keys($this->choices()), true)) {
+            throw InvalidTransitionException::notAllowed($data->toStatus);
+        }
     }
 
+    /**
+     * Post-offer transitions (accepted/declined/withdrawn) are status-only by design.
+     *
+     * The offer fields (offer_extended_at, offer_extended_by, offer_amount,
+     * offer_response_deadline) are persisted earlier, when the offer is created in
+     * InProgressTransition::processOfferExtension() on the InProgress -> OfferExtended
+     * step. This step intentionally updates only the status so it never overwrites
+     * those values. Fields are collected in StateTransitionAction and carried by
+     * TransitionData.
+     */
     public function processStep(TransitionData $data): void
     {
-        $payload = ['status' => $data->toStatus];
-
-        if ($data->toStatus === ApplicationStatusEnum::OfferAccepted) {
-            $payload += [
-                'offer_extended_at' => $data->offerExtendedAt ?? now(),
-                'offer_extended_by' => $data->byUserId,
-                'offer_amount' => $data->offerAmount ?? $this->application->offer_amount,
-                'offer_response_deadline' => $data->offerResponseDeadline ?? $this->application->offer_response_deadline,
-            ];
-        }
-
-        $this->application->update($payload);
+        $this->application->update(['status' => $data->toStatus]);
     }
 
     public function notify(TransitionData $data): void {}
