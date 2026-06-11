@@ -20,7 +20,7 @@ use Illuminate\Support\Carbon;
  * @property string $degree
  * @property string $field_of_study
  * @property Carbon $start_date
- * @property Carbon $end_date
+ * @property Carbon|null $end_date
  * @property bool $is_enrolled
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -43,6 +43,23 @@ class Education extends BaseModel
     public function candidate(): BelongsTo
     {
         return $this->belongsTo(Candidate::class);
+    }
+
+    /**
+     * Total months between the start date and the effective end date.
+     *
+     * Returns null when the degree is completed but has no recorded end date,
+     * so the duration is genuinely unknown and must not be assumed as "until today".
+     */
+    public function durationInMonths(): ?int
+    {
+        $end = $this->is_enrolled ? now() : $this->end_date;
+
+        if ($end === null) {
+            return null;
+        }
+
+        return (int) $this->start_date->diffInMonths($end);
     }
 
     protected function casts(): array
