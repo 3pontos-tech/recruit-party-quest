@@ -145,7 +145,9 @@
                                         {{ $startDate->format('M Y') }} -
                                         {{ $isCurrent ? __('panel-organization::view.tabs.work_experience.present') : $endDate?->format('M Y') ?? '—' }}
                                     </span>
-                                    <span>{{ $durationText }}</span>
+                                    @if ($durationText !== null)
+                                        <span>{{ $durationText }}</span>
+                                    @endif
                                 </div>
 
                                 {{-- Description --}}

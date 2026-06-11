@@ -71,10 +71,9 @@
                 @php
                     $degreeCategory = categorizeDegree($degree->degree);
                     $isCompleted = ! $degree->is_enrolled;
-                    $endDate = $degree->end_date ?? now();
-                    $duration = $degree->start_date->diffInMonths($endDate);
-                    $durationYears = (int) floor($duration / 12);
-                    $durationMonths = (int) $duration % 12;
+                    $durationMonthsTotal = $degree->durationInMonths();
+                    $durationYears = $durationMonthsTotal !== null ? intdiv($durationMonthsTotal, 12) : 0;
+                    $durationMonths = $durationMonthsTotal !== null ? $durationMonthsTotal % 12 : 0;
 
                     $categoryColors = [
                         'PhD' => 'purple',
@@ -116,17 +115,19 @@
                                 {{ $degree->start_date->format('Y') }} -
                                 {{ $degree->is_enrolled ? __('panel-organization::view.tabs.work_experience.present') : $degree->end_date?->format('Y') ?? '—' }}
                             </p>
-                            <p class="text-text-medium text-xs">
-                                @if ($durationYears > 0)
-                                    {{ trans_choice('panel-organization::view.time.year', $durationYears, ['count' => $durationYears]) }}
+                            @if ($durationMonthsTotal !== null)
+                                <p class="text-text-medium text-xs">
+                                    @if ($durationYears > 0)
+                                        {{ trans_choice('panel-organization::view.time.year', $durationYears, ['count' => $durationYears]) }}
 
-                                    @if ($durationMonths > 0)
+                                        @if ($durationMonths > 0)
+                                            {{ trans_choice('panel-organization::view.time.month', $durationMonths, ['count' => $durationMonths]) }}
+                                        @endif
+                                    @else
                                         {{ trans_choice('panel-organization::view.time.month', $durationMonths, ['count' => $durationMonths]) }}
                                     @endif
-                                @else
-                                    {{ trans_choice('panel-organization::view.time.month', $durationMonths, ['count' => $durationMonths]) }}
-                                @endif
-                            </p>
+                                </p>
+                            @endif
                         </div>
                     </div>
 

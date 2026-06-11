@@ -50,3 +50,32 @@ it('uses soft deletes', function (): void {
     expect($workExperience->deleted_at)->not->toBeNull()
         ->and(WorkExperience::withTrashed()->find($workExperience->id))->not->toBeNull();
 });
+
+it('returns null duration for a past role without an end date', function (): void {
+    $workExperience = WorkExperience::factory()->create([
+        'is_currently_working_here' => false,
+        'end_date' => null,
+        'start_date' => now()->subMonths(10),
+    ]);
+
+    expect($workExperience->durationInMonths())->toBeNull();
+});
+
+it('counts duration up to today for a currently held role', function (): void {
+    $workExperience = WorkExperience::factory()->create([
+        'is_currently_working_here' => true,
+        'start_date' => now()->subMonths(6),
+    ]);
+
+    expect($workExperience->durationInMonths())->toBe(6);
+});
+
+it('counts duration between start and end for a finished role', function (): void {
+    $workExperience = WorkExperience::factory()->create([
+        'is_currently_working_here' => false,
+        'start_date' => now()->subMonths(24),
+        'end_date' => now()->subMonths(12),
+    ]);
+
+    expect($workExperience->durationInMonths())->toBe(12);
+});

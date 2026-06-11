@@ -122,15 +122,15 @@ class Candidate extends BaseModel implements HasMedia
         return $this->is_onboarded;
     }
 
-    public function getExperienceDuration(WorkExperience $experience): string
+    public function getExperienceDuration(WorkExperience $experience): ?string
     {
-        $end = $experience->is_currently_working_here
-            ? now()
-            : ($experience->end_date ?? now());
+        $months = $experience->durationInMonths();
 
-        $months = (float) $experience->start_date->diffInMonths($end);
+        if ($months === null) {
+            return null;
+        }
 
-        return $this->formatExperienceTime($months);
+        return $this->formatExperienceTime((float) $months);
     }
 
     public function calculateProfileCompletion(): int
@@ -315,13 +315,7 @@ class Candidate extends BaseModel implements HasMedia
     private function calculateTotalExperienceMonths(): int
     {
         return (int) $this->workExperiences
-            ->sum(function (WorkExperience $exp) {
-                $end = $exp->is_currently_working_here
-                    ? now()
-                    : ($exp->end_date ?? now());
-
-                return $exp->start_date->diffInMonths($end);
-            });
+            ->sum(fn (WorkExperience $exp): int => $exp->durationInMonths() ?? 0);
     }
 
     private function formatExperienceTime(float $totalMonths): string
