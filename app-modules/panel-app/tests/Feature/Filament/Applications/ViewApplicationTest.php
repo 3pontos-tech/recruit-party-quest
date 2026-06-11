@@ -85,7 +85,7 @@ it('shows neutral title and rejection details for rejected application', functio
 
     livewire(ViewApplication::class, ['record' => $application->getKey()])
         ->assertOk()
-        ->assertSee('Application Not Progressed')
+        ->assertSee('Not Approved')
         ->assertDontSee('Selection Process Stages')
         ->assertSee('Rejection Reason')
         ->assertSee($application->rejection_reason_category->getLabel());

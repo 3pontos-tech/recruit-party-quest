@@ -67,7 +67,7 @@ return [
         'active_since' => 'Ativo desde :date',
         'hired' => 'Contratado',
         'hired_on' => 'Contratado em :date',
-        'rejected_title' => 'Candidatura Não Aprovada',
+        'rejected_title' => 'Reprovado',
         'rejected_reason' => 'Motivo da Reprovação',
         'rejected_details' => 'Feedback',
         'rejected_screening_message' => 'Informamos que, após avaliação, sua candidatura não seguirá para as próximas etapas do processo seletivo.',
