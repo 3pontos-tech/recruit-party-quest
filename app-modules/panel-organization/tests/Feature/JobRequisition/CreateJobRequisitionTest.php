@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
+use Filament\Actions\Testing\TestAction;
 use He4rt\Organization\Filament\Resources\Recruitment\JobRequisitions\Pages\CreateJobRequisition;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
@@ -18,6 +19,7 @@ use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
 
 beforeEach(function (): void {
     filament()->setCurrentPanel(FilamentPanel::Organization->value);
@@ -118,6 +120,46 @@ it('shows validation errors for required fields when submitting without data', f
     Livewire::test(CreateJobRequisition::class)
         ->call('create')
         ->assertHasFormErrors(['post.title', 'post.summary', 'department_id', 'recruiter_id']);
+});
+
+it('requires a head user when creating a department inline from the requisition form', function (): void {
+    // Reproduz o erro de produção: o head_user_id da tabela departments é NOT NULL,
+    // mas o createOptionForm inline não exigia o campo, gerando QueryException no INSERT.
+    $this->recruiter->user->givePermissionTo('create_departments');
+
+    Livewire::test(CreateJobRequisition::class)
+        ->callAction(
+            TestAction::make('createOption')->schemaComponent('department_id'),
+            data: [
+                'name' => 'Administrativo',
+                'description' => 'Setor administrativo',
+                // head_user_id intencionalmente omitido
+            ],
+        )
+        ->assertHasFormErrors(['head_user_id' => 'required']);
+
+    assertDatabaseMissing(Department::class, ['name' => 'Administrativo']);
+});
+
+it('creates a department inline when a head user is provided', function (): void {
+    $this->recruiter->user->givePermissionTo('create_departments');
+
+    Livewire::test(CreateJobRequisition::class)
+        ->callAction(
+            TestAction::make('createOption')->schemaComponent('department_id'),
+            data: [
+                'name' => 'Administrativo',
+                'description' => 'Setor administrativo',
+                'head_user_id' => $this->recruiter->user->getKey(),
+            ],
+        )
+        ->assertHasNoFormErrors();
+
+    assertDatabaseHas(Department::class, [
+        'name' => 'Administrativo',
+        'team_id' => $this->team->getKey(),
+        'head_user_id' => $this->recruiter->user->getKey(),
+    ]);
 });
 
 it('requires employment_type and work_schedule when creating', function (): void {
