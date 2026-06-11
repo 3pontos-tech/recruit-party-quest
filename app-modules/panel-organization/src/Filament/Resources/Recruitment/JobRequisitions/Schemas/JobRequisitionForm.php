@@ -125,6 +125,7 @@ class JobRequisitionForm
                                                             })
                                                             ->orderBy('name'),
                                                     )
+                                                    ->required()
                                                     ->searchable()
                                                     ->preload(),
                                                 Hidden::make('team_id')

@@ -20,7 +20,7 @@ use Illuminate\Support\Collection;
  * @property string $company_name
  * @property string $description
  * @property Carbon $start_date
- * @property Carbon $end_date
+ * @property Carbon|null $end_date
  * @property bool $is_currently_working_here
  * @property Collection<int, string> $metadata
  * @property Carbon|null $created_at
@@ -44,6 +44,23 @@ class WorkExperience extends BaseModel
     public function candidate(): BelongsTo
     {
         return $this->belongsTo(Candidate::class);
+    }
+
+    /**
+     * Total months between the start date and the effective end date.
+     *
+     * Returns null when the role is in the past but has no recorded end date,
+     * so the duration is genuinely unknown and must not be assumed as "until today".
+     */
+    public function durationInMonths(): ?int
+    {
+        $end = $this->is_currently_working_here ? now() : $this->end_date;
+
+        if ($end === null) {
+            return null;
+        }
+
+        return (int) $this->start_date->diffInMonths($end);
     }
 
     protected function casts(): array

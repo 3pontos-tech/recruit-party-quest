@@ -67,7 +67,7 @@ return [
         'active_since' => 'Active since :date',
         'hired' => 'Hired',
         'hired_on' => 'Hired on :date',
-        'rejected_title' => 'Application Not Progressed',
+        'rejected_title' => 'Not Approved',
         'rejected_reason' => 'Rejection Reason',
         'rejected_details' => 'Feedback',
         'rejected_screening_message' => 'Please note that, after evaluation, your application will not proceed to the next stages of the selection process.',

@@ -96,3 +96,38 @@ it('calculates individual experience duration correctly', function (): void {
     expect($duration)->toBeString()
         ->and($duration)->not->toBeEmpty();
 });
+
+it('returns null experience duration for a past role without an end date', function (): void {
+    $candidate = Candidate::factory()->create();
+
+    $experience = WorkExperience::factory()->create([
+        'candidate_id' => $candidate->id,
+        'is_currently_working_here' => false,
+        'end_date' => null,
+        'start_date' => now()->subMonths(10),
+    ]);
+
+    expect($candidate->getExperienceDuration($experience))->toBeNull();
+});
+
+it('excludes unmeasurable experiences from the total experience time', function (): void {
+    $candidate = Candidate::factory()->create();
+
+    // Mensurável: 12 meses entre início e término.
+    WorkExperience::factory()->create([
+        'candidate_id' => $candidate->id,
+        'is_currently_working_here' => false,
+        'start_date' => now()->subMonths(24),
+        'end_date' => now()->subMonths(12),
+    ]);
+
+    // Imensurável: emprego passado sem data de término não pode inflar o total.
+    WorkExperience::factory()->create([
+        'candidate_id' => $candidate->id,
+        'is_currently_working_here' => false,
+        'end_date' => null,
+        'start_date' => now()->subMonths(60),
+    ]);
+
+    expect($candidate->total_experience_months)->toBe(12);
+});

@@ -43,3 +43,32 @@ it('uses soft deletes', function (): void {
     expect($education->deleted_at)->not->toBeNull()
         ->and(Education::withTrashed()->find($education->id))->not->toBeNull();
 });
+
+it('returns null duration for a completed degree without an end date', function (): void {
+    $education = Education::factory()->create([
+        'is_enrolled' => false,
+        'end_date' => null,
+        'start_date' => now()->subMonths(10),
+    ]);
+
+    expect($education->durationInMonths())->toBeNull();
+});
+
+it('counts duration up to today while still enrolled', function (): void {
+    $education = Education::factory()->create([
+        'is_enrolled' => true,
+        'start_date' => now()->subMonths(6),
+    ]);
+
+    expect($education->durationInMonths())->toBe(6);
+});
+
+it('counts duration between start and end for a completed degree', function (): void {
+    $education = Education::factory()->create([
+        'is_enrolled' => false,
+        'start_date' => now()->subMonths(48),
+        'end_date' => now()->subMonths(12),
+    ]);
+
+    expect($education->durationInMonths())->toBe(36);
+});
