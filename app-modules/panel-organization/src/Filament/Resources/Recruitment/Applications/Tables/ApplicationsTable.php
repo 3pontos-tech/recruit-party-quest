@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Models\Application;
+use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 
 class ApplicationsTable
@@ -108,7 +109,7 @@ class ApplicationsTable
                     ->options(CandidateSourceEnum::class),
                 SelectFilter::make('requisition')
                     ->label(__('applications::filament.filters.requisition'))
-                    ->relationship('requisition', 'id', fn ($query) => $query->with('post'))
+                    ->relationship('requisition', 'id', fn ($query) => $query->with('post')->where('status', RequisitionStatusEnum::Published))
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->post->title ?? __('panel-organization::filament.group.job_no_title'))
                     ->preload(),
             ])
