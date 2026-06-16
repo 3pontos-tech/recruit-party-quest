@@ -296,6 +296,29 @@ it('extends an offer (InProgress → OfferExtended) and advances to the offer st
         ->and($fresh->currentStage->stage_type)->toBe(StageTypeEnum::Offer);
 });
 
+it('keeps the offer fields null when amount and deadline are left blank', function (): void {
+    $this->application->update(['offer_amount' => null, 'offer_response_deadline' => null]);
+
+    livewire(ViewApplication::class, [
+        'tenant' => $this->team,
+        'record' => $this->application->getKey(),
+    ])
+        ->callAction(
+            TestAction::make('state-transition-action')->schemaComponent('quick-actions'),
+            data: [
+                'to_status' => ApplicationStatusEnum::OfferExtended->value,
+                'offer_amount' => '',
+                'offer_response_deadline' => '',
+            ],
+        )
+        ->assertHasNoActionErrors();
+
+    $fresh = $this->application->fresh();
+    expect($fresh->status)->toBe(ApplicationStatusEnum::OfferExtended)
+        ->and($fresh->offer_amount)->toBeNull()
+        ->and($fresh->offer_response_deadline)->toBeNull();
+});
+
 it('renders the status picker as a custom hero band', function (): void {
     livewire(ViewApplication::class, [
         'tenant' => $this->team,

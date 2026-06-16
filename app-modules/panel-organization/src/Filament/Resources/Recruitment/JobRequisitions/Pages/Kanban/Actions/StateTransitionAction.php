@@ -56,11 +56,11 @@ class StateTransitionAction extends Action
         $evaluatedStageId = $record->current_stage_id;
 
         if (isset($data['offer_amount'])) {
-            $data['offer_amount'] = (float) $data['offer_amount'];
+            $data['offer_amount'] = filled($data['offer_amount']) ? (float) $data['offer_amount'] : null;
         }
 
         if (isset($data['offer_response_deadline'])) {
-            $data['offer_response_deadline'] = Date::parse($data['offer_response_deadline']);
+            $data['offer_response_deadline'] = filled($data['offer_response_deadline']) ? Date::parse($data['offer_response_deadline']) : null;
         }
 
         $userId = auth()->id();
