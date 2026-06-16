@@ -44,10 +44,10 @@ final readonly class EvaluationDTO
             stageId: $data['stage_id'],
             evaluatorId: $data['evaluator_id'],
             overallRating: EvaluationRatingEnum::from($data['overall_rating']),
-            recommendation: $data['recommendation'],
-            strengths: $data['strengths'],
-            concerns: $data['concerns'],
-            notes: $data['notes'],
+            recommendation: $data['recommendation'] ?? null,
+            strengths: $data['strengths'] ?? null,
+            concerns: $data['concerns'] ?? null,
+            notes: $data['notes'] ?? null,
             criteriaScores: $data['criteria_scores'],
         );
     }

@@ -8,7 +8,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
@@ -19,7 +18,7 @@ use Illuminate\Validation\Rule;
 
 final class AiAssistantForm
 {
-    public function form(Schema|Component $form): Schema|Component
+    public function form(Schema $form): Schema
     {
         auth()->user();
 

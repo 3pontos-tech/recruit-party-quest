@@ -9,8 +9,8 @@ use JsonSerializable;
 final class CandidateOnboardingDTO implements JsonSerializable
 {
     /**
-     * @param  array<int|CandidateEducationDTO>  $education
-     * @param  array<int|CandidateWorkExperienceDTO>  $work_experiences
+     * @param  array<int, CandidateEducationDTO>  $education
+     * @param  array<int, CandidateWorkExperienceDTO>  $work_experiences
      */
     public function __construct(
         public array $education,

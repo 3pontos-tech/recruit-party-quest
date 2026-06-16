@@ -36,7 +36,7 @@ class StateTransitionAction extends Action
             ->extraAttributes(fn () => ['class' => 'w-full'])
             ->modalWidth(Width::FourExtraLarge)
             ->disabled(fn (Application $record): bool => ! $record->current_step->canChange())
-            ->tooltip(fn (Application $record): ?string => $record->current_step->canChange() ? null : __('applications::filament.actions.change_status.no_transitions_tooltip'))
+            ->tooltip(fn (Application $record): ?string => $record->current_step->canChange() ? null : (string) __('applications::filament.actions.change_status.no_transitions_tooltip'))
             ->schema($this->buildSchema(...))
             ->action($this->processAction(...))
             ->requiresConfirmation();
@@ -54,7 +54,8 @@ class StateTransitionAction extends Action
     {
         $evaluatedStageId = $record->current_stage_id;
 
-        $transitionData = TransitionData::fromArray($data, auth()->id());
+        $userId = auth()->id();
+        $transitionData = TransitionData::fromArray($data, $userId !== null ? (string) $userId : null);
         $record->current_step->handle($transitionData);
 
         if ($data['with_evaluation'] ?? false) {

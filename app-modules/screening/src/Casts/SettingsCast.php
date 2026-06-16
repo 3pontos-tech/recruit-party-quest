@@ -53,14 +53,14 @@ class SettingsCast implements CastsAttributes
 
         // Accept both array and ValueObject
         if (is_array($value)) {
-            return json_encode($value);
+            return json_encode($value, JSON_THROW_ON_ERROR);
         }
 
         // ValueObject with toArray() method
         if (method_exists($value, 'toArray')) {
-            return json_encode($value->toArray());
+            return json_encode($value->toArray(), JSON_THROW_ON_ERROR);
         }
 
-        return json_encode((array) $value);
+        return json_encode((array) $value, JSON_THROW_ON_ERROR);
     }
 }

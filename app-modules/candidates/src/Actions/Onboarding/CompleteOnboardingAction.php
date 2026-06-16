@@ -136,6 +136,12 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
      */
     private function callPrism(TemporaryUploadedFile $file, string $provider, string $model): array
     {
+        $rawContent = $file->get();
+
+        if (! is_string($rawContent)) {
+            throw new FileNotFoundException(sprintf('Unable to read uploaded file [%s].', $file->getClientOriginalName()));
+        }
+
         /** @var Response $response */
         $response = Prism::structured()
             ->using($provider, $model)
@@ -145,7 +151,7 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
                 CvAnalysisPrompt::make($this->notAnCv),
                 [
                     Document::fromRawContent(
-                        rawContent: $file->get(),
+                        rawContent: $rawContent,
                         mimeType: $file->getMimeType()
                     ),
                 ]

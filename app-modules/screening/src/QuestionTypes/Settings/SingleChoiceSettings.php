@@ -48,7 +48,7 @@ readonly class SingleChoiceSettings implements HasValidations
         $rules = [];
 
         if ($required) {
-            $rules['required'] = 'required';
+            $rules[] = 'required';
         }
 
         return $rules;

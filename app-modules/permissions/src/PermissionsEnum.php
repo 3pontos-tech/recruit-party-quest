@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Permissions;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Str;
 
@@ -19,6 +20,7 @@ enum PermissionsEnum: string
 
     public function buildPermissionFor(string $classPath): string
     {
-        return $this->value.'_'.Str::snake(Relation::getMorphAlias($classPath));
+        /** @var class-string<Model> $classPath */
+        return $this->value.'_'.Str::snake((string) Relation::getMorphAlias($classPath));
     }
 }

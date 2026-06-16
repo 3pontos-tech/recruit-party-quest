@@ -7,6 +7,7 @@ namespace He4rt\Applications\Services\Transitions;
 use Carbon\CarbonInterface;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
+use InvalidArgumentException;
 
 final readonly class TransitionData
 {
@@ -45,24 +46,24 @@ final readonly class TransitionData
     {
         $toStatus = $data['to_status'] ?? $data['status'] ?? null;
 
+        throw_if($toStatus === null, InvalidArgumentException::class, 'TransitionData requires a "to_status" or "status".');
+
+        $rejectionCategory = $data['rejection_reason_category'] ?? null;
+
         return new self(
-            toStatus: $toStatus,
+            toStatus: $toStatus instanceof ApplicationStatusEnum
+                ? $toStatus
+                : ApplicationStatusEnum::from($toStatus),
             toStageId: $data['to_stage_id'] ?? null,
             advanceStage: $data['advance_stage'] ?? null,
-            rejectionReasonCategory: isset($data['rejection_reason_category'])
-                ? RejectionReasonCategoryEnum::tryFrom($data['rejection_reason_category'])
-                : null,
+            rejectionReasonCategory: $rejectionCategory instanceof RejectionReasonCategoryEnum
+                ? $rejectionCategory
+                : (is_string($rejectionCategory) ? RejectionReasonCategoryEnum::tryFrom($rejectionCategory) : null),
             rejectionReasonDetails: $data['rejection_reason_details'] ?? null,
-            rejectedAt: isset($data['rejected_at']) && is_string($data['rejected_at'])
-                ? now()->parse($data['rejected_at'])
-                : ($data['rejected_at'] ?? null),
-            offerExtendedAt: isset($data['offer_extended_at']) && is_string($data['offer_extended_at'])
-                ? now()->parse($data['offer_extended_at'])
-                : ($data['offer_extended_at'] ?? null),
+            rejectedAt: self::parseDate($data['rejected_at'] ?? null),
+            offerExtendedAt: self::parseDate($data['offer_extended_at'] ?? null),
             offerAmount: isset($data['offer_amount']) ? (float) $data['offer_amount'] : null,
-            offerResponseDeadline: isset($data['offer_response_deadline']) && is_string($data['offer_response_deadline'])
-                ? now()->parse($data['offer_response_deadline'])
-                : ($data['offer_response_deadline'] ?? null),
+            offerResponseDeadline: self::parseDate($data['offer_response_deadline'] ?? null),
             notes: $data['notes'] ?? null,
             byUserId: $byUserId,
         );
@@ -118,5 +119,14 @@ final readonly class TransitionData
     public function isWithdrawal(): bool
     {
         return $this->toStatus === ApplicationStatusEnum::Withdrawn;
+    }
+
+    private static function parseDate(CarbonInterface|string|null $value): ?CarbonInterface
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        return $value instanceof CarbonInterface ? $value : now()->parse($value);
     }
 }
