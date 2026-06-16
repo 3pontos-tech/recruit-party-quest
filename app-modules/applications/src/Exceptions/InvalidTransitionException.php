@@ -18,4 +18,9 @@ final class InvalidTransitionException extends Exception
     {
         return new self(sprintf('Invalid target status: %s', $status), 400);
     }
+
+    public static function invalidTargetStage(string $stageId): self
+    {
+        return new self(sprintf('Invalid target stage: %s', $stageId), 400);
+    }
 }

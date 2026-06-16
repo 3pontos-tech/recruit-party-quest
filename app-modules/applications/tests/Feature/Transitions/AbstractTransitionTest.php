@@ -99,9 +99,12 @@ describe('AbstractApplicationTransition::handle()', function (): void {
         $application = Application::factory()->create([
             'status' => ApplicationStatusEnum::InProgress,
         ]);
+        $application->currentStage->update(['display_order' => 1, 'active' => true]);
 
         $newStage = Stage::factory()->create([
             'job_requisition_id' => $application->requisition_id,
+            'display_order' => 10,
+            'active' => true,
         ]);
 
         $data = TransitionData::fromArray([

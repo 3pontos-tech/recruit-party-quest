@@ -35,9 +35,18 @@ describe('InProgressTransition', function (): void {
     it('InProgress → InProgress via to_stage_id updates current_stage_id', function (): void {
         $user = User::factory()->create();
         $application = Application::factory()->withStatus(ApplicationStatusEnum::InProgress)->create();
+
+        $current = Stage::factory()->create([
+            'job_requisition_id' => $application->requisition_id,
+            'display_order' => 1,
+            'active' => true,
+        ]);
+        $application->update(['current_stage_id' => $current->id]);
+
         $targetStage = Stage::factory()->create([
             'job_requisition_id' => $application->requisition_id,
             'display_order' => 10,
+            'active' => true,
         ]);
 
         $data = TransitionData::fromArray([
@@ -51,6 +60,94 @@ describe('InProgressTransition', function (): void {
 
         expect($application->status)->toBe(ApplicationStatusEnum::InProgress)
             ->and($application->current_stage_id)->toBe($targetStage->id);
+    });
+
+    it('rejects a move to an earlier or same-order stage and keeps current_stage_id', function (int $targetOrder): void {
+        $user = User::factory()->create();
+        $application = Application::factory()->withStatus(ApplicationStatusEnum::InProgress)->create();
+
+        $current = Stage::factory()->create([
+            'job_requisition_id' => $application->requisition_id,
+            'display_order' => 5,
+            'active' => true,
+        ]);
+        $application->update(['current_stage_id' => $current->id]);
+
+        $target = Stage::factory()->create([
+            'job_requisition_id' => $application->requisition_id,
+            'display_order' => $targetOrder,
+            'active' => true,
+        ]);
+
+        $data = TransitionData::fromArray([
+            'to_status' => ApplicationStatusEnum::InProgress,
+            'to_stage_id' => $target->id,
+        ], $user->id);
+
+        expect(fn () => $application->current_step->handle($data))
+            ->toThrow(InvalidTransitionException::class);
+
+        expect($application->fresh()->current_stage_id)->toBe($current->id);
+    })->with([
+        'earlier stage' => 3,
+        'same-order stage' => 5,
+    ]);
+
+    it('rejects a move to an inactive stage and keeps current_stage_id', function (): void {
+        $user = User::factory()->create();
+        $application = Application::factory()->withStatus(ApplicationStatusEnum::InProgress)->create();
+
+        $current = Stage::factory()->create([
+            'job_requisition_id' => $application->requisition_id,
+            'display_order' => 5,
+            'active' => true,
+        ]);
+        $application->update(['current_stage_id' => $current->id]);
+
+        $inactive = Stage::factory()->create([
+            'job_requisition_id' => $application->requisition_id,
+            'display_order' => 9,
+            'active' => false,
+        ]);
+
+        $data = TransitionData::fromArray([
+            'to_status' => ApplicationStatusEnum::InProgress,
+            'to_stage_id' => $inactive->id,
+        ], $user->id);
+
+        expect(fn () => $application->current_step->handle($data))
+            ->toThrow(InvalidTransitionException::class);
+
+        expect($application->fresh()->current_stage_id)->toBe($current->id);
+    });
+
+    it('rejects a move to a stage from another requisition and keeps current_stage_id', function (): void {
+        $user = User::factory()->create();
+        $application = Application::factory()->withStatus(ApplicationStatusEnum::InProgress)->create();
+
+        $current = Stage::factory()->create([
+            'job_requisition_id' => $application->requisition_id,
+            'display_order' => 5,
+            'active' => true,
+        ]);
+        $application->update(['current_stage_id' => $current->id]);
+
+        // Belongs to a brand-new requisition (own JobRequisition::factory()), so it is
+        // forward and active but must still be refused as cross-requisition.
+        $foreignStage = Stage::factory()->create([
+            'display_order' => 9,
+            'active' => true,
+        ]);
+
+        $data = TransitionData::fromArray([
+            'to_status' => ApplicationStatusEnum::InProgress,
+            'to_stage_id' => $foreignStage->id,
+        ], $user->id);
+
+        expect(fn () => $application->current_step->handle($data))
+            ->toThrow(InvalidTransitionException::class);
+
+        expect($application->fresh()->current_stage_id)->toBe($current->id);
     });
 
     it('InProgress → InProgress via advance_stage moves to next stage', function (): void {
