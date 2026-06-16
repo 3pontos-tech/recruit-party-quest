@@ -9,6 +9,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Enums\Width;
@@ -66,6 +67,11 @@ class StateTransitionAction extends Action
         $userId = auth()->id();
         $transitionData = TransitionData::fromArray($data, $userId !== null ? (string) $userId : null);
         $record->current_step->handle($transitionData);
+
+        Notification::make()
+            ->success()
+            ->title(__('applications::filament.actions.change_status.notifications.updated.title'))
+            ->send();
 
         if ($data['with_evaluation'] ?? false) {
             $this->recordEvaluation($record, $data, $evaluatedStageId);

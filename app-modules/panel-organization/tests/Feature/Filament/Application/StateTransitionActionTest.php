@@ -122,7 +122,8 @@ it('moves a New application to InReview auto-advancing the stage', function (): 
                 'notes' => 'starting review',
             ],
         )
-        ->assertHasNoActionErrors();
+        ->assertHasNoActionErrors()
+        ->assertNotified(__('applications::filament.actions.change_status.notifications.updated.title'));
 
     expect($application->fresh()->status)->toBe(ApplicationStatusEnum::InReview)
         ->and($application->fresh()->current_stage_id)->toBe($stage->id);
