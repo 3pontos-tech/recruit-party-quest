@@ -15,7 +15,7 @@ it('performs a New → Rejected transition with a null actor (system)', function
 
     $data = TransitionData::fromArray([
         'to_status' => ApplicationStatusEnum::Rejected,
-        'rejection_reason_category' => RejectionReasonCategoryEnum::ScreeningKnockout->value,
+        'rejection_reason_category' => RejectionReasonCategoryEnum::ScreeningKnockout,
         'rejection_reason_details' => 'Failed: Q1',
     ]);
 

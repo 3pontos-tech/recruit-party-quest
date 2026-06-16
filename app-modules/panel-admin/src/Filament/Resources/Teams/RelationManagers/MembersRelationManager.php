@@ -67,6 +67,7 @@ class MembersRelationManager extends RelationManager
                         return $data;
                     })
                     ->action(function (array $data, Action $action): void {
+                        /** @var array{name: string, email: string, team_id: string} $data */
                         $result = resolve(InviteTeamMemberAction::class)->handle(
                             InviteTeamMemberDTO::fromArray($data)
                         );

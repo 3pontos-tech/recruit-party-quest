@@ -7,6 +7,7 @@ namespace He4rt\Applications\Services\Transitions;
 use Carbon\CarbonInterface;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
+use InvalidArgumentException;
 
 final readonly class TransitionData
 {
@@ -25,44 +26,35 @@ final readonly class TransitionData
     ) {}
 
     /**
-     * Create a DTO from an associative array.
-     *
      * @param  array{
-     *     to_status?: ApplicationStatusEnum|string|null,
-     *     status?: ApplicationStatusEnum|string|null,
+     *     to_status?: ApplicationStatusEnum|null,
      *     to_stage_id?: string|null,
      *     advance_stage?: bool|null,
-     *     rejection_reason_category?: RejectionReasonCategoryEnum|string|null,
+     *     rejection_reason_category?: RejectionReasonCategoryEnum|null,
      *     rejection_reason_details?: string|null,
-     *     rejected_at?: CarbonInterface|string|null,
-     *     offer_extended_at?: CarbonInterface|string|null,
-     *     offer_amount?: float|int|string|null,
-     *     offer_response_deadline?: CarbonInterface|string|null,
+     *     rejected_at?: CarbonInterface|null,
+     *     offer_extended_at?: CarbonInterface|null,
+     *     offer_amount?: float|null,
+     *     offer_response_deadline?: CarbonInterface|null,
      *     notes?: string|null,
      * } $data
      */
     public static function fromArray(array $data, ?string $byUserId = null): self
     {
-        $toStatus = $data['to_status'] ?? $data['status'] ?? null;
+        $toStatus = $data['to_status'] ?? null;
+
+        throw_if($toStatus === null, InvalidArgumentException::class, 'TransitionData requires a "to_status".');
 
         return new self(
             toStatus: $toStatus,
             toStageId: $data['to_stage_id'] ?? null,
             advanceStage: $data['advance_stage'] ?? null,
-            rejectionReasonCategory: isset($data['rejection_reason_category'])
-                ? RejectionReasonCategoryEnum::tryFrom($data['rejection_reason_category'])
-                : null,
+            rejectionReasonCategory: $data['rejection_reason_category'] ?? null,
             rejectionReasonDetails: $data['rejection_reason_details'] ?? null,
-            rejectedAt: isset($data['rejected_at']) && is_string($data['rejected_at'])
-                ? now()->parse($data['rejected_at'])
-                : ($data['rejected_at'] ?? null),
-            offerExtendedAt: isset($data['offer_extended_at']) && is_string($data['offer_extended_at'])
-                ? now()->parse($data['offer_extended_at'])
-                : ($data['offer_extended_at'] ?? null),
-            offerAmount: isset($data['offer_amount']) ? (float) $data['offer_amount'] : null,
-            offerResponseDeadline: isset($data['offer_response_deadline']) && is_string($data['offer_response_deadline'])
-                ? now()->parse($data['offer_response_deadline'])
-                : ($data['offer_response_deadline'] ?? null),
+            rejectedAt: $data['rejected_at'] ?? null,
+            offerExtendedAt: $data['offer_extended_at'] ?? null,
+            offerAmount: $data['offer_amount'] ?? null,
+            offerResponseDeadline: $data['offer_response_deadline'] ?? null,
             notes: $data['notes'] ?? null,
             byUserId: $byUserId,
         );

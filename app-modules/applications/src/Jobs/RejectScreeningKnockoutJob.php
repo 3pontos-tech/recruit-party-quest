@@ -41,7 +41,7 @@ final class RejectScreeningKnockoutJob implements ShouldQueue
 
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::Rejected,
-            'rejection_reason_category' => RejectionReasonCategoryEnum::ScreeningKnockout->value,
+            'rejection_reason_category' => RejectionReasonCategoryEnum::ScreeningKnockout,
             'rejection_reason_details' => __('screening::messages.knockout_auto_rejected'),
             'notes' => __('screening::messages.knockout_auto_rejected'),
         ]);

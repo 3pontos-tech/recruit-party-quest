@@ -11,6 +11,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Models\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 
 class RejectApplicationAction extends Action
@@ -30,7 +31,7 @@ class RejectApplicationAction extends Action
             ->modalHeading(__('panel-organization::filament.actions.reject_application.modal_heading'))
             ->modalDescription(__('panel-organization::filament.actions.reject_application.modal_description'))
             ->schema($this->formSchema())
-            ->action(function (array $data, Application $record): Redirector {
+            ->action(function (array $data, Application $record): RedirectResponse|Redirector {
                 resolve(\He4rt\Applications\Actions\RejectApplicationAction::class)->execute(
                     $record->getKey(),
                     $data['rejection_reason_category'],

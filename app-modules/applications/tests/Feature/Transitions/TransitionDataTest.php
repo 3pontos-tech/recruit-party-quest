@@ -7,36 +7,40 @@ use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Services\Transitions\TransitionData;
 use He4rt\Users\User;
+use Illuminate\Support\Facades\Date;
 
 describe('TransitionData::fromArray()', function (): void {
-    it('parses rejected_at string to CarbonInterface', function (): void {
+    it('carries the provided rejected_at date', function (): void {
+        $rejectedAt = Date::parse('2026-01-15 10:00:00');
+
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::Rejected,
-            'rejected_at' => '2026-01-15 10:00:00',
+            'rejected_at' => $rejectedAt,
         ], 'user-id');
 
-        expect($data->rejectedAt)->toBeInstanceOf(CarbonInterface::class)
-            ->and($data->rejectedAt->toDateTimeString())->toBe('2026-01-15 10:00:00');
+        expect($data->rejectedAt)->toBe($rejectedAt);
     });
 
-    it('parses offer_extended_at string to CarbonInterface', function (): void {
+    it('carries the provided offer_extended_at date', function (): void {
+        $offerExtendedAt = Date::parse('2026-03-01 09:00:00');
+
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::OfferExtended,
-            'offer_extended_at' => '2026-03-01 09:00:00',
+            'offer_extended_at' => $offerExtendedAt,
         ], 'user-id');
 
-        expect($data->offerExtendedAt)->toBeInstanceOf(CarbonInterface::class)
-            ->and($data->offerExtendedAt->toDateTimeString())->toBe('2026-03-01 09:00:00');
+        expect($data->offerExtendedAt)->toBe($offerExtendedAt);
     });
 
-    it('parses offer_response_deadline string to CarbonInterface', function (): void {
+    it('carries the provided offer_response_deadline date', function (): void {
+        $deadline = Date::parse('2026-03-08 00:00:00');
+
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::OfferExtended,
-            'offer_response_deadline' => '2026-03-08 00:00:00',
+            'offer_response_deadline' => $deadline,
         ], 'user-id');
 
-        expect($data->offerResponseDeadline)->toBeInstanceOf(CarbonInterface::class)
-            ->and($data->offerResponseDeadline->toDateTimeString())->toBe('2026-03-08 00:00:00');
+        expect($data->offerResponseDeadline)->toBe($deadline);
     });
 
     it('accepts CarbonInterface directly without re-parsing', function (): void {
@@ -47,36 +51,20 @@ describe('TransitionData::fromArray()', function (): void {
             'rejected_at' => $carbon,
         ], 'user-id');
 
-        expect($data->rejectedAt)->toBe($carbon);
+        expect($data->rejectedAt)->toBe($carbon)
+            ->and($data->rejectedAt)->toBeInstanceOf(CarbonInterface::class);
     });
 
-    it('accepts status as alias for to_status', function (): void {
-        $data = TransitionData::fromArray([
-            'status' => ApplicationStatusEnum::InReview,
-        ], 'user-id');
-
-        expect($data->toStatus)->toBe(ApplicationStatusEnum::InReview);
-    });
-
-    it('prefers to_status over status when both are present', function (): void {
-        $data = TransitionData::fromArray([
-            'to_status' => ApplicationStatusEnum::Hired,
-            'status' => ApplicationStatusEnum::Rejected,
-        ], 'user-id');
-
-        expect($data->toStatus)->toBe(ApplicationStatusEnum::Hired);
-    });
-
-    it('casts offer_amount string to float', function (): void {
+    it('carries the offer amount as a float', function (): void {
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::OfferExtended,
-            'offer_amount' => '85000',
+            'offer_amount' => 85000.0,
         ], 'user-id');
 
         expect($data->offerAmount)->toBe(85000.0);
     });
 
-    it('casts offer_amount integer to float', function (): void {
+    it('widens an integer offer amount to float', function (): void {
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::OfferExtended,
             'offer_amount' => 120000,
@@ -85,22 +73,13 @@ describe('TransitionData::fromArray()', function (): void {
         expect($data->offerAmount)->toBe(120000.0);
     });
 
-    it('casts rejection_reason_category string value to enum', function (): void {
+    it('carries the rejection reason category enum', function (): void {
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::Rejected,
-            'rejection_reason_category' => 'qualifications',
+            'rejection_reason_category' => RejectionReasonCategoryEnum::Qualifications,
         ], 'user-id');
 
         expect($data->rejectionReasonCategory)->toBe(RejectionReasonCategoryEnum::Qualifications);
-    });
-
-    it('returns null for invalid rejection_reason_category value', function (): void {
-        $data = TransitionData::fromArray([
-            'to_status' => ApplicationStatusEnum::Rejected,
-            'rejection_reason_category' => 'invalid_value',
-        ], 'user-id');
-
-        expect($data->rejectionReasonCategory)->toBeNull();
     });
 
     it('returns null for all optional fields when not provided', function (): void {
@@ -134,9 +113,9 @@ describe('TransitionData::toArray()', function (): void {
     it('serializes dates as datetime strings', function (): void {
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::Rejected,
-            'rejected_at' => '2026-01-15 10:00:00',
-            'offer_extended_at' => '2026-02-01 12:00:00',
-            'offer_response_deadline' => '2026-02-08 00:00:00',
+            'rejected_at' => Date::parse('2026-01-15 10:00:00'),
+            'offer_extended_at' => Date::parse('2026-02-01 12:00:00'),
+            'offer_response_deadline' => Date::parse('2026-02-08 00:00:00'),
         ], 'user-id');
 
         $array = $data->toArray();
@@ -149,7 +128,7 @@ describe('TransitionData::toArray()', function (): void {
     it('serializes enum values as strings', function (): void {
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::Rejected,
-            'rejection_reason_category' => 'experience',
+            'rejection_reason_category' => RejectionReasonCategoryEnum::Experience,
         ], 'user-id');
 
         $array = $data->toArray();

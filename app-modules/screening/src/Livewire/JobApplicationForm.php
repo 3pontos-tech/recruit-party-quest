@@ -65,12 +65,16 @@ class JobApplicationForm extends Component
             /** @var Candidate $candidate */
             $candidate = auth()->user()->candidate;
 
+            $source = $this->source instanceof CandidateSourceEnum
+                ? $this->source
+                : CandidateSourceEnum::from($this->source);
+
             $this->application = resolve(StoreApplication::class)->execute(ApplicationDTO::make([
                 'requisition_id' => $this->requisition->getKey(),
                 'candidate_id' => $candidate->getKey(),
                 'team_id' => $this->requisition->team_id,
                 'status' => ApplicationStatusEnum::New->value,
-                'source' => $this->source->value,
+                'source' => $source->value,
             ]));
 
         }

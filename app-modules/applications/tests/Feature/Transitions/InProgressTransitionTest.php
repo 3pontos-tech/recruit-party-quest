@@ -11,6 +11,7 @@ use He4rt\Applications\Services\Transitions\InProgressTransition;
 use He4rt\Applications\Services\Transitions\TransitionData;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Users\User;
+use Illuminate\Support\Facades\Date;
 
 describe('InProgressTransition', function (): void {
     it('canChange() returns true', function (): void {
@@ -190,9 +191,9 @@ describe('InProgressTransition', function (): void {
 
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::OfferExtended,
-            'offer_amount' => '75000',
-            'offer_extended_at' => '2026-03-01 09:00:00',
-            'offer_response_deadline' => '2026-03-08 00:00:00',
+            'offer_amount' => 75000.0,
+            'offer_extended_at' => Date::parse('2026-03-01 09:00:00'),
+            'offer_response_deadline' => Date::parse('2026-03-08 00:00:00'),
         ], $user->id);
 
         $application->current_step->handle($data);
@@ -238,7 +239,7 @@ describe('InProgressTransition', function (): void {
 
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::Rejected,
-            'rejection_reason_category' => RejectionReasonCategoryEnum::CultureFit->value,
+            'rejection_reason_category' => RejectionReasonCategoryEnum::CultureFit,
             'rejection_reason_details' => 'Not a good cultural fit',
         ], $user->id);
 

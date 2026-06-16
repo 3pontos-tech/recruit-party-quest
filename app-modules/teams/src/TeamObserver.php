@@ -32,7 +32,7 @@ class TeamObserver
         $newOwnerId = $team->owner_id;
 
         if ($oldOwnerId && $oldOwnerId !== $newOwnerId) {
-            $oldOwner = User::query()->find($oldOwnerId);
+            $oldOwner = User::query()->find((string) $oldOwnerId);
             if ($oldOwner && Team::query()->where('owner_id', $oldOwnerId)->doesntExist()) {
                 $oldOwner->removeRole(Roles::Owner->value);
             }

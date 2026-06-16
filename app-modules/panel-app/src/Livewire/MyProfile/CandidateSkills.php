@@ -75,7 +75,7 @@ class CandidateSkills extends MyProfileComponent
                             return null;
                         }
 
-                        $skill = Skill::query()->find($state['skill_id']);
+                        $skill = Skill::query()->find((string) $state['skill_id']);
 
                         return $skill?->name;
                     })

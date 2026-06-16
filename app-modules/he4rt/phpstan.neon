@@ -1,9 +1,6 @@
 includes:
-    - phpstan.modules.php
     - phpstan.ignore.neon
 
 parameters:
-    level: 7
-
     paths:
-        - app
+        - src/

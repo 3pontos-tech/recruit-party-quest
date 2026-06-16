@@ -9,6 +9,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Enums\Width;
@@ -22,6 +23,7 @@ use He4rt\Organization\Filament\Forms\Components\StageTimeline;
 use He4rt\Organization\Filament\Forms\Components\StatusHeroBand;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Schemas\EvaluationForm;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Date;
 
 class StateTransitionAction extends Action
 {
@@ -36,7 +38,7 @@ class StateTransitionAction extends Action
             ->extraAttributes(fn () => ['class' => 'w-full'])
             ->modalWidth(Width::FourExtraLarge)
             ->disabled(fn (Application $record): bool => ! $record->current_step->canChange())
-            ->tooltip(fn (Application $record): ?string => $record->current_step->canChange() ? null : __('applications::filament.actions.change_status.no_transitions_tooltip'))
+            ->tooltip(fn (Application $record): ?string => $record->current_step->canChange() ? null : (string) __('applications::filament.actions.change_status.no_transitions_tooltip'))
             ->schema($this->buildSchema(...))
             ->action($this->processAction(...))
             ->requiresConfirmation();
@@ -54,8 +56,22 @@ class StateTransitionAction extends Action
     {
         $evaluatedStageId = $record->current_stage_id;
 
-        $transitionData = TransitionData::fromArray($data, auth()->id());
+        if (isset($data['offer_amount'])) {
+            $data['offer_amount'] = filled($data['offer_amount']) ? (float) $data['offer_amount'] : null;
+        }
+
+        if (isset($data['offer_response_deadline'])) {
+            $data['offer_response_deadline'] = filled($data['offer_response_deadline']) ? Date::parse($data['offer_response_deadline']) : null;
+        }
+
+        $userId = auth()->id();
+        $transitionData = TransitionData::fromArray($data, $userId !== null ? (string) $userId : null);
         $record->current_step->handle($transitionData);
+
+        Notification::make()
+            ->success()
+            ->title(__('applications::filament.actions.change_status.notifications.updated.title'))
+            ->send();
 
         if ($data['with_evaluation'] ?? false) {
             $this->recordEvaluation($record, $data, $evaluatedStageId);

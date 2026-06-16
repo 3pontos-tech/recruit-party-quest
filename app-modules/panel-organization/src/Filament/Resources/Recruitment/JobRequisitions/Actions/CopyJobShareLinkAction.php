@@ -25,7 +25,7 @@ class CopyJobShareLinkAction extends Action
             ->authorize('view')
             ->disabled(fn (JobRequisition $record): bool => blank(self::shareUrlFor($record)))
             ->tooltip(fn (JobRequisition $record): ?string => blank(self::shareUrlFor($record))
-                ? __('panel-organization::filament.actions.copy_share_link.tooltip_unavailable')
+                ? (string) __('panel-organization::filament.actions.copy_share_link.tooltip_unavailable')
                 : null)
             ->actionJs(fn (JobRequisition $record): string => $this->clipboardJs($record));
     }
