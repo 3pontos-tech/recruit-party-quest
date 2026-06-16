@@ -25,8 +25,8 @@ class FeedbackServiceProvider extends ServiceProvider
         ]);
 
         CommentReaction::creating(function (CommentReaction $model): void {
-            if (blank($model->getAttribute('id'))) {
-                $model->setAttribute('id', (string) Str::uuid());
+            if ($model->getKey() === null) {
+                $model->setAttribute($model->getKeyName(), (string) Str::uuid());
             }
         });
 

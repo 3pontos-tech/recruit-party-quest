@@ -7,6 +7,7 @@ namespace He4rt\Applications\Services\Transitions;
 use Carbon\CarbonInterface;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
+use Illuminate\Support\Facades\Date;
 use InvalidArgumentException;
 
 final readonly class TransitionData
@@ -33,7 +34,7 @@ final readonly class TransitionData
      *     status?: ApplicationStatusEnum|string|null,
      *     to_stage_id?: string|null,
      *     advance_stage?: bool|null,
-     *     rejection_reason_category?: RejectionReasonCategoryEnum|string|null,
+     *     rejection_reason_category?: string|null,
      *     rejection_reason_details?: string|null,
      *     rejected_at?: CarbonInterface|string|null,
      *     offer_extended_at?: CarbonInterface|string|null,
@@ -56,9 +57,9 @@ final readonly class TransitionData
                 : ApplicationStatusEnum::from($toStatus),
             toStageId: $data['to_stage_id'] ?? null,
             advanceStage: $data['advance_stage'] ?? null,
-            rejectionReasonCategory: $rejectionCategory instanceof RejectionReasonCategoryEnum
-                ? $rejectionCategory
-                : (is_string($rejectionCategory) ? RejectionReasonCategoryEnum::tryFrom($rejectionCategory) : null),
+            rejectionReasonCategory: $rejectionCategory !== null
+                ? RejectionReasonCategoryEnum::tryFrom($rejectionCategory)
+                : null,
             rejectionReasonDetails: $data['rejection_reason_details'] ?? null,
             rejectedAt: self::parseDate($data['rejected_at'] ?? null),
             offerExtendedAt: self::parseDate($data['offer_extended_at'] ?? null),
@@ -127,6 +128,6 @@ final readonly class TransitionData
             return null;
         }
 
-        return $value instanceof CarbonInterface ? $value : now()->parse($value);
+        return $value instanceof CarbonInterface ? $value : Date::parse($value);
     }
 }
