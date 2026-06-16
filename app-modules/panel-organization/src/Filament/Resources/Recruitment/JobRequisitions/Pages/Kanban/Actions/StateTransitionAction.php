@@ -22,6 +22,7 @@ use He4rt\Organization\Filament\Forms\Components\StageTimeline;
 use He4rt\Organization\Filament\Forms\Components\StatusHeroBand;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Schemas\EvaluationForm;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Date;
 
 class StateTransitionAction extends Action
 {
@@ -53,6 +54,14 @@ class StateTransitionAction extends Action
     private function processAction(Application $record, array $data): void
     {
         $evaluatedStageId = $record->current_stage_id;
+
+        if (isset($data['offer_amount'])) {
+            $data['offer_amount'] = (float) $data['offer_amount'];
+        }
+
+        if (isset($data['offer_response_deadline'])) {
+            $data['offer_response_deadline'] = Date::parse($data['offer_response_deadline']);
+        }
 
         $userId = auth()->id();
         $transitionData = TransitionData::fromArray($data, $userId !== null ? (string) $userId : null);

@@ -17,7 +17,7 @@ final class RejectApplicationAction
 
         $application->current_step->handle(TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::Rejected,
-            'rejection_reason_category' => $reason->value,
+            'rejection_reason_category' => $reason,
             'rejection_reason_details' => $details,
         ]));
     }

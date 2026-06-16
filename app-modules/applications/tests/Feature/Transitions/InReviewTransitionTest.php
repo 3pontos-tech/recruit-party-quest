@@ -87,7 +87,7 @@ describe('InReviewTransition', function (): void {
 
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::Rejected,
-            'rejection_reason_category' => RejectionReasonCategoryEnum::Experience->value,
+            'rejection_reason_category' => RejectionReasonCategoryEnum::Experience,
             'rejection_reason_details' => 'Insufficient experience',
         ], $user->id);
 
@@ -134,7 +134,7 @@ describe('InReviewTransition', function (): void {
 
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::Rejected,
-            'rejection_reason_category' => RejectionReasonCategoryEnum::Other->value,
+            'rejection_reason_category' => RejectionReasonCategoryEnum::Other,
         ], $user->id);
 
         $application->current_step->handle($data);

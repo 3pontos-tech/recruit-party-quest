@@ -9,6 +9,7 @@ use He4rt\Applications\Models\Application;
 use He4rt\Applications\Services\Transitions\NewTransition;
 use He4rt\Applications\Services\Transitions\TransitionData;
 use He4rt\Users\User;
+use Illuminate\Support\Facades\Date;
 
 describe('NewTransition', function (): void {
     it('canChange() returns true', function (): void {
@@ -88,9 +89,9 @@ describe('NewTransition', function (): void {
 
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::Rejected,
-            'rejection_reason_category' => RejectionReasonCategoryEnum::Qualifications->value,
+            'rejection_reason_category' => RejectionReasonCategoryEnum::Qualifications,
             'rejection_reason_details' => 'Does not meet minimum requirements',
-            'rejected_at' => '2026-01-15 10:00:00',
+            'rejected_at' => Date::parse('2026-01-15 10:00:00'),
         ], $user->id);
 
         $application->current_step->handle($data);

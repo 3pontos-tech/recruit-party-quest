@@ -113,7 +113,7 @@ describe('OfferExtendedTransition', function (): void {
 
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::OfferAccepted,
-            'offer_amount' => '95000',
+            'offer_amount' => 95000.0,
         ], $user->id);
 
         $application->current_step->handle($data);

@@ -7,7 +7,6 @@ namespace He4rt\Applications\Services\Transitions;
 use Carbon\CarbonInterface;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
-use Illuminate\Support\Facades\Date;
 use InvalidArgumentException;
 
 final readonly class TransitionData
@@ -27,19 +26,17 @@ final readonly class TransitionData
     ) {}
 
     /**
-     * Create a DTO from an associative array.
-     *
      * @param  array{
-     *     to_status?: ApplicationStatusEnum|string|null,
-     *     status?: ApplicationStatusEnum|string|null,
+     *     to_status?: ApplicationStatusEnum|null,
+     *     status?: ApplicationStatusEnum|null,
      *     to_stage_id?: string|null,
      *     advance_stage?: bool|null,
-     *     rejection_reason_category?: string|null,
+     *     rejection_reason_category?: RejectionReasonCategoryEnum|null,
      *     rejection_reason_details?: string|null,
-     *     rejected_at?: CarbonInterface|string|null,
-     *     offer_extended_at?: CarbonInterface|string|null,
-     *     offer_amount?: float|int|string|null,
-     *     offer_response_deadline?: CarbonInterface|string|null,
+     *     rejected_at?: CarbonInterface|null,
+     *     offer_extended_at?: CarbonInterface|null,
+     *     offer_amount?: float|null,
+     *     offer_response_deadline?: CarbonInterface|null,
      *     notes?: string|null,
      * } $data
      */
@@ -49,22 +46,16 @@ final readonly class TransitionData
 
         throw_if($toStatus === null, InvalidArgumentException::class, 'TransitionData requires a "to_status" or "status".');
 
-        $rejectionCategory = $data['rejection_reason_category'] ?? null;
-
         return new self(
-            toStatus: $toStatus instanceof ApplicationStatusEnum
-                ? $toStatus
-                : ApplicationStatusEnum::from($toStatus),
+            toStatus: $toStatus,
             toStageId: $data['to_stage_id'] ?? null,
             advanceStage: $data['advance_stage'] ?? null,
-            rejectionReasonCategory: $rejectionCategory !== null
-                ? RejectionReasonCategoryEnum::tryFrom($rejectionCategory)
-                : null,
+            rejectionReasonCategory: $data['rejection_reason_category'] ?? null,
             rejectionReasonDetails: $data['rejection_reason_details'] ?? null,
-            rejectedAt: self::parseDate($data['rejected_at'] ?? null),
-            offerExtendedAt: self::parseDate($data['offer_extended_at'] ?? null),
-            offerAmount: isset($data['offer_amount']) ? (float) $data['offer_amount'] : null,
-            offerResponseDeadline: self::parseDate($data['offer_response_deadline'] ?? null),
+            rejectedAt: $data['rejected_at'] ?? null,
+            offerExtendedAt: $data['offer_extended_at'] ?? null,
+            offerAmount: $data['offer_amount'] ?? null,
+            offerResponseDeadline: $data['offer_response_deadline'] ?? null,
             notes: $data['notes'] ?? null,
             byUserId: $byUserId,
         );
@@ -120,14 +111,5 @@ final readonly class TransitionData
     public function isWithdrawal(): bool
     {
         return $this->toStatus === ApplicationStatusEnum::Withdrawn;
-    }
-
-    private static function parseDate(CarbonInterface|string|null $value): ?CarbonInterface
-    {
-        if ($value === null) {
-            return null;
-        }
-
-        return $value instanceof CarbonInterface ? $value : Date::parse($value);
     }
 }

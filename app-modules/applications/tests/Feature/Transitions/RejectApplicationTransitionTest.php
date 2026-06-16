@@ -9,6 +9,7 @@ use He4rt\Applications\Models\Application;
 use He4rt\Applications\Services\Transitions\RejectApplicationTransition;
 use He4rt\Applications\Services\Transitions\TransitionData;
 use He4rt\Users\User;
+use Illuminate\Support\Facades\Date;
 
 describe('RejectApplicationTransition', function (): void {
     it('canChange() returns false (terminal state)', function (): void {
@@ -33,9 +34,9 @@ describe('RejectApplicationTransition', function (): void {
 
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::Rejected,
-            'rejection_reason_category' => RejectionReasonCategoryEnum::Compensation->value,
+            'rejection_reason_category' => RejectionReasonCategoryEnum::Compensation,
             'rejection_reason_details' => 'Salary expectations too high',
-            'rejected_at' => '2026-02-10 14:00:00',
+            'rejected_at' => Date::parse('2026-02-10 14:00:00'),
         ], $user->id);
 
         $application->current_step->handle($data);
@@ -71,8 +72,8 @@ describe('RejectApplicationTransition', function (): void {
 
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::Rejected,
-            'rejection_reason_category' => RejectionReasonCategoryEnum::Location->value,
-            'rejected_at' => '2026-01-20 08:30:00',
+            'rejection_reason_category' => RejectionReasonCategoryEnum::Location,
+            'rejected_at' => Date::parse('2026-01-20 08:30:00'),
         ], $user->id);
 
         $application->current_step->handle($data);
@@ -89,7 +90,7 @@ describe('RejectApplicationTransition', function (): void {
 
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::Rejected,
-            'rejection_reason_category' => RejectionReasonCategoryEnum::Other->value,
+            'rejection_reason_category' => RejectionReasonCategoryEnum::Other,
         ], $user->id);
 
         $application->current_step->handle($data);
