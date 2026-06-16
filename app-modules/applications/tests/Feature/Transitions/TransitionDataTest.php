@@ -55,23 +55,6 @@ describe('TransitionData::fromArray()', function (): void {
             ->and($data->rejectedAt)->toBeInstanceOf(CarbonInterface::class);
     });
 
-    it('accepts status as alias for to_status', function (): void {
-        $data = TransitionData::fromArray([
-            'status' => ApplicationStatusEnum::InReview,
-        ], 'user-id');
-
-        expect($data->toStatus)->toBe(ApplicationStatusEnum::InReview);
-    });
-
-    it('prefers to_status over status when both are present', function (): void {
-        $data = TransitionData::fromArray([
-            'to_status' => ApplicationStatusEnum::Hired,
-            'status' => ApplicationStatusEnum::Rejected,
-        ], 'user-id');
-
-        expect($data->toStatus)->toBe(ApplicationStatusEnum::Hired);
-    });
-
     it('carries the offer amount as a float', function (): void {
         $data = TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::OfferExtended,

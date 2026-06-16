@@ -28,7 +28,6 @@ final readonly class TransitionData
     /**
      * @param  array{
      *     to_status?: ApplicationStatusEnum|null,
-     *     status?: ApplicationStatusEnum|null,
      *     to_stage_id?: string|null,
      *     advance_stage?: bool|null,
      *     rejection_reason_category?: RejectionReasonCategoryEnum|null,
@@ -42,9 +41,9 @@ final readonly class TransitionData
      */
     public static function fromArray(array $data, ?string $byUserId = null): self
     {
-        $toStatus = $data['to_status'] ?? $data['status'] ?? null;
+        $toStatus = $data['to_status'] ?? null;
 
-        throw_if($toStatus === null, InvalidArgumentException::class, 'TransitionData requires a "to_status" or "status".');
+        throw_if($toStatus === null, InvalidArgumentException::class, 'TransitionData requires a "to_status".');
 
         return new self(
             toStatus: $toStatus,
