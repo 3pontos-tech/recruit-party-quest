@@ -9,6 +9,7 @@ use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Exceptions\InvalidTransitionException;
 use He4rt\Applications\Exceptions\MissingTransitionDataException;
 use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
+use He4rt\Recruitment\Stages\Models\Stage;
 
 final class InProgressTransition extends AbstractApplicationTransition
 {
@@ -94,9 +95,26 @@ final class InProgressTransition extends AbstractApplicationTransition
     private function resolveTargetStage(TransitionData $data): ?string
     {
         return match (true) {
-            $data->toStageId !== null => $data->toStageId,
+            $data->toStageId !== null => $this->validateExplicitStage($data->toStageId)->getKey(),
             $data->advanceStage === true => $this->application->getNextStage()?->getKey(),
             default => null,
         };
+    }
+
+    private function validateExplicitStage(string $stageId): Stage
+    {
+        $currentOrder = $this->application->currentStage?->display_order ?? -1; // @phpstan-ignore nullsafe.neverNull
+
+        $stage = ($this->application->requisition?->stages ?? collect()) // @phpstan-ignore nullsafe.neverNull
+            ->firstWhere('id', $stageId);
+
+        throw_unless(
+            $stage instanceof Stage
+                && $stage->active
+                && $stage->display_order > $currentOrder,
+            InvalidTransitionException::invalidTargetStage($stageId),
+        );
+
+        return $stage;
     }
 }
