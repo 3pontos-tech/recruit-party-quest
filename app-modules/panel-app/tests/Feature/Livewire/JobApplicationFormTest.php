@@ -3,13 +3,14 @@
 declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
+use He4rt\App\Livewire\JobApplicationForm;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
+use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Models\Stage;
-use He4rt\Screening\Livewire\JobApplicationForm;
 use He4rt\Screening\Models\ScreeningQuestion;
 use He4rt\Screening\Models\ScreeningResponse;
 use Illuminate\Http\UploadedFile;
@@ -26,6 +27,7 @@ beforeEach(function (): void {
     actingAs($user);
     filament()->setCurrentPanel(FilamentPanel::App->value);
     $this->jobRequisition = JobRequisition::factory()->create();
+    JobPosting::factory()->for($this->jobRequisition, 'jobRequisition')->create();
 
     $this->question = ScreeningQuestion::factory()
         ->for($this->jobRequisition, 'screenable')
@@ -92,6 +94,7 @@ test('source question are required', function (): void {
 
 it('should submit successfully when requisition has no screening questions', function (): void {
     $requisition = JobRequisition::factory()->create();
+    JobPosting::factory()->for($requisition, 'jobRequisition')->create();
 
     $livewire = livewire(JobApplicationForm::class, ['requisition' => $requisition])
         ->set('source', CandidateSourceEnum::LinkedIn)
@@ -115,6 +118,7 @@ it('should submit successfully when requisition has no screening questions', fun
 
 it('should submit successfully and save screening responses', function (): void {
     $requisition = JobRequisition::factory()->create();
+    JobPosting::factory()->for($requisition, 'jobRequisition')->create();
     $question = ScreeningQuestion::factory()
         ->for($requisition, 'screenable')
         ->text()
@@ -148,6 +152,7 @@ it('should submit successfully and save screening responses', function (): void 
 
 it('should assign first stage to application when stages exist', function (): void {
     $requisition = JobRequisition::factory()->create();
+    JobPosting::factory()->for($requisition, 'jobRequisition')->create();
     Stage::factory()->create([
         'job_requisition_id' => $requisition->id,
         'team_id' => $requisition->team_id,

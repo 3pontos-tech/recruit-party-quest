@@ -14,10 +14,7 @@
 
     $hasApplied = false;
     if (auth()->check() && auth()->user()->candidate) {
-        $hasApplied = $jobRequisition
-            ->applications()
-            ->where('candidate_id', auth()->user()->candidate->id)
-            ->exists();
+        $hasApplied = $jobRequisition->applicationFrom(auth()->user()->candidate) !== null;
     }
 @endphp
 
@@ -226,7 +223,7 @@
                     show="showApplicationModal"
                     :title="__('panel-app::filament.pages.job_description.apply_modal_title', ['title' => $posting->title])"
                 >
-                    <livewire:screening.job-application-form :requisition="$jobRequisition" />
+                    <livewire:panel-app.job-application-form :requisition="$jobRequisition" />
                 </x-he4rt::modal>
             @endif
         @endif
