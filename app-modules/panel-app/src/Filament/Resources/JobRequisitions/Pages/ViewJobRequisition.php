@@ -35,9 +35,7 @@ class ViewJobRequisition extends ViewRecord
         $user = auth()->user();
 
         if ($user?->candidate) {
-            $application = $user->candidate->applications()
-                ->where('requisition_id', $this->record->getKey())
-                ->first();
+            $application = $this->record->applicationFrom($user->candidate);
 
             if ($application) {
                 $this->redirect(ApplicationResource::getUrl('view', ['record' => $application]));
@@ -56,7 +54,7 @@ class ViewJobRequisition extends ViewRecord
             return;
         }
 
-        if ($action->hasApplied($this->record, $user->candidate)) {
+        if ($this->record->applicationFrom($user->candidate)) {
             return;
         }
 

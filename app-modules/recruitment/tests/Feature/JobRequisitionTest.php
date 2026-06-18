@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use He4rt\Applications\Models\Application;
+use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Actions\StoreJobRequisitionAction;
 use He4rt\Recruitment\Requisitions\DTOs\JobRequisitionDTO;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
@@ -269,4 +271,21 @@ it('factory produces valid employment_type and work_schedule', function (): void
         expect($r->employment_type === null || $r->employment_type instanceof EmploymentTypeEnum)->toBeTrue()
             ->and($r->work_schedule === null || $r->work_schedule instanceof WorkScheduleEnum)->toBeTrue();
     });
+});
+
+it('returns the candidate application for the requisition or null when none exists', function (): void {
+    $candidate = Candidate::factory()->create();
+    $requisition = JobRequisition::factory()->create();
+
+    expect($requisition->applicationFrom($candidate))->toBeNull();
+
+    $application = Application::factory()->create([
+        'requisition_id' => $requisition->getKey(),
+        'candidate_id' => $candidate->getKey(),
+        'team_id' => $requisition->team_id,
+    ]);
+
+    expect($requisition->applicationFrom($candidate))
+        ->toBeInstanceOf(Application::class)
+        ->and($requisition->applicationFrom($candidate)->getKey())->toBe($application->getKey());
 });

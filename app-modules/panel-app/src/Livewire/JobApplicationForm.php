@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace He4rt\App\Livewire;
 
 use Filament\Notifications\Notification;
-use He4rt\Applications\DTOs\ApplicationDTO;
-use He4rt\Applications\Enums\ApplicationStatusEnum;
+use He4rt\Applications\Actions\ApplyToJobRequisitionAction;
 use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Models\Application;
-use He4rt\Applications\Services\Applications\StoreApplication;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Screening\Collections\ScreeningResponseCollection;
@@ -67,13 +65,8 @@ class JobApplicationForm extends Component
                 ? $this->source
                 : CandidateSourceEnum::from($this->source);
 
-            $this->application = resolve(StoreApplication::class)->execute(new ApplicationDTO(
-                requisitionId: $this->requisition->getKey(),
-                candidateId: $candidate->getKey(),
-                teamId: $this->requisition->team_id,
-                status: ApplicationStatusEnum::New,
-                source: $source,
-            ));
+            $this->application = resolve(ApplyToJobRequisitionAction::class)
+                ->execute($this->requisition, $candidate, $source);
         }
 
         event(new ScreeningResponsesSubmitted($this->application, $this->buildResponseCollection()));

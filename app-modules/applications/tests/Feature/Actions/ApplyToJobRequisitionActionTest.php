@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use He4rt\Applications\Actions\ApplyToJobRequisitionAction;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
+use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Events\ApplicationSubmitted;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
@@ -12,34 +13,22 @@ use Illuminate\Support\Facades\Event;
 
 use function Pest\Laravel\assertDatabaseHas;
 
-it('applies a candidate by delegating to StoreApplication and dispatches the event', function (): void {
+it('creates an application and dispatches ApplicationSubmitted', function (): void {
     Event::fake([ApplicationSubmitted::class]);
 
     $candidate = Candidate::factory()->create();
     $requisition = JobRequisition::factory()->create();
 
-    $application = resolve(ApplyToJobRequisitionAction::class)->execute($requisition, $candidate);
+    $application = resolve(ApplyToJobRequisitionAction::class)
+        ->execute($requisition, $candidate, CandidateSourceEnum::LinkedIn);
 
     assertDatabaseHas(Application::class, [
         'id' => $application->getKey(),
         'requisition_id' => $requisition->getKey(),
         'candidate_id' => $candidate->getKey(),
         'status' => ApplicationStatusEnum::New->value,
+        'source' => CandidateSourceEnum::LinkedIn->value,
     ]);
 
-    Event::assertDispatched(ApplicationSubmitted::class);
-});
-
-it('reports whether a candidate already applied', function (): void {
-    Event::fake([ApplicationSubmitted::class]);
-
-    $candidate = Candidate::factory()->create();
-    $requisition = JobRequisition::factory()->create();
-    $action = resolve(ApplyToJobRequisitionAction::class);
-
-    expect($action->hasApplied($requisition, $candidate))->toBeFalse();
-
-    $action->execute($requisition, $candidate);
-
-    expect($action->hasApplied($requisition, $candidate))->toBeTrue();
+    Event::assertDispatched(fn (ApplicationSubmitted $event): bool => $event->application->is($application));
 });

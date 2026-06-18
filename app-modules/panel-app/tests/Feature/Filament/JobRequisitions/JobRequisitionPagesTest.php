@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use He4rt\App\Filament\Resources\JobRequisitions\Pages\ListJobRequisitions;
 use He4rt\App\Filament\Resources\JobRequisitions\Pages\ViewJobRequisition;
-use He4rt\Applications\Actions\ApplyToJobRequisitionAction;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
@@ -113,8 +112,7 @@ describe('ViewJobRequisition Page', function (): void {
 
         expect($this->candidate->applications()->count())->toBe(1);
 
-        $action = resolve(ApplyToJobRequisitionAction::class);
-        expect($action->hasApplied($this->jobRequisition, $this->candidate))->toBeTrue();
+        expect($this->jobRequisition->applicationFrom($this->candidate))->not->toBeNull();
     });
 
     it('should handle applyDirectly method for candidates', function (): void {
@@ -131,10 +129,8 @@ describe('ViewJobRequisition Page', function (): void {
             ->for($this->jobRequisition, 'requisition')
             ->create();
 
-        $action = resolve(ApplyToJobRequisitionAction::class);
-
-        expect($action->hasApplied($this->jobRequisition, $this->candidate))
-            ->toBeTrue();
+        expect($this->jobRequisition->applicationFrom($this->candidate))
+            ->not->toBeNull();
     });
 
     it('should handle user without candidate profile', function (): void {

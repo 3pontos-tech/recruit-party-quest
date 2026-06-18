@@ -14,10 +14,7 @@
 
     $hasApplied = false;
     if (auth()->check() && auth()->user()->candidate) {
-        $hasApplied = $jobRequisition
-            ->applications()
-            ->where('candidate_id', auth()->user()->candidate->id)
-            ->exists();
+        $hasApplied = $jobRequisition->applicationFrom(auth()->user()->candidate) !== null;
     }
 @endphp
 

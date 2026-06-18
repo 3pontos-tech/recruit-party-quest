@@ -7,6 +7,7 @@ namespace He4rt\Recruitment\Requisitions\Models;
 use AlizHarb\ActivityLog\Contracts\HasActivityLogTitle;
 use App\Models\BaseModel;
 use He4rt\Applications\Models\Application;
+use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Database\Factories\JobRequisitionFactory;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
@@ -150,6 +151,19 @@ class JobRequisition extends BaseModel implements HasActivityLogTitle
     public function applications(): HasMany
     {
         return $this->hasMany(Application::class, 'requisition_id');
+    }
+
+    /**
+     * The candidate's application for this requisition, if any.
+     *
+     * Single source of truth for the "has this candidate already applied?" check
+     * shared by the apply guard, the page redirect, and the job description view.
+     */
+    public function applicationFrom(Candidate $candidate): ?Application
+    {
+        return $this->applications()
+            ->where('candidate_id', $candidate->getKey())
+            ->first();
     }
 
     public function getNextStage(Stage $currentStage): ?Stage
