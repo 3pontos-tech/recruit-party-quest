@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\App;
 
 use He4rt\App\Livewire\ContactForm;
+use He4rt\App\Livewire\JobApplicationForm;
 use He4rt\App\Livewire\JobRecommendations;
 use He4rt\App\Livewire\Jobs\BookmarkJobButton;
 use He4rt\App\Livewire\Jobs\SavedJobsWidget;
@@ -30,6 +31,7 @@ class PanelAppServiceProvider extends ServiceProvider
     {
         Livewire::component('panel-app.jobs.bookmark-job-button', BookmarkJobButton::class);
         Livewire::component('panel-app.jobs.saved-jobs-widget', SavedJobsWidget::class);
+        Livewire::component('panel-app.job-application-form', JobApplicationForm::class);
         Livewire::component('contact-form', ContactForm::class);
         Livewire::component('user-latest-applications', UserLatestApplications::class);
         Livewire::component('resume-file-upload-progress', ResumeFileUploadProgress::class);

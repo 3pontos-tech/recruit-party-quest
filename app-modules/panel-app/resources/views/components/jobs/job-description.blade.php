@@ -226,7 +226,7 @@
                     show="showApplicationModal"
                     :title="__('panel-app::filament.pages.job_description.apply_modal_title', ['title' => $posting->title])"
                 >
-                    <livewire:screening.job-application-form :requisition="$jobRequisition" />
+                    <livewire:panel-app.job-application-form :requisition="$jobRequisition" />
                 </x-he4rt::modal>
             @endif
         @endif

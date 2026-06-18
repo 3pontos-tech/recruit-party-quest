@@ -3,14 +3,15 @@
 declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
+use He4rt\App\Livewire\JobApplicationForm;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
+use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Screening\Events\ScreeningEvaluated;
-use He4rt\Screening\Livewire\JobApplicationForm;
 use He4rt\Screening\Models\ScreeningQuestion;
 use He4rt\Screening\Models\ScreeningResponse;
 use Illuminate\Support\Facades\Event;
@@ -26,6 +27,7 @@ beforeEach(function (): void {
 
     // JobRequisitionObserver::created() já cria os 8 stages ordenados.
     $this->requisition = JobRequisition::factory()->create(['auto_screening_transition' => true]);
+    JobPosting::factory()->for($this->requisition, 'jobRequisition')->create();
 
     $this->question = ScreeningQuestion::factory()
         ->yesNo()

@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
+use He4rt\App\Livewire\JobApplicationForm;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Models\Stage;
-use He4rt\Screening\Livewire\JobApplicationForm;
 use He4rt\Screening\Models\ScreeningQuestion;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
