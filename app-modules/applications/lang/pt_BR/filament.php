@@ -130,4 +130,21 @@ return [
             ],
         ],
     ],
+
+    'emails' => [
+        'application_received' => [
+            'subject' => 'Recebemos sua candidatura — :job',
+            'greeting' => 'Olá :name,',
+            'line' => 'Recebemos sua candidatura para :job. Você pode acompanhar o andamento no seu painel.',
+            'action' => 'Ver candidatura',
+        ],
+    ],
+
+    'notifications' => [
+        'application_received' => [
+            'title' => 'Candidatura recebida',
+            'body' => 'Recebemos sua candidatura para :job.',
+            'view_button' => 'Ver candidatura',
+        ],
+    ],
 ];

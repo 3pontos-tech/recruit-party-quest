@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace He4rt\Applications\Services\Applications;
 
 use He4rt\Applications\DTOs\ApplicationDTO;
+use He4rt\Applications\Events\ApplicationSubmitted;
 use He4rt\Applications\Models\Application;
 
 final class StoreApplication
@@ -22,6 +23,8 @@ final class StoreApplication
         $application->update([
             'current_stage_id' => $application->first_stage?->getKey(),
         ]);
+
+        event(new ApplicationSubmitted($application));
 
         return $application;
     }
