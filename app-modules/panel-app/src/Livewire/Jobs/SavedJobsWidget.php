@@ -45,7 +45,7 @@ class SavedJobsWidget extends Component implements HasActions, HasSchemas
             ->icon(Heroicon::Bookmark)
             ->iconButton()
             ->color('gray')
-            ->badge($this->savedJobsCount ?: null)
+            ->badge($this->savedJobsCount > 0 ? (string) $this->savedJobsCount : null)
             ->extraAttributes([
                 'aria-label' => __('panel-app::filament.components.saved_jobs_widget.aria_label'),
                 'data-test' => 'saved-jobs-badge',
