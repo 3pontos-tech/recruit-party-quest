@@ -154,7 +154,6 @@ final class ChatOrchestrator
             return '';
         }
 
-        /** @var HasGuideline $currentTask */
         $currentTask = $response->first();
         if (array_key_exists(1, $response->toArray())) {
             $nextTask = $response->get(1);
