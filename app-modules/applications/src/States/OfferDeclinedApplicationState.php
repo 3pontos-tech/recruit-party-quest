@@ -2,18 +2,12 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Applications\Services\Transitions;
+namespace He4rt\Applications\States;
 
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 
-/**
- * Handle candidate-initiated or admin-initiated withdrawals.
- */
-final class WithdrawnTransition extends AbstractApplicationTransition
+final class OfferDeclinedApplicationState extends ApplicationState
 {
-    /**
-     * @return array<string,string|null>
-     */
     public function choices(): array
     {
         return [];
@@ -29,7 +23,7 @@ final class WithdrawnTransition extends AbstractApplicationTransition
     public function processStep(TransitionData $data): void
     {
         $this->application->update([
-            'status' => ApplicationStatusEnum::Withdrawn,
+            'status' => ApplicationStatusEnum::OfferDeclined,
         ]);
     }
 

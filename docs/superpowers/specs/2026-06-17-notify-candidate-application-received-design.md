@@ -15,7 +15,7 @@ de candidatura (decididas durante o brainstorm — ver §2): **consolidar a cria
 ## 1. Contexto
 
 Hoje **nenhuma** transição da candidatura notifica o candidato — todos os `notify()` das transições
-(`AbstractApplicationTransition` e subclasses) estão vazios. O RH decidiu (respostas de 01/06/2026) que,
+(`ApplicationState` e subclasses) estão vazios. O RH decidiu (respostas de 01/06/2026) que,
 **por ora**, o único momento que gera aviso ao candidato é a **confirmação de candidatura recebida**
 (decisão 3.1), entregue em **dois canais** — painel in-app (`database`) **e** e-mail (decisão 3.2).
 Reprovações **nunca** são notificadas (decisão 3.3), nem as manuais nem a auto-reprovação por knockout.
@@ -26,11 +26,11 @@ quando o RH liberar (ex.: #198 proposta).
 
 ### Correções de premissas da issue (validadas contra o código atual)
 
-| Premissa da issue                         | Realidade no código                                                                                                                                                            | Efeito no design                                            |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
-| "Canal `database` nunca foi usado"        | **Falso.** `MentionedInCommentNotification` já usa `['mail','database']` com `toDatabase()` via `FilamentNotification::make()->...->getDatabaseMessage()`.                     | **Reusamos** o padrão.                                      |
-| "Candidato é `Notifiable`"                | Quem é `Notifiable` é o `User`, não o `Candidate`.                                                                                                                             | Alvo = `$application->candidate->user`.                     |
-| "Disparar via `ApplicationStatusChanged`" | Esse evento só dispara com `fromStatus !== toStatus`. A candidatura **nasce** em `New` — nunca dispara na criação. `NewTransition` modela a **saída** de `New`, não a entrada. | Gatilho = evento de domínio próprio `ApplicationSubmitted`. |
+| Premissa da issue                         | Realidade no código                                                                                                                                                                  | Efeito no design                                            |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| "Canal `database` nunca foi usado"        | **Falso.** `MentionedInCommentNotification` já usa `['mail','database']` com `toDatabase()` via `FilamentNotification::make()->...->getDatabaseMessage()`.                           | **Reusamos** o padrão.                                      |
+| "Candidato é `Notifiable`"                | Quem é `Notifiable` é o `User`, não o `Candidate`.                                                                                                                                   | Alvo = `$application->candidate->user`.                     |
+| "Disparar via `ApplicationStatusChanged`" | Esse evento só dispara com `fromStatus !== toStatus`. A candidatura **nasce** em `New` — nunca dispara na criação. `NewApplicationState` modela a **saída** de `New`, não a entrada. | Gatilho = evento de domínio próprio `ApplicationSubmitted`. |
 
 ---
 

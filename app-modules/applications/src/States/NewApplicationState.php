@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Applications\Services\Transitions;
+namespace He4rt\Applications\States;
 
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Exceptions\InvalidTransitionException;
 use He4rt\Recruitment\Stages\Models\Stage;
 
-final class NewTransition extends AbstractApplicationTransition
+final class NewApplicationState extends ApplicationState
 {
     public function choices(): array
     {

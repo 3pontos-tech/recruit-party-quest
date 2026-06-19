@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Applications\Services\Transitions;
+namespace He4rt\Applications\States;
 
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 
-final class HiredTransition extends AbstractApplicationTransition
+final class HiredApplicationState extends ApplicationState
 {
     public function choices(): array
     {

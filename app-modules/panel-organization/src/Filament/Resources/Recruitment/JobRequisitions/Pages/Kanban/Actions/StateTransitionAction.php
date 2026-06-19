@@ -15,7 +15,7 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Enums\Width;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
-use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Applications\States\TransitionData;
 use He4rt\Feedback\Actions\StoreEvaluationAction;
 use He4rt\Feedback\DTOs\CriteriaScoresDTO;
 use He4rt\Feedback\DTOs\EvaluationDTO;
@@ -37,8 +37,8 @@ class StateTransitionAction extends Action
             ->icon('heroicon-o-play')
             ->extraAttributes(fn () => ['class' => 'w-full'])
             ->modalWidth(Width::FourExtraLarge)
-            ->disabled(fn (Application $record): bool => ! $record->current_step->canChange())
-            ->tooltip(fn (Application $record): ?string => $record->current_step->canChange() ? null : (string) __('applications::filament.actions.change_status.no_transitions_tooltip'))
+            ->disabled(fn (Application $record): bool => ! $record->current_state->canChange())
+            ->tooltip(fn (Application $record): ?string => $record->current_state->canChange() ? null : (string) __('applications::filament.actions.change_status.no_transitions_tooltip'))
             ->schema($this->buildSchema(...))
             ->action($this->processAction(...))
             ->requiresConfirmation();
@@ -66,7 +66,7 @@ class StateTransitionAction extends Action
 
         $userId = auth()->id();
         $transitionData = TransitionData::fromArray($data, $userId !== null ? (string) $userId : null);
-        $record->current_step->handle($transitionData);
+        $record->current_state->handle($transitionData);
 
         Notification::make()
             ->success()
@@ -108,7 +108,7 @@ class StateTransitionAction extends Action
     private function buildSchema(Application $record): array
     {
         $choices = Arr::except(
-            $record->current_step->choices(),
+            $record->current_state->choices(),
             [ApplicationStatusEnum::Rejected->value],
         );
 

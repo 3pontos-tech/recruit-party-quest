@@ -5,23 +5,23 @@ declare(strict_types=1);
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Applications\Models\ApplicationStageHistory;
-use He4rt\Applications\Services\Transitions\HiredTransition;
-use He4rt\Applications\Services\Transitions\OfferDeclinedTransition;
-use He4rt\Applications\Services\Transitions\TransitionData;
-use He4rt\Applications\Services\Transitions\WithdrawnTransition;
+use He4rt\Applications\States\HiredApplicationState;
+use He4rt\Applications\States\OfferDeclinedApplicationState;
+use He4rt\Applications\States\TransitionData;
+use He4rt\Applications\States\WithdrawnApplicationState;
 use He4rt\Users\User;
 
-describe('HiredTransition', function (): void {
+describe('HiredApplicationState', function (): void {
     it('canChange() returns false (terminal state)', function (): void {
         $application = Application::factory()->create(['status' => ApplicationStatusEnum::Hired]);
-        $transition = new HiredTransition($application);
+        $transition = new HiredApplicationState($application);
 
         expect($transition->canChange())->toBeFalse();
     });
 
     it('choices() returns empty array (terminal state)', function (): void {
         $application = Application::factory()->create(['status' => ApplicationStatusEnum::Hired]);
-        $transition = new HiredTransition($application);
+        $transition = new HiredApplicationState($application);
 
         expect($transition->choices())->toBe([]);
     });
@@ -36,7 +36,7 @@ describe('HiredTransition', function (): void {
             'to_status' => ApplicationStatusEnum::Hired,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect($application->fresh()->status)->toBe(ApplicationStatusEnum::Hired);
     });
@@ -51,23 +51,23 @@ describe('HiredTransition', function (): void {
             'to_status' => ApplicationStatusEnum::Hired,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect(ApplicationStageHistory::query()->where('application_id', $application->id)->count())->toBe(1);
     });
 });
 
-describe('WithdrawnTransition', function (): void {
+describe('WithdrawnApplicationState', function (): void {
     it('canChange() returns false (terminal state)', function (): void {
         $application = Application::factory()->create(['status' => ApplicationStatusEnum::Withdrawn]);
-        $transition = new WithdrawnTransition($application);
+        $transition = new WithdrawnApplicationState($application);
 
         expect($transition->canChange())->toBeFalse();
     });
 
     it('choices() returns empty array (terminal state)', function (): void {
         $application = Application::factory()->create(['status' => ApplicationStatusEnum::Withdrawn]);
-        $transition = new WithdrawnTransition($application);
+        $transition = new WithdrawnApplicationState($application);
 
         expect($transition->choices())->toBe([]);
     });
@@ -82,7 +82,7 @@ describe('WithdrawnTransition', function (): void {
             'to_status' => ApplicationStatusEnum::Withdrawn,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect($application->fresh()->status)->toBe(ApplicationStatusEnum::Withdrawn);
     });
@@ -97,23 +97,23 @@ describe('WithdrawnTransition', function (): void {
             'to_status' => ApplicationStatusEnum::Withdrawn,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect(ApplicationStageHistory::query()->where('application_id', $application->id)->count())->toBe(1);
     });
 });
 
-describe('OfferDeclinedTransition', function (): void {
+describe('OfferDeclinedApplicationState', function (): void {
     it('canChange() returns false (terminal state)', function (): void {
         $application = Application::factory()->create(['status' => ApplicationStatusEnum::OfferDeclined]);
-        $transition = new OfferDeclinedTransition($application);
+        $transition = new OfferDeclinedApplicationState($application);
 
         expect($transition->canChange())->toBeFalse();
     });
 
     it('choices() returns empty array (terminal state)', function (): void {
         $application = Application::factory()->create(['status' => ApplicationStatusEnum::OfferDeclined]);
-        $transition = new OfferDeclinedTransition($application);
+        $transition = new OfferDeclinedApplicationState($application);
 
         expect($transition->choices())->toBe([]);
     });
@@ -128,7 +128,7 @@ describe('OfferDeclinedTransition', function (): void {
             'to_status' => ApplicationStatusEnum::OfferDeclined,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect($application->fresh()->status)->toBe(ApplicationStatusEnum::OfferDeclined);
     });
@@ -143,7 +143,7 @@ describe('OfferDeclinedTransition', function (): void {
             'to_status' => ApplicationStatusEnum::OfferDeclined,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect(ApplicationStageHistory::query()->where('application_id', $application->id)->count())->toBe(1);
     });

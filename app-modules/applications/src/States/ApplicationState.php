@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Applications\Services\Transitions;
+namespace He4rt\Applications\States;
 
 use He4rt\Applications\Events\ApplicationStatusChanged;
 use He4rt\Applications\Models\Application;
@@ -11,7 +11,7 @@ use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\DB;
 
-abstract class AbstractApplicationTransition
+abstract class ApplicationState
 {
     public function __construct(public Application $application) {}
 

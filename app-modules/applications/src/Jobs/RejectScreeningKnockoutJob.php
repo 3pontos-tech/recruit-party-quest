@@ -7,7 +7,7 @@ namespace He4rt\Applications\Jobs;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Models\Application;
-use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Applications\States\TransitionData;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -46,6 +46,6 @@ final class RejectScreeningKnockoutJob implements ShouldQueue
             'notes' => __('screening::messages.knockout_auto_rejected'),
         ]);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
     }
 }

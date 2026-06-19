@@ -115,7 +115,7 @@ Withdrawn     → Candidate withdrew
   `isTerminal()`: the _positive_ finals (`OfferAccepted`/`Hired`) also forbid a
   rejection without being a terminal stop. Once an offer is extended the negative
   path is a _declined_ offer, not a rejection — the state machine
-  (`OfferExtendedTransition`) only models `OfferAccepted`/`OfferDeclined`/`Withdrawn`,
+  (`OfferExtendedApplicationState`) only models `OfferAccepted`/`OfferDeclined`/`Withdrawn`,
   so this guard is aligned to it. Drives the disabled state of the reject action.
 
 ### CandidateSourceEnum

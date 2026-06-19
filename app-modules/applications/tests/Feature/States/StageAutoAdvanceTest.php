@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
-use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Applications\States\TransitionData;
 use He4rt\Recruitment\Stages\Enums\StageTypeEnum;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Users\User;
@@ -19,7 +19,7 @@ describe('stage auto-advances to mirror the status on the funnel ends', function
             'offer_amount' => 9500,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         $fresh = $application->fresh()->load('currentStage');
         expect($fresh->status)->toBe(ApplicationStatusEnum::OfferExtended)
@@ -34,7 +34,7 @@ describe('stage auto-advances to mirror the status on the funnel ends', function
             'to_status' => ApplicationStatusEnum::Hired,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         $fresh = $application->fresh()->load('currentStage');
         expect($fresh->status)->toBe(ApplicationStatusEnum::Hired)
@@ -50,7 +50,7 @@ describe('stage auto-advances to mirror the status on the funnel ends', function
             'to_status' => ApplicationStatusEnum::Withdrawn,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         $fresh = $application->fresh();
         expect($fresh->status)->toBe(ApplicationStatusEnum::Withdrawn)
@@ -79,7 +79,7 @@ describe('stage auto-advances to mirror the status on the funnel ends', function
             'offer_amount' => 5000,
         ], $user->id);
 
-        Application::query()->findOrFail($application->id)->current_step->handle($data);
+        Application::query()->findOrFail($application->id)->current_state->handle($data);
 
         expect($application->fresh()->current_stage_id)->toBe($offerStage->id);
     });
@@ -98,7 +98,7 @@ describe('stage auto-advances to mirror the status on the funnel ends', function
             'to_status' => ApplicationStatusEnum::Hired,
         ], $user->id);
 
-        expect(fn () => $reloaded->current_step->handle($data))->not->toThrow(Exception::class);
+        expect(fn () => $reloaded->current_state->handle($data))->not->toThrow(Exception::class);
 
         $fresh = $application->fresh();
         expect($fresh->status)->toBe(ApplicationStatusEnum::Hired)

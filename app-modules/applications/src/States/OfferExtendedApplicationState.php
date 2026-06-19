@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace He4rt\Applications\Services\Transitions;
+namespace He4rt\Applications\States;
 
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Exceptions\InvalidTransitionException;
 
-final class OfferExtendedTransition extends AbstractApplicationTransition
+final class OfferExtendedApplicationState extends ApplicationState
 {
     public function choices(): array
     {
@@ -35,7 +35,7 @@ final class OfferExtendedTransition extends AbstractApplicationTransition
      *
      * The offer fields (offer_extended_at, offer_extended_by, offer_amount,
      * offer_response_deadline) are persisted earlier, when the offer is created in
-     * InProgressTransition::processOfferExtension() on the InProgress -> OfferExtended
+     * InProgressApplicationState::processOfferExtension() on the InProgress -> OfferExtended
      * step. This step intentionally updates only the status so it never overwrites
      * those values. Fields are collected in StateTransitionAction and carried by
      * TransitionData.

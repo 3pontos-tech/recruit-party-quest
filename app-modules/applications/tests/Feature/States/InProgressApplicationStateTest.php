@@ -7,23 +7,23 @@ use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Exceptions\InvalidTransitionException;
 use He4rt\Applications\Exceptions\MissingTransitionDataException;
 use He4rt\Applications\Models\Application;
-use He4rt\Applications\Services\Transitions\InProgressTransition;
-use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Applications\States\InProgressApplicationState;
+use He4rt\Applications\States\TransitionData;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\Date;
 
-describe('InProgressTransition', function (): void {
+describe('InProgressApplicationState', function (): void {
     it('canChange() returns true', function (): void {
         $application = Application::factory()->withStatus(ApplicationStatusEnum::InProgress)->create();
-        $transition = new InProgressTransition($application);
+        $transition = new InProgressApplicationState($application);
 
         expect($transition->canChange())->toBeTrue();
     });
 
     it('choices() contains InProgress, OfferExtended, Rejected and Withdrawn', function (): void {
         $application = Application::factory()->withStatus(ApplicationStatusEnum::InProgress)->create();
-        $transition = new InProgressTransition($application);
+        $transition = new InProgressApplicationState($application);
 
         expect(array_keys($transition->choices()))->toContain(
             ApplicationStatusEnum::InProgress->value,
@@ -55,7 +55,7 @@ describe('InProgressTransition', function (): void {
             'to_stage_id' => $targetStage->id,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         $application->refresh();
 
@@ -85,7 +85,7 @@ describe('InProgressTransition', function (): void {
             'to_stage_id' => $target->id,
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))
+        expect(fn () => $application->current_state->handle($data))
             ->toThrow(InvalidTransitionException::class);
 
         expect($application->fresh()->current_stage_id)->toBe($current->id);
@@ -116,7 +116,7 @@ describe('InProgressTransition', function (): void {
             'to_stage_id' => $inactive->id,
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))
+        expect(fn () => $application->current_state->handle($data))
             ->toThrow(InvalidTransitionException::class);
 
         expect($application->fresh()->current_stage_id)->toBe($current->id);
@@ -145,7 +145,7 @@ describe('InProgressTransition', function (): void {
             'to_stage_id' => $foreignStage->id,
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))
+        expect(fn () => $application->current_state->handle($data))
             ->toThrow(InvalidTransitionException::class);
 
         expect($application->fresh()->current_stage_id)->toBe($current->id);
@@ -164,7 +164,7 @@ describe('InProgressTransition', function (): void {
             'advance_stage' => true,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect($application->fresh()->current_stage_id)->toBe($stage->id);
     });
@@ -182,7 +182,7 @@ describe('InProgressTransition', function (): void {
             'advance_stage' => true,
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))->toThrow(InvalidTransitionException::class);
+        expect(fn () => $application->current_state->handle($data))->toThrow(InvalidTransitionException::class);
     });
 
     it('InProgress → OfferExtended writes all offer fields', function (): void {
@@ -196,7 +196,7 @@ describe('InProgressTransition', function (): void {
             'offer_response_deadline' => Date::parse('2026-03-08 00:00:00'),
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         $application->refresh();
 
@@ -216,7 +216,7 @@ describe('InProgressTransition', function (): void {
             'to_status' => ApplicationStatusEnum::OfferExtended,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect($application->fresh()->offer_extended_at->isAfter($before))->toBeTrue();
     });
@@ -229,7 +229,7 @@ describe('InProgressTransition', function (): void {
             'to_status' => ApplicationStatusEnum::Rejected,
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))
+        expect(fn () => $application->current_state->handle($data))
             ->toThrow(MissingTransitionDataException::class);
     });
 
@@ -243,7 +243,7 @@ describe('InProgressTransition', function (): void {
             'rejection_reason_details' => 'Not a good cultural fit',
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         $application->refresh();
 
@@ -262,7 +262,7 @@ describe('InProgressTransition', function (): void {
             'to_status' => ApplicationStatusEnum::Withdrawn,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect($application->fresh()->status)->toBe(ApplicationStatusEnum::Withdrawn);
     });
@@ -275,6 +275,6 @@ describe('InProgressTransition', function (): void {
             'to_status' => ApplicationStatusEnum::Hired,
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))->toThrow(InvalidTransitionException::class);
+        expect(fn () => $application->current_state->handle($data))->toThrow(InvalidTransitionException::class);
     });
 });

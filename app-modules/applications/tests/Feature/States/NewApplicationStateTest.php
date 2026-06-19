@@ -6,22 +6,22 @@ use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Exceptions\InvalidTransitionException;
 use He4rt\Applications\Models\Application;
-use He4rt\Applications\Services\Transitions\NewTransition;
-use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Applications\States\NewApplicationState;
+use He4rt\Applications\States\TransitionData;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\Date;
 
-describe('NewTransition', function (): void {
+describe('NewApplicationState', function (): void {
     it('canChange() returns true', function (): void {
         $application = Application::factory()->withStatus(ApplicationStatusEnum::New)->create();
-        $transition = new NewTransition($application);
+        $transition = new NewApplicationState($application);
 
         expect($transition->canChange())->toBeTrue();
     });
 
     it('choices() contains InReview, Rejected and Withdrawn', function (): void {
         $application = Application::factory()->withStatus(ApplicationStatusEnum::New)->create();
-        $transition = new NewTransition($application);
+        $transition = new NewApplicationState($application);
 
         expect(array_keys($transition->choices()))->toContain(
             ApplicationStatusEnum::InReview->value,
@@ -42,7 +42,7 @@ describe('NewTransition', function (): void {
             'to_status' => ApplicationStatusEnum::InReview,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         $application->refresh();
 
@@ -62,7 +62,7 @@ describe('NewTransition', function (): void {
             'to_status' => ApplicationStatusEnum::InReview,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         $application->refresh();
 
@@ -78,7 +78,7 @@ describe('NewTransition', function (): void {
             'to_status' => ApplicationStatusEnum::Withdrawn,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect($application->fresh()->status)->toBe(ApplicationStatusEnum::Withdrawn);
     });
@@ -94,7 +94,7 @@ describe('NewTransition', function (): void {
             'rejected_at' => Date::parse('2026-01-15 10:00:00'),
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         $application->refresh();
 
@@ -112,6 +112,6 @@ describe('NewTransition', function (): void {
             'to_status' => ApplicationStatusEnum::Hired,
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))->toThrow(InvalidTransitionException::class);
+        expect(fn () => $application->current_state->handle($data))->toThrow(InvalidTransitionException::class);
     });
 });

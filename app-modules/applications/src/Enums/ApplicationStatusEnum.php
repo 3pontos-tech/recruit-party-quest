@@ -11,16 +11,16 @@ use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 use Filament\Support\Icons\Heroicon;
 use He4rt\Applications\Models\Application;
-use He4rt\Applications\Services\Transitions\AbstractApplicationTransition;
-use He4rt\Applications\Services\Transitions\HiredTransition;
-use He4rt\Applications\Services\Transitions\InProgressTransition;
-use He4rt\Applications\Services\Transitions\InReviewTransition;
-use He4rt\Applications\Services\Transitions\NewTransition;
-use He4rt\Applications\Services\Transitions\OfferAcceptedTransition;
-use He4rt\Applications\Services\Transitions\OfferDeclinedTransition;
-use He4rt\Applications\Services\Transitions\OfferExtendedTransition;
-use He4rt\Applications\Services\Transitions\RejectApplicationTransition;
-use He4rt\Applications\Services\Transitions\WithdrawnTransition;
+use He4rt\Applications\States\ApplicationState;
+use He4rt\Applications\States\HiredApplicationState;
+use He4rt\Applications\States\InProgressApplicationState;
+use He4rt\Applications\States\InReviewApplicationState;
+use He4rt\Applications\States\NewApplicationState;
+use He4rt\Applications\States\OfferAcceptedApplicationState;
+use He4rt\Applications\States\OfferDeclinedApplicationState;
+use He4rt\Applications\States\OfferExtendedApplicationState;
+use He4rt\Applications\States\RejectedApplicationState;
+use He4rt\Applications\States\WithdrawnApplicationState;
 
 enum ApplicationStatusEnum: string implements HasColor, HasIcon, HasLabel
 {
@@ -92,7 +92,7 @@ enum ApplicationStatusEnum: string implements HasColor, HasIcon, HasLabel
      * negative outcomes are painted as a terminal stop in the pipeline stepper.
      *
      * Once an offer is extended, the negative path is a declined offer, not a
-     * rejection: the state machine (OfferExtendedTransition) only models
+     * rejection: the state machine (OfferExtendedApplicationState) only models
      * OfferAccepted/OfferDeclined/Withdrawn, so this guard is aligned to it and
      * forbids rejecting an OfferExtended application.
      */
@@ -109,18 +109,18 @@ enum ApplicationStatusEnum: string implements HasColor, HasIcon, HasLabel
         };
     }
 
-    public function getAction(Application $application): AbstractApplicationTransition
+    public function state(Application $application): ApplicationState
     {
         return match ($this) {
-            self::New => new NewTransition($application),
-            self::InReview => new InReviewTransition($application),
-            self::InProgress => new InProgressTransition($application),
-            self::OfferExtended => new OfferExtendedTransition($application),
-            self::OfferAccepted => new OfferAcceptedTransition($application),
-            self::OfferDeclined => new OfferDeclinedTransition($application),
-            self::Hired => new HiredTransition($application),
-            self::Rejected => new RejectApplicationTransition($application),
-            self::Withdrawn => new WithdrawnTransition($application),
+            self::New => new NewApplicationState($application),
+            self::InReview => new InReviewApplicationState($application),
+            self::InProgress => new InProgressApplicationState($application),
+            self::OfferExtended => new OfferExtendedApplicationState($application),
+            self::OfferAccepted => new OfferAcceptedApplicationState($application),
+            self::OfferDeclined => new OfferDeclinedApplicationState($application),
+            self::Hired => new HiredApplicationState($application),
+            self::Rejected => new RejectedApplicationState($application),
+            self::Withdrawn => new WithdrawnApplicationState($application),
         };
     }
 
