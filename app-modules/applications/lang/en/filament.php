@@ -139,6 +139,7 @@ return [
             'greeting' => 'Hi :name,',
             'line' => 'We received your application for :job. You can follow its progress in your panel.',
             'action' => 'View application',
+            'job_fallback' => 'the position',
         ],
     ],
 

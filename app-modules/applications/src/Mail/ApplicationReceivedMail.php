@@ -23,7 +23,7 @@ class ApplicationReceivedMail extends Mailable implements ShouldQueue
     {
         return new Envelope(
             subject: __('applications::filament.emails.application_received.subject', [
-                'job' => $this->application->requisition->post->title,
+                'job' => $this->jobTitle(),
             ]),
         );
     }
@@ -34,7 +34,7 @@ class ApplicationReceivedMail extends Mailable implements ShouldQueue
             markdown: 'applications::emails.application-received',
             with: [
                 'candidateName' => $this->application->candidate->user->name,
-                'jobTitle' => $this->application->requisition->post->title,
+                'jobTitle' => $this->jobTitle(),
                 // Rota nomeada (string) em vez de panel-app::ApplicationResource::getUrl()
                 // para não criar dependência reversa applications -> panel-app.
                 'url' => route('filament.app.resources.applications.view', [
@@ -42,5 +42,15 @@ class ApplicationReceivedMail extends Mailable implements ShouldQueue
                 ]),
             ],
         );
+    }
+
+    /**
+     * Job title for the message, falling back to a generic label when the
+     * requisition has no (or a soft-deleted) posting.
+     */
+    private function jobTitle(): string
+    {
+        return $this->application->requisition->postTitle()
+            ?? __('applications::filament.emails.application_received.job_fallback');
     }
 }

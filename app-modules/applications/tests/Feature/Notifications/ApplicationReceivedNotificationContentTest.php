@@ -23,5 +23,20 @@ it('targets mail and database channels and is queued', function (): void {
     $database = $notification->toDatabase($user);
 
     expect($database)->toBeArray()
-        ->and(json_encode($database))->toContain($application->requisition->post->title);
+        ->and($database['body'])->toContain($application->requisition->post->title);
+});
+
+it('falls back to a generic job title in the database payload when the posting is missing', function (): void {
+    $application = Application::factory()->create();
+    $application->load('requisition.post');
+
+    $user = $application->candidate->user;
+
+    expect($application->requisition->post)->toBeNull();
+
+    $fallback = __('applications::filament.emails.application_received.job_fallback');
+
+    $database = new ApplicationReceivedNotification($application)->toDatabase($user);
+
+    expect($database['body'])->toContain($fallback);
 });

@@ -105,6 +105,13 @@ class JobRequisition extends BaseModel implements HasActivityLogTitle
         return $this->hasOne(JobPosting::class, 'job_requisition_id');
     }
 
+    public function postTitle(): ?string
+    {
+        return JobPosting::query()
+            ->where('job_requisition_id', $this->getKey())
+            ->first()?->title;
+    }
+
     /**
      * @return HasMany<JobRequisitionItem, $this>
      */

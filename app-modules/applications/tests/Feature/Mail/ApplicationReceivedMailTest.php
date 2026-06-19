@@ -18,3 +18,17 @@ it('builds the application received mail with subject and job title', function (
     $mailable->assertHasSubject(__('applications::filament.emails.application_received.subject', ['job' => $jobTitle]));
     $mailable->assertSeeInHtml($jobTitle);
 });
+
+it('falls back to a generic job title when the posting is missing', function (): void {
+    $application = Application::factory()->create();
+    $application->load('requisition.post');
+
+    expect($application->requisition->post)->toBeNull();
+
+    $fallback = __('applications::filament.emails.application_received.job_fallback');
+
+    $mailable = new ApplicationReceivedMail($application);
+
+    $mailable->assertHasSubject(__('applications::filament.emails.application_received.subject', ['job' => $fallback]));
+    $mailable->assertSeeInHtml($fallback);
+});

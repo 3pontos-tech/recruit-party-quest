@@ -54,6 +54,7 @@ class AppPanelProvider extends PanelProvider
             ->brandLogo(fn () => view('partials.logo-compact'))
             ->favicon(asset('favicon.ico'))
             ->maxContentWidth(Width::ScreenTwoExtraLarge)
+            ->databaseNotifications()
             ->path($this->panelEnum->getPath())
             ->colors([
                 'primary' => Color::Gray,
