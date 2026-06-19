@@ -41,7 +41,8 @@ final class ApplicationReceivedNotification extends Notification implements Shou
         return FilamentNotification::make()
             ->title(__('applications::filament.notifications.application_received.title'))
             ->body(__('applications::filament.notifications.application_received.body', [
-                'job' => $this->application->requisition->post->title,
+                'job' => $this->application->requisition->postTitle()
+                    ?? __('applications::filament.emails.application_received.job_fallback'),
             ]))
             ->icon(Heroicon::OutlinedCheckCircle)
             ->actions([
