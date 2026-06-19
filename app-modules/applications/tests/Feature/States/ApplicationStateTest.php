@@ -6,12 +6,12 @@ use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Events\ApplicationStatusChanged;
 use He4rt\Applications\Models\Application;
 use He4rt\Applications\Models\ApplicationStageHistory;
-use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Applications\States\TransitionData;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\Event;
 
-describe('AbstractApplicationTransition::handle()', function (): void {
+describe('ApplicationState::handle()', function (): void {
     it('creates a stage history record after a valid transition', function (): void {
         $user = User::factory()->create();
         $application = Application::factory()->create([
@@ -24,7 +24,7 @@ describe('AbstractApplicationTransition::handle()', function (): void {
             'to_status' => ApplicationStatusEnum::InReview,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect(ApplicationStageHistory::query()->where('application_id', $application->id)->count())->toBe(1);
 
@@ -46,7 +46,7 @@ describe('AbstractApplicationTransition::handle()', function (): void {
             'notes' => 'Moving to review stage.',
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         $history = ApplicationStageHistory::query()->where('application_id', $application->id)->first();
         expect($history->notes)->toBe('Moving to review stage.');
@@ -66,7 +66,7 @@ describe('AbstractApplicationTransition::handle()', function (): void {
             // Neither to_stage_id nor advance_stage — processStep will throw
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))->toThrow(Exception::class);
+        expect(fn () => $application->current_state->handle($data))->toThrow(Exception::class);
 
         // DB should be untouched
         expect(ApplicationStageHistory::query()->where('application_id', $application->id)->count())->toBe(0);
@@ -85,7 +85,7 @@ describe('AbstractApplicationTransition::handle()', function (): void {
             'to_status' => ApplicationStatusEnum::InReview,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         Event::assertDispatched(fn (ApplicationStatusChanged $event): bool => $event->application->id === $application->id
             && $event->fromStatus === ApplicationStatusEnum::New->value
@@ -112,7 +112,7 @@ describe('AbstractApplicationTransition::handle()', function (): void {
             'to_stage_id' => $newStage->id,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         Event::assertNotDispatched(ApplicationStatusChanged::class);
     });
@@ -130,7 +130,7 @@ describe('AbstractApplicationTransition::handle()', function (): void {
             'notes' => 'Test note',
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         Event::assertDispatched(fn (ApplicationStatusChanged $event): bool => $event->by->id === $user->id
             && $event->meta['notes'] === 'Test note');
@@ -155,7 +155,7 @@ describe('AbstractApplicationTransition::handle()', function (): void {
             'to_status' => ApplicationStatusEnum::InReview,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect($state->historyExistedAtDispatch)->toBeTrue();
     });

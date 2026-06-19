@@ -5,21 +5,21 @@ declare(strict_types=1);
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Exceptions\InvalidTransitionException;
 use He4rt\Applications\Models\Application;
-use He4rt\Applications\Services\Transitions\OfferAcceptedTransition;
-use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Applications\States\OfferAcceptedApplicationState;
+use He4rt\Applications\States\TransitionData;
 use He4rt\Users\User;
 
-describe('OfferAcceptedTransition', function (): void {
+describe('OfferAcceptedApplicationState', function (): void {
     it('canChange() returns true', function (): void {
         $application = Application::factory()->create(['status' => ApplicationStatusEnum::OfferAccepted]);
-        $transition = new OfferAcceptedTransition($application);
+        $transition = new OfferAcceptedApplicationState($application);
 
         expect($transition->canChange())->toBeTrue();
     });
 
     it('choices() contains Hired and Withdrawn', function (): void {
         $application = Application::factory()->create(['status' => ApplicationStatusEnum::OfferAccepted]);
-        $transition = new OfferAcceptedTransition($application);
+        $transition = new OfferAcceptedApplicationState($application);
 
         expect(array_keys($transition->choices()))->toContain(
             ApplicationStatusEnum::Hired->value,
@@ -37,7 +37,7 @@ describe('OfferAcceptedTransition', function (): void {
             'to_status' => ApplicationStatusEnum::Hired,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect($application->fresh()->status)->toBe(ApplicationStatusEnum::Hired);
     });
@@ -52,7 +52,7 @@ describe('OfferAcceptedTransition', function (): void {
             'to_status' => ApplicationStatusEnum::Rejected,
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))->toThrow(InvalidTransitionException::class);
+        expect(fn () => $application->current_state->handle($data))->toThrow(InvalidTransitionException::class);
     });
 
     it('OfferAccepted → Withdrawn succeeds and is status-only', function (): void {
@@ -66,7 +66,7 @@ describe('OfferAcceptedTransition', function (): void {
             'to_status' => ApplicationStatusEnum::Withdrawn,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         $fresh = $application->fresh();
         expect($fresh->status)->toBe(ApplicationStatusEnum::Withdrawn)

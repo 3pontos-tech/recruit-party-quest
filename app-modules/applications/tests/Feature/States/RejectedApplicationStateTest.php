@@ -6,22 +6,22 @@ use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Exceptions\MissingTransitionDataException;
 use He4rt\Applications\Models\Application;
-use He4rt\Applications\Services\Transitions\RejectApplicationTransition;
-use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Applications\States\RejectedApplicationState;
+use He4rt\Applications\States\TransitionData;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\Date;
 
-describe('RejectApplicationTransition', function (): void {
+describe('RejectedApplicationState', function (): void {
     it('canChange() returns false (terminal state)', function (): void {
         $application = Application::factory()->rejected()->create();
-        $transition = new RejectApplicationTransition($application);
+        $transition = new RejectedApplicationState($application);
 
         expect($transition->canChange())->toBeFalse();
     });
 
     it('choices() returns empty array (terminal state)', function (): void {
         $application = Application::factory()->rejected()->create();
-        $transition = new RejectApplicationTransition($application);
+        $transition = new RejectedApplicationState($application);
 
         expect($transition->choices())->toBe([]);
     });
@@ -39,7 +39,7 @@ describe('RejectApplicationTransition', function (): void {
             'rejected_at' => Date::parse('2026-02-10 14:00:00'),
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         $application->refresh();
 
@@ -60,7 +60,7 @@ describe('RejectApplicationTransition', function (): void {
             // no rejection_reason_category
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))
+        expect(fn () => $application->current_state->handle($data))
             ->toThrow(MissingTransitionDataException::class);
     });
 
@@ -76,7 +76,7 @@ describe('RejectApplicationTransition', function (): void {
             'rejected_at' => Date::parse('2026-01-20 08:30:00'),
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect($application->fresh()->rejected_at->toDateTimeString())->toBe('2026-01-20 08:30:00');
     });
@@ -93,7 +93,7 @@ describe('RejectApplicationTransition', function (): void {
             'rejection_reason_category' => RejectionReasonCategoryEnum::Other,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect($application->fresh()->rejected_at->isAfter($before))->toBeTrue();
     });

@@ -7,22 +7,22 @@ use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Exceptions\InvalidTransitionException;
 use He4rt\Applications\Exceptions\MissingTransitionDataException;
 use He4rt\Applications\Models\Application;
-use He4rt\Applications\Services\Transitions\InReviewTransition;
-use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Applications\States\InReviewApplicationState;
+use He4rt\Applications\States\TransitionData;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Users\User;
 
-describe('InReviewTransition', function (): void {
+describe('InReviewApplicationState', function (): void {
     it('canChange() returns true', function (): void {
         $application = Application::factory()->withStatus(ApplicationStatusEnum::InReview)->create();
-        $transition = new InReviewTransition($application);
+        $transition = new InReviewApplicationState($application);
 
         expect($transition->canChange())->toBeTrue();
     });
 
     it('choices() contains InProgress, Rejected and Withdrawn', function (): void {
         $application = Application::factory()->withStatus(ApplicationStatusEnum::InReview)->create();
-        $transition = new InReviewTransition($application);
+        $transition = new InReviewApplicationState($application);
 
         expect(array_keys($transition->choices()))->toContain(
             ApplicationStatusEnum::InProgress->value,
@@ -43,7 +43,7 @@ describe('InReviewTransition', function (): void {
             'to_status' => ApplicationStatusEnum::InProgress,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         $application->refresh();
 
@@ -64,7 +64,7 @@ describe('InReviewTransition', function (): void {
             'to_stage_id' => $specificStage->id,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect($application->fresh()->current_stage_id)->toBe($specificStage->id);
     });
@@ -77,7 +77,7 @@ describe('InReviewTransition', function (): void {
             'to_status' => ApplicationStatusEnum::Rejected,
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))
+        expect(fn () => $application->current_state->handle($data))
             ->toThrow(MissingTransitionDataException::class);
     });
 
@@ -91,7 +91,7 @@ describe('InReviewTransition', function (): void {
             'rejection_reason_details' => 'Insufficient experience',
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         $application->refresh();
 
@@ -110,7 +110,7 @@ describe('InReviewTransition', function (): void {
             'to_status' => ApplicationStatusEnum::Withdrawn,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect($application->fresh()->status)->toBe(ApplicationStatusEnum::Withdrawn);
     });
@@ -123,7 +123,7 @@ describe('InReviewTransition', function (): void {
             'to_status' => ApplicationStatusEnum::Hired,
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))->toThrow(InvalidTransitionException::class);
+        expect(fn () => $application->current_state->handle($data))->toThrow(InvalidTransitionException::class);
     });
 
     it('rejected_at defaults to now() when not provided', function (): void {
@@ -137,7 +137,7 @@ describe('InReviewTransition', function (): void {
             'rejection_reason_category' => RejectionReasonCategoryEnum::Other,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect($application->fresh()->rejected_at)->not->toBeNull()
             ->and($application->fresh()->rejected_at->isAfter($before))->toBeTrue();

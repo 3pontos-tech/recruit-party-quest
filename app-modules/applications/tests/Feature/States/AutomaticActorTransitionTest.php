@@ -6,7 +6,7 @@ use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Events\ApplicationStatusChanged;
 use He4rt\Applications\Models\Application;
-use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Applications\States\TransitionData;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\Event;
 
@@ -19,7 +19,7 @@ it('performs a New → Rejected transition with a null actor (system)', function
         'rejection_reason_details' => 'Failed: Q1',
     ]);
 
-    $application->current_step->handle($data);
+    $application->current_state->handle($data);
 
     $application->refresh();
 
@@ -40,7 +40,7 @@ it('still dispatches ApplicationStatusChanged with a null actor', function (): v
         'to_status' => ApplicationStatusEnum::Withdrawn,
     ]);
 
-    $application->current_step->handle($data);
+    $application->current_state->handle($data);
 
     Event::assertDispatched(fn (ApplicationStatusChanged $event): bool => ! $event->by instanceof User
         && $event->toStatus === ApplicationStatusEnum::Withdrawn->value);

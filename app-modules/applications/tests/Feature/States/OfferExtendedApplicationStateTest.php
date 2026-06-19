@@ -6,22 +6,22 @@ use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Exceptions\InvalidTransitionException;
 use He4rt\Applications\Exceptions\MissingTransitionDataException;
 use He4rt\Applications\Models\Application;
-use He4rt\Applications\Services\Transitions\OfferExtendedTransition;
-use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Applications\States\OfferExtendedApplicationState;
+use He4rt\Applications\States\TransitionData;
 use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Users\User;
 
-describe('OfferExtendedTransition', function (): void {
+describe('OfferExtendedApplicationState', function (): void {
     it('canChange() returns true', function (): void {
         $application = Application::factory()->withOffer()->create();
-        $transition = new OfferExtendedTransition($application);
+        $transition = new OfferExtendedApplicationState($application);
 
         expect($transition->canChange())->toBeTrue();
     });
 
     it('choices() contains OfferAccepted, OfferDeclined and Withdrawn', function (): void {
         $application = Application::factory()->withOffer()->create();
-        $transition = new OfferExtendedTransition($application);
+        $transition = new OfferExtendedApplicationState($application);
 
         expect(array_keys($transition->choices()))->toContain(
             ApplicationStatusEnum::OfferAccepted->value,
@@ -39,7 +39,7 @@ describe('OfferExtendedTransition', function (): void {
             'to_status' => ApplicationStatusEnum::OfferAccepted,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         $fresh = $application->fresh();
         expect($fresh->status)->toBe(ApplicationStatusEnum::OfferAccepted)
@@ -55,7 +55,7 @@ describe('OfferExtendedTransition', function (): void {
             // no to_stage_id — accepting an offer is status-only now
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))
+        expect(fn () => $application->current_state->handle($data))
             ->not->toThrow(MissingTransitionDataException::class);
 
         expect($application->fresh()->status)->toBe(ApplicationStatusEnum::OfferAccepted);
@@ -71,7 +71,7 @@ describe('OfferExtendedTransition', function (): void {
             'to_stage_id' => $stage->id,
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))->not->toThrow(MissingTransitionDataException::class);
+        expect(fn () => $application->current_state->handle($data))->not->toThrow(MissingTransitionDataException::class);
     });
 
     it('OfferExtended → OfferDeclined succeeds without any extra data', function (): void {
@@ -82,7 +82,7 @@ describe('OfferExtendedTransition', function (): void {
             'to_status' => ApplicationStatusEnum::OfferDeclined,
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))->not->toThrow(Exception::class);
+        expect(fn () => $application->current_state->handle($data))->not->toThrow(Exception::class);
     });
 
     it('OfferExtended → Withdrawn succeeds without any extra data', function (): void {
@@ -93,7 +93,7 @@ describe('OfferExtendedTransition', function (): void {
             'to_status' => ApplicationStatusEnum::Withdrawn,
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))->not->toThrow(Exception::class);
+        expect(fn () => $application->current_state->handle($data))->not->toThrow(Exception::class);
     });
 
     it('throws InvalidTransitionException for illegal target status', function (): void {
@@ -104,7 +104,7 @@ describe('OfferExtendedTransition', function (): void {
             'to_status' => ApplicationStatusEnum::Hired,
         ], $user->id);
 
-        expect(fn () => $application->current_step->handle($data))->toThrow(InvalidTransitionException::class);
+        expect(fn () => $application->current_state->handle($data))->toThrow(InvalidTransitionException::class);
     });
 
     it('OfferExtended → OfferAccepted does not overwrite the offer fields (status-only)', function (): void {
@@ -116,7 +116,7 @@ describe('OfferExtendedTransition', function (): void {
             'offer_amount' => 95000.0,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         expect((float) $application->fresh()->offer_amount)->toBe(50000.0);
     });

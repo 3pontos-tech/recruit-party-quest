@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
-use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Applications\States\TransitionData;
 use He4rt\Users\User;
 
 describe('stage history records the status transition', function (): void {
@@ -16,7 +16,7 @@ describe('stage history records the status transition', function (): void {
             'to_status' => ApplicationStatusEnum::OfferAccepted,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         $row = $application->stageHistory()->latest()->first();
 
@@ -33,7 +33,7 @@ describe('stage history records the status transition', function (): void {
             'to_status' => ApplicationStatusEnum::OfferDeclined,
         ], $user->id);
 
-        $application->current_step->handle($data);
+        $application->current_state->handle($data);
 
         $row = $application->stageHistory()->latest()->first();
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Carbon\CarbonInterface;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
-use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Applications\States\TransitionData;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\Date;
 
