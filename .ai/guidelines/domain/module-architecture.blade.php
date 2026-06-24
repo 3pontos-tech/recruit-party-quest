@@ -60,7 +60,7 @@ app-modules/{module}/
 │   ├── factories/
 │   ├── migrations/
 │   └── seeders/
-├── lang/{en,pt_BR}/                          (optional — see the modular guideline)
+├── lang/{en,pt_BR}/                          (optional — see the i18n guideline)
 ├── routes/{topic}-routes.php                 (optional, auto-discovered)
 ├── resources/views/                          (optional, presentation only)
 ├── src/
@@ -147,3 +147,14 @@ namespace), not in the `panel-*` module ServiceProviders — those do supporting
   components and styles — it must not accumulate business logic (despite the `Core` name).
 - Wrap Domain Actions inside Filament Actions at the presentation boundary (see the
   `presentation/core` guideline).
+
+## Module integration
+
+Within the dependency rules above, modules integrate through:
+
+- **Events** — published by models/Actions and consumed by other modules (loose coupling).
+- **Shared traits** — cross-cutting behaviour like `InteractsWithTenants` (tenancy, from `teams`)
+  and `LogsActivity`.
+- **Composer path repositories** — modules are required directly as `he4rt/{slug}`, so a module
+  may `use` another module's public classes (respecting Domain ✗→ Presentation).
+- **Service Providers** — each module registers its own migrations, translations, routes, and bindings.

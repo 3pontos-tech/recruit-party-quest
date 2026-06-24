@@ -10,6 +10,9 @@ their openings.
 
 ## Modular Monolith (`internachi/modular`)
 
+Self-contained domain modules following **Domain-Driven Design (DDD)** — each owns its
+models, migrations, tests and service provider.
+
 | Layer            | Modules                                                                 |
 | ---------------- | ----------------------------------------------------------------------- |
 | **Domain**       | `applications`, `candidates`, `recruitment`, `screening`, `feedback`, `teams`, `users`, `permissions`, `location`, `links`, `term` |
@@ -24,7 +27,7 @@ and dependency rules. The `ai` module is parked — confirm before touching it.
 - **Tenant = `Team`** (organization) — Filament-native tenancy, slug in the URL; only the
   organization panel is tenant-scoped. See `multi-tenancy`.
 - **Namespace:** `He4rt\{Module}` (exceptions: `panel-*` → `He4rt\{Name}`, `he4rt` → `He4rt\Core`).
-- **Shared / kernel code** lives in `App\`, **not** in a module — see the `modular` guideline.
-- **Language:** PT-BR for user-facing strings, English for code. The i18n rules live in `modular`.
+- **Shared / kernel code** lives in `App\`, **not** in a module — see `module-architecture`.
+- **Language:** PT-BR for user-facing strings, English for code. The i18n rules live in `i18n`.
 - **PHP:** 8.4. **Filament:** v5. **Livewire:** v4. **DB:** PostgreSQL.
 - **Testing:** Pest v4. **Quality:** Larastan (modular `phpstan.neon` per module), Rector, Pint.
