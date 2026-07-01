@@ -285,7 +285,11 @@ return [
 
     'payload' => [
         'max_size' => 1024 * 1024,   // 1MB - maximum request payload size in bytes
-        'max_nesting_depth' => 10,   // Maximum depth of dot-notation property paths
+        // RichEditor (TipTap) sincroniza o documento como árvore JSON aninhada via Livewire.
+        // Sob ->relationship('post') o prefixo "data.post.description" já consome 3 níveis,
+        // e listas aninhadas adicionam +2 por nível, estourando o default de 10. 20 acomoda
+        // rich text aninhado preservando a proteção contra payloads abusivos.
+        'max_nesting_depth' => 20,   // Maximum depth of dot-notation property paths
         'max_calls' => 50,           // Maximum method calls per request
         'max_components' => 20,      // Maximum components per batch request
     ],
