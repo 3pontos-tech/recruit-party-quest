@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Middleware\RedirectSocialiteCallbackErrors;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Session\Middleware\AuthenticateSession;
@@ -25,5 +26,6 @@ return [
         StartSession::class,
         AuthenticateSession::class,
         ShareErrorsFromSession::class,
+        RedirectSocialiteCallbackErrors::class,
     ],
 ];
