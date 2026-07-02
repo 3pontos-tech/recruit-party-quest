@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e37dd2faf983f04a90b2e59325294fb5",
+    "content-hash": "3d2b224bdbabb26ebd32edb8a4d2ed54",
     "packages": [
         {
             "name": "alizharb/filament-activity-log",
@@ -214,16 +214,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.387.1",
+            "version": "3.387.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "2e1a16e9c87f2a069aa8a0a14a314dd148de21e1"
+                "reference": "dac6a19ffc71e6d100f06098e7df58f2e27103f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2e1a16e9c87f2a069aa8a0a14a314dd148de21e1",
-                "reference": "2e1a16e9c87f2a069aa8a0a14a314dd148de21e1",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/dac6a19ffc71e6d100f06098e7df58f2e27103f9",
+                "reference": "dac6a19ffc71e6d100f06098e7df58f2e27103f9",
                 "shasum": ""
             },
             "require": {
@@ -305,9 +305,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.387.1"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.387.2"
             },
-            "time": "2026-07-01T18:10:42+00:00"
+            "time": "2026-07-02T18:06:18+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
@@ -366,31 +366,32 @@
         },
         {
             "name": "basementdevs/filament-better-mails",
-            "version": "5.0.1",
+            "version": "5.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/basementdevs/filament-better-mail.git",
-                "reference": "24e90a5b6705e2d3489abae733b2eb5c7d6a0bc4"
+                "reference": "71a7c873c68242208e25e1848315cea63607437b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/basementdevs/filament-better-mail/zipball/24e90a5b6705e2d3489abae733b2eb5c7d6a0bc4",
-                "reference": "24e90a5b6705e2d3489abae733b2eb5c7d6a0bc4",
+                "url": "https://api.github.com/repos/basementdevs/filament-better-mail/zipball/71a7c873c68242208e25e1848315cea63607437b",
+                "reference": "71a7c873c68242208e25e1848315cea63607437b",
                 "shasum": ""
             },
             "require": {
                 "filament/filament": "^5.0",
-                "illuminate/contracts": "^12.0",
+                "illuminate/contracts": "^12.0||^13.0",
                 "php": "^8.3",
-                "resend/resend-laravel": "^0.22.0",
+                "resend/resend-laravel": "^1.0",
                 "spatie/laravel-package-tools": "^1.16"
             },
             "require-dev": {
                 "driftingly/rector-laravel": "^2.0.4",
                 "larastan/larastan": "^3.0",
+                "laravel/boost": "^2.3",
                 "laravel/pint": "^1.14",
                 "nunomaduro/collision": "^8.8",
-                "orchestra/testbench": "^10.0.0||^9.0.0",
+                "orchestra/testbench": "^11.0.0||^10.0.0||^9.0.0",
                 "pestphp/pest": "^4.0",
                 "pestphp/pest-plugin-arch": "^4.0",
                 "pestphp/pest-plugin-laravel": "^4.0",
@@ -431,7 +432,7 @@
             ],
             "support": {
                 "issues": "https://github.com/basementdevs/filament-better-mail/issues",
-                "source": "https://github.com/basementdevs/filament-better-mail/tree/5.0.1"
+                "source": "https://github.com/basementdevs/filament-better-mail/tree/5.2.0"
             },
             "funding": [
                 {
@@ -439,7 +440,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-03-13T16:49:18+00:00"
+            "time": "2026-06-30T18:29:24+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",
@@ -9921,30 +9922,30 @@
         },
         {
             "name": "resend/resend-laravel",
-            "version": "v0.22.0",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/resend/resend-laravel.git",
-                "reference": "bbd8692f679fbf4ad6ea540ebf8be1559566efea"
+                "reference": "6dd5f5ec607404068c5af067fd7f6ba4b659262b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/resend/resend-laravel/zipball/bbd8692f679fbf4ad6ea540ebf8be1559566efea",
-                "reference": "bbd8692f679fbf4ad6ea540ebf8be1559566efea",
+                "url": "https://api.github.com/repos/resend/resend-laravel/zipball/6dd5f5ec607404068c5af067fd7f6ba4b659262b",
+                "reference": "6dd5f5ec607404068c5af067fd7f6ba4b659262b",
                 "shasum": ""
             },
             "require": {
-                "illuminate/http": "^10.0|^11.0|^12.0",
-                "illuminate/support": "^10.0|^11.0|^12.0",
+                "illuminate/http": "^10.0|^11.0|^12.0|^13.0",
+                "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
                 "php": "^8.1",
-                "resend/resend-php": "^0.20.0",
-                "symfony/mailer": "^6.2|^7.0"
+                "resend/resend-php": "^1.0.0",
+                "symfony/mailer": "^6.2|^7.0|^8.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.14",
                 "mockery/mockery": "^1.5",
-                "orchestra/testbench": "^8.17|^9.0|^10.0",
-                "pestphp/pest": "^2.0|^3.7"
+                "orchestra/testbench": "^8.17|^9.0|^10.8|^11.0",
+                "pestphp/pest": "^1.0|^2.0|^3.7|^4.0"
             },
             "type": "library",
             "extra": {
@@ -9984,22 +9985,22 @@
             ],
             "support": {
                 "issues": "https://github.com/resend/resend-laravel/issues",
-                "source": "https://github.com/resend/resend-laravel/tree/v0.22.0"
+                "source": "https://github.com/resend/resend-laravel/tree/v1.4.0"
             },
-            "time": "2025-09-18T06:58:18+00:00"
+            "time": "2026-05-06T17:08:44+00:00"
         },
         {
             "name": "resend/resend-php",
-            "version": "v0.20.0",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/resend/resend-php.git",
-                "reference": "25391cb93382601e3b2678c4c57d34d3a84210e8"
+                "reference": "24e4f0507316776bc6a7c9136b2832ea2ecba6c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/resend/resend-php/zipball/25391cb93382601e3b2678c4c57d34d3a84210e8",
-                "reference": "25391cb93382601e3b2678c4c57d34d3a84210e8",
+                "url": "https://api.github.com/repos/resend/resend-php/zipball/24e4f0507316776bc6a7c9136b2832ea2ecba6c3",
+                "reference": "24e4f0507316776bc6a7c9136b2832ea2ecba6c3",
                 "shasum": ""
             },
             "require": {
@@ -10009,7 +10010,7 @@
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.13",
                 "mockery/mockery": "^1.6",
-                "pestphp/pest": "^2.0"
+                "pestphp/pest": "^1.0|^2.0|^3.0|^4.0"
             },
             "type": "library",
             "autoload": {
@@ -10041,9 +10042,9 @@
             ],
             "support": {
                 "issues": "https://github.com/resend/resend-php/issues",
-                "source": "https://github.com/resend/resend-php/tree/v0.20.0"
+                "source": "https://github.com/resend/resend-php/tree/v1.4.0"
             },
-            "time": "2025-09-18T05:31:42+00:00"
+            "time": "2026-06-26T21:11:51+00:00"
         },
         {
             "name": "ryangjchandler/blade-capture-directive",
