@@ -13,8 +13,8 @@ return [
     |
     */
 
-    'title' => '3Pontos - Recrutamento e Seleção de Profissionais de TI',
-    'description' => 'Plataforma de recrutamento especializada em profissionais de tecnologia. Conectamos empresas aos melhores talentos de TI, acelerando sua empresa enquanto fortalecemos carreiras.',
+    'title' => '3Pontos - Recrutamento e Seleção de Profissionais',
+    'description' => 'Plataforma de recrutamento especializada em profissionais de tecnologia. Conectamos empresas aos melhores talentos, acelerando sua empresa enquanto fortalecemos carreiras.',
     'robots' => 'index, follow',
 
     'og_type' => 'website',
