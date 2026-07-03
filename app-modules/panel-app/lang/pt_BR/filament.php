@@ -29,6 +29,7 @@ return [
         'job_description' => [
             'no_posting' => 'Os detalhes do anúncio de emprego não estão disponíveis no momento.',
             'job_unavailable' => 'Esta vaga não está mais disponível.',
+            'already_applied' => 'Você já se candidatou a esta vaga.',
             'location_remote' => 'Remoto',
             'diversity' => 'Diversidade',
             'apply_button' => 'Candidatar-se',

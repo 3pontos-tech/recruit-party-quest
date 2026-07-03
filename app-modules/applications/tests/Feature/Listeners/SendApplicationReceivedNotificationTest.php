@@ -7,6 +7,7 @@ use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Applications\Notifications\ApplicationReceivedNotification;
 use He4rt\Candidates\Models\Candidate;
+use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use Illuminate\Support\Facades\Notification;
 
@@ -14,7 +15,7 @@ it('notifies the candidate user when an application is submitted', function (): 
     Notification::fake();
 
     $candidate = Candidate::factory()->create();
-    $requisition = JobRequisition::factory()->create();
+    $requisition = JobRequisition::factory()->create(['status' => RequisitionStatusEnum::Published]);
 
     $application = resolve(ApplyToJobRequisitionAction::class)
         ->execute($requisition, $candidate, CandidateSourceEnum::CareerPage);

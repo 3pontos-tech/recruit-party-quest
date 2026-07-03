@@ -173,6 +173,11 @@ class JobRequisition extends BaseModel implements HasActivityLogTitle
             ->first();
     }
 
+    public function isPublished(): bool
+    {
+        return $this->status === RequisitionStatusEnum::Published;
+    }
+
     public function getNextStage(Stage $currentStage): ?Stage
     {
         $availableStages = $this

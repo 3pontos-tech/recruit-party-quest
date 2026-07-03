@@ -9,6 +9,7 @@ use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
+use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Screening\Events\ScreeningEvaluated;
@@ -26,7 +27,7 @@ beforeEach(function (): void {
     filament()->setCurrentPanel(FilamentPanel::App->value);
 
     // JobRequisitionObserver::created() já cria os 8 stages ordenados.
-    $this->requisition = JobRequisition::factory()->create(['auto_screening_transition' => true]);
+    $this->requisition = JobRequisition::factory()->create(['auto_screening_transition' => true, 'status' => RequisitionStatusEnum::Published]);
     JobPosting::factory()->for($this->requisition, 'jobRequisition')->create();
 
     $this->question = ScreeningQuestion::factory()

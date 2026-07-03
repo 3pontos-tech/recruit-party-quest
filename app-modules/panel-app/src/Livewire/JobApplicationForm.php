@@ -7,6 +7,7 @@ namespace He4rt\App\Livewire;
 use Filament\Notifications\Notification;
 use He4rt\Applications\Actions\ApplyToJobRequisitionAction;
 use He4rt\Applications\Enums\CandidateSourceEnum;
+use He4rt\Applications\Exceptions\RequisitionNotPublishedException;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
@@ -15,6 +16,7 @@ use He4rt\Screening\DTOs\ScreeningResponseDTO;
 use He4rt\Screening\Events\ScreeningResponsesSubmitted;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\RedirectResponse;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
@@ -61,12 +63,42 @@ class JobApplicationForm extends Component
             /** @var Candidate $candidate */
             $candidate = auth()->user()->candidate;
 
+            $existing = $this->requisition->applicationFrom($candidate);
+
+            if ($existing instanceof Application) {
+                Notification::make()
+                    ->title(__('panel-app::filament.pages.job_description.already_applied'))
+                    ->warning()
+                    ->send();
+
+                return redirect(route('filament.app.resources.applications.view', ['record' => $existing->getKey()]));
+            }
+
             $source = $this->source instanceof CandidateSourceEnum
                 ? $this->source
                 : CandidateSourceEnum::from($this->source);
 
-            $this->application = resolve(ApplyToJobRequisitionAction::class)
-                ->execute($this->requisition, $candidate, $source);
+            try {
+                $this->application = resolve(ApplyToJobRequisitionAction::class)
+                    ->execute($this->requisition, $candidate, $source);
+            } catch (RequisitionNotPublishedException) {
+                Notification::make()
+                    ->title(__('panel-app::filament.pages.job_description.job_unavailable'))
+                    ->warning()
+                    ->send();
+
+                return redirect(route('filament.app.resources.vagas.index'));
+            } catch (UniqueConstraintViolationException) {
+                // Lost a concurrent race: the application was created between the
+                // check above and this insert. Avoid a 500 (and any query on the
+                // aborted transaction) by sending the candidate back to the list.
+                Notification::make()
+                    ->title(__('panel-app::filament.pages.job_description.already_applied'))
+                    ->warning()
+                    ->send();
+
+                return redirect(route('filament.app.resources.vagas.index'));
+            }
         }
 
         event(new ScreeningResponsesSubmitted($this->application, $this->buildResponseCollection()));
