@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace He4rt\App\Http\Controllers;
 
 use Filament\Notifications\Notification;
-use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use Illuminate\Http\RedirectResponse;
 
@@ -18,7 +17,7 @@ final class JobApplyIntentController
             ->with('jobRequisition')
             ->first();
 
-        $isAvailable = $posting?->jobRequisition?->status === RequisitionStatusEnum::Published;
+        $isAvailable = $posting?->jobRequisition?->isPublished() ?? false;
 
         if (! $isAvailable) {
             Notification::make()

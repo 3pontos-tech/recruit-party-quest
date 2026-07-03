@@ -7,6 +7,7 @@ namespace He4rt\App\Livewire;
 use Filament\Notifications\Notification;
 use He4rt\Applications\Actions\ApplyToJobRequisitionAction;
 use He4rt\Applications\Enums\CandidateSourceEnum;
+use He4rt\Applications\Exceptions\RequisitionNotPublishedException;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
@@ -65,8 +66,17 @@ class JobApplicationForm extends Component
                 ? $this->source
                 : CandidateSourceEnum::from($this->source);
 
-            $this->application = resolve(ApplyToJobRequisitionAction::class)
-                ->execute($this->requisition, $candidate, $source);
+            try {
+                $this->application = resolve(ApplyToJobRequisitionAction::class)
+                    ->execute($this->requisition, $candidate, $source);
+            } catch (RequisitionNotPublishedException) {
+                Notification::make()
+                    ->title(__('panel-app::filament.pages.job_description.job_unavailable'))
+                    ->warning()
+                    ->send();
+
+                return redirect(route('filament.app.resources.vagas.index'));
+            }
         }
 
         event(new ScreeningResponsesSubmitted($this->application, $this->buildResponseCollection()));

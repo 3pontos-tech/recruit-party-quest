@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace He4rt\App\Filament\Resources\JobRequisitions\Pages;
 
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\Width;
 use He4rt\App\Filament\Resources\Applications\ApplicationResource;
 use He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource;
 use He4rt\Applications\Actions\ApplyToJobRequisitionAction;
+use He4rt\Applications\Exceptions\RequisitionNotPublishedException;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Users\User;
@@ -27,9 +29,12 @@ class ViewJobRequisition extends ViewRecord
 
     public function mount(int|string $record): void
     {
-        $record = JobPosting::query()->where('slug', $record)->firstOrFail()->job_requisition_id;
+        $requisitionId = JobPosting::query()
+            ->where('slug', $record)
+            ->firstOrFail()
+            ->job_requisition_id;
 
-        parent::mount($record);
+        parent::mount($requisitionId);
 
         /** @var User|null $user */
         $user = auth()->user();
@@ -39,7 +44,13 @@ class ViewJobRequisition extends ViewRecord
 
             if ($application) {
                 $this->redirect(ApplicationResource::getUrl('view', ['record' => $application]));
+
+                return;
             }
+        }
+
+        if (! $this->record->isPublished()) {
+            $this->redirectToUnavailableJobsList();
         }
     }
 
@@ -58,7 +69,13 @@ class ViewJobRequisition extends ViewRecord
             return;
         }
 
-        $application = $action->execute($this->record, $user->candidate);
+        try {
+            $application = $action->execute($this->record, $user->candidate);
+        } catch (RequisitionNotPublishedException) {
+            $this->redirectToUnavailableJobsList();
+
+            return;
+        }
 
         $this->redirect(ApplicationResource::getUrl('view', ['record' => $application]));
     }
@@ -84,5 +101,18 @@ class ViewJobRequisition extends ViewRecord
     public function getSubheading(): ?string
     {
         return null;
+    }
+
+    /**
+     * Warn the candidate the job is unavailable and send them back to the jobs list.
+     */
+    private function redirectToUnavailableJobsList(): void
+    {
+        Notification::make()
+            ->title(__('panel-app::filament.pages.job_description.job_unavailable'))
+            ->warning()
+            ->send();
+
+        $this->redirect(JobRequisitionResource::getUrl('index'));
     }
 }

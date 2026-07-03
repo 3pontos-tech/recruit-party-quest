@@ -8,6 +8,7 @@ use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
+use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Stages\Models\Stage;
@@ -26,7 +27,7 @@ beforeEach(function (): void {
     $user = $this->candidate->user->refresh();
     actingAs($user);
     filament()->setCurrentPanel(FilamentPanel::App->value);
-    $this->jobRequisition = JobRequisition::factory()->create();
+    $this->jobRequisition = JobRequisition::factory()->create(['status' => RequisitionStatusEnum::Published]);
     JobPosting::factory()->for($this->jobRequisition, 'jobRequisition')->create();
 
     $this->question = ScreeningQuestion::factory()
@@ -93,7 +94,7 @@ test('source question are required', function (): void {
 });
 
 it('should submit successfully when requisition has no screening questions', function (): void {
-    $requisition = JobRequisition::factory()->create();
+    $requisition = JobRequisition::factory()->create(['status' => RequisitionStatusEnum::Published]);
     JobPosting::factory()->for($requisition, 'jobRequisition')->create();
 
     $livewire = livewire(JobApplicationForm::class, ['requisition' => $requisition])
@@ -117,7 +118,7 @@ it('should submit successfully when requisition has no screening questions', fun
 })->group('screening');
 
 it('should submit successfully and save screening responses', function (): void {
-    $requisition = JobRequisition::factory()->create();
+    $requisition = JobRequisition::factory()->create(['status' => RequisitionStatusEnum::Published]);
     JobPosting::factory()->for($requisition, 'jobRequisition')->create();
     $question = ScreeningQuestion::factory()
         ->for($requisition, 'screenable')
@@ -150,8 +151,30 @@ it('should submit successfully and save screening responses', function (): void 
     expect($screeningResponse->response_value)->toBe(['value' => 'Minha resposta']);
 })->group('screening');
 
+it('redirects to the jobs list with a warning when the requisition is unpublished before submit', function (): void {
+    $requisition = JobRequisition::factory()->create(['status' => RequisitionStatusEnum::Published]);
+    JobPosting::factory()->for($requisition, 'jobRequisition')->create();
+    $question = ScreeningQuestion::factory()
+        ->for($requisition, 'screenable')
+        ->text()
+        ->required()
+        ->create();
+
+    $component = livewire(JobApplicationForm::class, ['requisition' => $requisition])
+        ->set('source', CandidateSourceEnum::LinkedIn)
+        ->set('responses.'.$question->getKey(), 'Minha resposta');
+
+    $requisition->update(['status' => RequisitionStatusEnum::Closed]);
+
+    $component->call('submit')
+        ->assertRedirect(route('filament.app.resources.vagas.index'))
+        ->assertSessionHas('filament.notifications');
+
+    assertDatabaseCount(Application::class, 0);
+})->group('screening');
+
 it('should assign first stage to application when stages exist', function (): void {
-    $requisition = JobRequisition::factory()->create();
+    $requisition = JobRequisition::factory()->create(['status' => RequisitionStatusEnum::Published]);
     JobPosting::factory()->for($requisition, 'jobRequisition')->create();
     Stage::factory()->create([
         'job_requisition_id' => $requisition->id,

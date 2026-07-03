@@ -6,6 +6,7 @@ use He4rt\App\Filament\Resources\JobRequisitions\Pages\ListJobRequisitions;
 use He4rt\App\Filament\Resources\JobRequisitions\Pages\ViewJobRequisition;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
+use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkScheduleEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
@@ -30,7 +31,7 @@ beforeEach(function (): void {
         ->for($this->department)
         ->for($this->recruiter, 'recruiter')
         ->for($this->user, 'createdBy')
-        ->create(['is_confidential' => false, 'is_internal_only' => false]);
+        ->create(['is_confidential' => false, 'is_internal_only' => false, 'status' => RequisitionStatusEnum::Published]);
 
     $this->jobPosting = JobPosting::factory()
         ->for($this->jobRequisition, 'jobRequisition')
@@ -67,7 +68,7 @@ describe('ViewJobRequisition Page — Confidential', function (): void {
             ->for($this->department)
             ->for($this->recruiter, 'recruiter')
             ->for($this->user, 'createdBy')
-            ->create(['is_confidential' => true]);
+            ->create(['is_confidential' => true, 'status' => RequisitionStatusEnum::Published]);
 
         $confidentialPosting = JobPosting::factory()
             ->for($confidentialRequisition, 'jobRequisition')
@@ -91,7 +92,7 @@ describe('ViewJobRequisition Page — Confidential', function (): void {
             ->for($this->department)
             ->for($this->recruiter, 'recruiter')
             ->for($this->user, 'createdBy')
-            ->create(['is_confidential' => true]);
+            ->create(['is_confidential' => true, 'status' => RequisitionStatusEnum::Published]);
 
         $confidentialPosting = JobPosting::factory()
             ->for($confidentialRequisition, 'jobRequisition')
@@ -150,6 +151,7 @@ describe('ViewJobRequisition Page', function (): void {
                 'is_confidential' => false,
                 'employment_type' => null,
                 'work_schedule' => WorkScheduleEnum::FullTime,
+                'status' => RequisitionStatusEnum::Published,
             ]);
 
         $posting = JobPosting::factory()->for($requisition, 'jobRequisition')->create();
@@ -173,7 +175,7 @@ describe('ViewJobRequisition Page — Share button visibility', function (): voi
             ->for($this->department)
             ->for($this->recruiter, 'recruiter')
             ->for($this->user, 'createdBy')
-            ->create(['is_confidential' => false, 'is_internal_only' => true]);
+            ->create(['is_confidential' => false, 'is_internal_only' => true, 'status' => RequisitionStatusEnum::Published]);
 
         $internalPosting = JobPosting::factory()
             ->for($internalRequisition, 'jobRequisition')
