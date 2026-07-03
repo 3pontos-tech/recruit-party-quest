@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 use He4rt\Candidates\DTOs\CandidateEducationDTO;
+use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\DTOs\CandidateWorkExperienceDTO;
 use Illuminate\Support\Facades\Date;
 
@@ -89,5 +90,45 @@ describe('CandidateWorkExperienceDTO', function (): void {
         $serialized = $dto->jsonSerialize();
 
         expect($serialized['end_date'])->toBeNull();
+    });
+});
+
+describe('CandidateOnboardingDTO', function (): void {
+    it('hydrates child DTOs from raw arrays in the broadcast payload shape', function (): void {
+        $dto = CandidateOnboardingDTO::make([
+            'education' => [
+                [
+                    'institution' => 'MIT',
+                    'degree' => 'Bachelor',
+                    'field_of_study' => 'Computer Science',
+                    'is_enrolled' => false,
+                    'start_date' => '2020-01-01',
+                    'end_date' => '2024-01-01',
+                ],
+            ],
+            'work_experiences' => [
+                [
+                    'company_name' => '3-Pontos',
+                    'description' => 'PHP Developer',
+                    'is_currently_working_here' => true,
+                    'start_date' => '2023-06-15',
+                    'end_date' => null,
+                ],
+            ],
+        ]);
+
+        expect($dto->education)->toHaveCount(1)
+            ->and($dto->education[0])->toBeInstanceOf(CandidateEducationDTO::class)
+            ->and($dto->education[0]->jsonSerialize()['institution'])->toBe('MIT')
+            ->and($dto->work_experiences)->toHaveCount(1)
+            ->and($dto->work_experiences[0])->toBeInstanceOf(CandidateWorkExperienceDTO::class)
+            ->and($dto->work_experiences[0]->jsonSerialize()['company_name'])->toBe('3-Pontos');
+    });
+
+    it('defaults missing education and work_experiences keys to empty lists', function (): void {
+        $dto = CandidateOnboardingDTO::make([]);
+
+        expect($dto->education)->toBeArray()->toBeEmpty()
+            ->and($dto->work_experiences)->toBeArray()->toBeEmpty();
     });
 });

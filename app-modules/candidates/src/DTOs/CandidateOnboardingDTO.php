@@ -18,13 +18,16 @@ final class CandidateOnboardingDTO implements JsonSerializable
     ) {}
 
     /**
-     * @param  array{education: array<int, CandidateEducationDTO>, work_experiences: array<int, CandidateWorkExperienceDTO>}  $data
+     * Hydrates the DTO from raw arrays — the shape produced by jsonSerialize(),
+     * which is how the payload arrives after the broadcast round-trip (Echo → Livewire).
+     *
+     * @param  array{education?: array<int, array<string, mixed>>, work_experiences?: array<int, array<string, mixed>>}  $data
      */
     public static function make(array $data): self
     {
         return new self(
-            education: $data['education'],
-            work_experiences: $data['work_experiences'],
+            education: array_map(CandidateEducationDTO::make(...), $data['education'] ?? []),
+            work_experiences: array_map(CandidateWorkExperienceDTO::make(...), $data['work_experiences'] ?? []),
         );
     }
 

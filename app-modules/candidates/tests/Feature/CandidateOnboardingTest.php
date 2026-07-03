@@ -29,13 +29,11 @@ beforeEach(function (): void {
     actingAs($this->candidate->user);
     filament()->setCurrentPanel(FilamentPanel::App->value);
     instanceFakeClass();
-    $this->dto = generateDto();
     Storage::fake('public');
+    // Mirrors the broadcast round-trip: Echo delivers the DTOs as raw JSON arrays.
     $this->dto = [
-        'fields' => [
-            'education' => $this->dto->education,
-            'work_experiences' => $this->dto->work_experiences,
-        ]];
+        'fields' => json_decode(json_encode(generateDto(), JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR),
+    ];
     $this->file = UploadedFile::fake()->create('curriculum.pdf');
 });
 it('render', function (): void {
@@ -176,8 +174,8 @@ function generateDto(): CandidateOnboardingDTO
         startDate: Date::parse('08/01/2024'),
     );
 
-    return CandidateOnboardingDTO::make([
-        'education' => [$education],
-        'work_experiences' => [$work],
-    ]);
+    return new CandidateOnboardingDTO(
+        education: [$education],
+        work_experiences: [$work],
+    );
 }
