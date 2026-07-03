@@ -7,9 +7,7 @@ namespace He4rt\Candidates\Actions\Onboarding;
 use He4rt\Candidates\AI\Prompts\CvAnalysisPrompt;
 use He4rt\Candidates\AI\Schema\CvDataSchema;
 use He4rt\Candidates\AiAutocompleteInterface;
-use He4rt\Candidates\DTOs\CandidateEducationDTO;
 use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
-use He4rt\Candidates\DTOs\CandidateWorkExperienceDTO;
 use He4rt\Candidates\Enums\ResumeErrorReasons;
 use He4rt\Candidates\Exceptions\OnboardingException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -44,14 +42,8 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
         $output = $this->callWithFallback($file, $provider, $models);
 
         return CandidateOnboardingDTO::make([
-            'education' => array_map(
-                CandidateEducationDTO::make(...),
-                $output['education'] ?? []
-            ),
-            'work_experiences' => array_map(
-                CandidateWorkExperienceDTO::make(...),
-                $output['work_experiences'] ?? []
-            ),
+            'education' => $output['education'] ?? [],
+            'work_experiences' => $output['work_experiences'] ?? [],
         ]);
     }
 
