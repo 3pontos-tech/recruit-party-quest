@@ -16,6 +16,7 @@ use He4rt\Screening\DTOs\ScreeningResponseDTO;
 use He4rt\Screening\Events\ScreeningResponsesSubmitted;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\RedirectResponse;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
@@ -62,6 +63,17 @@ class JobApplicationForm extends Component
             /** @var Candidate $candidate */
             $candidate = auth()->user()->candidate;
 
+            $existing = $this->requisition->applicationFrom($candidate);
+
+            if ($existing instanceof Application) {
+                Notification::make()
+                    ->title(__('panel-app::filament.pages.job_description.already_applied'))
+                    ->warning()
+                    ->send();
+
+                return redirect(route('filament.app.resources.applications.view', ['record' => $existing->getKey()]));
+            }
+
             $source = $this->source instanceof CandidateSourceEnum
                 ? $this->source
                 : CandidateSourceEnum::from($this->source);
@@ -72,6 +84,16 @@ class JobApplicationForm extends Component
             } catch (RequisitionNotPublishedException) {
                 Notification::make()
                     ->title(__('panel-app::filament.pages.job_description.job_unavailable'))
+                    ->warning()
+                    ->send();
+
+                return redirect(route('filament.app.resources.vagas.index'));
+            } catch (UniqueConstraintViolationException) {
+                // Lost a concurrent race: the application was created between the
+                // check above and this insert. Avoid a 500 (and any query on the
+                // aborted transaction) by sending the candidate back to the list.
+                Notification::make()
+                    ->title(__('panel-app::filament.pages.job_description.already_applied'))
                     ->warning()
                     ->send();
 

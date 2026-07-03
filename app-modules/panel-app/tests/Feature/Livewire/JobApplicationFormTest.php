@@ -173,6 +173,29 @@ it('redirects to the jobs list with a warning when the requisition is unpublishe
     assertDatabaseCount(Application::class, 0);
 })->group('screening');
 
+it('redirects to the existing application without duplicating when the candidate already applied (double submit)', function (): void {
+    $requisition = JobRequisition::factory()->create(['status' => RequisitionStatusEnum::Published]);
+    JobPosting::factory()->for($requisition, 'jobRequisition')->create();
+
+    // The candidate that submit() will actually use (auth user's own candidate,
+    // not the factory instance — see the UserObserver stale-candidate pitfall).
+    $candidate = auth()->user()->candidate;
+
+    // Simulate the already-committed application from a first, concurrent submit.
+    $existing = Application::factory()
+        ->for($candidate)
+        ->for($requisition, 'requisition')
+        ->create();
+
+    livewire(JobApplicationForm::class, ['requisition' => $requisition])
+        ->set('source', CandidateSourceEnum::LinkedIn)
+        ->call('submit')
+        ->assertRedirect(route('filament.app.resources.applications.view', ['record' => $existing->getKey()]))
+        ->assertSessionHas('filament.notifications');
+
+    assertDatabaseCount(Application::class, 1);
+})->group('screening');
+
 it('should assign first stage to application when stages exist', function (): void {
     $requisition = JobRequisition::factory()->create(['status' => RequisitionStatusEnum::Published]);
     JobPosting::factory()->for($requisition, 'jobRequisition')->create();
