@@ -135,6 +135,66 @@ describe('Resume Analysis Error Handling', function (): void {
     });
 });
 
+describe('Resume Analysis Completion (broadcast payload)', function (): void {
+    // The .finished event arrives through Echo: the AnalyzeResumeEvent DTOs become
+    // raw JSON arrays on the browser round-trip before reaching Livewire again.
+    it('shows the wizard with prefilled state when the finished event arrives as raw arrays', function (): void {
+        $component = livewire(OnboardingWizard::class)
+            ->call('onResumeAnalyzed', [
+                'status' => 'finished',
+                'userId' => $this->user->id,
+                'fields' => [
+                    'education' => [
+                        [
+                            'institution' => 'FATEC',
+                            'degree' => 'Bacharelado',
+                            'field_of_study' => 'ADS',
+                            'is_enrolled' => true,
+                            'start_date' => '2021-02-01',
+                            'end_date' => null,
+                        ],
+                    ],
+                    'work_experiences' => [
+                        [
+                            'company_name' => '3-Pontos',
+                            'description' => 'PHP Developer',
+                            'is_currently_working_here' => true,
+                            'start_date' => '2023-06-15',
+                            'end_date' => null,
+                        ],
+                    ],
+                ],
+            ])
+            ->assertSet('wizardVisible', true)
+            ->assertSet('canSkipResumeAnalysis', true)
+            ->assertNotified('Currículo carregado com sucesso!');
+
+        $workExperiences = array_values($component->get('data.work_experiences'));
+        $education = array_values($component->get('data.education'));
+
+        expect($workExperiences)->toHaveCount(1)
+            ->and($workExperiences[0]['company_name'])->toBe('3-Pontos')
+            ->and($workExperiences[0]['is_currently_working_here'])->toBeTrue()
+            ->and($education)->toHaveCount(1)
+            ->and($education[0]['institution'])->toBe('FATEC');
+    });
+
+    it('handles a finished event without education or work experiences', function (): void {
+        livewire(OnboardingWizard::class)
+            ->call('onResumeAnalyzed', [
+                'status' => 'finished',
+                'userId' => $this->user->id,
+                'fields' => [
+                    'education' => [],
+                    'work_experiences' => [],
+                ],
+            ])
+            ->assertSet('wizardVisible', true)
+            ->assertSet('data.work_experiences', [])
+            ->assertSet('data.education', []);
+    });
+});
+
 describe('Finalization validation (issue #166)', function (): void {
     it('blocks finalization when phone is invalid for BR and does not persist', function (): void {
         livewire(OnboardingWizard::class)
