@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
+use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
@@ -28,7 +29,11 @@ beforeEach(function (): void {
         ->for($department)
         ->for($recruiter, 'recruiter')
         ->for($this->user, 'createdBy')
-        ->create(['is_confidential' => false, 'is_internal_only' => false]);
+        ->create([
+            'is_confidential' => false,
+            'is_internal_only' => false,
+            'status' => RequisitionStatusEnum::Published,
+        ]);
 
     $this->posting = JobPosting::factory()
         ->for($this->jobRequisition, 'jobRequisition')
@@ -64,6 +69,19 @@ describe('Apply intent route', function (): void {
         actingAs($this->user);
 
         get(route('filament.app.jobs.apply-intent', ['record' => 'vaga-inexistente']))
+            ->assertRedirect(route('filament.app.resources.vagas.index'))
+            ->assertSessionHas('filament.notifications');
+    });
+
+    it('redirects to the jobs list with a notification when the requisition is no longer published', function (): void {
+        $this->jobRequisition->update(['status' => RequisitionStatusEnum::Closed]);
+
+        $this->user->candidate()->update(['is_onboarded' => true]);
+        $this->user->refresh();
+
+        actingAs($this->user);
+
+        get(route('filament.app.jobs.apply-intent', ['record' => $this->posting->slug]))
             ->assertRedirect(route('filament.app.resources.vagas.index'))
             ->assertSessionHas('filament.notifications');
     });
