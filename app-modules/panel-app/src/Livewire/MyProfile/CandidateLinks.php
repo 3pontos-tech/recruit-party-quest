@@ -61,7 +61,7 @@ class CandidateLinks extends MyProfileComponent
             $icon = $type?->icon();
 
             if (filled($entry['id'] ?? null)) {
-                $link = $user->links()->find($entry['id']);
+                $link = $user->links()->find((string) $entry['id']);
                 if ($link) {
                     $link->update([
                         'name' => $name,

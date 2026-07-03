@@ -122,7 +122,8 @@ it('moves a New application to InReview auto-advancing the stage', function (): 
                 'notes' => 'starting review',
             ],
         )
-        ->assertHasNoActionErrors();
+        ->assertHasNoActionErrors()
+        ->assertNotified(__('applications::filament.actions.change_status.notifications.updated.title'));
 
     expect($application->fresh()->status)->toBe(ApplicationStatusEnum::InReview)
         ->and($application->fresh()->current_stage_id)->toBe($stage->id);
@@ -294,6 +295,29 @@ it('extends an offer (InProgress → OfferExtended) and advances to the offer st
     expect($fresh->status)->toBe(ApplicationStatusEnum::OfferExtended)
         ->and((float) $fresh->offer_amount)->toBe(9500.0)
         ->and($fresh->currentStage->stage_type)->toBe(StageTypeEnum::Offer);
+});
+
+it('keeps the offer fields null when amount and deadline are left blank', function (): void {
+    $this->application->update(['offer_amount' => null, 'offer_response_deadline' => null]);
+
+    livewire(ViewApplication::class, [
+        'tenant' => $this->team,
+        'record' => $this->application->getKey(),
+    ])
+        ->callAction(
+            TestAction::make('state-transition-action')->schemaComponent('quick-actions'),
+            data: [
+                'to_status' => ApplicationStatusEnum::OfferExtended->value,
+                'offer_amount' => '',
+                'offer_response_deadline' => '',
+            ],
+        )
+        ->assertHasNoActionErrors();
+
+    $fresh = $this->application->fresh();
+    expect($fresh->status)->toBe(ApplicationStatusEnum::OfferExtended)
+        ->and($fresh->offer_amount)->toBeNull()
+        ->and($fresh->offer_response_deadline)->toBeNull();
 });
 
 it('renders the status picker as a custom hero band', function (): void {

@@ -18,6 +18,7 @@ use He4rt\Recruitment\Stages\Concerns\InteractsWithInterviewStages;
 use He4rt\Teams\Concerns\InteractsWithTenants;
 use He4rt\Teams\Team;
 use He4rt\Users\Database\Factories\UserFactory;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
@@ -51,7 +52,7 @@ use Spatie\Permission\Traits\HasRoles;
 #[UsePolicy(UserPolicy::class)]
 #[UseFactory(UserFactory::class)]
 #[ObservedBy(UserObserver::class)]
-final class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar, HasMedia, HasTenants
+final class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar, HasLocalePreference, HasMedia, HasTenants
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory;
@@ -121,6 +122,11 @@ final class User extends Authenticatable implements Commenter, FilamentUser, Has
     public function candidate(): HasOne
     {
         return $this->hasOne(Candidate::class, 'user_id');
+    }
+
+    public function preferredLocale(): ?string
+    {
+        return $this->candidate?->preferred_language;
     }
 
     /**

@@ -33,7 +33,7 @@ class RedirectIfOnboardingIncomplete
         $isOnboarding = $request->route()->uri === 'onboarding';
 
         if ((! $candidate || ! $candidate->hasCompletedOnboarding()) && ! $isOnboarding && ! $isLandingPage) {
-            return redirect(OnboardingWizard::getUrl());
+            return redirect()->guest(OnboardingWizard::getUrl());
         }
 
         return $next($request);

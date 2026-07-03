@@ -7,7 +7,7 @@ namespace He4rt\Applications\Actions;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Models\Application;
-use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Applications\States\TransitionData;
 
 final class RejectApplicationAction
 {
@@ -15,9 +15,9 @@ final class RejectApplicationAction
     {
         $application = Application::query()->findOrFail($applicationId);
 
-        $application->current_step->handle(TransitionData::fromArray([
+        $application->current_state->handle(TransitionData::fromArray([
             'to_status' => ApplicationStatusEnum::Rejected,
-            'rejection_reason_category' => $reason->value,
+            'rejection_reason_category' => $reason,
             'rejection_reason_details' => $details,
         ]));
     }

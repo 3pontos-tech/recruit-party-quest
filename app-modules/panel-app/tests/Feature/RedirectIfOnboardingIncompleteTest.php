@@ -59,3 +59,13 @@ it('still forces onboarding for a plain user role', function (): void {
     get(AppDashboard::getUrl())
         ->assertRedirect(OnboardingWizard::getUrl());
 });
+
+it('stores the blocked url as url.intended when bouncing to the onboarding wizard', function (): void {
+    $user = User::factory()->create();
+
+    actingAs($user);
+
+    get(AppDashboard::getUrl())
+        ->assertRedirect(OnboardingWizard::getUrl())
+        ->assertSessionHas('url.intended', AppDashboard::getUrl());
+});

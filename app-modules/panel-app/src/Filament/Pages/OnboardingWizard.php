@@ -42,7 +42,6 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
-use JsonSerializable;
 use Livewire\Attributes\On;
 use Symfony\Component\HttpFoundation\Response;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
@@ -204,7 +203,7 @@ class OnboardingWizard extends Page
             ->title(__('panel-app::pages/onboarding.notifications.onboarding_complete.title'))->success()
             ->send();
 
-        redirect(route('filament.app.pages.dashboard'));
+        redirect()->intended(route('filament.app.pages.dashboard'));
     }
 
     public function getTitle(): string|Htmlable
@@ -246,15 +245,11 @@ class OnboardingWizard extends Page
         $this->canSkipResumeAnalysis = true;
 
         $workState = collect($fields->work_experiences)->mapWithKeys(fn ($item) => [
-            (string) Str::uuid() => $item instanceof JsonSerializable
-                ? $item->jsonSerialize()
-                : $item,
+            (string) Str::uuid() => $item->jsonSerialize(),
         ])->all();
 
         $educationState = collect($fields->education)->mapWithKeys(fn ($item) => [
-            (string) Str::uuid() => $item instanceof JsonSerializable
-                ? $item->jsonSerialize()
-                : $item,
+            (string) Str::uuid() => $item->jsonSerialize(),
         ])->all();
 
         $this->data['work_experiences'] = $workState;

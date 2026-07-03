@@ -28,6 +28,8 @@ return [
         ],
         'job_description' => [
             'no_posting' => 'Job posting details are currently unavailable.',
+            'job_unavailable' => 'This job is no longer available.',
+            'already_applied' => 'You have already applied to this job.',
             'location_remote' => 'Remote',
             'diversity' => 'Diversity',
             'apply_button' => 'Apply for job',

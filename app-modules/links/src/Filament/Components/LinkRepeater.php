@@ -71,7 +71,7 @@ class LinkRepeater
                             return;
                         }
 
-                        $host = parse_url((string) $value, PHP_URL_HOST) ?? '';
+                        $host = (string) parse_url((string) $value, PHP_URL_HOST);
 
                         foreach ($domains as $domain) {
                             if (str_contains($host, $domain)) {

@@ -6,3 +6,12 @@ parameters:
           identifier: method.notFound
           count: 1
           path: app/Providers/FilamentServiceProvider.php
+
+        # Falso positivo: o PHPDoc do filament-breezy usa o namespace relativo
+        # `Pages\MyProfilePage`, que resolve para a classe inexistente
+        # `...Concerns\Plugin\Pages\MyProfilePage`. A classe real e
+        # `Jeffgreco13\FilamentBreezy\Pages\MyProfilePage`, estendida por CandidateMyProfilePage.
+        - message: '#^Parameter \#1 \$class of method Jeffgreco13\\FilamentBreezy\\BreezyCore::customMyProfilePage\(\) expects class-string<Jeffgreco13\\FilamentBreezy\\Concerns\\Plugin\\Pages\\MyProfilePage>, string given\.$#'
+          identifier: argument.type
+          count: 1
+          path: app/Providers/Filament/AppPanelProvider.php

@@ -6,7 +6,7 @@ namespace He4rt\Applications\Listeners;
 
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Jobs\RejectScreeningKnockoutJob;
-use He4rt\Applications\Services\Transitions\TransitionData;
+use He4rt\Applications\States\TransitionData;
 use He4rt\Screening\Events\ScreeningEvaluated;
 
 final class HandleScreeningKnockoutTransition
@@ -36,7 +36,7 @@ final class HandleScreeningKnockoutTransition
                 'notes' => __('screening::messages.knockout_auto_advanced'),
             ]);
 
-            $application->current_step->handle($data);
+            $application->current_state->handle($data);
         }
     }
 }

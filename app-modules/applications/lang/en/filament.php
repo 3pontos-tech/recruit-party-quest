@@ -132,4 +132,22 @@ return [
         ],
 
     ],
+
+    'emails' => [
+        'application_received' => [
+            'subject' => 'We received your application — :job',
+            'greeting' => 'Hi :name,',
+            'line' => 'We received your application for :job. You can follow its progress in your panel.',
+            'action' => 'View application',
+            'job_fallback' => 'the position',
+        ],
+    ],
+
+    'notifications' => [
+        'application_received' => [
+            'title' => 'Application received',
+            'body' => 'We received your application for :job.',
+            'view_button' => 'View application',
+        ],
+    ],
 ];

@@ -10,7 +10,7 @@ use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
 use He4rt\Applications\Policies\ApplicationPolicy;
-use He4rt\Applications\Services\Transitions\AbstractApplicationTransition;
+use He4rt\Applications\States\ApplicationState;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Feedback\Models\Evaluation;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
@@ -48,7 +48,7 @@ use Kirschbaum\Commentions\HasComments;
  * @property Carbon|null $offer_extended_at
  * @property string|null $offer_extended_by
  * @property float|null $offer_amount
- * @property AbstractApplicationTransition $current_step
+ * @property ApplicationState $current_state
  * @property Carbon|null $offer_response_deadline
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -136,7 +136,7 @@ class Application extends BaseModel implements Commentable
      * The first active stage of the given type in this requisition (by display_order),
      * or null when the requisition has no stage of that type. Used to mirror the
      * status onto the stage at the funnel ends (offer/hired) — see
-     * AbstractApplicationTransition::advanceToStageType().
+     * ApplicationState::advanceToStageType().
      */
     public function firstStageOfType(StageTypeEnum $type): ?Stage
     {
@@ -214,8 +214,8 @@ class Application extends BaseModel implements Commentable
     /**
      * @phpstan-ignore missingType.generics
      */
-    protected function currentStep(): Attribute
+    protected function currentState(): Attribute
     {
-        return Attribute::make(get: fn () => $this->status->getAction($this));
+        return Attribute::make(get: fn () => $this->status->state($this));
     }
 }

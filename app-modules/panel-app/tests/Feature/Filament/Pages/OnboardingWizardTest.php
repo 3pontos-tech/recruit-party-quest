@@ -209,6 +209,30 @@ describe('Finalization validation (issue #166)', function (): void {
 });
 
 describe('Complete Registration Flow', function (): void {
+    it('redirects to the stored intent after completing onboarding', function (): void {
+        $intentUrl = url('/vagas/alguma-vaga/candidatar');
+        session(['url.intended' => $intentUrl]);
+
+        livewire(OnboardingWizard::class)
+            ->set('wizardVisible', true)
+            ->set('data.expected_salary', '75000')
+            ->set('data.expected_salary_currency', 'USD')
+            ->set('data.availability_date', now()->addDays(30)->format('Y-m-d'))
+            ->set('data.willing_to_relocate', true)
+            ->set('data.is_open_to_remote', true)
+            ->set('data.experience_level', ExperienceLevelEnum::MidLevel->value)
+            ->set('data.timezone', 'America/New_York')
+            ->set('data.preferred_language', 'en_US')
+            ->set('data.phone', '+5511987654321')
+            ->set('data.confirm_submission', true)
+            ->set('data.data_consent_given', true)
+            ->set('data.work_experiences', [])
+            ->set('data.education', [])
+            ->call('handleRegistration')
+            ->assertHasNoFormErrors()
+            ->assertRedirect($intentUrl);
+    });
+
     it('should complete full onboarding successfully', function (): void {
         livewire(OnboardingWizard::class)
             ->set('wizardVisible', true)

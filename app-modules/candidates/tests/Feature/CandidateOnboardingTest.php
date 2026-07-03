@@ -130,10 +130,9 @@ it('should be able to onboard', function (): void {
 it('should disable file uploader when it is uploading a file', function (): void {
     livewire(OnboardingWizard::class)
         ->set('data.cv_file', [$this->file])
-        ->call('onResumeAnalyzed', $this->dto)
         ->assertOk()
         ->assertHasNoFormErrors()
-        ->assertDontSeeText(__('panel-app::pages/onboarding.steps.cv.fields.cv_file_helper'))
+        ->assertSet('canSkipResumeAnalysis', false)
         ->assertNotified(__('panel-app::pages/onboarding.steps.cv.fields.cv_file_uploading'));
 });
 

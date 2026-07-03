@@ -57,10 +57,10 @@ class ApplicationForm
 
                         Select::make('status')
                             ->label(__('applications::filament.fields.status'))
-                            ->options(fn (Application $record) => $record->current_step->choices())
+                            ->options(fn (Application $record) => $record->current_state->choices())
                             ->default(ApplicationStatusEnum::New)
                             ->required()
-                            ->disabled(fn (Application $record): bool => ! $record->current_step->canChange())
+                            ->disabled(fn (Application $record): bool => ! $record->current_state->canChange())
                             ->reactive()
                             ->live(),
 

@@ -15,8 +15,6 @@ class KanbanColumn extends Column
 {
     protected string|Htmlable|BackedEnum|Closure|null $description = null;
 
-    protected bool $hidden = false;
-
     /**
      * @var Closure|Collection<int,Recruiter>|null
      */
@@ -25,13 +23,6 @@ class KanbanColumn extends Column
     public function description(string|Htmlable|BackedEnum|Closure|null $description): static
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function hidden(bool $hidden = true): static
-    {
-        $this->hidden = $hidden;
 
         return $this;
     }
@@ -58,10 +49,5 @@ class KanbanColumn extends Column
     public function getRecruiters(): ?Collection
     {
         return $this->evaluate($this->recruiters);
-    }
-
-    public function isHidden(): bool
-    {
-        return $this->hidden;
     }
 }
