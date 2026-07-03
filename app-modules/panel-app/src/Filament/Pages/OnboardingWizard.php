@@ -203,7 +203,7 @@ class OnboardingWizard extends Page
             ->title(__('panel-app::pages/onboarding.notifications.onboarding_complete.title'))->success()
             ->send();
 
-        redirect(route('filament.app.pages.dashboard'));
+        redirect()->intended(route('filament.app.pages.dashboard'));
     }
 
     public function getTitle(): string|Htmlable

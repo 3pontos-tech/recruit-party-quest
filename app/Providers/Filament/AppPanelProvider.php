@@ -9,6 +9,7 @@ use App\Providers\Filament\Hooks\AppPanelHooks;
 use App\Socialite\CreateUserFromOauth;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\Provider;
+use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
@@ -19,6 +20,7 @@ use He4rt\App\Filament\Pages\AppDashboard;
 use He4rt\App\Filament\Pages\AppLoginPage;
 use He4rt\App\Filament\Pages\CandidateMyProfilePage;
 use He4rt\App\Filament\Pages\LandingPage;
+use He4rt\App\Http\Controllers\JobApplyIntentController;
 use He4rt\App\Livewire\MyProfile\CandidateEducation;
 use He4rt\App\Livewire\MyProfile\CandidateLinks;
 use He4rt\App\Livewire\MyProfile\CandidatePreferences;
@@ -36,6 +38,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Route;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 
@@ -50,6 +53,11 @@ class AppPanelProvider extends PanelProvider
             ->default()
             ->login(AppLoginPage::class)
             ->registration()
+            ->routes(function (): void {
+                Route::get('/vagas/{record}/candidatar', JobApplyIntentController::class)
+                    ->middleware(Authenticate::class)
+                    ->name('jobs.apply-intent');
+            })
             ->topNavigation()
             ->brandLogo(fn () => view('partials.logo-compact'))
             ->favicon(asset('favicon.ico'))

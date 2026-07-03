@@ -16,6 +16,8 @@
     if (auth()->check() && auth()->user()->candidate) {
         $hasApplied = $jobRequisition->applicationFrom(auth()->user()->candidate) !== null;
     }
+
+    $autoOpenApplication = request()->boolean('apply') && ! $hasApplied && $jobRequisition->screeningQuestions->isNotEmpty();
 @endphp
 
 @if (! $posting)
@@ -25,7 +27,7 @@
 @else
     <div
         x-data="{
-            showApplicationModal: false,
+            showApplicationModal: @js($autoOpenApplication),
             hasApplied: @js($hasApplied),
         }"
         x-on:application-submitted.window="hasApplied = true; showApplicationModal = false"
@@ -98,7 +100,11 @@
             <div class="flex w-full items-center gap-3">
                 @if ($hasAction)
                     @guest
-                        <x-he4rt::button variant="solid" class="w-full sm:w-auto" href="/login">
+                        <x-he4rt::button
+                            variant="solid"
+                            class="w-full sm:w-auto"
+                            :href="route('filament.app.jobs.apply-intent', ['record' => $posting->slug])"
+                        >
                             {{ __('panel-app::filament.pages.job_description.apply_button') }}
                         </x-he4rt::button>
                     @else
