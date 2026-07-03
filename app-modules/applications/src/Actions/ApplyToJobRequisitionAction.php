@@ -7,6 +7,7 @@ namespace He4rt\Applications\Actions;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Events\ApplicationSubmitted;
+use He4rt\Applications\Exceptions\RequisitionNotPublishedException;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
@@ -24,6 +25,10 @@ final class ApplyToJobRequisitionAction
         Candidate $candidate,
         CandidateSourceEnum $source = CandidateSourceEnum::CareerPage,
     ): Application {
+        if (! $requisition->isPublished()) {
+            throw RequisitionNotPublishedException::cannotApplyToRequisition($requisition);
+        }
+
         $application = Application::query()->create([
             'requisition_id' => $requisition->getKey(),
             'candidate_id' => $candidate->getKey(),
