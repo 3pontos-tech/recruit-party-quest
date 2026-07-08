@@ -63,7 +63,7 @@ return [
                 'data_consent_helper' => 'Isso é necessário para prosseguir com sua candidatura.',
             ],
             'validations' => [
-                'phone' => 'Informe um número de telefone válido com DDD (ex: (11) 98765-4321).',
+                'phone' => 'Informe um número de telefone válido, incluindo o código do país.',
             ],
         ],
         'cv' => [

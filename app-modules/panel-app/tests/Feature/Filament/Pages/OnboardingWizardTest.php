@@ -383,6 +383,30 @@ describe('Complete Registration Flow', function (): void {
         ]);
     });
 
+    it('accepts an international phone number from another country (UY)', function (): void {
+        livewire(OnboardingWizard::class)
+            ->set('wizardVisible', true)
+            ->set('data.expected_salary', '50000')
+            ->set('data.expected_salary_currency', 'BRL')
+            ->set('data.availability_date', now()->addDays(30)->format('Y-m-d'))
+            ->set('data.experience_level', 'junior')
+            ->set('data.timezone', 'America/Montevideo')
+            ->set('data.preferred_language', 'pt_BR')
+            ->set('data.phone', '+59891234567')
+            ->set('data.confirm_submission', true)
+            ->set('data.data_consent_given', true)
+            ->set('data.work_experiences', [])
+            ->set('data.education', [])
+            ->call('handleRegistration')
+            ->assertHasNoFormErrors()
+            ->assertRedirectToRoute('filament.app.pages.dashboard');
+
+        assertDatabaseHas(Candidate::class, [
+            'user_id' => $this->user->id,
+            'phone_number' => '+59891234567',
+        ]);
+    });
+
     it('should mark candidate as onboarded with timestamp', function (): void {
         livewire(OnboardingWizard::class)
             ->set('wizardVisible', true)

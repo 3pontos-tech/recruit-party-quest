@@ -20,7 +20,7 @@ return [
             'phone_number' => 'e.g., +55 (11) 98765-4321',
         ],
         'validations' => [
-            'phone_number' => 'Please enter a valid phone number with area code (e.g., (11) 98765-4321).',
+            'phone_number' => 'Please enter a valid phone number, including the country code.',
         ],
     ],
 

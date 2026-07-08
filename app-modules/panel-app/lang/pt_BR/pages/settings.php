@@ -20,7 +20,7 @@ return [
             'phone_number' => 'ex: +55 (11) 98765-4321',
         ],
         'validations' => [
-            'phone_number' => 'Informe um número de telefone válido com DDD (ex: (11) 98765-4321).',
+            'phone_number' => 'Informe um número de telefone válido, incluindo o código do país.',
         ],
     ],
 

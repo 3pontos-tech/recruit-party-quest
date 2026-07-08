@@ -302,7 +302,7 @@ class OnboardingWizard extends Page
                             ->defaultCountry('BR')
                             ->initialCountry('BR')
                             ->required()
-                            ->validateFor(country: 'BR')
+                            ->validateFor()
                             ->validationMessages([
                                 'phone' => __('panel-app::pages/onboarding.steps.account.validations.phone'),
                             ]),

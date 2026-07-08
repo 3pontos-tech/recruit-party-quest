@@ -63,7 +63,7 @@ return [
                 'data_consent_helper' => 'This is required to proceed with your application.',
             ],
             'validations' => [
-                'phone' => 'Please enter a valid phone number with area code (e.g., (11) 98765-4321).',
+                'phone' => 'Please enter a valid phone number, including the country code.',
             ],
         ],
         'cv' => [
