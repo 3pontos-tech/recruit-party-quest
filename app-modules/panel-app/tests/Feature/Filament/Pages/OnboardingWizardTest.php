@@ -196,7 +196,7 @@ describe('Resume Analysis Completion (broadcast payload)', function (): void {
 });
 
 describe('Finalization validation (issue #166)', function (): void {
-    it('blocks finalization when phone is invalid for BR and does not persist', function (): void {
+    it('blocks finalization when phone number is invalid and does not persist', function (): void {
         livewire(OnboardingWizard::class)
             ->set('wizardVisible', true)
             ->set('data.timezone', 'America/Sao_Paulo')
@@ -380,6 +380,30 @@ describe('Complete Registration Flow', function (): void {
         assertDatabaseHas(Candidate::class, [
             'user_id' => $this->user->id,
             'phone_number' => '+5511987654321',
+        ]);
+    });
+
+    it('accepts an international phone number from another country (UY)', function (): void {
+        livewire(OnboardingWizard::class)
+            ->set('wizardVisible', true)
+            ->set('data.expected_salary', '50000')
+            ->set('data.expected_salary_currency', 'BRL')
+            ->set('data.availability_date', now()->addDays(30)->format('Y-m-d'))
+            ->set('data.experience_level', 'junior')
+            ->set('data.timezone', 'America/Montevideo')
+            ->set('data.preferred_language', 'pt_BR')
+            ->set('data.phone', '+59891234567')
+            ->set('data.confirm_submission', true)
+            ->set('data.data_consent_given', true)
+            ->set('data.work_experiences', [])
+            ->set('data.education', [])
+            ->call('handleRegistration')
+            ->assertHasNoFormErrors()
+            ->assertRedirectToRoute('filament.app.pages.dashboard');
+
+        assertDatabaseHas(Candidate::class, [
+            'user_id' => $this->user->id,
+            'phone_number' => '+59891234567',
         ]);
     });
 
