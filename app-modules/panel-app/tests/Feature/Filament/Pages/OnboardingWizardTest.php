@@ -196,7 +196,7 @@ describe('Resume Analysis Completion (broadcast payload)', function (): void {
 });
 
 describe('Finalization validation (issue #166)', function (): void {
-    it('blocks finalization when phone is invalid for BR and does not persist', function (): void {
+    it('blocks finalization when phone number is invalid and does not persist', function (): void {
         livewire(OnboardingWizard::class)
             ->set('wizardVisible', true)
             ->set('data.timezone', 'America/Sao_Paulo')
