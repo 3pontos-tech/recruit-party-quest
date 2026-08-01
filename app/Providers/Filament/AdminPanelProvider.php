@@ -6,6 +6,7 @@ namespace App\Providers\Filament;
 
 use AlizHarb\ActivityLog\ActivityLogPlugin;
 use App\Enums\FilamentPanel;
+use App\Filament\Shared\MyProfile\PersonalInfo;
 use App\Filament\Shared\Pages\LoginPage;
 use Basement\BetterMails\Filament\FilamentBetterEmailPlugin;
 use Filament\Enums\ThemeMode;
@@ -80,6 +81,9 @@ final class AdminPanelProvider extends PanelProvider
                         // Sets the 'account' link in the panel User Menu (default = true)
                         userMenuLabel: 'My Profile', // Enables the avatar upload form component (default = false)
                     )
+                    ->myProfileComponents([
+                        'personal_info' => PersonalInfo::class,
+                    ])
                     ->enableBrowserSessions(),
                 new TermPlugin,
             ])

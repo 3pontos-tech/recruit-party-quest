@@ -13,6 +13,7 @@ use He4rt\Users\User;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
 
@@ -79,4 +80,18 @@ it('can update user', function (): void {
 
     expect($user->refresh())
         ->name->toBe('Updated User Name');
+});
+
+it('rejects a user email whose domain has no TLD', function (): void {
+    livewire(CreateUser::class)
+        ->fillForm([
+            'name' => 'Myke Douglas',
+            'email' => 'contatomyke@hotmail',
+            'email_verified_at' => null,
+            'password' => 'password',
+        ])
+        ->call('create')
+        ->assertHasFormErrors(['email']);
+
+    assertDatabaseMissing('users', ['email' => 'contatomyke@hotmail']);
 });

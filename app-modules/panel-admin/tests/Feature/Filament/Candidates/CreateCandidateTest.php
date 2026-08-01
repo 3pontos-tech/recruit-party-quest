@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
+use Filament\Actions\Testing\TestAction;
 use He4rt\Admin\Filament\Resources\Recruitment\Candidates\Pages\CreateCandidate;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Permissions\Roles;
@@ -11,6 +12,7 @@ use He4rt\Users\User;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseCount;
+use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
@@ -81,4 +83,19 @@ it('should redirect after successful creation', function (): void {
         ])
         ->call('create')
         ->assertRedirect();
+});
+
+it('rejects a new user email whose domain has no TLD in the create-option form', function (): void {
+    livewire(CreateCandidate::class)
+        ->callAction(
+            TestAction::make('createOption')->schemaComponent('user_id'),
+            data: [
+                'name' => 'Myke Douglas',
+                'email' => 'contatomyke@hotmail',
+                'password' => 'password',
+            ],
+        )
+        ->assertHasActionErrors(['email']);
+
+    assertDatabaseMissing('users', ['email' => 'contatomyke@hotmail']);
 });
