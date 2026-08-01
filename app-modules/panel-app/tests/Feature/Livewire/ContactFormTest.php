@@ -77,6 +77,20 @@ it('fails validation with invalid email', function (): void {
     Mail::assertNotSent(ContactFormMail::class);
 });
 
+it('fails validation when the email domain has no TLD', function (): void {
+    Mail::fake();
+
+    livewire(ContactForm::class)
+        ->set('name', 'Myke Douglas')
+        ->set('email', 'contatomyke@hotmail')
+        ->set('message', 'Mensagem de teste qualquer aqui.')
+        ->call('submit')
+        ->assertHasErrors(['email'])
+        ->assertSet('isSent', false);
+
+    Mail::assertNotSent(ContactFormMail::class);
+});
+
 it('fails validation when message is too short', function (): void {
     Mail::fake();
 

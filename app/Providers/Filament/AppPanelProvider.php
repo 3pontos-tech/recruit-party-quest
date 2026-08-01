@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Enums\FilamentPanel;
+use App\Filament\Shared\MyProfile\PersonalInfo;
 use App\Providers\Filament\Hooks\AppPanelHooks;
 use App\Socialite\CreateUserFromOauth;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
@@ -18,6 +19,7 @@ use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Width;
 use He4rt\App\Filament\Pages\AppDashboard;
 use He4rt\App\Filament\Pages\AppLoginPage;
+use He4rt\App\Filament\Pages\AppRegisterPage;
 use He4rt\App\Filament\Pages\CandidateMyProfilePage;
 use He4rt\App\Filament\Pages\LandingPage;
 use He4rt\App\Http\Controllers\JobApplyIntentController;
@@ -52,7 +54,7 @@ class AppPanelProvider extends PanelProvider
             ->id($this->panelEnum->value)
             ->default()
             ->login(AppLoginPage::class)
-            ->registration()
+            ->registration(AppRegisterPage::class)
             ->routes(function (): void {
                 Route::get('/vagas/{record}/candidatar', JobApplyIntentController::class)
                     ->middleware(Authenticate::class)
@@ -94,6 +96,7 @@ class AppPanelProvider extends PanelProvider
                     ->myProfile()
                     ->customMyProfilePage(CandidateMyProfilePage::class)
                     ->myProfileComponents([
+                        'personal_info' => PersonalInfo::class,
                         'candidate_resume_upload' => CandidateResumeUpload::class,
                         'candidate_profile_info' => CandidateProfileInfo::class,
                         'candidate_preferences' => CandidatePreferences::class,

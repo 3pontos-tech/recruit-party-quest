@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Admin\Filament\Resources\Recruitment\Candidates\Schemas;
 
+use App\Filament\Shared\Fields\EmailTextInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -44,8 +45,7 @@ class CandidateForm
                                     ->createOptionForm([
                                         TextInput::make('name')
                                             ->required(),
-                                        TextInput::make('email')
-                                            ->email()
+                                        EmailTextInput::make('email')
                                             ->required(),
                                         TextInput::make('password')
                                             ->password()

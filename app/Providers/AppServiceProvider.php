@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Filament\Shared\MyProfile\PersonalInfo;
 use App\Providers\Tools\DebugbarServiceProvider;
 use App\Providers\Tools\TelescopeServiceProvider;
 use Carbon\CarbonImmutable;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 use SocialiteProviders\Discord\Provider;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
@@ -47,6 +49,21 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureUrl();
         $this->configureHttp();
         $this->configureSocialite();
+        $this->configureLivewireComponents();
+    }
+
+    /**
+     * Aponta o alias `personal_info` do Breezy para a nossa subclasse.
+     *
+     * O Breezy registra `Livewire::component('personal_info', ...)` com a classe dele;
+     * sem sobrescrever o alias, o primeiro render usa a nossa classe mas o round-trip
+     * do Livewire ressuscita o componente como o do pacote, perdendo o override.
+     */
+    private function configureLivewireComponents(): void
+    {
+        $this->app->booted(static function (): void {
+            Livewire::component('personal_info', PersonalInfo::class);
+        });
     }
 
     /**
