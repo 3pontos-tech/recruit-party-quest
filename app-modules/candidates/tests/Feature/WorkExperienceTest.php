@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use He4rt\Candidates\DTOs\WorkExperienceMetadata;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Candidates\Models\WorkExperience;
+use Illuminate\Support\Facades\DB;
 
 it('can create a work experience record', function (): void {
     $workExperience = WorkExperience::factory()->create();
@@ -35,12 +37,14 @@ it('casts is_currently_working_here to boolean', function (): void {
     expect($workExperience->is_currently_working_here)->toBeBool();
 });
 
-it('casts metadata to array', function (): void {
+it('casts metadata to the value object when given a plain array', function (): void {
     $workExperience = WorkExperience::factory()->create([
-        'metadata' => ['key' => 'value'],
+        'metadata' => ['skills' => ['Excel']],
     ]);
 
-    expect($workExperience->metadata)->toBeArray();
+    expect($workExperience->metadata)
+        ->toBeInstanceOf(WorkExperienceMetadata::class)
+        ->and($workExperience->metadata->skills)->toBe(['Excel']);
 });
 
 it('uses soft deletes', function (): void {
@@ -78,4 +82,50 @@ it('counts duration between start and end for a finished role', function (): voi
     ]);
 
     expect($workExperience->durationInMonths())->toBe(12);
+});
+
+it('persists and reads back the position column', function (): void {
+    $experience = WorkExperience::factory()->create(['position' => 'Analista de RH Pleno']);
+
+    expect($experience->fresh()->position)->toBe('Analista de RH Pleno');
+});
+
+it('allows a null position for legacy records', function (): void {
+    $experience = WorkExperience::factory()->create(['position' => null]);
+
+    expect($experience->fresh()->position)->toBeNull();
+});
+
+it('casts metadata to the value object', function (): void {
+    $experience = WorkExperience::factory()->create([
+        'metadata' => new WorkExperienceMetadata(['Gupy', 'Excel']),
+    ]);
+
+    expect($experience->fresh()->metadata)
+        ->toBeInstanceOf(WorkExperienceMetadata::class)
+        ->and($experience->fresh()->metadata->skills)->toBe(['Gupy', 'Excel']);
+});
+
+it('returns an empty metadata object when the column is null', function (): void {
+    $experience = WorkExperience::factory()->create(['metadata' => null]);
+
+    expect($experience->fresh()->metadata)
+        ->toBeInstanceOf(WorkExperienceMetadata::class)
+        ->and($experience->fresh()->metadata->skills)->toBe([]);
+});
+
+it('no longer seeds team_size or project_type', function (): void {
+    $experience = WorkExperience::factory()->create();
+
+    $raw = json_decode(
+        (string) DB::table('candidate_work_experiences')
+            ->where('id', $experience->getKey())
+            ->value('metadata'),
+        true,
+    );
+
+    expect($raw)->toHaveKey('skills')
+        ->not->toHaveKey('team_size')
+        ->not->toHaveKey('project_type')
+        ->not->toHaveKey('position');   // agora é coluna
 });

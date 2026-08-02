@@ -16,66 +16,6 @@
     $currentJob = $workExperiences->where('is_currently_working_here', true)->first();
 
     $totalExperienceTimeString = $candidate->totalExperienceFormatted;
-
-    if (! function_exists('extractJobTitle')) {
-        function extractJobTitle($description, $metadata = null): string
-        {
-            if ($metadata && isset($metadata['position'])) {
-                return $metadata['position'];
-            }
-
-            $lines = explode("\n", trim($description));
-            $firstLine = trim($lines[0]);
-
-            if (strlen($firstLine) <= 60 && ! preg_match('/^[•\-\*]/', $firstLine)) {
-                return $firstLine;
-            }
-
-            return __('panel-organization::view.tabs.work_experience.professional_role_fallback');
-        }
-    }
-
-    if (! function_exists('extractSkills')) {
-        function extractSkills($metadata, $description): array
-        {
-            $skills = [];
-
-            if ($metadata) {
-                if (isset($metadata['skills']) && is_array($metadata['skills'])) {
-                    $skills = array_merge($skills, $metadata['skills']);
-                }
-                if (isset($metadata['technologies']) && is_array($metadata['technologies'])) {
-                    $skills = array_merge($skills, $metadata['technologies']);
-                }
-            }
-
-            if (empty($skills)) {
-                $commonTech = ['PHP', 'Laravel', 'JavaScript', 'React', 'Vue', 'Node.js', 'Python', 'Java', 'MySQL', 'PostgreSQL', 'MongoDB', 'AWS', 'Docker', 'Kubernetes', 'Git'];
-                foreach ($commonTech as $tech) {
-                    if (stripos($description, $tech) !== false) {
-                        $skills[] = $tech;
-                    }
-                }
-            }
-
-            return array_unique($skills);
-        }
-    }
-    if (! function_exists('formatJobDescription')) {
-        function formatJobDescription($description): string
-        {
-            $lines = explode("\n", trim($description));
-
-            if (count($lines) > 1) {
-                $firstLine = trim($lines[0]);
-                if (strlen($firstLine) <= 60 && ! preg_match('/^[•\-\*]/', $firstLine)) {
-                    array_shift($lines);
-                }
-            }
-
-            return implode("\n", $lines);
-        }
-    }
 @endphp
 
 <x-filament::section icon="heroicon-o-briefcase" icon-color="info">
@@ -101,9 +41,8 @@
             @foreach ($workExperiences as $experience)
                 @php
                     $isCurrent = $experience->is_currently_working_here;
-                    $jobTitle = extractJobTitle($experience->description, $experience->metadata);
-                    $skills = extractSkills($experience->metadata, $experience->description);
-                    $formattedDescription = formatJobDescription($experience->description);
+                    $jobTitle = $experience->position ?? __('panel-organization::view.tabs.work_experience.professional_role_fallback');
+                    $skills = $experience->metadata->skills;
 
                     $startDate = $experience->start_date;
                     $endDate = $isCurrent ? now() : $experience->end_date;
@@ -151,9 +90,9 @@
                                 </div>
 
                                 {{-- Description --}}
-                                @if (! empty(trim($formattedDescription)))
-                                    <div class="text-text-medium mt-4 text-base leading-7">
-                                        {{ $formattedDescription }}
+                                @if (! empty(trim($experience->description)))
+                                    <div class="text-text-medium mt-4 text-base leading-7 whitespace-pre-line">
+                                        {{ $experience->description }}
                                     </div>
                                 @endif
 

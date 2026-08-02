@@ -119,6 +119,104 @@ describe('StoreCandidateWorkExperiences', function (): void {
 
         assertDatabaseCount(WorkExperience::class, 2);
     });
+
+    it('persists position and skills from the extracted dto', function (): void {
+        $dto = new CandidateWorkExperienceDTO(
+            companyName: 'Nubank',
+            description: 'Recrutamento e seleção',
+            isCurrentlyWorking: true,
+            position: 'Analista de RH Pleno',
+            skills: ['Gupy', 'LinkedIn Recruiter'],
+            startDate: Date::parse('2023-03-01'),
+        );
+
+        resolve(StoreCandidateWorkExperiences::class)->execute(
+            new CandidateWorkExperienceCollection([$dto])
+        );
+
+        $record = WorkExperience::query()->firstOrFail();
+
+        expect($record->position)->toBe('Analista de RH Pleno')
+            ->and($record->metadata->skills)->toBe(['Gupy', 'LinkedIn Recruiter']);
+    });
+
+    it('persists a null position when the model did not extract one', function (): void {
+        $dto = new CandidateWorkExperienceDTO(
+            companyName: 'Nubank',
+            description: 'Recrutamento',
+            isCurrentlyWorking: false,
+            startDate: Date::parse('2023-03-01'),
+        );
+
+        resolve(StoreCandidateWorkExperiences::class)->execute(
+            new CandidateWorkExperienceCollection([$dto])
+        );
+
+        $record = WorkExperience::query()->firstOrFail();
+
+        expect($record->position)->toBeNull()
+            ->and($record->metadata->skills)->toBe([]);
+    });
+
+    it('persists an experience even when the description is empty', function (): void {
+        $dto = new CandidateWorkExperienceDTO(
+            companyName: 'Nubank',
+            description: '',
+            isCurrentlyWorking: false,
+            position: 'Analista de RH',
+            startDate: Date::parse('2023-03-01'),
+        );
+
+        resolve(StoreCandidateWorkExperiences::class)->execute(
+            new CandidateWorkExperienceCollection([$dto])
+        );
+
+        assertDatabaseCount(WorkExperience::class, 1);
+        assertDatabaseHas(WorkExperience::class, ['company_name' => 'Nubank', 'description' => '']);
+    });
+
+    it('skips an experience without a company name', function (): void {
+        $dto = new CandidateWorkExperienceDTO(
+            companyName: '',
+            description: 'Alguma coisa',
+            isCurrentlyWorking: false,
+            startDate: Date::parse('2023-03-01'),
+        );
+
+        resolve(StoreCandidateWorkExperiences::class)->execute(
+            new CandidateWorkExperienceCollection([$dto])
+        );
+
+        assertDatabaseCount(WorkExperience::class, 0);
+    });
+
+    it('does not overwrite an existing experience on cv re-upload', function (): void {
+        // O UserObserver já cria um Candidate para cada User, então o fixture deixa dois
+        // candidatos para o mesmo usuário. A Action resolve via `auth()->user()->candidate`,
+        // e o registro pré-existente precisa pertencer a esse mesmo candidato.
+        $existing = WorkExperience::factory()
+            ->for($this->user->candidate, 'candidate')
+            ->create([
+                'company_name' => 'Nubank',
+                'start_date' => Date::parse('2023-03-01')->startOfDay(),
+                'position' => 'Cargo digitado pelo candidato',
+            ]);
+
+        $dto = new CandidateWorkExperienceDTO(
+            companyName: 'Nubank',
+            description: 'Recrutamento',
+            isCurrentlyWorking: false,
+            position: 'Cargo extraído pela IA',
+            startDate: Date::parse('2023-03-01'),
+        );
+
+        resolve(StoreCandidateWorkExperiences::class)->execute(
+            new CandidateWorkExperienceCollection([$dto])
+        );
+
+        assertDatabaseCount(WorkExperience::class, 1);
+        expect($existing->fresh()->position)->toBe('Cargo digitado pelo candidato');
+    });
 });
 
 describe('StoreCandidateEducation', function (): void {

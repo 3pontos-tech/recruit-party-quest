@@ -23,7 +23,6 @@ final class CvDataSchema
                     'is_cv',
                     'Define se o arquivo é um currículo válido.'
                 ),
-
                 'rejection_reason' => new StringSchema(
                     'rejection_reason',
                     sprintf('Motivo da rejeição seguindo esses padrões (ex: {%s}).', $notAnCv->value)
@@ -31,31 +30,46 @@ final class CvDataSchema
                 'work_experiences' => new ArraySchema(
                     'work_experiences',
                     'Lista de experiências profissionais',
-
-                    /** @phpstan-ignore-next-line argument.type */
-                    new ObjectSchema('experience', 'Detalhes da experiência', [
-                        'company_name' => new StringSchema('company_name', 'Nome da empresa'),
-                        'description' => new StringSchema('description', 'Descrição das atividades'),
-                        'start_date' => new StringSchema('start_date', 'Data de início YYYY-MM-DD'),
-                        'end_date' => new StringSchema('end_date', 'Data de término YYYY-MM-DD ou null'),
-                        'is_currently_working_here' => new BooleanSchema('is_currently_working_here', 'Se trabalha lá'),
-                    ])
+                    new ObjectSchema(
+                        'experience',
+                        'Detalhes da experiência',
+                        /** @phpstan-ignore-next-line argument.type */
+                        [
+                            'company_name' => new StringSchema('company_name', 'Nome da empresa'),
+                            'position' => new StringSchema('position', 'Cargo ou função exercida, exatamente como aparece no currículo (ex.: Analista de RH Pleno)'),
+                            'description' => new StringSchema('description', 'Descrição das atividades'),
+                            'skills' => new ArraySchema(
+                                'skills',
+                                'Competências, tecnologias e ferramentas citadas nesta experiência',
+                                new StringSchema('skill', 'Nome da competência')
+                            ),
+                            'start_date' => new StringSchema('start_date', 'Data de início YYYY-MM-DD'),
+                            'end_date' => new StringSchema('end_date', 'Data de término YYYY-MM-DD ou null', nullable: true),
+                            'is_currently_working_here' => new BooleanSchema('is_currently_working_here', 'Se trabalha lá'),
+                        ],
+                        requiredFields: ['company_name', 'start_date', 'is_currently_working_here'],
+                    )
                 ),
                 'education' => new ArraySchema(
                     'education',
                     'Lista de formação acadêmica',
-
-                    /** @phpstan-ignore-next-line argument.type */
-                    new ObjectSchema('education_item', 'Detalhes da formação', [
-                        'institution' => new StringSchema('institution', 'Nome da instituição'),
-                        'degree' => new StringSchema('degree', 'Grau acadêmico'),
-                        'field_of_study' => new StringSchema('field_of_study', 'Curso'),
-                        'start_date' => new StringSchema('start_date', 'Data de início YYYY-MM-DD'),
-                        'end_date' => new StringSchema('end_date', 'Data de término YYYY-MM-DD'),
-                        'is_enrolled' => new BooleanSchema('is_enrolled', 'Se ainda está cursando'),
-                    ])
+                    new ObjectSchema(
+                        'education_item',
+                        'Detalhes da formação',
+                        /** @phpstan-ignore-next-line argument.type */
+                        [
+                            'institution' => new StringSchema('institution', 'Nome da instituição'),
+                            'degree' => new StringSchema('degree', 'Grau acadêmico'),
+                            'field_of_study' => new StringSchema('field_of_study', 'Curso'),
+                            'start_date' => new StringSchema('start_date', 'Data de início YYYY-MM-DD'),
+                            'end_date' => new StringSchema('end_date', 'Data de término YYYY-MM-DD', nullable: true),
+                            'is_enrolled' => new BooleanSchema('is_enrolled', 'Se ainda está cursando'),
+                        ],
+                        requiredFields: ['institution', 'start_date', 'is_enrolled'],
+                    )
                 ),
-            ]
+            ],
+            requiredFields: ['is_cv'],
         );
     }
 }

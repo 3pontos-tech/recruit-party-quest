@@ -49,6 +49,17 @@ describe('CandidateEducationDTO', function (): void {
 
         expect($serialized['end_date'])->toBeNull();
     });
+
+    it('does not throw when the model omits institution or degree', function (): void {
+        $dto = CandidateEducationDTO::make([
+            'field_of_study' => 'Psicologia',
+            'start_date' => '2018-01-01',
+        ]);
+
+        expect($dto->institution)->toBe('')
+            ->and($dto->degree)->toBe('')
+            ->and($dto->isEnrolled)->toBeFalse();
+    });
 });
 
 describe('CandidateWorkExperienceDTO', function (): void {
@@ -90,6 +101,75 @@ describe('CandidateWorkExperienceDTO', function (): void {
         $serialized = $dto->jsonSerialize();
 
         expect($serialized['end_date'])->toBeNull();
+    });
+
+    it('does not throw when the model omits company_name', function (): void {
+        $dto = CandidateWorkExperienceDTO::make([
+            'description' => 'Recrutamento e seleção',
+            'start_date' => '2023-03-01',
+            'is_currently_working_here' => true,
+        ]);
+
+        expect($dto->companyName)->toBe('')
+            ->and($dto->description)->toBe('Recrutamento e seleção');
+    });
+
+    it('does not throw when the model omits description', function (): void {
+        $dto = CandidateWorkExperienceDTO::make([
+            'company_name' => 'Nubank',
+            'start_date' => '2023-03-01',
+        ]);
+
+        expect($dto->description)->toBe('');
+    });
+
+    it('defaults position to null and skills to an empty list', function (): void {
+        $dto = CandidateWorkExperienceDTO::make([
+            'company_name' => 'Nubank',
+            'description' => 'Recrutamento',
+        ]);
+
+        expect($dto->position)->toBeNull()
+            ->and($dto->skills)->toBe([]);
+    });
+
+    it('hydrates position and skills when the model provides them', function (): void {
+        $dto = CandidateWorkExperienceDTO::make([
+            'company_name' => 'Nubank',
+            'description' => 'Recrutamento',
+            'position' => 'Analista de RH Pleno',
+            'skills' => ['Gupy', 'LinkedIn Recruiter'],
+        ]);
+
+        expect($dto->position)->toBe('Analista de RH Pleno')
+            ->and($dto->skills)->toBe(['Gupy', 'LinkedIn Recruiter']);
+    });
+
+    it('discards empty and non-string entries from skills', function (): void {
+        $dto = CandidateWorkExperienceDTO::make([
+            'company_name' => 'Nubank',
+            'description' => 'Recrutamento',
+            'skills' => ['Gupy', '', null, 'Excel'],
+        ]);
+
+        expect($dto->skills)->toBe(['Gupy', 'Excel']);
+    });
+
+    it('survives a jsonSerialize round-trip with the new fields', function (): void {
+        $original = CandidateWorkExperienceDTO::make([
+            'company_name' => 'Nubank',
+            'description' => 'Recrutamento',
+            'position' => 'Analista de RH Pleno',
+            'skills' => ['Gupy'],
+            'start_date' => '2023-03-01',
+            'is_currently_working_here' => true,
+        ]);
+
+        $restored = CandidateWorkExperienceDTO::make($original->jsonSerialize());
+
+        expect($restored->position)->toBe('Analista de RH Pleno')
+            ->and($restored->skills)->toBe(['Gupy'])
+            ->and($restored->companyName)->toBe('Nubank');
     });
 });
 
