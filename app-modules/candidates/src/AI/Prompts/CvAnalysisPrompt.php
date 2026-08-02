@@ -22,6 +22,10 @@ final class CvAnalysisPrompt
 
                 ### EXTRAÇÃO (Se is_cv: TRUE):
                 - Extraia até 5 experiências profissionais e a formação acadêmica.
+                - Para cada experiência, extraia o cargo (position) exatamente como aparece no
+                  currículo. Se o cargo não estiver explícito, omita o campo — nunca deduza nem invente.
+                - Em skills, liste as competências, tecnologias e ferramentas citadas naquela
+                  experiência específica. Se nenhuma for citada, retorne uma lista vazia.
 PROMPT;
     }
 }
