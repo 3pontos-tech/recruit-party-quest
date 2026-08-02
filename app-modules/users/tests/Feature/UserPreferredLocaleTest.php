@@ -7,7 +7,8 @@ use Illuminate\Contracts\Translation\HasLocalePreference;
 
 it('exposes the candidate preferred language as the locale preference', function (): void {
     $user = User::factory()->create();
-    $user->candidate()->update(['preferred_language' => 'pt_BR']);
+    $user->candidate()->firstOrCreate([])->update(['preferred_language' => 'pt_BR']);
+    $user->unsetRelation('candidate');
 
     expect($user->fresh())->toBeInstanceOf(HasLocalePreference::class)
         ->and($user->fresh()->preferredLocale())->toBe('pt_BR');

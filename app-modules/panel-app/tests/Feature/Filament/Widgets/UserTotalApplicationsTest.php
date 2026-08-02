@@ -6,6 +6,7 @@ use App\Enums\FilamentPanel;
 use He4rt\App\Filament\Widgets\UserTotalApplications;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
+use He4rt\Candidates\Actions\EnsureCandidateProfile;
 use He4rt\Users\User;
 
 use function Pest\Laravel\actingAs;
@@ -13,9 +14,9 @@ use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
     $this->user = User::factory()->create();
-    $this->user->refresh();
 
-    $this->candidate = $this->user->candidate;
+    $this->candidate = resolve(EnsureCandidateProfile::class)->execute($this->user);
+    $this->user->setRelation('candidate', $this->candidate);
 
     actingAs($this->user);
     filament()->setCurrentPanel(FilamentPanel::App->value);

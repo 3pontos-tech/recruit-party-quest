@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use He4rt\App\Livewire\MyProfile\CandidateWorkExperience;
+use He4rt\Candidates\Actions\EnsureCandidateProfile;
 use He4rt\Candidates\DTOs\WorkExperienceMetadata;
 use He4rt\Candidates\Models\WorkExperience;
 use He4rt\Users\User;
@@ -13,12 +14,8 @@ use function Pest\Laravel\actingAs;
 beforeEach(function (): void {
     $this->user = User::factory()->create();
 
-    // O UserObserver já cria um Candidate por User. Criar outro aqui deixaria dois
-    // registros para o mesmo `user_id`, e `auth()->user()->candidate` — usado pelo
-    // componente — resolveria para o do observer, não para o do fixture.
-    $this->user->refresh();
-
-    $this->candidate = $this->user->candidate;
+    $this->candidate = resolve(EnsureCandidateProfile::class)->execute($this->user);
+    $this->user->setRelation('candidate', $this->candidate);
 
     actingAs($this->user);
 });

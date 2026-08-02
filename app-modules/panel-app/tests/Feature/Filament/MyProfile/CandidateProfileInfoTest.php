@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use He4rt\App\Livewire\MyProfile\CandidateProfileInfo;
+use He4rt\Candidates\Actions\EnsureCandidateProfile;
 use He4rt\Users\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -12,9 +13,9 @@ use function Pest\Laravel\actingAs;
 
 beforeEach(function (): void {
     $this->user = User::factory()->create();
-    $this->user->refresh();
 
-    $this->candidate = $this->user->candidate;
+    $this->candidate = resolve(EnsureCandidateProfile::class)->execute($this->user);
+    $this->user->setRelation('candidate', $this->candidate);
     $this->candidate->update([
         'headline' => 'Test Headline',
         'summary' => 'Test Summary',
@@ -52,8 +53,9 @@ it('returns ui-avatars url when candidate has no avatar', function (): void {
 
 it('returns ui-avatars url when user has no candidate', function (): void {
     $user = User::factory()->create();
-    $user->refresh();
-    $user->candidate?->forceDelete();
+
+    // Até a Tarefa 5 o observer ainda cria o perfil; depois dela estas duas linhas somem.
+    $user->candidate()->forceDelete();
     $user->unsetRelation('candidate');
 
     $avatarUrl = $user->getFilamentAvatarUrl();

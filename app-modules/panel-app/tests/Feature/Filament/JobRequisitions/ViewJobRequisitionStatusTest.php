@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Enums\FilamentPanel;
 use He4rt\App\Filament\Resources\JobRequisitions\Pages\ViewJobRequisition;
 use He4rt\Applications\Models\Application;
+use He4rt\Candidates\Actions\EnsureCandidateProfile;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
@@ -71,11 +72,12 @@ it('redirects an already-applied candidate to their application even when the jo
     $posting = JobPosting::factory()->for($requisition, 'jobRequisition')->create();
 
     $user = User::factory()->create();
-    $user->candidate()->update(['is_onboarded' => true]);
-    $user->refresh();
+    $candidate = resolve(EnsureCandidateProfile::class)->execute($user);
+    $user->setRelation('candidate', $candidate);
+    $candidate->update(['is_onboarded' => true]);
 
     $application = Application::factory()
-        ->for($user->candidate)
+        ->for($candidate)
         ->for($requisition, 'requisition')
         ->create();
 
@@ -90,8 +92,9 @@ it('redirects to the jobs list with a warning when the job is unpublished betwee
     $posting = JobPosting::factory()->for($requisition, 'jobRequisition')->create();
 
     $user = User::factory()->create();
-    $user->candidate()->update(['is_onboarded' => true]);
-    $user->refresh();
+    $candidate = resolve(EnsureCandidateProfile::class)->execute($user);
+    $user->setRelation('candidate', $candidate);
+    $candidate->update(['is_onboarded' => true]);
 
     actingAs($user);
 

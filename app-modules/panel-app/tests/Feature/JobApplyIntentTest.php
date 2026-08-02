@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
+use He4rt\Candidates\Actions\EnsureCandidateProfile;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
@@ -19,6 +20,8 @@ beforeEach(function (): void {
     filament()->setCurrentPanel(FilamentPanel::App->value);
 
     $this->user = User::factory()->create();
+    $this->candidate = resolve(EnsureCandidateProfile::class)->execute($this->user);
+    $this->user->setRelation('candidate', $this->candidate);
 
     $team = Team::factory()->create();
     $department = Department::factory()->for($team)->create();
@@ -50,8 +53,7 @@ describe('Apply intent route', function (): void {
     });
 
     it('redirects an authenticated candidate to the job page with the apply flag', function (): void {
-        $this->user->candidate()->update(['is_onboarded' => true]);
-        $this->user->refresh();
+        $this->candidate->update(['is_onboarded' => true]);
 
         actingAs($this->user);
 
@@ -63,8 +65,7 @@ describe('Apply intent route', function (): void {
     });
 
     it('redirects to the jobs list with a notification when the posting no longer exists', function (): void {
-        $this->user->candidate()->update(['is_onboarded' => true]);
-        $this->user->refresh();
+        $this->candidate->update(['is_onboarded' => true]);
 
         actingAs($this->user);
 
@@ -76,8 +77,7 @@ describe('Apply intent route', function (): void {
     it('redirects to the jobs list with a notification when the requisition is no longer published', function (): void {
         $this->jobRequisition->update(['status' => RequisitionStatusEnum::Closed]);
 
-        $this->user->candidate()->update(['is_onboarded' => true]);
-        $this->user->refresh();
+        $this->candidate->update(['is_onboarded' => true]);
 
         actingAs($this->user);
 
@@ -101,8 +101,7 @@ describe('Job page apply intent UI', function (): void {
             ->required()
             ->create();
 
-        $this->user->candidate()->update(['is_onboarded' => true]);
-        $this->user->refresh();
+        $this->candidate->update(['is_onboarded' => true]);
 
         actingAs($this->user);
 
@@ -121,8 +120,7 @@ describe('Job page apply intent UI', function (): void {
             ->required()
             ->create();
 
-        $this->user->candidate()->update(['is_onboarded' => true]);
-        $this->user->refresh();
+        $this->candidate->update(['is_onboarded' => true]);
 
         actingAs($this->user);
 

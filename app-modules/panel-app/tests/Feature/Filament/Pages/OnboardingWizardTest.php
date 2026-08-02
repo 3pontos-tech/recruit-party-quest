@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
 use He4rt\App\Filament\Pages\OnboardingWizard;
+use He4rt\Candidates\Actions\EnsureCandidateProfile;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Candidates\Models\WorkExperience;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
@@ -19,12 +20,8 @@ use function Pest\Livewire\livewire;
 beforeEach(function (): void {
     $this->user = User::factory()->create();
 
-    // O UserObserver já cria um Candidate por User, mas o acesso a `$user->candidate`
-    // dentro do observer deixa a relação cacheada como null nesta instância. Sem o
-    // refresh, `auth()->user()->candidate` continuaria null durante todo o teste.
-    $this->user->refresh();
-
-    $this->candidate = $this->user->candidate;
+    $this->candidate = resolve(EnsureCandidateProfile::class)->execute($this->user);
+    $this->user->setRelation('candidate', $this->candidate);
     $this->candidate->update(['is_onboarded' => false]);
 
     actingAs($this->user);
