@@ -6,7 +6,6 @@ use App\Enums\FilamentPanel;
 use He4rt\App\Filament\Widgets\UserTotalApplications;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
 use He4rt\Applications\Models\Application;
-use He4rt\Candidates\Actions\EnsureCandidateProfile;
 use He4rt\Users\User;
 
 use function Pest\Laravel\actingAs;
@@ -15,8 +14,7 @@ use function Pest\Livewire\livewire;
 beforeEach(function (): void {
     $this->user = User::factory()->create();
 
-    $this->candidate = resolve(EnsureCandidateProfile::class)->execute($this->user);
-    $this->user->setRelation('candidate', $this->candidate);
+    $this->candidate = candidateFor($this->user);
 
     actingAs($this->user);
     filament()->setCurrentPanel(FilamentPanel::App->value);
@@ -123,7 +121,7 @@ describe('Offers received count', function (): void {
 describe('User isolation', function (): void {
     it('ignores applications from other users', function (): void {
         $otherUser = User::factory()->create();
-        $otherCandidate = resolve(EnsureCandidateProfile::class)->execute($otherUser);
+        $otherCandidate = candidateFor($otherUser);
 
         Application::factory()->count(5)->create([
             'candidate_id' => $otherCandidate->getKey(),
@@ -136,7 +134,7 @@ describe('User isolation', function (): void {
 
     it('counts only the authenticated user applications when multiple users exist', function (): void {
         $otherUser = User::factory()->create();
-        $otherCandidate = resolve(EnsureCandidateProfile::class)->execute($otherUser);
+        $otherCandidate = candidateFor($otherUser);
 
         Application::factory()->count(2)->create([
             'candidate_id' => $this->candidate->getKey(),

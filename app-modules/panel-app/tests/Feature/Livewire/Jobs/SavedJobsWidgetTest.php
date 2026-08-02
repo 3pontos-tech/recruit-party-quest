@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use He4rt\App\Livewire\Jobs\SavedJobsWidget;
-use He4rt\Candidates\Actions\EnsureCandidateProfile;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Candidates\Models\CandidateJobSaved;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
@@ -18,8 +17,7 @@ use function Pest\Livewire\livewire;
 beforeEach(function (): void {
     $this->user = User::factory()->create();
 
-    $this->candidate = resolve(EnsureCandidateProfile::class)->execute($this->user);
-    $this->user->setRelation('candidate', $this->candidate);
+    $this->candidate = candidateFor($this->user);
     actingAs($this->user);
 
     Livewire::withoutLazyLoading();
@@ -140,7 +138,7 @@ it('shows the empty state when there are no saved jobs', function (): void {
 
 it('does not remove a saved job that belongs to another candidate', function (): void {
     $otherUser = User::factory()->create();
-    $otherCandidate = resolve(EnsureCandidateProfile::class)->execute($otherUser);
+    $otherCandidate = candidateFor($otherUser);
 
     $job = JobRequisition::factory()->available()->create();
     saveJobForCandidate($job, $otherCandidate);

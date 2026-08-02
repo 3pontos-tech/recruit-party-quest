@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use He4rt\App\Livewire\MyProfile\CandidateProfileInfo;
-use He4rt\Candidates\Actions\EnsureCandidateProfile;
 use He4rt\Users\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -14,9 +13,7 @@ use function Pest\Laravel\actingAs;
 beforeEach(function (): void {
     $this->user = User::factory()->create();
 
-    $this->candidate = resolve(EnsureCandidateProfile::class)->execute($this->user);
-    $this->user->setRelation('candidate', $this->candidate);
-    $this->candidate->update([
+    $this->candidate = candidateFor($this->user, [
         'headline' => 'Test Headline',
         'summary' => 'Test Summary',
         'phone_number' => '+5511999999999',

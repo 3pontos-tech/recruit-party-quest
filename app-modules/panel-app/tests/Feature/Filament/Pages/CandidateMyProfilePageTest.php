@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use He4rt\App\Filament\Pages\CandidateMyProfilePage;
-use He4rt\Candidates\Actions\EnsureCandidateProfile;
 use He4rt\Users\User;
 use Livewire\Livewire;
 
@@ -17,11 +16,7 @@ it('prevents unauthenticated users from accessing the page', function (): void {
 
 it('allows authenticated users with completed onboarding to access my profile page', function (): void {
     $user = User::factory()->create();
-    $candidate = resolve(EnsureCandidateProfile::class)->execute($user);
-    $user->setRelation('candidate', $candidate);
-
-    // Mark onboarding as complete
-    $candidate->update([
+    candidateFor($user, [
         'is_onboarded' => true,
         'onboarding_completed_at' => now(),
     ]);
@@ -34,11 +29,7 @@ it('allows authenticated users with completed onboarding to access my profile pa
 
 it('renders the my profile page successfully for authenticated users', function (): void {
     $user = User::factory()->create();
-    $candidate = resolve(EnsureCandidateProfile::class)->execute($user);
-    $user->setRelation('candidate', $candidate);
-
-    // Mark onboarding as complete
-    $candidate->update([
+    candidateFor($user, [
         'is_onboarded' => true,
         'onboarding_completed_at' => now(),
     ]);

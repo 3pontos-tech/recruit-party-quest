@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
-use He4rt\Candidates\Actions\EnsureCandidateProfile;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
@@ -20,8 +19,7 @@ beforeEach(function (): void {
     filament()->setCurrentPanel(FilamentPanel::App->value);
 
     $this->user = User::factory()->create();
-    $this->candidate = resolve(EnsureCandidateProfile::class)->execute($this->user);
-    $this->user->setRelation('candidate', $this->candidate);
+    $this->candidate = candidateFor($this->user);
 
     $team = Team::factory()->create();
     $department = Department::factory()->for($team)->create();

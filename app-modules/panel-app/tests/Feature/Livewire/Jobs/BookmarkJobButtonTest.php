@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use He4rt\App\Livewire\Jobs\BookmarkJobButton;
-use He4rt\Candidates\Actions\EnsureCandidateProfile;
 use He4rt\Candidates\Models\CandidateJobSaved;
 use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Users\User;
@@ -14,8 +13,7 @@ use function Pest\Livewire\livewire;
 beforeEach(function (): void {
     $this->user = User::factory()->create();
 
-    $this->candidate = resolve(EnsureCandidateProfile::class)->execute($this->user);
-    $this->user->setRelation('candidate', $this->candidate);
+    $this->candidate = candidateFor($this->user);
     $this->job = JobRequisition::factory()->create();
 
     actingAs($this->user);
