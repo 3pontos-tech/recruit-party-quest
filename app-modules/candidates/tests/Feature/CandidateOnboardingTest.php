@@ -120,9 +120,13 @@ it('should be able to onboard', function (): void {
     assertDatabaseCount(WorkExperience::class, 1);
     assertDatabaseHas(WorkExperience::class, [
         'company_name' => '3-Pontos',
+        'position' => 'Backend Developer',
         'description' => 'working with php, filament, writing some tests',
         'is_currently_working_here' => true,
     ]);
+
+    expect(WorkExperience::query()->firstOrFail()->metadata->skills)
+        ->toBe(['PHP', 'Filament']);
 });
 
 it('should disable file uploader when it is uploading a file', function (): void {
@@ -171,6 +175,8 @@ function generateDto(): CandidateOnboardingDTO
         companyName: '3-Pontos',
         description: 'working with php, filament, writing some tests',
         isCurrentlyWorking: true,
+        position: 'Backend Developer',
+        skills: ['PHP', 'Filament'],
         startDate: Date::parse('08/01/2024'),
     );
 
