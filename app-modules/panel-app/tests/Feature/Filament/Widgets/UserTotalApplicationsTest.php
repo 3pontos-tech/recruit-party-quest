@@ -123,10 +123,10 @@ describe('Offers received count', function (): void {
 describe('User isolation', function (): void {
     it('ignores applications from other users', function (): void {
         $otherUser = User::factory()->create();
-        $otherUser->refresh();
+        $otherCandidate = resolve(EnsureCandidateProfile::class)->execute($otherUser);
 
         Application::factory()->count(5)->create([
-            'candidate_id' => $otherUser->candidate->getKey(),
+            'candidate_id' => $otherCandidate->getKey(),
             'status' => ApplicationStatusEnum::New,
         ]);
 
@@ -136,7 +136,7 @@ describe('User isolation', function (): void {
 
     it('counts only the authenticated user applications when multiple users exist', function (): void {
         $otherUser = User::factory()->create();
-        $otherUser->refresh();
+        $otherCandidate = resolve(EnsureCandidateProfile::class)->execute($otherUser);
 
         Application::factory()->count(2)->create([
             'candidate_id' => $this->candidate->getKey(),
@@ -144,7 +144,7 @@ describe('User isolation', function (): void {
         ]);
 
         Application::factory()->count(9)->create([
-            'candidate_id' => $otherUser->candidate->getKey(),
+            'candidate_id' => $otherCandidate->getKey(),
             'status' => ApplicationStatusEnum::InReview,
         ]);
 

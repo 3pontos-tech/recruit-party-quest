@@ -15,10 +15,6 @@ beforeEach(function (): void {
     $this->admin = User::factory()->create();
     $this->admin->assignRole(Roles::SuperAdmin);
 
-    // Até a Tarefa 5 o observer ainda cria o perfil; depois dela estas duas linhas somem.
-    $this->admin->candidate()->forceDelete();
-    $this->admin->unsetRelation('candidate');
-
     actingAs($this->admin);
     filament()->setCurrentPanel(FilamentPanel::App->value);
 });

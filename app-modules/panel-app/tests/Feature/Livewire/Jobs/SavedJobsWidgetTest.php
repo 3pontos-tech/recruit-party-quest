@@ -140,9 +140,7 @@ it('shows the empty state when there are no saved jobs', function (): void {
 
 it('does not remove a saved job that belongs to another candidate', function (): void {
     $otherUser = User::factory()->create();
-    $otherUser->refresh();
-
-    $otherCandidate = $otherUser->candidate;
+    $otherCandidate = resolve(EnsureCandidateProfile::class)->execute($otherUser);
 
     $job = JobRequisition::factory()->available()->create();
     saveJobForCandidate($job, $otherCandidate);

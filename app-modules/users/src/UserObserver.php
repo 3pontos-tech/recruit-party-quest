@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Users;
 
-use He4rt\Candidates\Models\Candidate;
+use He4rt\Permissions\Roles;
 
 class UserObserver
 {
@@ -13,17 +13,7 @@ class UserObserver
      */
     public function created(User $user): void
     {
-        if (! $user->candidate) {
-            Candidate::query()->create([
-                'user_id' => $user->id,
-                'is_onboarded' => false,
-                'preferred_language' => 'en',
-                'expected_salary_currency' => 'USD',
-                'is_open_to_remote' => true,
-            ]);
-
-            $user->assignRole('user');
-        }
+        $user->assignRole(Roles::User);
     }
 
     /**

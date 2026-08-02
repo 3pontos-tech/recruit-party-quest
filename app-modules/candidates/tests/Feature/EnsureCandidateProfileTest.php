@@ -9,10 +9,6 @@ use He4rt\Users\User;
 it('creates a candidate profile with the onboarding defaults', function (): void {
     $user = User::factory()->create();
 
-    // Enquanto o UserObserver ainda criar o perfil (até a Tarefa 5), o registro precisa
-    // sair da frente para que este teste exercite o caminho de criação da Action.
-    Candidate::query()->where('user_id', $user->getKey())->forceDelete();
-
     $candidate = resolve(EnsureCandidateProfile::class)->execute($user);
 
     expect($candidate->user_id)->toBe($user->getKey())

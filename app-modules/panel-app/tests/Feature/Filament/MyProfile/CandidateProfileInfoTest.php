@@ -54,10 +54,6 @@ it('returns ui-avatars url when candidate has no avatar', function (): void {
 it('returns ui-avatars url when user has no candidate', function (): void {
     $user = User::factory()->create();
 
-    // Até a Tarefa 5 o observer ainda cria o perfil; depois dela estas duas linhas somem.
-    $user->candidate()->forceDelete();
-    $user->unsetRelation('candidate');
-
     $avatarUrl = $user->getFilamentAvatarUrl();
 
     expect($avatarUrl)->toContain('ui-avatars.com');
