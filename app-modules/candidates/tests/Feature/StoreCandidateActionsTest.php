@@ -191,9 +191,8 @@ describe('StoreCandidateWorkExperiences', function (): void {
     });
 
     it('does not overwrite an existing experience on cv re-upload', function (): void {
-        // O UserObserver já cria um Candidate para cada User, então o fixture deixa dois
-        // candidatos para o mesmo usuário. A Action resolve via `auth()->user()->candidate`,
-        // e o registro pré-existente precisa pertencer a esse mesmo candidato.
+        // A Action resolve o perfil pelo usuário autenticado, então o registro
+        // pré-existente precisa pertencer a esse mesmo candidato.
         $existing = WorkExperience::factory()
             ->for($this->user->candidate, 'candidate')
             ->create([

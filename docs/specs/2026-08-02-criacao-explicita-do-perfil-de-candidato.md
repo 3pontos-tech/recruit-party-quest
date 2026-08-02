@@ -146,25 +146,26 @@ public function created(User $user): void
 ```
 
 A role base continua sendo invariante de todo `User` — é identidade, não perfil. O `import`
-de `He4rt\Candidates\Models\Candidate` sai do módulo `users`, e a string `'user'` dá lugar
-ao enum `Roles::User`.
+de `He4rt\Candidates\Models\Candidate` sai do observer, e a string `'user'` dá lugar ao
+enum `Roles::User`. O módulo `users` continua importando o model em `User.php`, onde vive a
+relação `candidate()` — desacoplar isso é um trabalho à parte, fora deste escopo.
 
 ### `candidates` — a Action
 
-`EnsureCandidateProfile`, invokável, em `app-modules/candidates/src/Actions/`. Recebe o
-`User`, devolve o `Candidate`, idempotente. Carrega os defaults que hoje moram no observer:
+`EnsureCandidateProfile` em `app-modules/candidates/src/Actions/`, com o método `execute()`
+que é a convenção do projeto. Recebe o `User`, devolve o `Candidate`, idempotente:
 
 ```php
-final readonly class EnsureCandidateProfile
+final class EnsureCandidateProfile
 {
-    public function __invoke(User $user): Candidate
+    public function execute(User $user): Candidate
     {
         return Candidate::query()->firstOrCreate(
             ['user_id' => $user->getKey()],
             [
                 'is_onboarded' => false,
-                'preferred_language' => 'en',
-                'expected_salary_currency' => 'USD',
+                'preferred_language' => 'pt_BR',
+                'expected_salary_currency' => 'BRL',
                 'is_open_to_remote' => true,
             ],
         );
@@ -183,10 +184,20 @@ CREATE UNIQUE INDEX candidates_user_id_unique ON candidates (user_id) WHERE dele
 
 O `firstOrCreate` acima passa a ser garantido pelo banco, não só pela aplicação.
 
-Os quatro defaults são idênticos aos `default()` das colunas na migration original
-(`is_open_to_remote` → `true`, `expected_salary_currency` → `'USD'`, `is_onboarded` →
-`false`, `preferred_language` → `'en'`). Mantê-los explícitos na Action preserva o
-comportamento atual do observer e deixa a intenção legível sem depender do schema.
+Dois dos quatro defaults divergem de propósito do `default()` das colunas e do que o
+observer gravava, assumindo o público brasileiro da plataforma:
+
+| Campo | Coluna / observer | Action |
+| --- | --- | --- |
+| `is_onboarded` | `false` | `false` |
+| `is_open_to_remote` | `true` | `true` |
+| `preferred_language` | `'en'` | `'pt_BR'` |
+| `expected_salary_currency` | `'USD'` | `'BRL'` |
+
+A grafia `pt_BR` — e não `pt_br` — é a que `User::preferredLocale()` entrega ao Laravel e a
+que o select do onboarding (`OnboardingWizard.php:299`) oferece; em minúsculas o locale
+cairia no fallback. Manter os quatro explícitos na Action deixa a intenção legível sem
+depender do schema.
 
 ### `panel-app` — o onboarding
 

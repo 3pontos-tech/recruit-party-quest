@@ -19,7 +19,7 @@ class ProfileCard extends Component
         return view('panel-app::livewire.profile-card', [
             'links' => $links,
             'candidate' => $candidate,
-            'profileCompletionPercentage' => $candidate?->profile_completion_percentage ?? 0,
+            'profileCompletionPercentage' => $candidate->profile_completion_percentage ?? 0,
             'missingSections' => $candidate?->getMissingProfileSections() ?? [],
         ]);
     }
