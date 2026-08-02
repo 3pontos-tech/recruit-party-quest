@@ -163,7 +163,7 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
      */
     private function validate(array $output): void
     {
-        if ($output['is_cv'] === true) {
+        if (($output['is_cv'] ?? false) === true) {
             return;
         }
 

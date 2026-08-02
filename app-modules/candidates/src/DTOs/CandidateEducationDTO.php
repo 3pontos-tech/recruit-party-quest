@@ -26,10 +26,10 @@ final readonly class CandidateEducationDTO implements JsonSerializable
     public static function make(array $data): self
     {
         return new self(
-            institution: $data['institution'],
-            degree: $data['degree'],
-            fieldOfStudy: $data['field_of_study'],
-            isEnrolled: $data['is_enrolled'],
+            institution: (string) ($data['institution'] ?? ''),
+            degree: (string) ($data['degree'] ?? ''),
+            fieldOfStudy: (string) ($data['field_of_study'] ?? ''),
+            isEnrolled: (bool) ($data['is_enrolled'] ?? false),
             startDate: (filled($data['start_date'] ?? null) && $data['start_date'] !== 'null')
                 ? Date::parse($data['start_date'])
                 : null,
