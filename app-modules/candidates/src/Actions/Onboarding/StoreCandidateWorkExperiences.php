@@ -17,10 +17,6 @@ final class StoreCandidateWorkExperiences
 
         foreach ($experiences->jsonSerialize() as $experience) {
             if (blank($experience->companyName)) {
-                logger()->warning('Work experience skipped: missing company name', [
-                    'candidate_id' => $candidate->id,
-                ]);
-
                 continue;
             }
 
