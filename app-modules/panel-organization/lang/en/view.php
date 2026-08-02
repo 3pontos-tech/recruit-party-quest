@@ -114,7 +114,7 @@ return [
             'no_experience' => 'No work experience listed',
             'no_experience_text' => "This candidate hasn't added any work experience to their profile yet.",
             'present' => 'Present',
-            'professional_role_fallback' => 'Professional Role',
+            'professional_role_fallback' => 'Role not informed',
             'career_summary' => 'Career Summary',
             'career_timeline' => 'Career Timeline',
             'companies' => 'Companies',

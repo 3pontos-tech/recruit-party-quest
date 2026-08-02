@@ -114,7 +114,7 @@ return [
             'no_experience' => 'Nenhuma experiência profissional listada',
             'no_experience_text' => 'Este candidato não adicionou experiência profissional ao perfil.',
             'present' => 'Atualmente',
-            'professional_role_fallback' => 'Cargo profissional',
+            'professional_role_fallback' => 'Cargo não informado',
             'career_summary' => 'Resumo da carreira',
             'career_timeline' => 'Linha do tempo da carreira',
             'companies' => 'Empresas',
