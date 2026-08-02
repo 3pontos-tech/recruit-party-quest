@@ -1,12 +1,12 @@
 ---
 type: spec
-title: "Criação explícita do perfil de candidato"
+title: 'Criação explícita do perfil de candidato'
 module: users, candidates, panel-app
 status: proposed
 date: 2026-08-02
 author: Clintonrocha98
 related:
-  issue: 3pontos-tech/recruit-party-quest#261
+    issue: 3pontos-tech/recruit-party-quest#261
 ---
 
 # Criação explícita do perfil de candidato
@@ -71,11 +71,11 @@ próprio formulário. Nunca foi exercitada.
 
 Experimentos na suíte completa (1201 testes), cada patch aplicado e revertido:
 
-| Cenário | Testes quebrados |
-| --- | --- |
-| `$user->candidate()->exists()` — correção da issue | 1 (`ProfileCardTest`) |
-| Observer sem criar Candidate, mantendo `assignRole` | 78 |
-| Observer vazio | 99 (23 fail + 76 error) |
+| Cenário                                             | Testes quebrados        |
+| --------------------------------------------------- | ----------------------- |
+| `$user->candidate()->exists()` — correção da issue  | 1 (`ProfileCardTest`)   |
+| Observer sem criar Candidate, mantendo `assignRole` | 78                      |
+| Observer vazio                                      | 99 (23 fail + 76 error) |
 
 ### Efeito colateral no produto
 
@@ -187,12 +187,12 @@ O `firstOrCreate` acima passa a ser garantido pelo banco, não só pela aplicaç
 Dois dos quatro defaults divergem de propósito do `default()` das colunas e do que o
 observer gravava, assumindo o público brasileiro da plataforma:
 
-| Campo | Coluna / observer | Action |
-| --- | --- | --- |
-| `is_onboarded` | `false` | `false` |
-| `is_open_to_remote` | `true` | `true` |
-| `preferred_language` | `'en'` | `'pt_BR'` |
-| `expected_salary_currency` | `'USD'` | `'BRL'` |
+| Campo                      | Coluna / observer | Action    |
+| -------------------------- | ----------------- | --------- |
+| `is_onboarded`             | `false`           | `false`   |
+| `is_open_to_remote`        | `true`            | `true`    |
+| `preferred_language`       | `'en'`            | `'pt_BR'` |
+| `expected_salary_currency` | `'USD'`           | `'BRL'`   |
 
 A grafia `pt_BR` — e não `pt_br` — é a que `User::preferredLocale()` entrega ao Laravel e a
 que o select do onboarding (`OnboardingWizard.php:299`) oferece; em minúsculas o locale
@@ -219,24 +219,52 @@ Com o bypass de admin, um SuperAdmin ou Admin sem `Candidate` navegando pelo pai
 alcança código que hoje assume a relação não-nula. Isso funciona atualmente só porque todo
 usuário tem perfil. Pontos a tratar:
 
-| Arquivo | Linhas |
-| --- | --- |
-| `panel-app/src/Filament/Resources/Applications/Tables/ApplicationsTable.php` | 18 |
-| `panel-app/src/Livewire/JobApplicationForm.php` | 64 |
-| `panel-app/src/Livewire/Jobs/BookmarkJobButton.php` | 37 |
-| `panel-app/src/Livewire/ProfileCard.php` | 17 |
-| `panel-app/src/Livewire/MyProfile/CandidateSkills.php` | 30, 95 |
-| `panel-app/src/Livewire/MyProfile/CandidateProfileInfo.php` | 31, 43, 83 |
-| `panel-app/src/Livewire/MyProfile/CandidateEducation.php` | 32, 109 |
-| `panel-app/src/Livewire/MyProfile/CandidatePreferences.php` | 33, 129 |
-| `panel-app/src/Livewire/MyProfile/CandidateWorkExperience.php` | 36, 125 |
-| `panel-app/src/Livewire/MyProfile/CandidateResumeUpload.php` | 41, 70 |
-| `candidates/src/Actions/Onboarding/StoreCandidateEducation.php` | 15 |
-| `candidates/src/Actions/Onboarding/StoreCandidateWorkExperiences.php` | 16 |
+| Arquivo                                                                      | Linhas     |
+| ---------------------------------------------------------------------------- | ---------- |
+| `panel-app/src/Filament/Resources/Applications/Tables/ApplicationsTable.php` | 18         |
+| `panel-app/src/Livewire/JobApplicationForm.php`                              | 64         |
+| `panel-app/src/Livewire/Jobs/BookmarkJobButton.php`                          | 37         |
+| `panel-app/src/Livewire/ProfileCard.php`                                     | 17         |
+| `panel-app/src/Livewire/MyProfile/CandidateSkills.php`                       | 30, 95     |
+| `panel-app/src/Livewire/MyProfile/CandidateProfileInfo.php`                  | 31, 43, 83 |
+| `panel-app/src/Livewire/MyProfile/CandidateEducation.php`                    | 32, 109    |
+| `panel-app/src/Livewire/MyProfile/CandidatePreferences.php`                  | 33, 129    |
+| `panel-app/src/Livewire/MyProfile/CandidateWorkExperience.php`               | 36, 125    |
+| `panel-app/src/Livewire/MyProfile/CandidateResumeUpload.php`                 | 41, 70     |
 
 Já null-safe, sem ação: `SavedJobsWidget` (`?->`), `ViewJobRequisition` (protegido por
 `if`), `User::getFilamentAvatarUrl:90`, `User::preferredLocale:129`,
 `RedirectIfOnboardingIncomplete:35`.
+
+### `candidates` — as Actions de onboarding
+
+`StoreCandidateEducation` e `StoreCandidateWorkExperiences` resolviam o perfil por conta
+própria, via `EnsureCandidateProfile` sobre `auth()->user()`. Passam a **receber o
+`Candidate`** — os dois chamadores já o têm em mão quando chamam:
+
+```php
+// antes
+public function execute(CandidateEducationCollection $degree): void
+{
+    $candidate = resolve(EnsureCandidateProfile::class)->execute(auth()->user());
+
+// depois
+public function execute(Candidate $candidate, CandidateEducationCollection $degree): void
+{
+```
+
+Isso tira `auth()` do domínio e transforma "sem perfil" em erro de tipo, em vez de
+gravação silenciosamente perdida. A orquestração das duas — idêntica no wizard e no
+retorno da análise de CV — passa a viver em `StoreCandidateResume`, que recebe o perfil e
+o array de campos e monta as collections:
+
+```php
+// OnboardingWizard::handleRegistration() e CandidateResumeUpload::finished()
+resolve(StoreCandidateResume::class)->execute($candidate, $fields);
+```
+
+`EnsureCandidateProfile` fica com um único chamador em produção: `OnboardingWizard::mount()`
+— o ponto de materialização.
 
 ### Factories
 
@@ -251,10 +279,14 @@ $this->candidate = $this->user->candidate;
 
 // depois — o fixture declara o que quer
 $this->user = User::factory()->create();
-$this->candidate = Candidate::factory()->for($this->user, 'user')->create([
-    'is_onboarded' => false,
-]);
+$this->candidate = candidateFor($this->user, ['is_onboarded' => false]);
 ```
+
+O helper global `candidateFor()` vive em `tests/Pest.php`: cria o perfil pela
+`CandidateFactory` e faz o `setRelation`, para que `auth()->user()->candidate` responda na
+mesma instância sem `refresh()`. Ele existe para que os fixtures não precisem importar
+`EnsureCandidateProfile` — a Action de produção continua exercitada pelo teste dela e pelos
+testes do wizard, que passam pelo fluxo real.
 
 Descartada a alternativa de um state `withCandidate()` na `UserFactory`: ela obrigaria o
 módulo `users` a importar `He4rt\Candidates` de volta — agora pelas factories — desfazendo

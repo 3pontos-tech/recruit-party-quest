@@ -8,21 +8,17 @@ use He4rt\Candidates\DTOs\CandidateEducationDTO;
 use He4rt\Candidates\DTOs\CandidateWorkExperienceDTO;
 use He4rt\Candidates\DTOs\Collections\CandidateEducationCollection;
 use He4rt\Candidates\DTOs\Collections\CandidateWorkExperienceCollection;
-use He4rt\Candidates\Models\Candidate;
 use He4rt\Candidates\Models\Education;
 use He4rt\Candidates\Models\WorkExperience;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\Date;
 
-use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseCount;
 use function Pest\Laravel\assertDatabaseHas;
 
 beforeEach(function (): void {
     $this->user = User::factory()->create();
-    $this->candidate = Candidate::factory()->for($this->user, 'user')->create();
-    $this->user->refresh();
-    actingAs($this->user);
+    $this->candidate = candidateFor($this->user);
 });
 
 describe('StoreCandidateWorkExperiences', function (): void {
@@ -36,7 +32,7 @@ describe('StoreCandidateWorkExperiences', function (): void {
 
         $collection = new CandidateWorkExperienceCollection([$dto]);
 
-        resolve(StoreCandidateWorkExperiences::class)->execute($collection);
+        resolve(StoreCandidateWorkExperiences::class)->execute($this->candidate, $collection);
 
         assertDatabaseCount(WorkExperience::class, 1);
         assertDatabaseHas(WorkExperience::class, [
@@ -60,11 +56,11 @@ describe('StoreCandidateWorkExperiences', function (): void {
         $collection = new CandidateWorkExperienceCollection([$dto]);
 
         // First call
-        resolve(StoreCandidateWorkExperiences::class)->execute($collection);
+        resolve(StoreCandidateWorkExperiences::class)->execute($this->candidate, $collection);
         assertDatabaseCount(WorkExperience::class, 1);
 
         // Second call with same data
-        resolve(StoreCandidateWorkExperiences::class)->execute($collection);
+        resolve(StoreCandidateWorkExperiences::class)->execute($this->candidate, $collection);
         assertDatabaseCount(WorkExperience::class, 1);
     });
 
@@ -84,10 +80,12 @@ describe('StoreCandidateWorkExperiences', function (): void {
         );
 
         resolve(StoreCandidateWorkExperiences::class)->execute(
+            $this->candidate,
             new CandidateWorkExperienceCollection([$dto1])
         );
 
         resolve(StoreCandidateWorkExperiences::class)->execute(
+            $this->candidate,
             new CandidateWorkExperienceCollection([$dto2])
         );
 
@@ -110,10 +108,12 @@ describe('StoreCandidateWorkExperiences', function (): void {
         );
 
         resolve(StoreCandidateWorkExperiences::class)->execute(
+            $this->candidate,
             new CandidateWorkExperienceCollection([$dto1])
         );
 
         resolve(StoreCandidateWorkExperiences::class)->execute(
+            $this->candidate,
             new CandidateWorkExperienceCollection([$dto2])
         );
 
@@ -131,6 +131,7 @@ describe('StoreCandidateWorkExperiences', function (): void {
         );
 
         resolve(StoreCandidateWorkExperiences::class)->execute(
+            $this->candidate,
             new CandidateWorkExperienceCollection([$dto])
         );
 
@@ -149,6 +150,7 @@ describe('StoreCandidateWorkExperiences', function (): void {
         );
 
         resolve(StoreCandidateWorkExperiences::class)->execute(
+            $this->candidate,
             new CandidateWorkExperienceCollection([$dto])
         );
 
@@ -168,6 +170,7 @@ describe('StoreCandidateWorkExperiences', function (): void {
         );
 
         resolve(StoreCandidateWorkExperiences::class)->execute(
+            $this->candidate,
             new CandidateWorkExperienceCollection([$dto])
         );
 
@@ -184,6 +187,7 @@ describe('StoreCandidateWorkExperiences', function (): void {
         );
 
         resolve(StoreCandidateWorkExperiences::class)->execute(
+            $this->candidate,
             new CandidateWorkExperienceCollection([$dto])
         );
 
@@ -191,10 +195,8 @@ describe('StoreCandidateWorkExperiences', function (): void {
     });
 
     it('does not overwrite an existing experience on cv re-upload', function (): void {
-        // A Action resolve o perfil pelo usuário autenticado, então o registro
-        // pré-existente precisa pertencer a esse mesmo candidato.
         $existing = WorkExperience::factory()
-            ->for($this->user->candidate, 'candidate')
+            ->for($this->candidate, 'candidate')
             ->create([
                 'company_name' => 'Nubank',
                 'start_date' => Date::parse('2023-03-01')->startOfDay(),
@@ -210,6 +212,7 @@ describe('StoreCandidateWorkExperiences', function (): void {
         );
 
         resolve(StoreCandidateWorkExperiences::class)->execute(
+            $this->candidate,
             new CandidateWorkExperienceCollection([$dto])
         );
 
@@ -230,6 +233,7 @@ describe('StoreCandidateEducation', function (): void {
         );
 
         resolve(StoreCandidateEducation::class)->execute(
+            $this->candidate,
             new CandidateEducationCollection([$dto])
         );
 
@@ -254,11 +258,11 @@ describe('StoreCandidateEducation', function (): void {
         $collection = new CandidateEducationCollection([$dto]);
 
         // First call
-        resolve(StoreCandidateEducation::class)->execute($collection);
+        resolve(StoreCandidateEducation::class)->execute($this->candidate, $collection);
         assertDatabaseCount(Education::class, 1);
 
         // Second call with same data
-        resolve(StoreCandidateEducation::class)->execute($collection);
+        resolve(StoreCandidateEducation::class)->execute($this->candidate, $collection);
         assertDatabaseCount(Education::class, 1);
     });
 
@@ -280,10 +284,12 @@ describe('StoreCandidateEducation', function (): void {
         );
 
         resolve(StoreCandidateEducation::class)->execute(
+            $this->candidate,
             new CandidateEducationCollection([$dto1])
         );
 
         resolve(StoreCandidateEducation::class)->execute(
+            $this->candidate,
             new CandidateEducationCollection([$dto2])
         );
 
@@ -308,10 +314,12 @@ describe('StoreCandidateEducation', function (): void {
         );
 
         resolve(StoreCandidateEducation::class)->execute(
+            $this->candidate,
             new CandidateEducationCollection([$dto1])
         );
 
         resolve(StoreCandidateEducation::class)->execute(
+            $this->candidate,
             new CandidateEducationCollection([$dto2])
         );
 

@@ -8,10 +8,7 @@ use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
 use He4rt\App\Filament\Pages\CandidateMyProfilePage;
 use He4rt\App\Filament\Schemas\ProfileResumeFileUpload;
-use He4rt\Candidates\Actions\Onboarding\StoreCandidateEducation;
-use He4rt\Candidates\Actions\Onboarding\StoreCandidateWorkExperiences;
-use He4rt\Candidates\DTOs\Collections\CandidateEducationCollection;
-use He4rt\Candidates\DTOs\Collections\CandidateWorkExperienceCollection;
+use He4rt\Candidates\Actions\Onboarding\StoreCandidateResume;
 use He4rt\Users\User;
 use Jeffgreco13\FilamentBreezy\Livewire\MyProfileComponent;
 use Livewire\Attributes\On;
@@ -69,11 +66,7 @@ class CandidateResumeUpload extends MyProfileComponent
             return;
         }
 
-        $experiences = CandidateWorkExperienceCollection::fromArray($payload['fields']['work_experiences'] ?? []);
-        resolve(StoreCandidateWorkExperiences::class)->execute($experiences);
-
-        $education = CandidateEducationCollection::fromArray($payload['fields']['education'] ?? []);
-        resolve(StoreCandidateEducation::class)->execute($education);
+        resolve(StoreCandidateResume::class)->execute($candidate, $payload['fields'] ?? []);
 
         $candidate->update(['cv_last_uploaded_at' => now()]);
 

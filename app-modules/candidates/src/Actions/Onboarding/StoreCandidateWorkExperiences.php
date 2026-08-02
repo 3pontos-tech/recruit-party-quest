@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace He4rt\Candidates\Actions\Onboarding;
 
-use He4rt\Candidates\Actions\EnsureCandidateProfile;
 use He4rt\Candidates\DTOs\Collections\CandidateWorkExperienceCollection;
 use He4rt\Candidates\DTOs\WorkExperienceMetadata;
+use He4rt\Candidates\Models\Candidate;
 
 final class StoreCandidateWorkExperiences
 {
-    public function execute(CandidateWorkExperienceCollection $experiences): void
+    public function execute(Candidate $candidate, CandidateWorkExperienceCollection $experiences): void
     {
-        $candidate = resolve(EnsureCandidateProfile::class)->execute(auth()->user());
-
         foreach ($experiences->jsonSerialize() as $experience) {
             if (blank($experience->companyName)) {
                 continue;
