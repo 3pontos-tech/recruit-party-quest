@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace He4rt\Candidates\Actions\Onboarding;
 
+use He4rt\Candidates\Actions\EnsureCandidateProfile;
 use He4rt\Candidates\DTOs\Collections\CandidateEducationCollection;
-use He4rt\Candidates\Models\Candidate;
 
 final class StoreCandidateEducation
 {
     public function execute(CandidateEducationCollection $degree): void
     {
-        /** @var Candidate $candidate */
-        $candidate = auth()->user()->candidate;
+        $candidate = resolve(EnsureCandidateProfile::class)->execute(auth()->user());
 
         foreach ($degree->jsonSerialize() as $education) {
             $payload = $education->jsonSerialize();

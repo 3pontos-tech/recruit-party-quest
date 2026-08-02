@@ -17,8 +17,8 @@ it('creates a candidate profile with the onboarding defaults', function (): void
 
     expect($candidate->user_id)->toBe($user->getKey())
         ->and($candidate->is_onboarded)->toBeFalse()
-        ->and($candidate->preferred_language)->toBe('en')
-        ->and($candidate->expected_salary_currency)->toBe('USD')
+        ->and($candidate->preferred_language)->toBe('pt_BR')
+        ->and($candidate->expected_salary_currency)->toBe('BRL')
         ->and($candidate->is_open_to_remote)->toBeTrue();
 });
 

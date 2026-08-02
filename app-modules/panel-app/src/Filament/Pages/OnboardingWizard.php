@@ -29,6 +29,7 @@ use Filament\Support\Concerns\EvaluatesClosures;
 use Filament\Support\Enums\Width;
 use He4rt\App\Filament\Schemas\ResumeFileUpload;
 use He4rt\App\Livewire\ResumeFileUploadProgress;
+use He4rt\Candidates\Actions\EnsureCandidateProfile;
 use He4rt\Candidates\Actions\Onboarding\StoreCandidateEducation;
 use He4rt\Candidates\Actions\Onboarding\StoreCandidateWorkExperiences;
 use He4rt\Candidates\Actions\Onboarding\UpdateCandidateAction;
@@ -105,7 +106,8 @@ class OnboardingWizard extends Page
         }
 
         $this->user = $user;
-        $this->record = $user->candidate;
+        $this->record = resolve(EnsureCandidateProfile::class)->execute($user);
+        $user->setRelation('candidate', $this->record);
         $this->content->fill();
     }
 

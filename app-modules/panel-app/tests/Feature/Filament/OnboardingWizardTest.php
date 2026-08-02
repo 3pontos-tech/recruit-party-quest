@@ -60,3 +60,17 @@ it('redirects non-onboarding pages to onboarding when user has no candidate', fu
     get(route('filament.app.pages.dashboard'))
         ->assertRedirect(route(OnboardingWizard::getRouteName()));
 });
+
+it('creates the candidate profile when a user without one opens the wizard', function (): void {
+    $user = User::factory()->create();
+
+    // Até a Tarefa 5 o observer ainda cria o perfil; depois dela estas duas linhas somem.
+    $user->candidate()->forceDelete();
+    $user->unsetRelation('candidate');
+
+    actingAs($user);
+
+    livewire(OnboardingWizard::class)->assertOk();
+
+    expect(Candidate::query()->where('user_id', $user->getKey())->count())->toBe(1);
+});
