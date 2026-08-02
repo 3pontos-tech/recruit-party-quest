@@ -91,7 +91,7 @@
 
                                 {{-- Description --}}
                                 @if (! empty(trim($experience->description)))
-                                    <div class="text-text-medium mt-4 text-base leading-7">
+                                    <div class="text-text-medium mt-4 text-base leading-7 whitespace-pre-line">
                                         {{ $experience->description }}
                                     </div>
                                 @endif
