@@ -269,6 +269,32 @@ it('throws OnboardingException when the uploaded file is not a CV', function ():
         ->toThrow(OnboardingException::class);
 });
 
+it('throws OnboardingException when the response omits is_cv', function (): void {
+    Prism::fake([
+        StructuredResponseFake::make()->withStructured([
+            'work_experiences' => [],
+            'education' => [],
+        ]),
+    ]);
+
+    expect(fn () => resolve(CompleteOnboardingAction::class)->execute(onboardingMakeFakeFile()))
+        ->toThrow(OnboardingException::class);
+});
+
+it('throws OnboardingException when is_cv is false and the rejection reason is unknown', function (): void {
+    Prism::fake([
+        StructuredResponseFake::make()->withStructured([
+            'is_cv' => false,
+            'rejection_reason' => 'something the enum does not describe',
+            'work_experiences' => [],
+            'education' => [],
+        ]),
+    ]);
+
+    expect(fn () => resolve(CompleteOnboardingAction::class)->execute(onboardingMakeFakeFile()))
+        ->toThrow(OnboardingException::class);
+});
+
 it('retries with fallback model when primary model throws PrismException', function (): void {
     Cache::flush();
 
