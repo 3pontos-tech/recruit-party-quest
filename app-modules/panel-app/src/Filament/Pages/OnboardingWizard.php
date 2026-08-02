@@ -12,6 +12,7 @@ use Filament\Actions\Concerns\InteractsWithRecord;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -35,6 +36,7 @@ use He4rt\Candidates\DTOs\CandidateDTO;
 use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\DTOs\Collections\CandidateEducationCollection;
 use He4rt\Candidates\DTOs\Collections\CandidateWorkExperienceCollection;
+use He4rt\Candidates\Models\Skill;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Users\User;
 use Illuminate\Contracts\Support\Htmlable;
@@ -333,10 +335,21 @@ class OnboardingWizard extends Page
                                 TextInput::make('company_name')
                                     ->label(__('panel-app::pages/onboarding.steps.profile.fields.company_name'))
                                     ->required(),
+                                TextInput::make('position')
+                                    ->label(__('panel-app::pages/onboarding.steps.profile.fields.position'))
+                                    ->placeholder(__('panel-app::pages/onboarding.steps.profile.placeholders.position'))
+                                    ->maxLength(255)
+                                    ->required(),
                                 Textarea::make('description')
                                     ->label(__('panel-app::pages/onboarding.steps.profile.fields.description'))
                                     ->rows(3)
                                     ->required(),
+                                TagsInput::make('skills')
+                                    ->label(__('panel-app::pages/onboarding.steps.profile.fields.skills'))
+                                    ->placeholder(__('panel-app::pages/onboarding.steps.profile.placeholders.skills'))
+                                    ->suggestions(fn (): array => Skill::query()->orderBy('name')->pluck('name')->all())
+                                    ->trim()
+                                    ->columnSpanFull(),
                                 DatePicker::make('start_date')
                                     ->label(__('panel-app::pages/onboarding.steps.profile.fields.start_date'))
                                     ->required(),
@@ -346,7 +359,9 @@ class OnboardingWizard extends Page
                                 Toggle::make('is_currently_working_here')
                                     ->label(__('panel-app::pages/onboarding.steps.profile.fields.is_currently_working_here')),
                             ])
-                            ->itemLabel(fn (array $state): ?string => $state['company_name'] ?? null)
+                            ->itemLabel(fn (array $state): ?string => filled($state['position'] ?? null)
+                                ? sprintf('%s · %s', $state['position'], $state['company_name'] ?? '')
+                                : ($state['company_name'] ?? null))
                             ->columnSpanFull(),
                     ]),
                 Section::make(__('panel-app::pages/onboarding.steps.profile.sections.education'))

@@ -93,6 +93,7 @@ return [
             'fields' => [
                 'work_experience' => 'Experiência Profissional',
                 'company_name' => 'Nome da Empresa',
+                'position' => 'Cargo',
                 'description' => 'Descrição',
                 'start_date' => 'Data de Início',
                 'end_date' => 'Data de Término',
@@ -102,8 +103,12 @@ return [
                 'degree' => 'Grau / Título',
                 'field_of_study' => 'Área de Estudo',
                 'is_enrolled' => 'Matriculado atualmente',
-                'skills' => 'Habilidades',
+                'skills' => 'Competências e tecnologias',
                 'skills_helper' => 'Pelo menos 3 habilidades são necessárias',
+            ],
+            'placeholders' => [
+                'position' => 'ex.: Analista de RH Pleno',
+                'skills' => 'Digite e pressione Enter',
             ],
         ],
         'preferences' => [
