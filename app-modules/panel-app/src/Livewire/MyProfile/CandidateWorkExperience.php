@@ -33,7 +33,11 @@ class CandidateWorkExperience extends MyProfileComponent
 
     public function mount(): void
     {
-        $candidate = auth()->user()->candidate;
+        $candidate = auth()->user()?->candidate;
+
+        if ($candidate === null) {
+            return;
+        }
 
         $this->form->fill([
             'work_experiences' => $candidate->workExperiences->map(fn (WorkExperience $experience) => [
@@ -122,7 +126,11 @@ class CandidateWorkExperience extends MyProfileComponent
     public function submit(): void
     {
         $data = $this->form->getState();
-        $candidate = auth()->user()->candidate;
+        $candidate = auth()->user()?->candidate;
+
+        if ($candidate === null) {
+            return;
+        }
 
         $existingIds = [];
 

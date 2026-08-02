@@ -38,10 +38,12 @@ class CandidateResumeUpload extends MyProfileComponent
     public function mount(): void
     {
         $this->user = auth()->user();
-        $candidate = $this->user->candidate;
+        $candidate = $this->user?->candidate;
 
-        $this->isOnCooldown = $candidate->isCvUploadOnCooldown();
-        $this->cooldownDaysRemaining = $candidate->cvCooldownDaysRemaining();
+        if ($candidate !== null) {
+            $this->isOnCooldown = $candidate->isCvUploadOnCooldown();
+            $this->cooldownDaysRemaining = $candidate->cvCooldownDaysRemaining();
+        }
 
         $this->form->fill();
     }
@@ -61,13 +63,19 @@ class CandidateResumeUpload extends MyProfileComponent
     #[On('echo-private:candidate-onboarding.resume.{user.id},.finished')]
     public function finished(array $payload): void
     {
+        $candidate = auth()->user()?->candidate;
+
+        if ($candidate === null) {
+            return;
+        }
+
         $experiences = CandidateWorkExperienceCollection::fromArray($payload['fields']['work_experiences'] ?? []);
         resolve(StoreCandidateWorkExperiences::class)->execute($experiences);
 
         $education = CandidateEducationCollection::fromArray($payload['fields']['education'] ?? []);
         resolve(StoreCandidateEducation::class)->execute($education);
 
-        auth()->user()->candidate->update(['cv_last_uploaded_at' => now()]);
+        $candidate->update(['cv_last_uploaded_at' => now()]);
 
         $this->isOnCooldown = true;
         $this->cooldownDaysRemaining = 3;

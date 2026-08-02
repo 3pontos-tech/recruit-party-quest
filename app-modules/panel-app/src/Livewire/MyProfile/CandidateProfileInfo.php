@@ -28,7 +28,11 @@ class CandidateProfileInfo extends MyProfileComponent
 
     public function mount(): void
     {
-        $candidate = auth()->user()->candidate;
+        $candidate = auth()->user()?->candidate;
+
+        if ($candidate === null) {
+            return;
+        }
 
         $this->form->fill([
             'headline' => $candidate->headline,
@@ -40,7 +44,7 @@ class CandidateProfileInfo extends MyProfileComponent
     public function form(Schema $schema): Schema
     {
         return $schema
-            ->model(fn () => auth()->user()->candidate->loadMissing('media'))
+            ->model(fn () => auth()->user()?->candidate?->loadMissing('media'))
             ->components([
                 SpatieMediaLibraryFileUpload::make('avatar')
                     ->label(__('panel-app::pages/settings.profile_info.fields.avatar'))
@@ -80,7 +84,12 @@ class CandidateProfileInfo extends MyProfileComponent
     {
         $data = $this->form->getState();
 
-        $candidate = auth()->user()->candidate;
+        $candidate = auth()->user()?->candidate;
+
+        if ($candidate === null) {
+            return;
+        }
+
         $candidate->update(Arr::except($data, ['avatar']));
 
         $this->form->model($candidate)->saveRelationships();
