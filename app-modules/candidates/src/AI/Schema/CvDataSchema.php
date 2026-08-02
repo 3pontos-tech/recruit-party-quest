@@ -30,10 +30,10 @@ final class CvDataSchema
                 'work_experiences' => new ArraySchema(
                     'work_experiences',
                     'Lista de experiências profissionais',
-                    /** @phpstan-ignore-next-line argument.type */
                     new ObjectSchema(
                         'experience',
                         'Detalhes da experiência',
+                        /** @phpstan-ignore-next-line argument.type */
                         [
                             'company_name' => new StringSchema('company_name', 'Nome da empresa'),
                             'position' => new StringSchema('position', 'Cargo ou função exercida, exatamente como aparece no currículo (ex.: Analista de RH Pleno)'),
@@ -53,10 +53,10 @@ final class CvDataSchema
                 'education' => new ArraySchema(
                     'education',
                     'Lista de formação acadêmica',
-                    /** @phpstan-ignore-next-line argument.type */
                     new ObjectSchema(
                         'education_item',
                         'Detalhes da formação',
+                        /** @phpstan-ignore-next-line argument.type */
                         [
                             'institution' => new StringSchema('institution', 'Nome da instituição'),
                             'degree' => new StringSchema('degree', 'Grau acadêmico'),
