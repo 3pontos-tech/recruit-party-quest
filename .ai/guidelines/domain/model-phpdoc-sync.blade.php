@@ -5,9 +5,8 @@
 # Model PHPDoc Sync — Mandatory on Schema Changes
 
 **Priority: HIGH** — This rule is non-negotiable. Every schema change MUST update the
-corresponding model PHPDoc. This is already the prevailing practice here (most models carry
-`@property` blocks and use `#[UseFactory]`); the explicit `#[Table]` attribute is the one
-addition to standardize on.
+corresponding model PHPDoc. This is already the prevailing practice here — most models carry
+`@property` blocks and use `#[UseFactory]`.
 
 ## Rule
 
@@ -37,7 +36,6 @@ manual SQL, or schema dump), the `@property` PHPDoc block on the affected Model 
  * @property Carbon|null $updated_at
  */
 #[UseFactory(ExampleFactory::class)]
-#[Table(name: 'examples')]
 final class Example extends Model
 </code-snippet>
 @endverbatim
@@ -61,24 +59,28 @@ final class Example extends Model
 
 ## Explicit class-level attributes
 
-Declare these attributes explicitly, even when the values match Laravel's convention. This
+Declare this attribute explicitly, even when the value matches Laravel's convention. This
 is the standard for new and refactored models:
 
-- `#[Table(name: '...')]` — explicit table name.
 - `#[UseFactory(XxxFactory::class)]` — explicit factory binding, instead of a `newFactory()`
   override. The `HasFactory` trait is still required (it provides `factory()`).
 
+Set the table name with the `protected $table` property. There is **no** `#[Table]` attribute
+in this Laravel version — `Illuminate\Database\Eloquent\Attributes\` ships `UseFactory`,
+`UsePolicy`, `ObservedBy`, `ScopedBy` and friends, but not `Table`. Declaring it makes the
+model fall back to the conventional table name and breaks every query against it.
+
 @verbatim
 <code-snippet name="Explicit model attributes" lang="php">
-use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 
 #[UseFactory(UserFactory::class)]
-#[Table(name: 'users')]
 final class User extends Model
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory;
+
+    protected $table = 'users';
 }
 </code-snippet>
 @endverbatim
@@ -89,5 +91,5 @@ Before marking a schema task as done, confirm:
 
 1. The model has a `/** @property … */` block covering **every** column in the table.
 2. Types match the column definition and any explicit `casts()`.
-3. The model declares `#[Table(name: '...')]` and `#[UseFactory(XxxFactory::class)]`.
+3. The model declares `#[UseFactory(XxxFactory::class)]`.
 4. PHPStan passes (`{{ $assist->binCommand('phpstan analyse') }}`).
