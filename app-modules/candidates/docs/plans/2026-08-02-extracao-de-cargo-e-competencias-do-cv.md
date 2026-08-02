@@ -1258,7 +1258,7 @@ use He4rt\Candidates\Models\WorkExperience;
 - [ ] **Passo 3: Rodar e confirmar a falha**
 
 ```bash
-php artisan test --compact --filter="requires a position for each work experience"
+php artisan test --compact --filter="blocks finalization when a work experience has no position"
 ```
 
 Esperado: FAIL — o campo `position` não existe no formulário.
