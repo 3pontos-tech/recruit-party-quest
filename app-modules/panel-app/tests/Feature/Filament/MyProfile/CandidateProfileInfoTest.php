@@ -12,10 +12,8 @@ use function Pest\Laravel\actingAs;
 
 beforeEach(function (): void {
     $this->user = User::factory()->create();
-    $this->user->refresh();
 
-    $this->candidate = $this->user->candidate;
-    $this->candidate->update([
+    $this->candidate = candidateFor($this->user, [
         'headline' => 'Test Headline',
         'summary' => 'Test Summary',
         'phone_number' => '+5511999999999',
@@ -52,9 +50,10 @@ it('returns ui-avatars url when candidate has no avatar', function (): void {
 
 it('returns ui-avatars url when user has no candidate', function (): void {
     $user = User::factory()->create();
-    $user->refresh();
-    $user->candidate?->forceDelete();
-    $user->unsetRelation('candidate');
+
+    // Sem esta asserção o teste passa mesmo se o perfil voltar a ser criado junto do
+    // usuário: um candidato sem avatar cai no mesmo fallback.
+    expect($user->candidate()->exists())->toBeFalse();
 
     $avatarUrl = $user->getFilamentAvatarUrl();
 

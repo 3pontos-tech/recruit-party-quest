@@ -10,6 +10,7 @@ use He4rt\Candidates\AiAutocompleteInterface;
 use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\Enums\ResumeErrorReasons;
 use He4rt\Candidates\Exceptions\OnboardingException;
+use He4rt\Candidates\Exceptions\ProvidersUnavailableException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
@@ -115,6 +116,20 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
             }
         }
 
+        $openCircuits = array_values(array_filter(
+            $models,
+            fn (string $model): bool => Cache::has('cb:gemini:'.$model),
+        ));
+
+        if (count($openCircuits) === count($models)) {
+            logger()->error('Every Gemini circuit breaker is open, aborting without retry', [
+                'models' => $openCircuits,
+                'last_error' => $lastException?->getMessage(),
+            ]);
+
+            throw ProvidersUnavailableException::make(previous: $lastException);
+        }
+
         throw OnboardingException::rateLimiting(previous: $lastException);
     }
 
@@ -157,21 +172,22 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
     }
 
     /**
+     * Only a response that explicitly flags the file as a CV is accepted.
+     *
+     * The schema declares `is_cv` as required, so a missing or non-boolean flag means the
+     * provider broke the contract — rejecting it keeps a malformed response from silently
+     * finishing the onboarding with an empty DTO.
+     *
      * @param  array<string, mixed>  $output
      *
      * @throws OnboardingException
      */
     private function validate(array $output): void
     {
-        if ($output['is_cv'] === true) {
+        if (($output['is_cv'] ?? null) === true) {
             return;
         }
 
-        $reason = $output['rejection_reason'] ?? '';
-
-        if (str_contains($reason, $this->notAnCv->value)) {
-            throw OnboardingException::invalidCv();
-        }
-
+        throw OnboardingException::invalidCv();
     }
 }

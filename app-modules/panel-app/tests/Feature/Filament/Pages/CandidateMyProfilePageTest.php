@@ -16,10 +16,7 @@ it('prevents unauthenticated users from accessing the page', function (): void {
 
 it('allows authenticated users with completed onboarding to access my profile page', function (): void {
     $user = User::factory()->create();
-    $user->refresh();
-
-    // Mark onboarding as complete
-    $user->candidate->update([
+    candidateFor($user, [
         'is_onboarded' => true,
         'onboarding_completed_at' => now(),
     ]);
@@ -32,10 +29,7 @@ it('allows authenticated users with completed onboarding to access my profile pa
 
 it('renders the my profile page successfully for authenticated users', function (): void {
     $user = User::factory()->create();
-    $user->refresh();
-
-    // Mark onboarding as complete
-    $user->candidate->update([
+    candidateFor($user, [
         'is_onboarded' => true,
         'onboarding_completed_at' => now(),
     ]);

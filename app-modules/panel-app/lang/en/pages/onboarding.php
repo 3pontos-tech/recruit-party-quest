@@ -63,7 +63,7 @@ return [
                 'data_consent_helper' => 'This is required to proceed with your application.',
             ],
             'validations' => [
-                'phone' => 'Please enter a valid phone number with area code (e.g., (11) 98765-4321).',
+                'phone' => 'Please enter a valid phone number, including the country code.',
             ],
         ],
         'cv' => [
@@ -93,6 +93,7 @@ return [
             'fields' => [
                 'work_experience' => 'Work Experience',
                 'company_name' => 'Company Name',
+                'position' => 'Role',
                 'description' => 'Description',
                 'start_date' => 'Start Date',
                 'end_date' => 'End Date',
@@ -102,8 +103,12 @@ return [
                 'degree' => 'Degree',
                 'field_of_study' => 'Field of Study',
                 'is_enrolled' => 'Currently Enrolled',
-                'skills' => 'Skills',
+                'skills' => 'Skills and technologies',
                 'skills_helper' => 'At least 3 skills required',
+            ],
+            'placeholders' => [
+                'position' => 'e.g. Senior HR Analyst',
+                'skills' => 'Type and press Enter',
             ],
         ],
         'preferences' => [

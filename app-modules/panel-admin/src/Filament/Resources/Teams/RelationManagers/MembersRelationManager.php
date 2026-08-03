@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Admin\Filament\Resources\Teams\RelationManagers;
 
+use App\Filament\Shared\Fields\EmailTextInput;
 use Filament\Actions\Action;
 use Filament\Actions\AttachAction;
 use Filament\Actions\CreateAction;
@@ -56,9 +57,8 @@ class MembersRelationManager extends RelationManager
                         TextInput::make('name')
                             ->label(__('teams::filament.fields.name'))
                             ->required(),
-                        TextInput::make('email')
+                        EmailTextInput::make('email')
                             ->label(__('teams::filament.fields.email'))
-                            ->email()
                             ->required(),
                     ])
                     ->mutateDataUsing(function (array $data): array {

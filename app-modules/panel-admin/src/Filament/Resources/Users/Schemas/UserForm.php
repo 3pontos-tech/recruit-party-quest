@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Admin\Filament\Resources\Users\Schemas;
 
+use App\Filament\Shared\Fields\EmailTextInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -20,7 +21,7 @@ class UserForm
                     ->label(__('users::labels.name'))
                     ->required(),
 
-                TextInput::make('email')
+                EmailTextInput::make('email')
                     ->label(__('users::labels.email'))
                     ->required(),
 

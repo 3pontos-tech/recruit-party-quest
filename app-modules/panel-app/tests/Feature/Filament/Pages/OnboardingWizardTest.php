@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Enums\FilamentPanel;
 use He4rt\App\Filament\Pages\OnboardingWizard;
 use He4rt\Candidates\Models\Candidate;
+use He4rt\Candidates\Models\WorkExperience;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\Event;
@@ -17,10 +18,8 @@ use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
     $this->user = User::factory()->create();
-    $this->candidate = Candidate::factory()->create([
-        'user_id' => $this->user->id,
-        'is_onboarded' => false,
-    ]);
+
+    $this->candidate = candidateFor($this->user, ['is_onboarded' => false]);
 
     actingAs($this->user);
     filament()->setCurrentPanel(FilamentPanel::App->value);
@@ -42,6 +41,23 @@ describe('Page Rendering & Access', function (): void {
 
         expect($component->instance()->getTitle())
             ->toBe(__('panel-app::pages/onboarding.title'));
+    });
+
+    it('creates the candidate profile on mount when the user has none', function (): void {
+        $userWithoutProfile = User::factory()->create();
+
+        actingAs($userWithoutProfile);
+
+        livewire(OnboardingWizard::class)->assertOk();
+
+        $candidates = Candidate::query()->where('user_id', $userWithoutProfile->id)->get();
+        $candidate = $candidates->first();
+
+        expect($candidates)->toHaveCount(1)
+            ->and($candidate->is_onboarded)->toBeFalse()
+            ->and($candidate->preferred_language)->toBe('pt_BR')
+            ->and($candidate->expected_salary_currency)->toBe('BRL')
+            ->and($candidate->is_open_to_remote)->toBeTrue();
     });
 
     it('should redirect to dashboard if user already completed onboarding', function (): void {
@@ -196,7 +212,7 @@ describe('Resume Analysis Completion (broadcast payload)', function (): void {
 });
 
 describe('Finalization validation (issue #166)', function (): void {
-    it('blocks finalization when phone is invalid for BR and does not persist', function (): void {
+    it('blocks finalization when phone number is invalid and does not persist', function (): void {
         livewire(OnboardingWizard::class)
             ->set('wizardVisible', true)
             ->set('data.timezone', 'America/Sao_Paulo')
@@ -244,6 +260,70 @@ describe('Finalization validation (issue #166)', function (): void {
             ->assertNoRedirect();
 
         expect($this->candidate->fresh()->is_onboarded)->toBeFalse();
+    });
+
+    it('blocks finalization when a work experience has no position', function (): void {
+        livewire(OnboardingWizard::class)
+            ->set('wizardVisible', true)
+            ->set('data.timezone', 'America/Sao_Paulo')
+            ->set('data.preferred_language', 'pt_BR')
+            ->set('data.phone', '+5511987654321')
+            ->set('data.data_consent_given', true)
+            ->set('data.expected_salary', '50000')
+            ->set('data.expected_salary_currency', 'BRL')
+            ->set('data.availability_date', now()->addDays(30)->format('Y-m-d'))
+            ->set('data.experience_level', ExperienceLevelEnum::Junior->value)
+            ->set('data.confirm_submission', true)
+            ->set('data.work_experiences', [
+                'item-1' => [
+                    'company_name' => 'Nubank',
+                    'position' => null,
+                    'description' => 'Recrutamento e seleção',
+                    'skills' => [],
+                    'start_date' => '2023-03-01',
+                    'end_date' => null,
+                    'is_currently_working_here' => true,
+                ],
+            ])
+            ->set('data.education', [])
+            ->call('handleRegistration')
+            ->assertHasFormErrors(['work_experiences.item-1.position'], 'content')
+            ->assertNoRedirect();
+
+        expect($this->candidate->fresh()->is_onboarded)->toBeFalse();
+    });
+
+    it('stores position and skills filled in the wizard', function (): void {
+        livewire(OnboardingWizard::class)
+            ->set('wizardVisible', true)
+            ->set('data.timezone', 'America/Sao_Paulo')
+            ->set('data.preferred_language', 'pt_BR')
+            ->set('data.phone', '+5511987654321')
+            ->set('data.data_consent_given', true)
+            ->set('data.expected_salary', '50000')
+            ->set('data.expected_salary_currency', 'BRL')
+            ->set('data.availability_date', now()->addDays(30)->format('Y-m-d'))
+            ->set('data.experience_level', ExperienceLevelEnum::Junior->value)
+            ->set('data.confirm_submission', true)
+            ->set('data.work_experiences', [
+                'item-1' => [
+                    'company_name' => 'Nubank',
+                    'position' => 'Analista de RH Pleno',
+                    'description' => 'Recrutamento e seleção',
+                    'skills' => ['Gupy'],
+                    'start_date' => '2023-03-01',
+                    'end_date' => null,
+                    'is_currently_working_here' => true,
+                ],
+            ])
+            ->set('data.education', [])
+            ->call('handleRegistration')
+            ->assertHasNoFormErrors([], 'content');
+
+        $record = WorkExperience::query()->firstOrFail();
+
+        expect($record->position)->toBe('Analista de RH Pleno')
+            ->and($record->metadata->skills)->toBe(['Gupy']);
     });
 
     it('blocks finalization when data consent is not given', function (): void {
@@ -380,6 +460,30 @@ describe('Complete Registration Flow', function (): void {
         assertDatabaseHas(Candidate::class, [
             'user_id' => $this->user->id,
             'phone_number' => '+5511987654321',
+        ]);
+    });
+
+    it('accepts an international phone number from another country (UY)', function (): void {
+        livewire(OnboardingWizard::class)
+            ->set('wizardVisible', true)
+            ->set('data.expected_salary', '50000')
+            ->set('data.expected_salary_currency', 'BRL')
+            ->set('data.availability_date', now()->addDays(30)->format('Y-m-d'))
+            ->set('data.experience_level', 'junior')
+            ->set('data.timezone', 'America/Montevideo')
+            ->set('data.preferred_language', 'pt_BR')
+            ->set('data.phone', '+59891234567')
+            ->set('data.confirm_submission', true)
+            ->set('data.data_consent_given', true)
+            ->set('data.work_experiences', [])
+            ->set('data.education', [])
+            ->call('handleRegistration')
+            ->assertHasNoFormErrors()
+            ->assertRedirectToRoute('filament.app.pages.dashboard');
+
+        assertDatabaseHas(Candidate::class, [
+            'user_id' => $this->user->id,
+            'phone_number' => '+59891234567',
         ]);
     });
 

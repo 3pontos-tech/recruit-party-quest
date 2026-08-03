@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\App\Livewire;
 
+use App\Support\Validation\DeliverableEmail;
 use He4rt\App\Mail\ContactFormMail;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -19,7 +20,7 @@ class ContactForm extends Component
     #[Validate('required|string|max:255')]
     public string $name = '';
 
-    #[Validate('required|email|max:255')]
+    #[Validate('required|'.DeliverableEmail::RULE.'|max:255')]
     public string $email = '';
 
     #[Validate('nullable|string|max:20')]

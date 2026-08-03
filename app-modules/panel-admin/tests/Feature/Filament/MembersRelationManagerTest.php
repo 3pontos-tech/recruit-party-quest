@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Bus;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
@@ -124,4 +125,20 @@ test('invite action validates email format', function (): void {
     ])
         ->callAction(TestAction::make('invite')->table(), data: ['name' => 'Foo', 'email' => 'not-an-email'])
         ->assertHasActionErrors(['email' => 'email']);
+});
+
+test('invite action rejects an email whose domain has no TLD', function (): void {
+    $team = Team::factory()->create();
+
+    livewire(MembersRelationManager::class, [
+        'ownerRecord' => $team,
+        'pageClass' => EditTeam::class,
+    ])
+        ->callAction(TestAction::make('invite')->table(), data: [
+            'name' => 'Myke Douglas',
+            'email' => 'contatomyke@hotmail',
+        ])
+        ->assertHasActionErrors(['email']);
+
+    assertDatabaseMissing('users', ['email' => 'contatomyke@hotmail']);
 });

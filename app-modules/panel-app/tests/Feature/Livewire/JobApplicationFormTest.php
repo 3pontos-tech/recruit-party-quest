@@ -177,8 +177,8 @@ it('redirects to the existing application without duplicating when the candidate
     $requisition = JobRequisition::factory()->create(['status' => RequisitionStatusEnum::Published]);
     JobPosting::factory()->for($requisition, 'jobRequisition')->create();
 
-    // The candidate that submit() will actually use (auth user's own candidate,
-    // not the factory instance — see the UserObserver stale-candidate pitfall).
+    // The candidate that submit() will actually use — the auth user's own profile,
+    // not the factory instance.
     $candidate = auth()->user()->candidate;
 
     // Simulate the already-committed application from a first, concurrent submit.

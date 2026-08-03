@@ -1,13 +1,9 @@
 @props([
     'bg' => 'bg-elevation-02dp',
+    'terms' => [],
 ])
 
 @php
-    $terms = \He4rt\Term\Models\Term::query()
-        ->where('is_active', true)
-        ->orderBy('title')
-        ->get(['title', 'slug']);
-
     $socials = [
         [
             'icon' => 'fab-instagram',
@@ -56,8 +52,8 @@
                 <ul class="text-text-medium space-y-2 text-sm sm:space-y-4">
                     @foreach ($terms as $term)
                         <li>
-                            <a href="/terms/{{ $term->slug }}" class="hover:text-text-high transition">
-                                {{ $term->title }}
+                            <a href="{{ $term['url'] }}" class="hover:text-text-high transition">
+                                {{ $term['title'] }}
                             </a>
                         </li>
                     @endforeach

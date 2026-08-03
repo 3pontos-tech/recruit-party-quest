@@ -13,9 +13,8 @@ use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
     $this->user = User::factory()->create();
-    $this->user->refresh();
 
-    $this->candidate = $this->user->candidate;
+    $this->candidate = candidateFor($this->user);
 
     actingAs($this->user);
     filament()->setCurrentPanel(FilamentPanel::App->value);
@@ -122,10 +121,10 @@ describe('Offers received count', function (): void {
 describe('User isolation', function (): void {
     it('ignores applications from other users', function (): void {
         $otherUser = User::factory()->create();
-        $otherUser->refresh();
+        $otherCandidate = candidateFor($otherUser);
 
         Application::factory()->count(5)->create([
-            'candidate_id' => $otherUser->candidate->getKey(),
+            'candidate_id' => $otherCandidate->getKey(),
             'status' => ApplicationStatusEnum::New,
         ]);
 
@@ -135,7 +134,7 @@ describe('User isolation', function (): void {
 
     it('counts only the authenticated user applications when multiple users exist', function (): void {
         $otherUser = User::factory()->create();
-        $otherUser->refresh();
+        $otherCandidate = candidateFor($otherUser);
 
         Application::factory()->count(2)->create([
             'candidate_id' => $this->candidate->getKey(),
@@ -143,7 +142,7 @@ describe('User isolation', function (): void {
         ]);
 
         Application::factory()->count(9)->create([
-            'candidate_id' => $otherUser->candidate->getKey(),
+            'candidate_id' => $otherCandidate->getKey(),
             'status' => ApplicationStatusEnum::InReview,
         ]);
 

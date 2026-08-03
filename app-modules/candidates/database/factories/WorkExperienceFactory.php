@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace He4rt\Candidates\Database\Factories;
 
+use He4rt\Candidates\DTOs\WorkExperienceMetadata;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Candidates\Models\WorkExperience;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -68,30 +69,17 @@ class WorkExperienceFactory extends Factory
 
         $position = fake()->randomElement($positions);
         $techStack = fake()->randomElement($technologies);
-        $teamSize = fake()->numberBetween(3, 15);
 
         return [
             'company_name' => fake()->randomElement($companies),
+            'position' => $position,
             'description' => $this->generateJobDescription($position, $techStack),
             'start_date' => $startDate,
             'end_date' => $isCurrentlyWorking ? null : $endDate,
             'is_currently_working_here' => $isCurrentlyWorking,
-            'metadata' => [
-                'position' => $position,
-                'technologies' => $techStack,
-                'team_size' => $teamSize,
-                'project_type' => fake()->randomElement([
-                    'E-commerce',
-                    'Fintech',
-                    'EdTech',
-                    'HealthTech',
-                    'Marketplace',
-                    'SaaS',
-                ]),
-            ],
+            'metadata' => new WorkExperienceMetadata($techStack),
             'created_at' => Date::now(),
             'updated_at' => Date::now(),
-
             'candidate_id' => Candidate::factory(),
         ];
     }

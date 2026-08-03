@@ -20,7 +20,7 @@ return [
             'phone_number' => 'e.g., +55 (11) 98765-4321',
         ],
         'validations' => [
-            'phone_number' => 'Please enter a valid phone number with area code (e.g., (11) 98765-4321).',
+            'phone_number' => 'Please enter a valid phone number, including the country code.',
         ],
     ],
 
@@ -90,14 +90,21 @@ return [
         'fields' => [
             'work_experiences' => 'Work Experiences',
             'company_name' => 'Company Name',
+            'position' => 'Role',
             'description' => 'Description',
             'start_date' => 'Start Date',
             'end_date' => 'End Date',
             'is_currently_working_here' => 'Currently Working Here',
+            'skills' => 'Skills and technologies',
         ],
         'placeholders' => [
             'company_name' => 'e.g., Google, Microsoft, Startup Inc.',
+            'position' => 'e.g. Senior HR Analyst',
             'description' => 'Describe your responsibilities, achievements, and key projects...',
+            'skills' => 'Type and press Enter',
+        ],
+        'helpers' => [
+            'position' => 'Helps recruiters understand your career path.',
         ],
     ],
 

@@ -20,7 +20,7 @@ return [
             'phone_number' => 'ex: +55 (11) 98765-4321',
         ],
         'validations' => [
-            'phone_number' => 'Informe um número de telefone válido com DDD (ex: (11) 98765-4321).',
+            'phone_number' => 'Informe um número de telefone válido, incluindo o código do país.',
         ],
     ],
 
@@ -90,14 +90,21 @@ return [
         'fields' => [
             'work_experiences' => 'Experiências Profissionais',
             'company_name' => 'Nome da Empresa',
+            'position' => 'Cargo',
             'description' => 'Descrição',
             'start_date' => 'Data de Início',
             'end_date' => 'Data de Término',
             'is_currently_working_here' => 'Trabalho Aqui Atualmente',
+            'skills' => 'Competências e tecnologias',
         ],
         'placeholders' => [
             'company_name' => 'ex: Google, Microsoft, Startup Inc.',
+            'position' => 'ex.: Analista de RH Pleno',
             'description' => 'Descreva suas responsabilidades, conquistas e projetos principais...',
+            'skills' => 'Digite e pressione Enter',
+        ],
+        'helpers' => [
+            'position' => 'Ajuda recrutadores a entender sua trajetória profissional.',
         ],
     ],
 

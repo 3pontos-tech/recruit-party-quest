@@ -5,24 +5,26 @@ declare(strict_types=1);
 namespace He4rt\Candidates\Models;
 
 use App\Models\BaseModel;
+use He4rt\Candidates\Casts\AsWorkExperienceMetadata;
 use He4rt\Candidates\Database\Factories\WorkExperienceFactory;
+use He4rt\Candidates\DTOs\WorkExperienceMetadata;
 use He4rt\Candidates\Policies\WorkExperiencePolicy;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 
 /**
  * @property string $id
  * @property string $candidate_id
  * @property string $company_name
+ * @property string|null $position
  * @property string $description
  * @property Carbon $start_date
  * @property Carbon|null $end_date
  * @property bool $is_currently_working_here
- * @property Collection<int, string> $metadata
+ * @property WorkExperienceMetadata $metadata
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
@@ -69,7 +71,7 @@ class WorkExperience extends BaseModel
             'start_date' => 'datetime',
             'end_date' => 'datetime',
             'is_currently_working_here' => 'boolean',
-            'metadata' => 'array',
+            'metadata' => AsWorkExperienceMetadata::class,
         ];
     }
 }

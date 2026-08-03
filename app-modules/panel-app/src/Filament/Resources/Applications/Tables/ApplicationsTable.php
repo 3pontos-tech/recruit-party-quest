@@ -15,7 +15,10 @@ class ApplicationsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->where('candidate_id', auth()->user()->candidate->getKey()))
+            ->modifyQueryUsing(fn (Builder $query) => $query->where(
+                'candidate_id',
+                auth()->user()?->candidate?->getKey(),
+            ))
             ->columns([
                 TextColumn::make('requisition.post.title')
                     ->description(fn (Application $record) => $record->team->name)

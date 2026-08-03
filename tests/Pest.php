@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use He4rt\Candidates\Models\Candidate;
+use He4rt\Users\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
@@ -43,4 +45,22 @@ pest()->extend(TestCase::class)
 function something(): void
 {
     // ..
+}
+
+/**
+ * Cria o perfil de candidato do usuário e deixa a relação resolvida na mesma instância.
+ *
+ * O perfil não nasce mais junto com o `User` — quem o materializa em produção é o
+ * onboarding. Nos fixtures, este helper ocupa esse lugar: além de criar o registro,
+ * faz o `setRelation` para que `auth()->user()->candidate` responda sem um `refresh()`.
+ *
+ * @param  array<string, mixed>  $attributes
+ */
+function candidateFor(User $user, array $attributes = []): Candidate
+{
+    $candidate = Candidate::factory()->for($user, 'user')->create($attributes);
+
+    $user->setRelation('candidate', $candidate);
+
+    return $candidate;
 }
