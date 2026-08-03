@@ -1,13 +1,13 @@
 ---
 type: plan
-title: "Criação explícita do perfil de candidato"
+title: 'Criação explícita do perfil de candidato'
 module: users, candidates, panel-app
 status: proposed
 date: 2026-08-02
 author: Clintonrocha98
 related:
-  spec: 2026-08-02-criacao-explicita-do-perfil-de-candidato
-  issue: 3pontos-tech/recruit-party-quest#261
+    spec: 2026-08-02-criacao-explicita-do-perfil-de-candidato
+    issue: 3pontos-tech/recruit-party-quest#261
 ---
 
 # Criação explícita do perfil de candidato — Plano de Implementação
@@ -22,7 +22,7 @@ explícita chamada no onboarding, fechando a issue #261 e viabilizando o índice
 
 **Architecture:** o observer fica só com `assignRole(Roles::User)`. Uma Action idempotente
 em `candidates` cria o perfil, e o `OnboardingWizard` a chama no `mount()`. As tarefas são
-ordenadas em *strangler*: cada uma deixa a suíte verde tanto com o observer antigo quanto
+ordenadas em _strangler_: cada uma deixa a suíte verde tanto com o observer antigo quanto
 sem ele, então nenhuma tarefa depende da seguinte para o CI passar.
 
 **Tech Stack:** PHP 8.4, Laravel 12, Filament v5, Livewire v4, PostgreSQL, Pest v4,
@@ -34,8 +34,10 @@ Larastan v3, Pint, Rector.
 
 - Módulos seguem `internachi/modular`: `candidates` → `He4rt\Candidates`, `users` →
   `He4rt\Users`, `panel-app` → `He4rt\App`.
-- Domínio nunca importa de apresentação. `users` **não pode** importar `He4rt\Candidates`
-  — esse é um dos objetivos do trabalho.
+- Domínio nunca importa de apresentação. O `UserObserver` **não pode** importar
+  `He4rt\Candidates` — esse é um dos objetivos do trabalho. A relação `User::candidate()`
+  permanece: `getFilamentAvatarUrl()` e `preferredLocale()` dependem dela, e desacoplá-la
+  está fora do escopo (ver spec).
 - Actions usam o método `execute()`, seguindo `StoreCandidateEducation`,
   `UpdateCandidateAction` e as demais em `app-modules/candidates/src/Actions/Onboarding/`.
 - Toda string de UI passa por `__()`. Este plano não introduz string nova de UI.
@@ -49,6 +51,7 @@ Larastan v3, Pint, Rector.
 ## Estrutura de arquivos
 
 **Criar**
+
 - `app-modules/candidates/src/Actions/EnsureCandidateProfile.php` — Action idempotente,
   única responsável por materializar o perfil.
 - `app-modules/candidates/tests/Feature/EnsureCandidateProfileTest.php`
@@ -56,6 +59,7 @@ Larastan v3, Pint, Rector.
 - `app-modules/users/tests/Feature/UserObserverTest.php`
 
 **Modificar**
+
 - `app-modules/users/src/UserObserver.php` — perde a criação do Candidate.
 - `app-modules/panel-app/src/Filament/Pages/OnboardingWizard.php:108` — passa a chamar a Action.
 - 10 arquivos de apresentação que assumem `candidate` não-nulo (Tarefa 3).
@@ -70,10 +74,12 @@ Cria a Action e seus testes. Nada mais no sistema a consome ainda, então a suí
 permanece verde.
 
 **Files:**
+
 - Create: `app-modules/candidates/src/Actions/EnsureCandidateProfile.php`
 - Test: `app-modules/candidates/tests/Feature/EnsureCandidateProfileTest.php`
 
 **Interfaces:**
+
 - Consumes: `He4rt\Users\User`, `He4rt\Candidates\Models\Candidate`.
 - Produces: `EnsureCandidateProfile::execute(User $user): Candidate` — idempotente,
   devolve o perfil existente quando já houver um. Tarefas 2, 4 e 5 dependem dessa
@@ -103,8 +109,8 @@ it('creates a candidate profile with the onboarding defaults', function (): void
 
     expect($candidate->user_id)->toBe($user->getKey())
         ->and($candidate->is_onboarded)->toBeFalse()
-        ->and($candidate->preferred_language)->toBe('en')
-        ->and($candidate->expected_salary_currency)->toBe('USD')
+        ->and($candidate->preferred_language)->toBe('pt_BR')
+        ->and($candidate->expected_salary_currency)->toBe('BRL')
         ->and($candidate->is_open_to_remote)->toBeTrue();
 });
 
@@ -157,8 +163,8 @@ final class EnsureCandidateProfile
             ['user_id' => $user->getKey()],
             [
                 'is_onboarded' => false,
-                'preferred_language' => 'en',
-                'expected_salary_currency' => 'USD',
+                'preferred_language' => 'pt_BR',
+                'expected_salary_currency' => 'BRL',
                 'is_open_to_remote' => true,
             ],
         );
@@ -200,6 +206,7 @@ Três arquivos que quebraram na medição do spec ficam de fora de propósito �
 o `assignRole`. Como a role continua no observer, eles não são afetados.
 
 **Files:**
+
 - Modify: `app-modules/panel-app/tests/Feature/Filament/Pages/OnboardingWizardTest.php:18-28`
 - Modify: `app-modules/panel-app/tests/Feature/Livewire/Jobs/SavedJobsWidgetTest.php:17-21`
 - Modify: `app-modules/panel-app/tests/Feature/Filament/MyProfile/CandidateProfileInfoTest.php:13-17,53-57`
@@ -213,6 +220,7 @@ o `assignRole`. Como a role continua no observer, eles não são afetados.
 - Modify: `app-modules/users/tests/Feature/UserPreferredLocaleTest.php:9-10,17-18`
 
 **Interfaces:**
+
 - Consumes: `EnsureCandidateProfile::execute(User $user): Candidate` da Tarefa 1.
 - Produces: nada — só fixtures.
 
@@ -427,6 +435,7 @@ Com a Tarefa 5, SuperAdmin e Admin passam a chegar ao painel app sem `Candidate`
 não-nula e precisam se comportar como "sem perfil".
 
 **Files:**
+
 - Modify: `app-modules/panel-app/src/Filament/Resources/Applications/Tables/ApplicationsTable.php:18`
 - Modify: `app-modules/panel-app/src/Livewire/JobApplicationForm.php:64`
 - Modify: `app-modules/panel-app/src/Livewire/Jobs/BookmarkJobButton.php:37`
@@ -440,6 +449,7 @@ não-nula e precisam se comportar como "sem perfil".
 - Test: `app-modules/panel-app/tests/Feature/Filament/AdminWithoutCandidateTest.php` (criar)
 
 **Interfaces:**
+
 - Consumes: nada das tarefas anteriores.
 - Produces: nada consumido adiante.
 
@@ -595,16 +605,16 @@ Aplique um dos dois formatos em cada ponto, conforme o método preencha ou grave
 método não for `void`, devolva o vazio do tipo declarado (`[]` para array, `null` para
 nulável) em vez de `return;`. Os métodos e linhas:
 
-| Arquivo | Linhas |
-| --- | --- |
-| `MyProfile/CandidateSkills.php` | 30, 95 |
-| `MyProfile/CandidateProfileInfo.php` | 31, 43, 83 |
-| `MyProfile/CandidateEducation.php` | 32, 109 |
-| `MyProfile/CandidatePreferences.php` | 33, 129 |
-| `MyProfile/CandidateWorkExperience.php` | 36, 125 |
-| `MyProfile/CandidateResumeUpload.php` | 41, 70 |
-| `JobApplicationForm.php` | 64 |
-| `Jobs/BookmarkJobButton.php` | 37 |
+| Arquivo                                 | Linhas     |
+| --------------------------------------- | ---------- |
+| `MyProfile/CandidateSkills.php`         | 30, 95     |
+| `MyProfile/CandidateProfileInfo.php`    | 31, 43, 83 |
+| `MyProfile/CandidateEducation.php`      | 32, 109    |
+| `MyProfile/CandidatePreferences.php`    | 33, 129    |
+| `MyProfile/CandidateWorkExperience.php` | 36, 125    |
+| `MyProfile/CandidateResumeUpload.php`   | 41, 70     |
+| `JobApplicationForm.php`                | 64         |
+| `Jobs/BookmarkJobButton.php`            | 37         |
 
 - [ ] **Step 6: Rodar o teste novo e os testes de `MyProfile`**
 
@@ -635,12 +645,14 @@ git commit -m "fix(panel-app): tolerate users without a candidate profile"
 ### Task 4: Onboarding materializa o perfil
 
 **Files:**
+
 - Modify: `app-modules/panel-app/src/Filament/Pages/OnboardingWizard.php:108`
 - Modify: `app-modules/candidates/src/Actions/Onboarding/StoreCandidateEducation.php:15`
 - Modify: `app-modules/candidates/src/Actions/Onboarding/StoreCandidateWorkExperiences.php:16`
 - Test: `app-modules/panel-app/tests/Feature/Filament/OnboardingWizardTest.php`
 
 **Interfaces:**
+
 - Consumes: `EnsureCandidateProfile::execute(User $user): Candidate` da Tarefa 1.
 - Produces: garantia de que qualquer usuário que abra o wizard tem perfil — a Tarefa 5
   depende disso.
@@ -750,6 +762,7 @@ git commit -m "feat(panel-app): create the candidate profile on onboarding"
 O passo que fecha a issue #261. A partir daqui `users` não importa mais `He4rt\Candidates`.
 
 **Files:**
+
 - Modify: `app-modules/users/src/UserObserver.php`
 - Create: `app-modules/users/tests/Feature/UserObserverTest.php`
 - Modify: `app-modules/panel-app/tests/Feature/Filament/AfterRegisterTest.php`
@@ -759,6 +772,7 @@ O passo que fecha a issue #261. A partir daqui `users` não importa mais `He4rt\
 - Modify: `app-modules/panel-app/tests/Feature/Filament/OnboardingWizardTest.php`
 
 **Interfaces:**
+
 - Consumes: tudo das Tarefas 1 a 4.
 - Produces: `UserObserver::created()` passa a fazer só `assignRole(Roles::User)`.
 
@@ -921,10 +935,12 @@ git commit -m "refactor(users): stop creating the candidate profile in UserObser
 ### Task 6: Índice único em `candidates.user_id`
 
 **Files:**
+
 - Create: `app-modules/candidates/database/migrations/2026_08_02_000000_add_unique_index_to_candidates_user_id.php`
 - Test: `app-modules/candidates/tests/Feature/EnsureCandidateProfileTest.php` (acrescentar caso)
 
 **Interfaces:**
+
 - Consumes: a garantia da Tarefa 5 de que nada mais cria perfis implicitamente.
 - Produces: nada consumido adiante.
 
@@ -1025,9 +1041,11 @@ git commit -m "feat(candidates): add partial unique index on candidates.user_id"
 ### Task 7: Fechamento — qualidade e issue
 
 **Files:**
+
 - Modify: nenhum arquivo novo; só correções apontadas pelas ferramentas.
 
 **Interfaces:**
+
 - Consumes: todas as tarefas anteriores.
 - Produces: branch pronta para PR.
 

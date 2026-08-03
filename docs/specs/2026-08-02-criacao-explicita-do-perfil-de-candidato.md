@@ -206,7 +206,7 @@ depender do schema.
 $this->record = $user->candidate;
 
 // depois
-$this->record = resolve(EnsureCandidateProfile::class)($user);
+$this->record = resolve(EnsureCandidateProfile::class)->execute($user);
 ```
 
 O middleware `RedirectIfOnboardingIncomplete` já é null-safe (`:35`) e empurra para o
