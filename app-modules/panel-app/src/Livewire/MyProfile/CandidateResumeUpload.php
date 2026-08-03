@@ -9,6 +9,7 @@ use Filament\Schemas\Schema;
 use He4rt\App\Filament\Pages\CandidateMyProfilePage;
 use He4rt\App\Filament\Schemas\ProfileResumeFileUpload;
 use He4rt\Candidates\Actions\Onboarding\StoreCandidateResume;
+use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Users\User;
 use Jeffgreco13\FilamentBreezy\Livewire\MyProfileComponent;
 use Livewire\Attributes\On;
@@ -66,7 +67,10 @@ class CandidateResumeUpload extends MyProfileComponent
             return;
         }
 
-        resolve(StoreCandidateResume::class)->execute($candidate, $payload['fields'] ?? []);
+        resolve(StoreCandidateResume::class)->execute(
+            $candidate,
+            CandidateOnboardingDTO::make($payload['fields'] ?? []),
+        );
 
         $candidate->update(['cv_last_uploaded_at' => now()]);
 

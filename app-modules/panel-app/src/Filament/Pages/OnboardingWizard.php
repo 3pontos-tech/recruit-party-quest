@@ -180,7 +180,7 @@ class OnboardingWizard extends Page
             return;
         }
 
-        resolve(StoreCandidateResume::class)->execute($candidate, $data);
+        resolve(StoreCandidateResume::class)->execute($candidate, CandidateOnboardingDTO::make($data));
 
         $experienceLevel = $data['experience_level'] ?? null;
 

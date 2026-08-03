@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use He4rt\Candidates\Actions\Onboarding\StoreCandidateResume;
+use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\Models\Education;
 use He4rt\Candidates\Models\WorkExperience;
 use He4rt\Users\User;
@@ -15,7 +16,7 @@ beforeEach(function (): void {
 });
 
 it('stores work experiences and education in a single call', function (): void {
-    resolve(StoreCandidateResume::class)->execute($this->candidate, [
+    resolve(StoreCandidateResume::class)->execute($this->candidate, CandidateOnboardingDTO::make([
         'work_experiences' => [
             [
                 'company_name' => 'Nubank',
@@ -31,7 +32,7 @@ it('stores work experiences and education in a single call', function (): void {
                 'field_of_study' => 'Computer Science',
             ],
         ],
-    ]);
+    ]));
 
     assertDatabaseHas(WorkExperience::class, [
         'candidate_id' => $this->candidate->getKey(),
@@ -45,7 +46,10 @@ it('stores work experiences and education in a single call', function (): void {
 });
 
 it('does nothing when the payload has no resume keys', function (): void {
-    resolve(StoreCandidateResume::class)->execute($this->candidate, ['headline' => 'Dev']);
+    resolve(StoreCandidateResume::class)->execute(
+        $this->candidate,
+        CandidateOnboardingDTO::make(['headline' => 'Dev']),
+    );
 
     assertDatabaseCount(WorkExperience::class, 0);
     assertDatabaseCount(Education::class, 0);
@@ -54,14 +58,14 @@ it('does nothing when the payload has no resume keys', function (): void {
 it('writes to the given profile, not to the authenticated one', function (): void {
     $other = candidateFor(User::factory()->create());
 
-    resolve(StoreCandidateResume::class)->execute($other, [
+    resolve(StoreCandidateResume::class)->execute($other, CandidateOnboardingDTO::make([
         'work_experiences' => [
             [
                 'company_name' => 'Stone',
                 'start_date' => '2022-01-01',
             ],
         ],
-    ]);
+    ]));
 
     assertDatabaseCount(WorkExperience::class, 1);
     assertDatabaseHas(WorkExperience::class, [
