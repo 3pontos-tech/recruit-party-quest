@@ -5,6 +5,7 @@ declare(strict_types=1);
 use He4rt\Candidates\Actions\Onboarding\CompleteOnboardingAction;
 use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\Exceptions\OnboardingException;
+use He4rt\Candidates\Exceptions\ProvidersUnavailableException;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Prism\Prism\Enums\Provider as ProviderEnum;
@@ -226,6 +227,30 @@ function bindAlwaysProviderOverloaded(): void
     });
 }
 
+/** Binds a PrismManager that fails loudly if the provider is reached at all. */
+function bindPrismThatMustNotBeCalled(): void
+{
+    $fake = new class extends PrismFake
+    {
+        public function __construct() {}
+
+        public function structured(StructuredRequest $request): StructuredResponse
+        {
+            throw new RuntimeException('Prism was called even though every circuit breaker is open.');
+        }
+    };
+
+    app()->instance(PrismManager::class, new class($fake) extends PrismManager
+    {
+        public function __construct(private readonly PrismFake $fake) {}
+
+        public function resolve(ProviderEnum|string $name, array $providerConfig = []): PrismFake
+        {
+            return $this->fake;
+        }
+    });
+}
+
 it('extracts work experiences and education from a valid CV', function (): void {
     Prism::fake([
         StructuredResponseFake::make()->withStructured(onboardingValidCvStructured()),
@@ -364,4 +389,50 @@ it('does not open circuit breaker when primary model throws PrismRequestTooLarge
         ->toThrow(OnboardingException::class);
 
     expect(Cache::has('cb:gemini:'.$primaryModel))->toBeFalse();
+});
+
+it('throws ProvidersUnavailableException without calling the provider when every circuit is already open', function (): void {
+    Cache::flush();
+
+    Cache::put('cb:gemini:'.config('ai.provider.gemini.model'), true, now()->addMinutes(3));
+    Cache::put('cb:gemini:'.config('ai.provider.gemini.fallback_model'), true, now()->addMinutes(3));
+
+    bindPrismThatMustNotBeCalled();
+
+    expect(fn () => resolve(CompleteOnboardingAction::class)->execute(onboardingMakeFakeFile()))
+        ->toThrow(ProvidersUnavailableException::class);
+});
+
+it('carries the originating provider error when every model opens its circuit in the same run', function (): void {
+    Cache::flush();
+
+    bindAlwaysProviderOverloaded();
+
+    $exception = null;
+
+    try {
+        resolve(CompleteOnboardingAction::class)->execute(onboardingMakeFakeFile());
+    } catch (OnboardingException $onboardingException) {
+        $exception = $onboardingException;
+    }
+
+    expect($exception)->toBeInstanceOf(ProvidersUnavailableException::class)
+        ->and($exception?->getPrevious())->toBeInstanceOf(PrismProviderOverloadedException::class);
+});
+
+it('keeps the retryable rate limiting error while at least one circuit stays closed', function (): void {
+    Cache::flush();
+
+    bindAlwaysRequestTooLarge();
+
+    $exception = null;
+
+    try {
+        resolve(CompleteOnboardingAction::class)->execute(onboardingMakeFakeFile());
+    } catch (OnboardingException $onboardingException) {
+        $exception = $onboardingException;
+    }
+
+    expect($exception)->toBeInstanceOf(OnboardingException::class)
+        ->and($exception)->not->toBeInstanceOf(ProvidersUnavailableException::class);
 });
