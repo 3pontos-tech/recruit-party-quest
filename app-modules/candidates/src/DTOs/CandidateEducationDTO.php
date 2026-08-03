@@ -6,7 +6,6 @@ namespace He4rt\Candidates\DTOs;
 
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\Date;
 use JsonSerializable;
 
 final readonly class CandidateEducationDTO implements JsonSerializable
@@ -30,12 +29,8 @@ final readonly class CandidateEducationDTO implements JsonSerializable
             degree: (string) ($data['degree'] ?? ''),
             fieldOfStudy: (string) ($data['field_of_study'] ?? ''),
             isEnrolled: (bool) ($data['is_enrolled'] ?? false),
-            startDate: (filled($data['start_date'] ?? null) && $data['start_date'] !== 'null')
-                ? Date::parse($data['start_date'])
-                : null,
-            endDate: (filled($data['end_date'] ?? null) && $data['end_date'] !== 'null')
-                ? Date::parse($data['end_date'])
-                : null,
+            startDate: ResumeDate::parse($data['start_date'] ?? null),
+            endDate: ResumeDate::parse($data['end_date'] ?? null),
         );
     }
 

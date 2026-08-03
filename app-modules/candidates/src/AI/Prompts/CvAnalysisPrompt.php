@@ -26,6 +26,18 @@ final class CvAnalysisPrompt
                   currículo. Se o cargo não estiver explícito, omita o campo — nunca deduza nem invente.
                 - Em skills, liste as competências, tecnologias e ferramentas citadas naquela
                   experiência específica. Se nenhuma for citada, retorne uma lista vazia.
+
+                ### DATAS (start_date e end_date):
+                - Sempre no formato YYYY-MM-DD, e sempre uma data válida do calendário.
+                - Currículo com mês e ano ("mar/2020", "03/2020", "março de 2020"): use o
+                  primeiro dia daquele mês — 2020-03-01.
+                - Currículo com apenas o ano ("2020", "2018 - 2020"): use o primeiro dia
+                  daquele ano — 2020-01-01.
+                - Data escrita em ordem brasileira ("05/03/2020") é dia/mês/ano — 2020-03-05.
+                - Se o currículo não informar a data, ou se ela indicar o presente
+                  ("Atual", "Presente", "Até o momento"), retorne null. Nunca escreva "N/A",
+                  "-" nem qualquer outro texto no lugar da data, e nunca deduza uma data que
+                  não esteja no documento.
 PROMPT;
     }
 }

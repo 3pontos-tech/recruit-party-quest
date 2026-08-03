@@ -45,3 +45,10 @@ it('declares required fields for education', function (): void {
 
     expect($education['required'])->toBe(['institution', 'start_date', 'is_enrolled']);
 });
+
+it('lets every date be null so the model never fills it with a placeholder', function (string $group): void {
+    $properties = cvSchemaArray()['properties'][$group]['items']['properties'];
+
+    expect($properties['start_date']['nullable'])->toBeTrue()
+        ->and($properties['end_date']['nullable'])->toBeTrue();
+})->with(['work_experiences', 'education']);
