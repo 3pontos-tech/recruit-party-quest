@@ -51,6 +51,10 @@ it('returns ui-avatars url when candidate has no avatar', function (): void {
 it('returns ui-avatars url when user has no candidate', function (): void {
     $user = User::factory()->create();
 
+    // Sem esta asserção o teste passa mesmo se o perfil voltar a ser criado junto do
+    // usuário: um candidato sem avatar cai no mesmo fallback.
+    expect($user->candidate()->exists())->toBeFalse();
+
     $avatarUrl = $user->getFilamentAvatarUrl();
 
     expect($avatarUrl)->toContain('ui-avatars.com');

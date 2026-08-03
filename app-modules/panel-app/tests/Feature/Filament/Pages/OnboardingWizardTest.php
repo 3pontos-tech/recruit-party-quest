@@ -43,6 +43,23 @@ describe('Page Rendering & Access', function (): void {
             ->toBe(__('panel-app::pages/onboarding.title'));
     });
 
+    it('creates the candidate profile on mount when the user has none', function (): void {
+        $userWithoutProfile = User::factory()->create();
+
+        actingAs($userWithoutProfile);
+
+        livewire(OnboardingWizard::class)->assertOk();
+
+        $candidates = Candidate::query()->where('user_id', $userWithoutProfile->id)->get();
+        $candidate = $candidates->first();
+
+        expect($candidates)->toHaveCount(1)
+            ->and($candidate->is_onboarded)->toBeFalse()
+            ->and($candidate->preferred_language)->toBe('pt_BR')
+            ->and($candidate->expected_salary_currency)->toBe('BRL')
+            ->and($candidate->is_open_to_remote)->toBeTrue();
+    });
+
     it('should redirect to dashboard if user already completed onboarding', function (): void {
         $onboardedUser = User::factory()->create();
         Candidate::factory()->create([
