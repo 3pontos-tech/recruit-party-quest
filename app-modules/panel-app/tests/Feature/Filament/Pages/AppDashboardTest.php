@@ -13,8 +13,7 @@ use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
     $this->user = User::factory()->create();
-    $this->user->refresh();
-    $this->user->candidate->update([
+    candidateFor($this->user, [
         'is_onboarded' => true,
         'onboarding_completed_at' => now(),
     ]);

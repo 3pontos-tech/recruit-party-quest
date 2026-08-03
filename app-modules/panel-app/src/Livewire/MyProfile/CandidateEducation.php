@@ -29,7 +29,11 @@ class CandidateEducation extends MyProfileComponent
 
     public function mount(): void
     {
-        $candidate = auth()->user()->candidate;
+        $candidate = auth()->user()?->candidate;
+
+        if ($candidate === null) {
+            return;
+        }
 
         $this->form->fill([
             'education' => $candidate->degrees->map(fn (Education $education) => [
@@ -106,7 +110,11 @@ class CandidateEducation extends MyProfileComponent
     public function submit(): void
     {
         $data = $this->form->getState();
-        $candidate = auth()->user()->candidate;
+        $candidate = auth()->user()?->candidate;
+
+        if ($candidate === null) {
+            return;
+        }
 
         $existingIds = [];
 

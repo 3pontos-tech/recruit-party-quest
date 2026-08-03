@@ -29,13 +29,12 @@ use Filament\Support\Concerns\EvaluatesClosures;
 use Filament\Support\Enums\Width;
 use He4rt\App\Filament\Schemas\ResumeFileUpload;
 use He4rt\App\Livewire\ResumeFileUploadProgress;
-use He4rt\Candidates\Actions\Onboarding\StoreCandidateEducation;
-use He4rt\Candidates\Actions\Onboarding\StoreCandidateWorkExperiences;
+use He4rt\Candidates\Actions\EnsureCandidateProfile;
+use He4rt\Candidates\Actions\Onboarding\StoreCandidateResume;
 use He4rt\Candidates\Actions\Onboarding\UpdateCandidateAction;
 use He4rt\Candidates\DTOs\CandidateDTO;
 use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
-use He4rt\Candidates\DTOs\Collections\CandidateEducationCollection;
-use He4rt\Candidates\DTOs\Collections\CandidateWorkExperienceCollection;
+use He4rt\Candidates\Models\Candidate;
 use He4rt\Candidates\Models\Skill;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Users\User;
@@ -105,7 +104,8 @@ class OnboardingWizard extends Page
         }
 
         $this->user = $user;
-        $this->record = $user->candidate;
+        $this->record = resolve(EnsureCandidateProfile::class)->execute($user);
+        $user->setRelation('candidate', $this->record);
         $this->content->fill();
     }
 
@@ -171,11 +171,16 @@ class OnboardingWizard extends Page
     {
         $data = $this->content->getState();
 
-        $experiences = CandidateWorkExperienceCollection::fromArray($data['work_experiences'] ?? []);
-        resolve(StoreCandidateWorkExperiences::class)->execute($experiences);
+        // O mount() materializa o perfil antes de qualquer interação, então a relação
+        // sempre resolve aqui. Não usamos $this->record porque o Livewire o re-hidrata
+        // como identificador, e não como Model.
+        $candidate = auth()->user()?->candidate;
 
-        $education = CandidateEducationCollection::fromArray($data['education'] ?? []);
-        resolve(StoreCandidateEducation::class)->execute($education);
+        if (! $candidate instanceof Candidate) {
+            return;
+        }
+
+        resolve(StoreCandidateResume::class)->execute($candidate, CandidateOnboardingDTO::make($data));
 
         $experienceLevel = $data['experience_level'] ?? null;
 

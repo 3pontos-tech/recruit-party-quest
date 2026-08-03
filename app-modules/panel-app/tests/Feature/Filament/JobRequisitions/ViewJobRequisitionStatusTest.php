@@ -71,11 +71,10 @@ it('redirects an already-applied candidate to their application even when the jo
     $posting = JobPosting::factory()->for($requisition, 'jobRequisition')->create();
 
     $user = User::factory()->create();
-    $user->candidate()->update(['is_onboarded' => true]);
-    $user->refresh();
+    $candidate = candidateFor($user, ['is_onboarded' => true]);
 
     $application = Application::factory()
-        ->for($user->candidate)
+        ->for($candidate)
         ->for($requisition, 'requisition')
         ->create();
 
@@ -90,8 +89,7 @@ it('redirects to the jobs list with a warning when the job is unpublished betwee
     $posting = JobPosting::factory()->for($requisition, 'jobRequisition')->create();
 
     $user = User::factory()->create();
-    $user->candidate()->update(['is_onboarded' => true]);
-    $user->refresh();
+    $candidate = candidateFor($user, ['is_onboarded' => true]);
 
     actingAs($user);
 

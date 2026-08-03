@@ -16,9 +16,8 @@ use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
     $this->user = User::factory()->create();
-    $this->user->refresh();
 
-    $this->candidate = $this->user->candidate;
+    $this->candidate = candidateFor($this->user);
     actingAs($this->user);
 
     Livewire::withoutLazyLoading();
@@ -139,9 +138,7 @@ it('shows the empty state when there are no saved jobs', function (): void {
 
 it('does not remove a saved job that belongs to another candidate', function (): void {
     $otherUser = User::factory()->create();
-    $otherUser->refresh();
-
-    $otherCandidate = $otherUser->candidate;
+    $otherCandidate = candidateFor($otherUser);
 
     $job = JobRequisition::factory()->available()->create();
     saveJobForCandidate($job, $otherCandidate);

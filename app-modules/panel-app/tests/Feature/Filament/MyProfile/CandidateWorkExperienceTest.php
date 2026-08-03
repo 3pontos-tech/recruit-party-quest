@@ -13,12 +13,7 @@ use function Pest\Laravel\actingAs;
 beforeEach(function (): void {
     $this->user = User::factory()->create();
 
-    // O UserObserver já cria um Candidate por User. Criar outro aqui deixaria dois
-    // registros para o mesmo `user_id`, e `auth()->user()->candidate` — usado pelo
-    // componente — resolveria para o do observer, não para o do fixture.
-    $this->user->refresh();
-
-    $this->candidate = $this->user->candidate;
+    $this->candidate = candidateFor($this->user);
 
     actingAs($this->user);
 });

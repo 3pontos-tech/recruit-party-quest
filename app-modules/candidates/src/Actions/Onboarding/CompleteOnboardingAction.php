@@ -10,6 +10,7 @@ use He4rt\Candidates\AiAutocompleteInterface;
 use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\Enums\ResumeErrorReasons;
 use He4rt\Candidates\Exceptions\OnboardingException;
+use He4rt\Candidates\Exceptions\ProvidersUnavailableException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
@@ -113,6 +114,20 @@ final readonly class CompleteOnboardingAction implements AiAutocompleteInterface
 
                 continue;
             }
+        }
+
+        $openCircuits = array_values(array_filter(
+            $models,
+            fn (string $model): bool => Cache::has('cb:gemini:'.$model),
+        ));
+
+        if (count($openCircuits) === count($models)) {
+            logger()->error('Every Gemini circuit breaker is open, aborting without retry', [
+                'models' => $openCircuits,
+                'last_error' => $lastException?->getMessage(),
+            ]);
+
+            throw ProvidersUnavailableException::make(previous: $lastException);
         }
 
         throw OnboardingException::rateLimiting(previous: $lastException);

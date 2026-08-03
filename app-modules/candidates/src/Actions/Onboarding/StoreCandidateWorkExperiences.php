@@ -10,11 +10,8 @@ use He4rt\Candidates\Models\Candidate;
 
 final class StoreCandidateWorkExperiences
 {
-    public function execute(CandidateWorkExperienceCollection $experiences): void
+    public function execute(Candidate $candidate, CandidateWorkExperienceCollection $experiences): void
     {
-        /** @var Candidate $candidate */
-        $candidate = auth()->user()->candidate;
-
         foreach ($experiences->jsonSerialize() as $experience) {
             if (blank($experience->companyName)) {
                 continue;

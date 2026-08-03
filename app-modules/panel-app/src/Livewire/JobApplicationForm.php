@@ -60,8 +60,11 @@ class JobApplicationForm extends Component
         $this->validate();
 
         if (! $this->application instanceof Application) {
-            /** @var Candidate $candidate */
-            $candidate = auth()->user()->candidate;
+            $candidate = auth()->user()?->candidate;
+
+            if (! $candidate instanceof Candidate) {
+                return redirect(route('filament.app.pages.onboarding'));
+            }
 
             $existing = $this->requisition->applicationFrom($candidate);
 

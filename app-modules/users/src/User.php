@@ -45,6 +45,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read string|null $remember_token
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
+ * @property-read Candidate|null $candidate
  * @property-read Collection|Team[] $teams
  * @property-read Collection|Role[] $roles
  * @property-read Collection|Permission[] $permissions

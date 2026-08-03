@@ -38,7 +38,13 @@ class ProfileResumeFileUpload extends FileUpload
             return;
         }
 
-        dispatch(new AiAnalyzeResumeJob($temporaryFile->getFilename(), auth()->user()->getKey()));
+        // Aqui a gravação é automática: o candidato já concluiu o onboarding e não há tela de
+        // revisão. No wizard (`ResumeFileUpload`) o default `false` mantém o resultado em revisão.
+        dispatch(new AiAnalyzeResumeJob(
+            $temporaryFile->getFilename(),
+            auth()->user()->getKey(),
+            persistOnServer: true,
+        ));
 
         $livewire->dispatch('queued');
 

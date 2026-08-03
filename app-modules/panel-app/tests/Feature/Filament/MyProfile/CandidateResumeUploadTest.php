@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Enums\FilamentPanel;
 use He4rt\App\Filament\Pages\CandidateMyProfilePage;
 use He4rt\App\Livewire\MyProfile\CandidateResumeUpload;
-use He4rt\Candidates\Models\Candidate;
 use He4rt\Candidates\Models\Education;
 use He4rt\Candidates\Models\WorkExperience;
 use He4rt\Users\User;
@@ -17,8 +16,7 @@ use function Pest\Laravel\assertDatabaseHas;
 
 beforeEach(function (): void {
     $this->user = User::factory()->create();
-    $this->candidate = Candidate::factory()->for($this->user, 'user')->create();
-    $this->user->refresh();
+    $this->candidate = candidateFor($this->user);
     actingAs($this->user);
     filament()->setCurrentPanel(FilamentPanel::App->value);
 });

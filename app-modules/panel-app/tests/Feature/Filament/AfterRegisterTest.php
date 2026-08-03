@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
 use Filament\Auth\Pages\Register;
+use He4rt\App\Filament\Pages\OnboardingWizard;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Users\User;
 
@@ -33,5 +34,11 @@ test('after registration user should be able to apply to jobs', function (): voi
         'name' => 'joe doe',
         'email' => 'joe@doe.com',
     ]);
+
+    // O registro não cria mais o perfil — quem materializa é o onboarding.
+    assertDatabaseCount(Candidate::class, 0);
+
+    livewire(OnboardingWizard::class)->assertOk();
+
     assertDatabaseCount(Candidate::class, 1);
 });

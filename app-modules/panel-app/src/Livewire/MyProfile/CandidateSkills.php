@@ -27,7 +27,11 @@ class CandidateSkills extends MyProfileComponent
 
     public function mount(): void
     {
-        $candidate = auth()->user()->candidate;
+        $candidate = auth()->user()?->candidate;
+
+        if ($candidate === null) {
+            return;
+        }
 
         $this->form->fill([
             'skills' => $candidate->skills->map(fn (Skill $skill) => [
@@ -92,7 +96,11 @@ class CandidateSkills extends MyProfileComponent
     public function submit(): void
     {
         $data = $this->form->getState();
-        $candidate = auth()->user()->candidate;
+        $candidate = auth()->user()?->candidate;
+
+        if ($candidate === null) {
+            return;
+        }
 
         $syncData = [];
         foreach ($data['skills'] as $entry) {

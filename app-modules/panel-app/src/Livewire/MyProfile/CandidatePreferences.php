@@ -30,7 +30,11 @@ class CandidatePreferences extends MyProfileComponent
 
     public function mount(): void
     {
-        $candidate = auth()->user()->candidate;
+        $candidate = auth()->user()?->candidate;
+
+        if ($candidate === null) {
+            return;
+        }
 
         $this->form->fill([
             'expected_salary' => $candidate->expected_salary,
@@ -125,8 +129,13 @@ class CandidatePreferences extends MyProfileComponent
     public function submit(): void
     {
         $data = $this->form->getState();
+        $candidate = auth()->user()?->candidate;
 
-        auth()->user()->candidate->update($data);
+        if ($candidate === null) {
+            return;
+        }
+
+        $candidate->update($data);
 
         Notification::make()
             ->success()

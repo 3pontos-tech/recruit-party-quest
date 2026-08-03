@@ -12,9 +12,8 @@ use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
     $this->user = User::factory()->create();
-    $this->user->refresh();
 
-    $this->candidate = $this->user->candidate;
+    $this->candidate = candidateFor($this->user);
     $this->job = JobRequisition::factory()->create();
 
     actingAs($this->user);

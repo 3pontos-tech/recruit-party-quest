@@ -8,10 +8,8 @@ use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
 use He4rt\App\Filament\Pages\CandidateMyProfilePage;
 use He4rt\App\Filament\Schemas\ProfileResumeFileUpload;
-use He4rt\Candidates\Actions\Onboarding\StoreCandidateEducation;
-use He4rt\Candidates\Actions\Onboarding\StoreCandidateWorkExperiences;
-use He4rt\Candidates\DTOs\Collections\CandidateEducationCollection;
-use He4rt\Candidates\DTOs\Collections\CandidateWorkExperienceCollection;
+use He4rt\Candidates\Actions\Onboarding\StoreCandidateResume;
+use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Users\User;
 use Jeffgreco13\FilamentBreezy\Livewire\MyProfileComponent;
 use Livewire\Attributes\On;
@@ -38,10 +36,12 @@ class CandidateResumeUpload extends MyProfileComponent
     public function mount(): void
     {
         $this->user = auth()->user();
-        $candidate = $this->user->candidate;
+        $candidate = $this->user?->candidate;
 
-        $this->isOnCooldown = $candidate->isCvUploadOnCooldown();
-        $this->cooldownDaysRemaining = $candidate->cvCooldownDaysRemaining();
+        if ($candidate !== null) {
+            $this->isOnCooldown = $candidate->isCvUploadOnCooldown();
+            $this->cooldownDaysRemaining = $candidate->cvCooldownDaysRemaining();
+        }
 
         $this->form->fill();
     }
@@ -61,13 +61,18 @@ class CandidateResumeUpload extends MyProfileComponent
     #[On('echo-private:candidate-onboarding.resume.{user.id},.finished')]
     public function finished(array $payload): void
     {
-        $experiences = CandidateWorkExperienceCollection::fromArray($payload['fields']['work_experiences'] ?? []);
-        resolve(StoreCandidateWorkExperiences::class)->execute($experiences);
+        $candidate = auth()->user()?->candidate;
 
-        $education = CandidateEducationCollection::fromArray($payload['fields']['education'] ?? []);
-        resolve(StoreCandidateEducation::class)->execute($education);
+        if ($candidate === null) {
+            return;
+        }
 
-        auth()->user()->candidate->update(['cv_last_uploaded_at' => now()]);
+        resolve(StoreCandidateResume::class)->execute(
+            $candidate,
+            CandidateOnboardingDTO::make($payload['fields'] ?? []),
+        );
+
+        $candidate->update(['cv_last_uploaded_at' => now()]);
 
         $this->isOnCooldown = true;
         $this->cooldownDaysRemaining = 3;

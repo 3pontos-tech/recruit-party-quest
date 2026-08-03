@@ -7,6 +7,7 @@ use He4rt\Candidates\DTOs\CandidateOnboardingDTO;
 use He4rt\Candidates\Enums\ResumeAnalyzeStatus;
 use He4rt\Candidates\Events\AnalyzeResumeEvent;
 use He4rt\Candidates\Exceptions\OnboardingException;
+use He4rt\Candidates\Exceptions\ProvidersUnavailableException;
 use He4rt\Candidates\Jobs\AiAnalyzeResumeJob;
 use He4rt\Users\User;
 use Illuminate\Support\Facades\Event;
@@ -40,6 +41,23 @@ it('broadcasts a Finished event when the CV analysis succeeds', function (): voi
         && $event->userId === (string) $this->user->id);
 });
 
+it('carries the upload origin from the dispatch to the finished event', function (bool $persistOnServer): void {
+    app()->bind(AiAutocompleteInterface::class, fn () => new class implements AiAutocompleteInterface
+    {
+        public function execute(TemporaryUploadedFile $file): CandidateOnboardingDTO
+        {
+            return CandidateOnboardingDTO::make(['education' => [], 'work_experiences' => []]);
+        }
+    });
+
+    new AiAnalyzeResumeJob($this->temporaryFilename, $this->user->id, $persistOnServer)->handle();
+
+    Event::assertDispatched(fn (AnalyzeResumeEvent $event) => $event->persistOnServer === $persistOnServer);
+})->with([
+    'profile re-upload' => true,
+    'onboarding wizard' => false,
+]);
+
 it('broadcasts an Error event immediately for an invalid CV without retrying', function (): void {
     app()->bind(AiAutocompleteInterface::class, fn () => new readonly class implements AiAutocompleteInterface
     {
@@ -69,6 +87,22 @@ it('re-throws transient OnboardingException for queue retry', function (): void 
         ->toThrow(OnboardingException::class);
 
     Event::assertNotDispatched(AnalyzeResumeEvent::class);
+});
+
+it('broadcasts an Error event without retrying when no provider is available', function (): void {
+    app()->bind(AiAutocompleteInterface::class, fn () => new readonly class implements AiAutocompleteInterface
+    {
+        public function execute(TemporaryUploadedFile $file): CandidateOnboardingDTO
+        {
+            throw ProvidersUnavailableException::make();
+        }
+    });
+
+    new AiAnalyzeResumeJob($this->temporaryFilename, $this->user->id)->handle();
+
+    Event::assertDispatched(fn (AnalyzeResumeEvent $event) => $event->status === ResumeAnalyzeStatus::Error
+        && $event->userId === (string) $this->user->id
+        && $event->code === Response::HTTP_SERVICE_UNAVAILABLE);
 });
 
 it('broadcasts an Error event when failed() is called after all retries are exhausted', function (): void {

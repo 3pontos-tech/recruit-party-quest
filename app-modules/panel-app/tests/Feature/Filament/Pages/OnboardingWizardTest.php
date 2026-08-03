@@ -19,13 +19,7 @@ use function Pest\Livewire\livewire;
 beforeEach(function (): void {
     $this->user = User::factory()->create();
 
-    // O UserObserver já cria um Candidate por User, mas o acesso a `$user->candidate`
-    // dentro do observer deixa a relação cacheada como null nesta instância. Sem o
-    // refresh, `auth()->user()->candidate` continuaria null durante todo o teste.
-    $this->user->refresh();
-
-    $this->candidate = $this->user->candidate;
-    $this->candidate->update(['is_onboarded' => false]);
+    $this->candidate = candidateFor($this->user, ['is_onboarded' => false]);
 
     actingAs($this->user);
     filament()->setCurrentPanel(FilamentPanel::App->value);
@@ -47,6 +41,23 @@ describe('Page Rendering & Access', function (): void {
 
         expect($component->instance()->getTitle())
             ->toBe(__('panel-app::pages/onboarding.title'));
+    });
+
+    it('creates the candidate profile on mount when the user has none', function (): void {
+        $userWithoutProfile = User::factory()->create();
+
+        actingAs($userWithoutProfile);
+
+        livewire(OnboardingWizard::class)->assertOk();
+
+        $candidates = Candidate::query()->where('user_id', $userWithoutProfile->id)->get();
+        $candidate = $candidates->first();
+
+        expect($candidates)->toHaveCount(1)
+            ->and($candidate->is_onboarded)->toBeFalse()
+            ->and($candidate->preferred_language)->toBe('pt_BR')
+            ->and($candidate->expected_salary_currency)->toBe('BRL')
+            ->and($candidate->is_open_to_remote)->toBeTrue();
     });
 
     it('should redirect to dashboard if user already completed onboarding', function (): void {
