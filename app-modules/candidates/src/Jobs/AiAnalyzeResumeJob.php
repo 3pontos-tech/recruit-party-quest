@@ -29,9 +29,15 @@ final class AiAnalyzeResumeJob implements ShouldQueue
 
     public int $timeout = 90;
 
+    /**
+     * @param  bool  $persistOnServer  `true` apenas no re-upload em Meu Perfil. O default cobre o
+     *                                 wizard, onde o candidato revisa antes de salvar — e vale
+     *                                 também para os jobs que ficaram na fila sem o parâmetro.
+     */
     public function __construct(
         public string $temporaryFile,
-        public string $userId
+        public string $userId,
+        public bool $persistOnServer = false,
     ) {}
 
     public function tries(): int
@@ -82,7 +88,12 @@ final class AiAnalyzeResumeJob implements ShouldQueue
         try {
             /** @var CandidateOnboardingDTO $fields */
             $fields = resolve(AiAutocompleteInterface::class)->execute($temporaryFile);
-            broadcast(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Finished, $fields, $this->userId));
+            broadcast(new AnalyzeResumeEvent(
+                status: ResumeAnalyzeStatus::Finished,
+                fields: $fields,
+                userId: $this->userId,
+                persistOnServer: $this->persistOnServer,
+            ));
         } catch (ProvidersUnavailableException $providersUnavailableException) {
             logger()->warning('CV analysis aborted, every provider circuit breaker is open', [
                 'userId' => $this->userId,

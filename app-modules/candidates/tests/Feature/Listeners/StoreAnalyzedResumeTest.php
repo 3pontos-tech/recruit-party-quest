@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Queue;
 
 use function Pest\Laravel\assertDatabaseCount;
 use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
 
 beforeEach(function (): void {
     // O evento é ShouldBroadcast: o fake impede a transmissão sem impedir os listeners
@@ -35,10 +36,12 @@ function analyzedResume(array $fields = []): CandidateOnboardingDTO
     ]);
 }
 
-it('persists the analysis without the browser for an onboarded candidate', function (): void {
+it('persists the analysis without the browser on a profile re-upload', function (): void {
     $candidate = candidateFor($this->user, ['is_onboarded' => true, 'cv_last_uploaded_at' => null]);
 
-    event(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Finished, analyzedResume(), $this->user->getKey()));
+    event(new AnalyzeResumeEvent(
+        ResumeAnalyzeStatus::Finished, analyzedResume(), $this->user->getKey(), persistOnServer: true,
+    ));
 
     assertDatabaseHas(WorkExperience::class, [
         'candidate_id' => $candidate->getKey(),
@@ -56,8 +59,29 @@ it('leaves the onboarding analysis for the candidate to review', function (): vo
     assertDatabaseCount(WorkExperience::class, 0);
 });
 
-it('ignores a user without a candidate profile', function (): void {
+it('ignores a wizard analysis that finishes after the candidate completed onboarding', function (): void {
+    // O candidato subiu o CV no wizard, perdeu a aba, preencheu tudo à mão e concluiu o
+    // onboarding antes de a análise terminar. Sem `persistOnServer` o evento não pede
+    // gravação, então o resultado da IA não pode entrar por cima do que ele digitou.
+    $candidate = candidateFor($this->user, ['is_onboarded' => true]);
+
+    WorkExperience::factory()
+        ->for($candidate, 'candidate')
+        ->create([
+            'company_name' => 'Nubank Pagamentos',
+            'start_date' => now()->parse('2023-03-01')->startOfDay(),
+        ]);
+
     event(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Finished, analyzedResume(), $this->user->getKey()));
+
+    assertDatabaseCount(WorkExperience::class, 1);
+    assertDatabaseMissing(WorkExperience::class, ['company_name' => 'Nubank']);
+});
+
+it('ignores a user without a candidate profile', function (): void {
+    event(new AnalyzeResumeEvent(
+        ResumeAnalyzeStatus::Finished, analyzedResume(), $this->user->getKey(), persistOnServer: true,
+    ));
 
     assertDatabaseCount(WorkExperience::class, 0);
 });
@@ -65,7 +89,9 @@ it('ignores a user without a candidate profile', function (): void {
 it('ignores every status other than finished', function (ResumeAnalyzeStatus $status): void {
     candidateFor($this->user, ['is_onboarded' => true]);
 
-    event(new AnalyzeResumeEvent($status, analyzedResume(), $this->user->getKey()));
+    event(new AnalyzeResumeEvent(
+        $status, analyzedResume(), $this->user->getKey(), persistOnServer: true,
+    ));
 
     assertDatabaseCount(WorkExperience::class, 0);
 })->with([
@@ -77,7 +103,9 @@ it('ignores every status other than finished', function (ResumeAnalyzeStatus $st
 it('ignores a finished event that carries no fields', function (): void {
     candidateFor($this->user, ['is_onboarded' => true]);
 
-    event(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Finished, null, $this->user->getKey()));
+    event(new AnalyzeResumeEvent(
+        ResumeAnalyzeStatus::Finished, null, $this->user->getKey(), persistOnServer: true,
+    ));
 
     assertDatabaseCount(WorkExperience::class, 0);
 });
@@ -93,7 +121,9 @@ it('does not overwrite what the candidate had already filled in', function (): v
             'position' => 'Cargo digitado pelo candidato',
         ]);
 
-    event(new AnalyzeResumeEvent(ResumeAnalyzeStatus::Finished, analyzedResume(), $this->user->getKey()));
+    event(new AnalyzeResumeEvent(
+        ResumeAnalyzeStatus::Finished, analyzedResume(), $this->user->getKey(), persistOnServer: true,
+    ));
 
     assertDatabaseCount(WorkExperience::class, 1);
     expect($existing->fresh()->position)->toBe('Cargo digitado pelo candidato');

@@ -41,6 +41,23 @@ it('broadcasts a Finished event when the CV analysis succeeds', function (): voi
         && $event->userId === (string) $this->user->id);
 });
 
+it('carries the upload origin from the dispatch to the finished event', function (bool $persistOnServer): void {
+    app()->bind(AiAutocompleteInterface::class, fn () => new class implements AiAutocompleteInterface
+    {
+        public function execute(TemporaryUploadedFile $file): CandidateOnboardingDTO
+        {
+            return CandidateOnboardingDTO::make(['education' => [], 'work_experiences' => []]);
+        }
+    });
+
+    new AiAnalyzeResumeJob($this->temporaryFilename, $this->user->id, $persistOnServer)->handle();
+
+    Event::assertDispatched(fn (AnalyzeResumeEvent $event) => $event->persistOnServer === $persistOnServer);
+})->with([
+    'profile re-upload' => true,
+    'onboarding wizard' => false,
+]);
+
 it('broadcasts an Error event immediately for an invalid CV without retrying', function (): void {
     app()->bind(AiAutocompleteInterface::class, fn () => new readonly class implements AiAutocompleteInterface
     {

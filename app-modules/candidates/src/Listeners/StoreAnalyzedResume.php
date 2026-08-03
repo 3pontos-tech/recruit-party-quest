@@ -19,10 +19,14 @@ use He4rt\Candidates\Models\Candidate;
  * evento localmente (`PendingBroadcast::__destruct`), este listener grava dentro do próprio
  * job, e o broadcast segue atualizando a tela como antes.
  *
- * **Só age sobre quem já concluiu o onboarding**, ou seja, o re-upload em Meu Perfil, onde
- * a gravação sempre foi automática. No wizard o resultado é oferecido para revisão antes de
- * salvar, e as Actions gravam com `firstOrCreate`: persistir aqui faria o registro extraído
- * pela IA chegar primeiro e vencer as correções do candidato.
+ * **Só age quando o upload pediu gravação automática** (`persistOnServer`), ou seja, o
+ * re-upload em Meu Perfil. No wizard o resultado é oferecido para revisão antes de salvar, e
+ * as Actions gravam com `firstOrCreate`: persistir aqui faria o registro extraído pela IA
+ * vencer as correções do candidato.
+ *
+ * O critério vem do evento, e não de `is_onboarded`, porque esse estado muda enquanto o job
+ * roda: uma análise do wizard que termina depois de o candidato concluir o onboarding — a
+ * aba fechada que motivou este listener — seria lida como re-upload de perfil.
  */
 final readonly class StoreAnalyzedResume
 {
@@ -34,9 +38,12 @@ final readonly class StoreAnalyzedResume
             return;
         }
 
+        if (! $event->persistOnServer) {
+            return;
+        }
+
         $candidate = Candidate::query()
             ->where('user_id', $event->userId)
-            ->where('is_onboarded', true)
             ->first();
 
         if (! $candidate instanceof Candidate) {
