@@ -60,6 +60,20 @@ describe('CandidateEducationDTO', function (): void {
             ->and($dto->degree)->toBe('')
             ->and($dto->isEnrolled)->toBeFalse();
     });
+
+    it('discards an unparseable date instead of throwing', function (string $placeholder): void {
+        $dto = CandidateEducationDTO::make([
+            'institution' => 'FATEC',
+            'degree' => 'Bacharelado',
+            'field_of_study' => 'ADS',
+            'is_enrolled' => false,
+            'start_date' => $placeholder,
+            'end_date' => $placeholder,
+        ]);
+
+        expect($dto->startDate)->toBeNull()
+            ->and($dto->endDate)->toBeNull();
+    })->with(['N/A', 'n/a', 'NA', '-', '--', 'null', 'NULL', 'Presente', 'Atual', 'Present', 'Não informado', 'desconhecido']);
 });
 
 describe('CandidateWorkExperienceDTO', function (): void {
@@ -153,6 +167,30 @@ describe('CandidateWorkExperienceDTO', function (): void {
         ]);
 
         expect($dto->skills)->toBe(['Gupy', 'Excel']);
+    });
+
+    it('discards an unparseable date instead of throwing', function (string $placeholder): void {
+        $dto = CandidateWorkExperienceDTO::make([
+            'company_name' => 'Nubank',
+            'description' => 'Recrutamento',
+            'start_date' => $placeholder,
+            'end_date' => $placeholder,
+            'is_currently_working_here' => false,
+        ]);
+
+        expect($dto->startDate)->toBeNull()
+            ->and($dto->endDate)->toBeNull();
+    })->with(['N/A', 'n/a', 'NA', '-', '--', 'null', 'NULL', 'Presente', 'Atual', 'Present', 'Não informado', 'desconhecido']);
+
+    it('keeps a valid date while discarding the unparseable one', function (): void {
+        $dto = CandidateWorkExperienceDTO::make([
+            'company_name' => 'Nubank',
+            'start_date' => '2023-03-01',
+            'end_date' => 'N/A',
+        ]);
+
+        expect($dto->startDate?->format('Y-m-d'))->toBe('2023-03-01')
+            ->and($dto->endDate)->toBeNull();
     });
 
     it('survives a jsonSerialize round-trip with the new fields', function (): void {

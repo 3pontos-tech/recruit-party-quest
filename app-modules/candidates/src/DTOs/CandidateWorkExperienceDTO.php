@@ -6,7 +6,6 @@ namespace He4rt\Candidates\DTOs;
 
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\Date;
 use JsonSerializable;
 
 final readonly class CandidateWorkExperienceDTO implements JsonSerializable
@@ -33,12 +32,8 @@ final readonly class CandidateWorkExperienceDTO implements JsonSerializable
             isCurrentlyWorking: (bool) ($data['is_currently_working_here'] ?? false),
             position: filled($data['position'] ?? null) ? (string) $data['position'] : null,
             skills: self::normalizeSkills($data['skills'] ?? []),
-            startDate: (filled($data['start_date'] ?? null) && $data['start_date'] !== 'null')
-                ? Date::parse($data['start_date'])
-                : null,
-            endDate: (filled($data['end_date'] ?? null) && $data['end_date'] !== 'null')
-                ? Date::parse($data['end_date'])
-                : null,
+            startDate: ResumeDate::parse($data['start_date'] ?? null),
+            endDate: ResumeDate::parse($data['end_date'] ?? null),
         );
     }
 

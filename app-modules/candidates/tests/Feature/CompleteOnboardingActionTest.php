@@ -263,6 +263,26 @@ it('extracts work experiences and education from a valid CV', function (): void 
         ->and($result->education)->toHaveCount(1);
 });
 
+it('completes the analysis when the model answers a date with a placeholder', function (): void {
+    $structured = onboardingValidCvStructured();
+    $structured['work_experiences'][0]['start_date'] = 'N/A';
+    $structured['education'][0]['start_date'] = 'N/A';
+    $structured['education'][0]['end_date'] = 'N/A';
+
+    Prism::fake([
+        StructuredResponseFake::make()->withStructured($structured),
+    ]);
+
+    $result = resolve(CompleteOnboardingAction::class)->execute(onboardingMakeFakeFile());
+
+    expect($result->work_experiences)->toHaveCount(1)
+        ->and($result->work_experiences[0]->startDate)->toBeNull()
+        ->and($result->work_experiences[0]->companyName)->toBe('3-Pontos')
+        ->and($result->education)->toHaveCount(1)
+        ->and($result->education[0]->startDate)->toBeNull()
+        ->and($result->education[0]->institution)->toBe('FATEC');
+});
+
 it('retries with fallback model when primary model hits rate limit', function (): void {
     $successResponse = StructuredResponseFake::make()->withStructured(onboardingValidCvStructured());
     $fake = bindRateLimitOnPrimaryThenSuccessOnFallback($successResponse);
