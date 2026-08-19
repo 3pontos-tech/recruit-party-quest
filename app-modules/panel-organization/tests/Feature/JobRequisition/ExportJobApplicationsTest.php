@@ -25,9 +25,6 @@ use Spatie\Permission\PermissionRegistrar;
 
 use function Pest\Laravel\actingAs;
 
-/**
- * The Filament Export model ships without a factory, so the exporter fixtures build one by hand.
- */
 function makeExportRecord(): Export
 {
     return Export::query()->create([
@@ -202,8 +199,7 @@ it('keeps the exported values in the language of whoever asked for the export', 
         ->for($requisition, 'requisition')
         ->create(['status' => ApplicationStatusEnum::InReview]);
 
-    // The queue worker boots with APP_LOCALE, not with the locale of the request that
-    // dispatched the job, so the exporter has to restore it from the export options.
+    // Stands in for the worker, which boots with APP_LOCALE.
     app()->setLocale('en');
 
     $exporter = new ApplicationExporter(

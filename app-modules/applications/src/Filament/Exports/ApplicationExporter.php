@@ -24,10 +24,8 @@ class ApplicationExporter extends Exporter
     protected static ?string $model = Application::class;
 
     /**
-     * The queue worker boots with APP_LOCALE and has no idea which language the person who
-     * clicked "export" was using. Column headings survive the trip because they travel
-     * already translated inside the job payload, but enum labels are resolved here, in the
-     * worker — without this, a pt_BR user gets Portuguese headings over English values.
+     * Enum labels are resolved in the worker, which boots with APP_LOCALE, so the request
+     * locale rides along in the options.
      *
      * @param  array<string, string>  $columnMap
      * @param  array<string, mixed>  $options
@@ -121,10 +119,7 @@ class ApplicationExporter extends Exporter
             ExportColumn::make('offer_amount')
                 ->label(__('applications::filament.export.columns.offer_amount'))
                 ->enabledByDefault(false),
-            /**
-             * Disabled by default on purpose: the accessor issues one query per profile
-             * section, so enabling it costs ~6 extra queries per exported row.
-             */
+            // Opt-in: the accessor issues one query per profile section.
             ExportColumn::make('profile_completion')
                 ->label(__('applications::filament.export.columns.profile_completion'))
                 ->enabledByDefault(false)
@@ -240,8 +235,7 @@ class ApplicationExporter extends Exporter
     }
 
     /**
-     * Spreadsheet software evaluates cells starting with `=`, `+`, `-` or `@` as
-     * formulas. Candidate-provided text is untrusted, so it gets a leading quote.
+     * Spreadsheets evaluate cells starting with `=`, `+`, `-` or `@` as formulas.
      */
     private static function escapeFormula(?string $value): ?string
     {

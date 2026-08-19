@@ -14,9 +14,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 
-/**
- * Exports every application of a single job requisition to CSV/XLSX.
- */
 class ExportJobApplicationsAction extends ExportAction
 {
     protected function setUp(): void
@@ -32,11 +29,7 @@ class ExportJobApplicationsAction extends ExportAction
             ->columnMappingColumns(2)
             ->options(fn (): array => ['locale' => App::getLocale()])
             ->visible(fn (JobRequisition $record): bool => auth()->user()?->can('viewAny', Application::class) ?? false)
-            /**
-             * The base query is rebuilt from scratch on purpose: when this action lives in
-             * the job requisitions table, the Livewire component is `HasTable` and Filament
-             * hands over the JobRequisition query instead of the Application one.
-             */
+            // Rebuilt from scratch: inside a table Filament hands over the JobRequisition query.
             ->modifyQueryUsing(fn (JobRequisition $record): Builder => ApplicationExporter::modifyQuery(
                 Application::query()
                     ->where('requisition_id', $record->getKey())
