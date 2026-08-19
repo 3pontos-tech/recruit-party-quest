@@ -15,6 +15,7 @@ use He4rt\Candidates\Models\WorkExperience;
 use He4rt\Links\Link;
 use He4rt\Links\LinkTypeEnum;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Number;
 use Override;
@@ -40,6 +41,21 @@ class ApplicationExporter extends Exporter
     }
 
     /**
+     * Escaping every value here instead of column by column: a new column cannot forget it,
+     * and values like `+55 11 9...` phone numbers trip the formula prefixes by accident.
+     *
+     * @return array<mixed>
+     */
+    #[Override]
+    public function __invoke(Model $record): array
+    {
+        return array_map(
+            fn (mixed $value): mixed => is_string($value) ? $this->escapeFormula($value) : $value,
+            parent::__invoke($record),
+        );
+    }
+
+    /**
      * @return array<ExportColumn>
      */
     public static function getColumns(): array
@@ -50,8 +66,7 @@ class ApplicationExporter extends Exporter
             ExportColumn::make('requisition.post.title')
                 ->label(__('applications::filament.export.columns.job_title')),
             ExportColumn::make('candidate.user.name')
-                ->label(__('applications::filament.export.columns.candidate_name'))
-                ->formatStateUsing(fn (?string $state): ?string => self::escapeFormula($state)),
+                ->label(__('applications::filament.export.columns.candidate_name')),
             ExportColumn::make('candidate.user.email')
                 ->label(__('applications::filament.export.columns.candidate_email')),
             ExportColumn::make('candidate.phone_number')
@@ -60,8 +75,7 @@ class ApplicationExporter extends Exporter
                 ->label(__('applications::filament.export.columns.status'))
                 ->state(fn (Application $record): string => $record->status->getLabel()),
             ExportColumn::make('currentStage.name')
-                ->label(__('applications::filament.export.columns.current_stage'))
-                ->formatStateUsing(fn (?string $state): ?string => self::escapeFormula($state)),
+                ->label(__('applications::filament.export.columns.current_stage')),
             ExportColumn::make('source')
                 ->label(__('applications::filament.export.columns.source'))
                 ->state(fn (Application $record): string => $record->source->getLabel()),
@@ -69,8 +83,7 @@ class ApplicationExporter extends Exporter
                 ->label(__('applications::filament.export.columns.applied_at'))
                 ->formatStateUsing(fn (Application $record): string => $record->created_at->format('d/m/Y H:i')),
             ExportColumn::make('candidate.headline')
-                ->label(__('applications::filament.export.columns.headline'))
-                ->formatStateUsing(fn (?string $state): ?string => self::escapeFormula($state)),
+                ->label(__('applications::filament.export.columns.headline')),
             ExportColumn::make('experience_level')
                 ->label(__('applications::filament.export.columns.experience_level'))
                 ->state(fn (Application $record): ?string => $record->candidate?->experience_level?->getLabel()),
@@ -106,8 +119,7 @@ class ApplicationExporter extends Exporter
                 ->state(fn (Application $record): ?string => self::findLink($record->candidate, LinkTypeEnum::GitHub)),
             ExportColumn::make('candidate.summary')
                 ->label(__('applications::filament.export.columns.summary'))
-                ->enabledByDefault(false)
-                ->formatStateUsing(fn (?string $state): ?string => self::escapeFormula($state)),
+                ->enabledByDefault(false),
             ExportColumn::make('rejected_at')
                 ->label(__('applications::filament.export.columns.rejected_at'))
                 ->enabledByDefault(false)
@@ -170,7 +182,7 @@ class ApplicationExporter extends Exporter
             return null;
         }
 
-        return self::escapeFormula(mb_trim(sprintf('%s · %s', $experience->position ?? '-', $experience->company_name)));
+        return mb_trim(sprintf('%s · %s', $experience->position ?? '-', $experience->company_name));
     }
 
     private static function formatLocation(?Candidate $candidate): ?string
@@ -183,7 +195,7 @@ class ApplicationExporter extends Exporter
 
         $parts = array_filter([$address->city, $address->state, $address->country]);
 
-        return $parts === [] ? null : self::escapeFormula(implode(', ', $parts));
+        return $parts === [] ? null : implode(', ', $parts);
     }
 
     private static function formatExpectedSalary(?Candidate $candidate): ?string
@@ -215,7 +227,7 @@ class ApplicationExporter extends Exporter
             ->map(fn (Skill $skill): string => $skill->name)
             ->all() ?? [];
 
-        return $skills === [] ? null : self::escapeFormula(implode(', ', $skills));
+        return $skills === [] ? null : implode(', ', $skills);
     }
 
     private static function formatEducation(?Candidate $candidate): ?string
@@ -224,7 +236,7 @@ class ApplicationExporter extends Exporter
             ->map(fn (Education $education): string => mb_trim(sprintf('%s - %s (%s)', $education->degree, $education->field_of_study, $education->institution)))
             ->all() ?? [];
 
-        return $degrees === [] ? null : self::escapeFormula(implode(' | ', $degrees));
+        return $degrees === [] ? null : implode(' | ', $degrees);
     }
 
     private static function findLink(?Candidate $candidate, LinkTypeEnum $type): ?string
@@ -237,9 +249,9 @@ class ApplicationExporter extends Exporter
     /**
      * Spreadsheets evaluate cells starting with `=`, `+`, `-` or `@` as formulas.
      */
-    private static function escapeFormula(?string $value): ?string
+    private function escapeFormula(string $value): string
     {
-        if ($value === null || $value === '') {
+        if ($value === '') {
             return $value;
         }
 

@@ -165,7 +165,7 @@ it('maps the candidate profile onto the exported row', function (): void {
         'APP-0001-TEST',
         $candidate->user->name,
         $candidate->user->email,
-        '+55 11 99999-0000',
+        "'+55 11 99999-0000",
         'Senior Laravel Developer',
         $application->status->getLabel(),
     ]);
@@ -215,6 +215,26 @@ it('carries the current locale into the export options', function (): void {
     app()->setLocale('pt_BR');
 
     expect(ExportJobApplicationsAction::make()->getOptions())->toBe(['locale' => 'pt_BR']);
+});
+
+it('escapes phone numbers that spreadsheets would read as a formula', function (): void {
+    $requisition = ($this->makeRequisition)();
+
+    $candidate = Candidate::factory()->create(['phone_number' => '+55 11 98765-4321']);
+
+    $application = Application::factory()
+        ->for($this->team)
+        ->for($requisition, 'requisition')
+        ->for($candidate)
+        ->create();
+
+    $exporter = new ApplicationExporter(
+        export: makeExportRecord(),
+        columnMap: ['candidate.phone_number' => 'Phone'],
+        options: [],
+    );
+
+    expect($exporter($application))->toBe(["'+55 11 98765-4321"]);
 });
 
 it('escapes candidate text that spreadsheets would read as a formula', function (): void {
