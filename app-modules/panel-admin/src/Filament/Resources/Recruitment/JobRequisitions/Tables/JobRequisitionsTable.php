@@ -15,6 +15,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use He4rt\Applications\Filament\Actions\ExportJobApplicationsAction;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
@@ -141,6 +142,7 @@ class JobRequisitionsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
+                ExportJobApplicationsAction::make(),
                 EditAction::make(),
                 RestoreAction::make(),
             ])

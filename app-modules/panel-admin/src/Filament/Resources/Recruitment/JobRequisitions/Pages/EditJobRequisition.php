@@ -9,6 +9,7 @@ use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
 use He4rt\Admin\Filament\Resources\Recruitment\JobRequisitions\JobRequisitionResource;
+use He4rt\Applications\Filament\Actions\ExportJobApplicationsAction;
 
 class EditJobRequisition extends EditRecord
 {
@@ -18,6 +19,7 @@ class EditJobRequisition extends EditRecord
     {
 
         return [
+            ExportJobApplicationsAction::make(),
             DeleteAction::make(),
             ForceDeleteAction::make(),
             RestoreAction::make(),
