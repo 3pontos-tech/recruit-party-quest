@@ -6,6 +6,7 @@ namespace He4rt\Organization;
 
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
+use He4rt\Organization\Livewire\Applications\ApplicationsWorkspace;
 use He4rt\Organization\Livewire\JobGenerationOverlay;
 use He4rt\Organization\Livewire\PipelineStageDetail;
 use Illuminate\Support\Facades\Blade;
@@ -27,6 +28,7 @@ class PanelOrganizationServiceProvider extends ServiceProvider
 
         Livewire::component('job-generation-overlay', JobGenerationOverlay::class);
         Livewire::component('pipeline-stage-detail', PipelineStageDetail::class);
+        Livewire::component('panel-organization.applications-workspace', ApplicationsWorkspace::class);
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::BODY_END,
