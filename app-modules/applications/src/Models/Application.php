@@ -6,9 +6,13 @@ namespace He4rt\Applications\Models;
 
 use App\Models\BaseModel;
 use He4rt\Applications\Database\Factories\ApplicationFactory;
+use He4rt\Applications\Enums\ApplicationListSort;
 use He4rt\Applications\Enums\ApplicationStatusEnum;
+use He4rt\Applications\Enums\ApplicationStatusGroup;
 use He4rt\Applications\Enums\CandidateSourceEnum;
 use He4rt\Applications\Enums\RejectionReasonCategoryEnum;
+use He4rt\Applications\Enums\ScreeningVerdictFilter;
+use He4rt\Applications\Enums\SeenFilter;
 use He4rt\Applications\Policies\ApplicationPolicy;
 use He4rt\Applications\States\ApplicationState;
 use He4rt\Candidates\Models\Candidate;
@@ -71,6 +75,10 @@ class Application extends BaseModel implements Commentable
     use HasComments;
     use InteractsWithStages;
     use SoftDeletes;
+
+    public const string STAGE_SINCE_SQL = 'COALESCE((SELECT MAX(h.created_at) FROM application_stage_history h WHERE h.application_id = applications.id), applications.created_at)';
+
+    private const string ATTENTION_ORDER_SQL = "CASE applications.status WHEN 'new' THEN 0 WHEN 'in_review' THEN 1 WHEN 'in_progress' THEN 2 WHEN 'offer_extended' THEN 3 WHEN 'offer_accepted' THEN 4 WHEN 'hired' THEN 5 ELSE 6 END";
 
     /**
      * @return BelongsTo<JobRequisition, $this>
@@ -219,6 +227,79 @@ class Application extends BaseModel implements Commentable
         return $this->current_stage_id === $stage->id;
     }
 
+    public function statusGroup(): ApplicationStatusGroup
+    {
+        return ApplicationStatusGroup::fromStatus($this->status);
+    }
+
+    public function stageSince(): Carbon
+    {
+        $selected = $this->attributes['stage_since'] ?? null;
+
+        if (filled($selected)) {
+            return new Carbon((string) $selected);
+        }
+
+        return new Carbon($this->getLastMovement()->created_at ?? $this->created_at);
+    }
+
+    public function daysInStage(): int
+    {
+        return (int) $this->stageSince()->diffInDays(now());
+    }
+
+    public function isOverdueInStage(): bool
+    {
+        $expected = $this->currentStage->expected_duration_days ?? 0;
+
+        return $expected > 0
+            && $this->statusGroup() !== ApplicationStatusGroup::Closed
+            && $this->daysInStage() > $expected;
+    }
+
+    public function knockoutFailsCount(): int
+    {
+        $loaded = $this->attributes['knockout_fails_count'] ?? null;
+
+        return $loaded !== null
+            ? (int) $loaded
+            : $this->screeningResponses()->where('is_knockout_fail', true)->count();
+    }
+
+    public function screeningAnswersCount(): int
+    {
+        $loaded = $this->attributes['screening_responses_count'] ?? null;
+
+        return $loaded !== null ? (int) $loaded : $this->screeningResponses()->count();
+    }
+
+    public function hasFailedKnockout(): bool
+    {
+        return $this->knockoutFailsCount() > 0;
+    }
+
+    /**
+     * @return Collection<int, ScreeningResponse>
+     */
+    public function knockoutResponses(): Collection
+    {
+        return $this->screeningResponses
+            ->filter(fn (ScreeningResponse $response): bool => $response->question->is_knockout)
+            ->sortByDesc('is_knockout_fail')
+            ->values();
+    }
+
+    public function averageEvaluationScore(): ?float
+    {
+        $submitted = $this->evaluations->whereNotNull('submitted_at');
+
+        if ($submitted->isEmpty()) {
+            return null;
+        }
+
+        return round((float) $submitted->avg(fn (Evaluation $evaluation): int => $evaluation->overall_rating->score()), 1);
+    }
+
     /**
      * @param  Builder<Application>  $query
      * @return Builder<Application>
@@ -237,6 +318,117 @@ class Application extends BaseModel implements Commentable
     protected function seenByTeam(Builder $query): Builder
     {
         return $query->whereHas('teamView');
+    }
+
+    /**
+     * @param  Builder<Application>  $query
+     * @return Builder<Application>
+     */
+    #[Scope]
+    protected function withStageSince(Builder $query): Builder
+    {
+        return $query->select('applications.*')->selectRaw(self::STAGE_SINCE_SQL.' AS stage_since');
+    }
+
+    /**
+     * @param  Builder<Application>  $query
+     * @return Builder<Application>
+     */
+    #[Scope]
+    protected function searchCandidate(Builder $query, string $term): Builder
+    {
+        $like = '%'.mb_trim($term).'%';
+
+        return $query->where(function (Builder $query) use ($like): void {
+            $query
+                ->where('applications.tracking_code', 'ilike', $like)
+                ->orWhereHas('candidate', fn (Builder $candidate) => $candidate
+                    ->where('headline', 'ilike', $like)
+                    ->orWhereHas('user', fn (Builder $user) => $user
+                        ->where('name', 'ilike', $like)
+                        ->orWhere('email', 'ilike', $like)));
+        });
+    }
+
+    /**
+     * @param  Builder<Application>  $query
+     * @return Builder<Application>
+     */
+    #[Scope]
+    protected function inStatusGroup(Builder $query, ApplicationStatusGroup $group): Builder
+    {
+        return $query->whereIn('applications.status', $group->values());
+    }
+
+    /**
+     * @param  Builder<Application>  $query
+     * @return Builder<Application>
+     */
+    #[Scope]
+    protected function withScreeningVerdict(Builder $query, ScreeningVerdictFilter $filter): Builder
+    {
+        $failed = fn (Builder $responses): Builder => $responses->where('is_knockout_fail', true);
+
+        return match ($filter) {
+            ScreeningVerdictFilter::Passed => $query->whereHas('screeningResponses')->whereDoesntHave('screeningResponses', $failed),
+            ScreeningVerdictFilter::Failed => $query->whereHas('screeningResponses', $failed),
+            ScreeningVerdictFilter::Unanswered => $query->whereDoesntHave('screeningResponses'),
+            ScreeningVerdictFilter::All => $query,
+        };
+    }
+
+    /**
+     * @param  Builder<Application>  $query
+     * @return Builder<Application>
+     */
+    #[Scope]
+    protected function withSeenState(Builder $query, SeenFilter $filter): Builder
+    {
+        return match ($filter) {
+            SeenFilter::Unseen => $query->whereDoesntHave('teamView'),
+            SeenFilter::Seen => $query->whereHas('teamView'),
+            SeenFilter::All => $query,
+        };
+    }
+
+    /**
+     * @param  Builder<Application>  $query
+     * @return Builder<Application>
+     */
+    #[Scope]
+    protected function withListingCounts(Builder $query): Builder
+    {
+        return $query->withCount([
+            'comments',
+            'screeningResponses',
+            'screeningResponses as knockout_fails_count' => fn (Builder $responses) => $responses->where('is_knockout_fail', true),
+        ]);
+    }
+
+    /**
+     * @param  Builder<Application>  $query
+     * @return Builder<Application>
+     */
+    #[Scope]
+    protected function orderForListing(Builder $query, ApplicationListSort $sort): Builder
+    {
+        $ordered = match ($sort) {
+            ApplicationListSort::Name => $query->orderBy(
+                User::query()
+                    ->select('users.name')
+                    ->join('candidates', 'candidates.user_id', '=', 'users.id')
+                    ->whereColumn('candidates.id', 'applications.candidate_id')
+                    ->limit(1)
+            ),
+            ApplicationListSort::Applied => $query->latest('applications.created_at'),
+            ApplicationListSort::DaysInStage => $query->orderByRaw(self::STAGE_SINCE_SQL.' ASC'),
+            ApplicationListSort::Stage => $query->orderByDesc(
+                Stage::query()->select('display_order')->whereColumn('id', 'applications.current_stage_id')->limit(1)
+            ),
+            ApplicationListSort::Attention => $query->orderByRaw(self::ATTENTION_ORDER_SQL)->orderByRaw(self::STAGE_SINCE_SQL.' ASC'),
+        };
+
+        return $ordered->orderBy('applications.id');
     }
 
     protected function casts(): array
