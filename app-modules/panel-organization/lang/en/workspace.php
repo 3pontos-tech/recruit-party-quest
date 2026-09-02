@@ -80,8 +80,6 @@ return [
         'knockout_passed_title' => '{1} ✓ Passed the :count knockout question|[2,*] ✓ Passed the :count knockout questions',
         'answered' => 'answered “:answer”',
         'question_removed' => 'Question removed',
-        'answer_yes' => 'Yes',
-        'answer_no' => 'No',
         'current_stage' => 'Current stage',
         'days' => '{1} :count day|[2,*] :count days',
         'expected' => 'expected :days',

@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
@@ -86,6 +87,10 @@ class ApplicationsWorkspace extends Component
         abort_unless($tenant instanceof Model, 403);
 
         $this->teamId = (string) $tenant->getKey();
+
+        if (! Str::isUuid($this->requisitionId)) {
+            $this->requisitionId = '';
+        }
     }
 
     /**
@@ -129,14 +134,20 @@ class ApplicationsWorkspace extends Component
     #[Computed]
     public function requisition(): ?JobRequisition
     {
-        if ($this->requisitionId === '') {
+        if ($this->requisitionId === '' || ! Str::isUuid($this->requisitionId)) {
             return null;
         }
 
-        return JobRequisition::query()
+        $requisition = JobRequisition::query()
             ->where('team_id', $this->teamId)
             ->with(['post', 'department', 'recruiter.user', 'stages' => fn ($stages) => $stages->where('active', true)->orderBy('display_order')])
             ->find($this->requisitionId);
+
+        if ($requisition === null) {
+            $this->requisitionId = '';
+        }
+
+        return $requisition;
     }
 
     /**
@@ -297,6 +308,8 @@ class ApplicationsWorkspace extends Component
 
     public function filterStage(string $stageId): void
     {
+        $stageId = Str::isUuid($stageId) ? $stageId : '';
+
         $this->stageId = $this->stageId === $stageId ? '' : $stageId;
         $this->resetPage();
     }

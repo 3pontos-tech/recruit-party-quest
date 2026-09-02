@@ -1,5 +1,6 @@
 @php
     use Filament\Support\Icons\Heroicon;
+    use He4rt\Screening\Presenters\ScreeningResponsePresenter;
 
     $selected = $this->selectedApplication;
     $knockoutQuestions = $this->knockoutQuestionCount;
@@ -49,7 +50,7 @@
                 [
                     'label' => __('panel-organization::workspace.preview.evaluations'),
                     'value' => $score === null ? __('panel-organization::workspace.queue.no_evaluations') : __('panel-organization::workspace.queue.average', ['score' => $score]),
-                    'hint' => trans_choice('panel-organization::workspace.preview.evaluations_count', $selected->evaluations->count(), ['count' => $selected->evaluations->count()]),
+                    'hint' => trans_choice('panel-organization::workspace.preview.evaluations_count', $selected->submittedEvaluationsCount(), ['count' => $selected->submittedEvaluationsCount()]),
                 ],
                 [
                     'label' => __('panel-organization::workspace.preview.comments'),
@@ -141,13 +142,7 @@
                             <ul class="mt-2 space-y-1.5 text-sm">
                                 @foreach ($knockoutResponses as $response)
                                     @php
-                                        $value = $response->response_value['value'] ?? null;
-                                        $responseText = match (true) {
-                                            $value === 'yes' => __('panel-organization::workspace.preview.answer_yes'),
-                                            $value === 'no' => __('panel-organization::workspace.preview.answer_no'),
-                                            is_array($value) => implode(', ', $value),
-                                            default => (string) $value,
-                                        };
+                                        $responseText = (new ScreeningResponsePresenter($response))->displayValue();
                                     @endphp
 
                                     <li wire:key="knockout-{{ $response->getKey() }}" class="flex items-start gap-2">

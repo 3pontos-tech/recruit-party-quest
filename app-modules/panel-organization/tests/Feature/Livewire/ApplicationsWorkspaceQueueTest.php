@@ -16,6 +16,7 @@ use He4rt\Recruitment\Requisitions\Models\JobRequisition;
 use He4rt\Recruitment\Staff\Recruiter\Recruiter;
 use He4rt\Screening\Models\ScreeningQuestion;
 use He4rt\Screening\Models\ScreeningResponse;
+use He4rt\Screening\Presenters\ScreeningResponsePresenter;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Livewire\livewire;
@@ -144,4 +145,14 @@ it('shows who saw the application in the preview', function (): void {
         ->call('openRequisition', $this->requisition->getKey())
         ->call('select', $this->seen->getKey())
         ->assertSee($this->seen->teamView->viewer->name);
+});
+
+it('shows the presented answer of each knockout question in the preview', function (): void {
+    $response = $this->failed->screeningResponses()->with('question')->firstOrFail();
+    $answer = new ScreeningResponsePresenter($response)->displayValue();
+
+    livewire(ApplicationsWorkspace::class)
+        ->call('openRequisition', $this->requisition->getKey())
+        ->call('select', $this->failed->getKey())
+        ->assertSee(__('panel-organization::workspace.preview.answered', ['answer' => $answer]));
 });

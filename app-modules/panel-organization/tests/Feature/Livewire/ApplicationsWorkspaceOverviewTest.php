@@ -100,6 +100,14 @@ it('falls back to the overview when the requisition belongs to another team', fu
 
     livewire(ApplicationsWorkspace::class, ['requisitionId' => $foreign->getKey()])
         ->assertOk()
+        ->assertSet('requisitionId', '')
+        ->assertSee(__('panel-organization::workspace.overview.title'));
+});
+
+it('falls back to the overview when the job parameter is not a uuid', function (): void {
+    livewire(ApplicationsWorkspace::class, ['requisitionId' => 'abc'])
+        ->assertOk()
+        ->assertSet('requisitionId', '')
         ->assertSee(__('panel-organization::workspace.overview.title'));
 });
 

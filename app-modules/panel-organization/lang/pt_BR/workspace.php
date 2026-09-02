@@ -80,8 +80,6 @@ return [
         'knockout_passed_title' => '{1} ✓ Aprovado na :count pergunta eliminatória|[2,*] ✓ Aprovado nas :count perguntas eliminatórias',
         'answered' => 'respondeu “:answer”',
         'question_removed' => 'Pergunta removida',
-        'answer_yes' => 'Sim',
-        'answer_no' => 'Não',
         'current_stage' => 'Etapa atual',
         'days' => '{1} :count dia|[2,*] :count dias',
         'expected' => 'esperado :days',
