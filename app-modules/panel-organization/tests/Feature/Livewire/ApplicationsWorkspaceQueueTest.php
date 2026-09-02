@@ -72,12 +72,27 @@ it('lists the candidates of the requisition with knockout verdict and seen state
 it('hides knockout signals for a requisition without knockout questions', function (): void {
     $application = Application::factory()->recycle($this->team)->for($this->plain, 'requisition')->for(Candidate::factory()->create(), 'candidate')->create();
 
+    $plainQuestion = ScreeningQuestion::factory()->yesNo()->create([
+        'team_id' => $this->team->getKey(),
+        'screenable_type' => $this->plain->getMorphClass(),
+        'screenable_id' => $this->plain->getKey(),
+        'is_knockout' => false,
+        'knockout_criteria' => null,
+    ]);
+
+    ScreeningResponse::factory()->yesNoResponse(false)->knockoutFailed()->create([
+        'team_id' => $this->team->getKey(),
+        'application_id' => $application->getKey(),
+        'question_id' => $plainQuestion->getKey(),
+    ]);
+
     livewire(ApplicationsWorkspace::class)
         ->call('openRequisition', $this->plain->getKey())
         ->assertSee($application->candidate->user->name)
         ->assertSee(__('panel-organization::workspace.header.no_knockout'))
         ->assertDontSee(__('panel-organization::workspace.queue.verdict_passed'))
-        ->assertDontSee(__('panel-organization::workspace.queue.verdict_unanswered'));
+        ->assertDontSee(__('panel-organization::workspace.queue.verdict_unanswered'))
+        ->assertDontSee('shadow-[inset_3px_0_0_0_var(--color-red-500)]');
 });
 
 it('filters by screening verdict, seen state, status group, stage and search', function (): void {

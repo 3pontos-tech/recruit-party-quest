@@ -48,7 +48,7 @@
                 ],
                 [
                     'label' => __('panel-organization::workspace.preview.evaluations'),
-                    'value' => $score === null ? __('panel-organization::workspace.queue.no_evaluations') : $score . ' / 5',
+                    'value' => $score === null ? __('panel-organization::workspace.queue.no_evaluations') : __('panel-organization::workspace.queue.average', ['score' => $score]),
                     'hint' => trans_choice('panel-organization::workspace.preview.evaluations_count', $selected->evaluations->count(), ['count' => $selected->evaluations->count()]),
                 ],
                 [
@@ -182,8 +182,8 @@
                         >
                             {{ trans_choice('panel-organization::workspace.preview.days', $selected->daysInStage(), ['count' => $selected->daysInStage()]) }}
                             @if ($expectedDuration)
-                                    ·
-                                    {{ __('panel-organization::workspace.preview.expected', ['days' => trans_choice('panel-organization::workspace.preview.days', $expectedDuration, ['count' => $expectedDuration])]) }}
+                                ·
+                                {{ __('panel-organization::workspace.preview.expected', ['days' => trans_choice('panel-organization::workspace.preview.days', $expectedDuration, ['count' => $expectedDuration])]) }}
                             @endif
                         </span>
                     </div>

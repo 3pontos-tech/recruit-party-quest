@@ -125,7 +125,7 @@
                         type="button"
                         wire:click="select('{{ $application->getKey() }}')"
                         aria-pressed="{{ $isSelected ? 'true' : 'false' }}"
-                        class="{{ $isSelected ? 'bg-elevation-02dp shadow-[inset_3px_0_0_0_var(--color-primary)]' : ($application->hasFailedKnockout() ? 'hover:bg-elevation-02dp/70 shadow-[inset_3px_0_0_0_var(--color-red-500)]' : 'hover:bg-elevation-02dp/70') }} grid w-full grid-cols-[auto_auto_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 text-left transition"
+                        class="{{ $isSelected ? 'bg-elevation-02dp shadow-[inset_3px_0_0_0_var(--color-primary)]' : ($showScreening && $application->hasFailedKnockout() ? 'hover:bg-elevation-02dp/70 shadow-[inset_3px_0_0_0_var(--color-red-500)]' : 'hover:bg-elevation-02dp/70') }} grid w-full grid-cols-[auto_auto_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 text-left transition"
                     >
                         <span
                             class="{{ $isSeen ? 'ring-outline-low/50 bg-transparent ring-1' : 'bg-indigo-500' }} size-2 rounded-full"
