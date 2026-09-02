@@ -6,6 +6,7 @@ namespace He4rt\Applications;
 
 use He4rt\Applications\Models\Application;
 use He4rt\Applications\Models\ApplicationStageHistory;
+use He4rt\Applications\Models\ApplicationView;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,6 +22,7 @@ class ApplicationsServiceProvider extends ServiceProvider
         Relation::morphMap([
             'applications' => Application::class,
             'application_stage_histories' => ApplicationStageHistory::class,
+            'application_views' => ApplicationView::class,
         ]);
     }
 }

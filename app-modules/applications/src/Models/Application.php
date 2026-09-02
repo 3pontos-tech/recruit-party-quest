@@ -20,12 +20,15 @@ use He4rt\Recruitment\Stages\Models\Stage;
 use He4rt\Screening\Models\ScreeningResponse;
 use He4rt\Teams\Concerns\BelongsToTeam;
 use He4rt\Users\User;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Kirschbaum\Commentions\Contracts\Commentable;
@@ -56,6 +59,7 @@ use Kirschbaum\Commentions\HasComments;
  * @property-read Collection<int, Evaluation> $evaluations
  * @property-read JobRequisition|null $requisition
  * @property-read Stage|null $currentStage
+ * @property-read ApplicationView|null $teamView
  *
  * @extends BaseModel<ApplicationFactory>
  */
@@ -133,6 +137,23 @@ class Application extends BaseModel implements Commentable
     }
 
     /**
+     * @return HasOne<ApplicationView, $this>
+     */
+    public function teamView(): HasOne
+    {
+        return $this->hasOne(ApplicationView::class);
+    }
+
+    public function isSeenByTeam(): bool
+    {
+        if ($this->relationLoaded('teamView')) {
+            return $this->teamView !== null;
+        }
+
+        return $this->teamView()->exists();
+    }
+
+    /**
      * The first active stage of the given type in this requisition (by display_order),
      * or null when the requisition has no stage of that type. Used to mirror the
      * status onto the stage at the funnel ends (offer/hired) — see
@@ -196,6 +217,26 @@ class Application extends BaseModel implements Commentable
     public function isCurrentStage(Stage $stage): bool
     {
         return $this->current_stage_id === $stage->id;
+    }
+
+    /**
+     * @param  Builder<Application>  $query
+     * @return Builder<Application>
+     */
+    #[Scope]
+    protected function unseenByTeam(Builder $query): Builder
+    {
+        return $query->whereDoesntHave('teamView');
+    }
+
+    /**
+     * @param  Builder<Application>  $query
+     * @return Builder<Application>
+     */
+    #[Scope]
+    protected function seenByTeam(Builder $query): Builder
+    {
+        return $query->whereHas('teamView');
     }
 
     protected function casts(): array
