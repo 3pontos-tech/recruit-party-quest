@@ -120,16 +120,12 @@ return [
     ],
 
     'tables' => [
-        'last_movement' => 'Última Movimentação',
         'position' => 'Cargo',
         'kanban' => 'Kanban',
     ],
 
     'group' => [
         'recruitment' => 'Recrutamento',
-        'job' => 'Vaga',
-        'job_no_title' => 'Vaga sem título',
-        'job_description' => 'Empresa: :team • Departamento: :department',
     ],
 
     'kanban' => [
