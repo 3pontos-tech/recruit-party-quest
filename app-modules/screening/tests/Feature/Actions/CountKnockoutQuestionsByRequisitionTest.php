@@ -14,7 +14,7 @@ it('counts knockout questions attached to the requisition and to its stages', fu
 
     ScreeningQuestion::factory()->yesNo()->knockout()->create(['team_id' => $team->getKey(), 'screenable_type' => $withQuestions->getMorphClass(), 'screenable_id' => $withQuestions->getKey()]);
     ScreeningQuestion::factory()->yesNo()->knockout()->create(['team_id' => $team->getKey(), 'screenable_type' => $stage->getMorphClass(), 'screenable_id' => $stage->getKey()]);
-    ScreeningQuestion::factory()->yesNo()->create(['team_id' => $team->getKey(), 'screenable_type' => $withQuestions->getMorphClass(), 'screenable_id' => $withQuestions->getKey()]);
+    ScreeningQuestion::factory()->yesNo()->create(['team_id' => $team->getKey(), 'screenable_type' => $withQuestions->getMorphClass(), 'screenable_id' => $withQuestions->getKey(), 'is_knockout' => false, 'knockout_criteria' => null]);
 
     $requisitions = JobRequisition::query()->with('stages')->whereKey([$withQuestions->getKey(), $without->getKey()])->get();
 
