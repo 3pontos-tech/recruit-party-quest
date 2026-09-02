@@ -142,5 +142,6 @@ it('averages only submitted evaluations', function (): void {
     Evaluation::factory()->draft()->create(['team_id' => $this->team->getKey(), 'application_id' => $application->getKey(), 'stage_id' => $this->stages[1]->getKey(), 'overall_rating' => EvaluationRatingEnum::StrongNo]);
 
     expect($application->fresh()->averageEvaluationScore())->toBe(4.5)
+        ->and($application->fresh()->submittedEvaluationsCount())->toBe(2)
         ->and(($this->make)(ApplicationStatusEnum::New)->averageEvaluationScore())->toBeNull();
 });

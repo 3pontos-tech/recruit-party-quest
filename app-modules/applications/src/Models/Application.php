@@ -78,8 +78,6 @@ class Application extends BaseModel implements Commentable
 
     public const string STAGE_SINCE_SQL = 'COALESCE((SELECT MAX(h.created_at) FROM application_stage_history h WHERE h.application_id = applications.id), applications.created_at)';
 
-    private const string ATTENTION_ORDER_SQL = "CASE applications.status WHEN 'new' THEN 0 WHEN 'in_review' THEN 1 WHEN 'in_progress' THEN 2 WHEN 'offer_extended' THEN 3 WHEN 'offer_accepted' THEN 4 WHEN 'hired' THEN 5 ELSE 6 END";
-
     /**
      * @return BelongsTo<JobRequisition, $this>
      */
@@ -300,6 +298,11 @@ class Application extends BaseModel implements Commentable
         return round((float) $submitted->avg(fn (Evaluation $evaluation): int => $evaluation->overall_rating->score()), 1);
     }
 
+    public function submittedEvaluationsCount(): int
+    {
+        return $this->evaluations->whereNotNull('submitted_at')->count();
+    }
+
     /**
      * @param  Builder<Application>  $query
      * @return Builder<Application>
@@ -425,7 +428,7 @@ class Application extends BaseModel implements Commentable
             ApplicationListSort::Stage => $query->orderByDesc(
                 Stage::query()->select('display_order')->whereColumn('id', 'applications.current_stage_id')->limit(1)
             ),
-            ApplicationListSort::Attention => $query->orderByRaw(self::ATTENTION_ORDER_SQL)->orderByRaw(self::STAGE_SINCE_SQL.' ASC'),
+            ApplicationListSort::Attention => $query->orderByRaw($this->attentionOrderSql())->orderByRaw(self::STAGE_SINCE_SQL.' ASC'),
         };
 
         return $ordered->orderBy('applications.id');
@@ -450,5 +453,23 @@ class Application extends BaseModel implements Commentable
     protected function currentState(): Attribute
     {
         return Attribute::make(get: fn () => $this->status->state($this));
+    }
+
+    private function attentionOrderSql(): string
+    {
+        $ranks = [
+            ApplicationStatusEnum::New->value => 0,
+            ApplicationStatusEnum::InReview->value => 1,
+            ApplicationStatusEnum::InProgress->value => 2,
+            ApplicationStatusEnum::OfferExtended->value => 3,
+            ApplicationStatusEnum::OfferAccepted->value => 4,
+            ApplicationStatusEnum::Hired->value => 5,
+        ];
+
+        $cases = collect($ranks)
+            ->map(fn (int $rank, string $status): string => sprintf("WHEN '%s' THEN %d", $status, $rank))
+            ->implode(' ');
+
+        return sprintf('CASE applications.status %s ELSE %d END', $cases, count($ranks));
     }
 }

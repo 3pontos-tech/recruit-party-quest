@@ -29,7 +29,7 @@ final class BuildRequisitionApplicationStats
 
         $overdue = $open()
             ->whereNotNull('current_stage_id')
-            ->whereRaw(Application::STAGE_SINCE_SQL.' < NOW() - MAKE_INTERVAL(days => (SELECT s.expected_duration_days FROM recruitment_pipeline_stages s WHERE s.id = applications.current_stage_id))')
+            ->whereRaw(Application::STAGE_SINCE_SQL.' < NOW() - MAKE_INTERVAL(days => (SELECT s.expected_duration_days FROM recruitment_pipeline_stages s WHERE s.id = applications.current_stage_id AND s.expected_duration_days > 0))')
             ->count();
 
         return new RequisitionApplicationStats(
