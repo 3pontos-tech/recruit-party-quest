@@ -6,12 +6,15 @@ namespace He4rt\Recruitment\Requisitions\Models;
 
 use AlizHarb\ActivityLog\Contracts\HasActivityLogTitle;
 use App\Models\BaseModel;
+use He4rt\Applications\Enums\ApplicationStatusEnum;
+use He4rt\Applications\Enums\ApplicationStatusGroup;
 use He4rt\Applications\Models\Application;
 use He4rt\Candidates\Models\Candidate;
 use He4rt\Recruitment\Database\Factories\JobRequisitionFactory;
 use He4rt\Recruitment\Requisitions\Enums\EmploymentTypeEnum;
 use He4rt\Recruitment\Requisitions\Enums\ExperienceLevelEnum;
 use He4rt\Recruitment\Requisitions\Enums\JobCategoryEnum;
+use He4rt\Recruitment\Requisitions\Enums\RequisitionOverviewSort;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionPriorityEnum;
 use He4rt\Recruitment\Requisitions\Enums\RequisitionStatusEnum;
 use He4rt\Recruitment\Requisitions\Enums\WorkArrangementEnum;
@@ -235,6 +238,62 @@ class JobRequisition extends BaseModel implements HasActivityLogTitle
     protected function publicJobs(Builder $query): Builder
     {
         return $query->where('is_internal_only', false);
+    }
+
+    /**
+     * @param  Builder<self>  $query
+     * @return Builder<self>
+     */
+    #[Scope]
+    protected function withRecruiterOverviewCounts(Builder $query): Builder
+    {
+        $failed = fn (Builder $responses): Builder => $responses->where('is_knockout_fail', true);
+
+        return $query
+            ->withCount([
+                'applications',
+                'applications as new_applications_count' => fn (Builder $applications) => $applications->whereIn('status', ApplicationStatusGroup::New->values()),
+                'applications as active_applications_count' => fn (Builder $applications) => $applications->whereIn('status', ApplicationStatusGroup::Active->values()),
+                'applications as hired_applications_count' => fn (Builder $applications) => $applications->where('status', ApplicationStatusEnum::Hired->value),
+                'applications as unseen_applications_count' => fn (Builder $applications) => $applications
+                    ->whereNotIn('status', ApplicationStatusGroup::Closed->values())
+                    ->whereDoesntHave('teamView'),
+                'applications as knockout_passed_count' => fn (Builder $applications) => $applications
+                    ->whereHas('screeningResponses')
+                    ->whereDoesntHave('screeningResponses', $failed),
+            ])
+            ->withMin(['applications as oldest_new_at' => fn (Builder $applications) => $applications->whereIn('status', ApplicationStatusGroup::New->values())], 'created_at');
+    }
+
+    /**
+     * @param  Builder<self>  $query
+     * @return Builder<self>
+     */
+    #[Scope]
+    protected function searchTitle(Builder $query, string $term): Builder
+    {
+        return $query->whereHas('post', fn (Builder $post) => $post->where('title', 'ilike', '%'.mb_trim($term).'%'));
+    }
+
+    /**
+     * @param  Builder<self>  $query
+     * @return Builder<self>
+     */
+    #[Scope]
+    protected function orderForRecruiterOverview(Builder $query, RequisitionOverviewSort $sort): Builder
+    {
+        $ordered = match ($sort) {
+            RequisitionOverviewSort::Unseen => $query->orderByDesc('unseen_applications_count'),
+            RequisitionOverviewSort::KnockoutPassed => $query->orderByDesc('knockout_passed_count'),
+            RequisitionOverviewSort::Oldest => $query->orderByRaw('oldest_new_at ASC NULLS LAST'),
+            RequisitionOverviewSort::Total => $query->orderByDesc('applications_count'),
+            RequisitionOverviewSort::Title => $query->orderBy(
+                JobPosting::query()->select('title')->whereColumn('job_requisition_id', 'recruitment_job_requisitions.id')->limit(1)
+            ),
+            RequisitionOverviewSort::New => $query->orderByDesc('new_applications_count'),
+        };
+
+        return $ordered->orderByDesc('applications_count')->orderBy('recruitment_job_requisitions.id');
     }
 
     protected function casts(): array

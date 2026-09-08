@@ -87,4 +87,28 @@ return [
             'label' => 'Automatic Screening',
         ],
     ],
+    'application_status_group' => [
+        'new' => ['label' => 'New'],
+        'active' => ['label' => 'In progress'],
+        'offer' => ['label' => 'Offer and hiring'],
+        'closed' => ['label' => 'Closed'],
+    ],
+    'screening_verdict_filter' => [
+        'all' => ['label' => 'All screening results'],
+        'passed' => ['label' => 'Passed the knockout questions'],
+        'failed' => ['label' => 'Failed the knockout questions'],
+        'unanswered' => ['label' => 'No screening answers'],
+    ],
+    'seen_filter' => [
+        'all' => ['label' => 'Seen and unseen'],
+        'unseen' => ['label' => 'Unseen'],
+        'seen' => ['label' => 'Already seen'],
+    ],
+    'application_list_sort' => [
+        'attention' => ['label' => 'Attention'],
+        'days_in_stage' => ['label' => 'Longest in stage'],
+        'applied' => ['label' => 'Most recent application'],
+        'name' => ['label' => 'Name'],
+        'stage' => ['label' => 'Furthest stage'],
+    ],
 ];

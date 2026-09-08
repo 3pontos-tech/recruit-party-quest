@@ -8,4 +8,12 @@ return [
         'success' => 'Vaga gerada com sucesso!',
         'error' => 'Erro ao gerar vaga',
     ],
+    'requisition_overview_sort' => [
+        'new' => ['label' => 'Mais novas pendentes'],
+        'unseen' => ['label' => 'Mais não vistos'],
+        'knockout_passed' => ['label' => 'Mais aprovados na eliminatória'],
+        'oldest' => ['label' => 'Pendente há mais tempo'],
+        'total' => ['label' => 'Mais candidaturas'],
+        'title' => ['label' => 'Título'],
+    ],
 ];
