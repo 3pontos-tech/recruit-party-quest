@@ -6,7 +6,6 @@
 @php
     /** @var \He4rt\Recruitment\Requisitions\Models\JobRequisition $job */
     $jobUrl = \He4rt\App\Filament\Resources\JobRequisitions\JobRequisitionResource::getUrl('view', ['record' => $job->post->slug]);
-    $publishedAt = $job->published_at instanceof \DateTimeInterface ? $job->published_at : ($job->published_at ? \Illuminate\Support\Carbon::createFromTimestamp($job->published_at) : null);
 @endphp
 
 <div
@@ -74,13 +73,6 @@
             <span class="inline-flex items-center gap-1.5">
                 <x-he4rt::icon icon="heroicon-o-currency-dollar" class="size-3.5" />
                 {{ $job->salary_range_for_candidates }}
-            </span>
-        @endif
-
-        @if ($publishedAt)
-            <span class="inline-flex items-center gap-1.5">
-                <x-he4rt::icon icon="heroicon-o-calendar" class="size-3.5" />
-                {{ $publishedAt->format('d/m/Y') }}
             </span>
         @endif
 
