@@ -48,3 +48,12 @@ it('UserLatestApplications renders without error when requisition is soft delete
     livewire(UserLatestApplications::class)
         ->assertOk();
 });
+
+it('renders ViewApplication with team info when the team is soft deleted', function (): void {
+    $team = $this->application->requisition->team;
+    $team->delete();
+
+    livewire(ViewApplication::class, ['record' => $this->application->getKey()])
+        ->assertOk()
+        ->assertSee($team->name);
+});
