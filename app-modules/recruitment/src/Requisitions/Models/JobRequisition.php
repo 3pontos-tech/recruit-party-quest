@@ -90,6 +90,16 @@ class JobRequisition extends BaseModel implements HasActivityLogTitle
     protected $table = 'recruitment_job_requisitions';
 
     /**
+     * Includes soft-deleted teams so existing requisitions (and their applications) keep resolving their team.
+     *
+     * @return BelongsTo<Team, $this>
+     */
+    public function team(): BelongsTo
+    {
+        return $this->belongsTo(Team::class)->withTrashed();
+    }
+
+    /**
      * @return BelongsTo<Department, $this>
      */
     public function department(): BelongsTo
