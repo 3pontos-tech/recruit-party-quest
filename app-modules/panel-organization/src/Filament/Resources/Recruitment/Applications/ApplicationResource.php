@@ -7,11 +7,9 @@ namespace He4rt\Organization\Filament\Resources\Recruitment\Applications;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
 use He4rt\Applications\Models\Application;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ListApplications;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ViewApplication;
-use He4rt\Organization\Filament\Resources\Recruitment\Applications\Tables\ApplicationsTable;
 use UnitEnum;
 
 class ApplicationResource extends Resource
@@ -34,11 +32,6 @@ class ApplicationResource extends Resource
     public static function canCreate(): bool
     {
         return false;
-    }
-
-    public static function table(Table $table): Table
-    {
-        return ApplicationsTable::configure($table);
     }
 
     public static function getPages(): array

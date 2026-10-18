@@ -87,4 +87,28 @@ return [
             'label' => 'Triagem Automática',
         ],
     ],
+    'application_status_group' => [
+        'new' => ['label' => 'Novas'],
+        'active' => ['label' => 'Em processo'],
+        'offer' => ['label' => 'Oferta e contratação'],
+        'closed' => ['label' => 'Encerradas'],
+    ],
+    'screening_verdict_filter' => [
+        'all' => ['label' => 'Toda a triagem'],
+        'passed' => ['label' => 'Aprovados na eliminatória'],
+        'failed' => ['label' => 'Reprovados na eliminatória'],
+        'unanswered' => ['label' => 'Sem respostas'],
+    ],
+    'seen_filter' => [
+        'all' => ['label' => 'Vistos e não vistos'],
+        'unseen' => ['label' => 'Não vistos'],
+        'seen' => ['label' => 'Já vistos'],
+    ],
+    'application_list_sort' => [
+        'attention' => ['label' => 'Atenção'],
+        'days_in_stage' => ['label' => 'Mais tempo na etapa'],
+        'applied' => ['label' => 'Inscrição mais recente'],
+        'name' => ['label' => 'Nome'],
+        'stage' => ['label' => 'Etapa mais avançada'],
+    ],
 ];

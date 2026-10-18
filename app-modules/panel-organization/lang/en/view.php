@@ -186,9 +186,6 @@ return [
             'no_responses_text' => 'This application has no screening responses yet.',
         ],
     ],
-    'last_movement' => [
-        'applied' => 'Application submitted',
-    ],
     'time' => [
         'year' => '{1} :count year|[2,*] :count years',
         'month' => '{1} :count month|[2,*] :count months',

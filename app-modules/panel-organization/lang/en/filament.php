@@ -119,16 +119,12 @@ return [
     ],
 
     'tables' => [
-        'last_movement' => 'Last Movement',
         'position' => 'Position',
         'kanban' => 'Kanban',
     ],
 
     'group' => [
         'recruitment' => 'Recruitment',
-        'job' => 'Job',
-        'job_no_title' => 'Untitled job',
-        'job_description' => 'Company: :team • Department: :department',
     ],
 
     'kanban' => [

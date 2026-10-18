@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use App\Enums\FilamentPanel;
-use Filament\Actions\Testing\TestAction;
 use He4rt\Applications\Models\Application;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\ApplicationResource;
 use He4rt\Organization\Filament\Resources\Recruitment\Applications\Pages\ListApplications;
+use He4rt\Organization\Livewire\Applications\ApplicationsWorkspace;
 use He4rt\Permissions\Roles;
 use He4rt\Recruitment\Requisitions\Models\JobPosting;
 use He4rt\Teams\Team;
@@ -35,8 +35,8 @@ it('does not expose an edit route for applications', function (): void {
     expect(array_keys(ApplicationResource::getPages()))->not->toContain('edit');
 });
 
-it('does not show an edit button in the applications table', function (): void {
-    livewire(ListApplications::class, ['tenant' => $this->team])
+it('lets the team owner open the workspace', function (): void {
+    livewire(ListApplications::class)
         ->assertOk()
-        ->assertActionDoesNotExist(TestAction::make('edit')->table($this->application));
+        ->assertSeeLivewire(ApplicationsWorkspace::class);
 });

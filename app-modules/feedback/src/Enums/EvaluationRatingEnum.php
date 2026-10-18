@@ -34,4 +34,15 @@ enum EvaluationRatingEnum: string implements HasColor, HasLabel
     {
         return __('feedback::enums.evaluation_rating.'.$this->value.'.label');
     }
+
+    public function score(): int
+    {
+        return match ($this) {
+            self::StrongNo => 1,
+            self::No => 2,
+            self::Maybe => 3,
+            self::Yes => 4,
+            self::StrongYes => 5,
+        };
+    }
 }

@@ -186,9 +186,6 @@ return [
             'no_responses_text' => 'Esta candidatura ainda não possui respostas de screening.',
         ],
     ],
-    'last_movement' => [
-        'applied' => 'Aplicação enviada',
-    ],
     'time' => [
         'year' => '{1} :count ano|[2,*] :count anos',
         'month' => '{1} :count mês|[2,*] :count meses',
