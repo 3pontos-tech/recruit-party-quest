@@ -39,6 +39,7 @@ it('accepts a profile email with a deliverable domain', function (): void {
         ->fillForm([
             'name' => 'Myke Douglas',
             'email' => 'contatomyke@hotmail.com',
+            'current_password' => 'password',
         ])
         ->call('submit')
         ->assertHasNoFormErrors();
