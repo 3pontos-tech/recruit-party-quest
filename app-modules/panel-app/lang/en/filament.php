@@ -71,6 +71,7 @@ return [
             'links' => 'Social Networks',
             'account' => 'Account',
         ],
+        'email_locked_without_password' => 'You sign in with a social account, so the email can only be changed by our support team.',
     ],
     'widgets' => [
         'user_stats' => [
