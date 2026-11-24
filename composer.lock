@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3d2b224bdbabb26ebd32edb8a4d2ed54",
+    "content-hash": "a3233e1884ec35e26d1e3ad773107628",
     "packages": [
         {
             "name": "alizharb/filament-activity-log",
