@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a3233e1884ec35e26d1e3ad773107628",
+    "content-hash": "7d656078a968ddb8f9b5a6ddc278a3d2",
     "packages": [
         {
             "name": "alizharb/filament-activity-log",
@@ -4796,16 +4796,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v12.73.0",
+            "version": "v12.74.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "d091054fca4761e109b477bdca364dc93c7fd6df"
+                "reference": "935434e4fad6a3aede68920bcc6fdb7f3411f312"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/d091054fca4761e109b477bdca364dc93c7fd6df",
-                "reference": "d091054fca4761e109b477bdca364dc93c7fd6df",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/935434e4fad6a3aede68920bcc6fdb7f3411f312",
+                "reference": "935434e4fad6a3aede68920bcc6fdb7f3411f312",
                 "shasum": ""
             },
             "require": {
@@ -5014,7 +5014,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2026-11-17T14:54:52+00:00"
+            "time": "2026-11-24T16:20:46+00:00"
         },
         {
             "name": "laravel/nightwatch",
