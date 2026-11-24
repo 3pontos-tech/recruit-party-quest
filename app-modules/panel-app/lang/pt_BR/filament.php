@@ -71,6 +71,7 @@ return [
             'links' => 'Redes Sociais',
             'account' => 'Conta',
         ],
+        'email_locked_without_password' => 'Você entra pelo login social, então o e-mail só pode ser trocado pelo nosso suporte.',
     ],
     'widgets' => [
         'user_stats' => [
